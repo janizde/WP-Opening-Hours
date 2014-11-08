@@ -85,7 +85,7 @@ abstract class OP_AbstractShortcode extends OP_AbstractModule {
    */
   public function renderShortcode ( array $attributes ) {
 
-    $attributes   = shortcode_atts( $this->getDefaultAttributes, $attributes, $this->getShortcodeTag );
+    $attributes   = shortcode_atts( $this->getDefaultAttributes(), $attributes, $this->getShortcodeTag() );
 
     ob_start();
 
