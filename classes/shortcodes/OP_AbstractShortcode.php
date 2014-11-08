@@ -135,7 +135,7 @@ abstract class OP_AbstractShortcode extends OP_AbstractModule {
    *
    *  @access     protected
    *  @param      array     $defaultAttributes
-   *  @return     OP_AbstractModule
+   *  @return     OP_AbstractShortcode
    */
   protected function setDefaultAttributes ( array $defaultAttributes ) {
     $this->defaultAttributes  = $defaultAttributes;
@@ -146,6 +146,7 @@ abstract class OP_AbstractShortcode extends OP_AbstractModule {
    *  Shortcode Function
    *
    *  @access     public
+   *  @abstract
    *  @param      array     $attributes
    */
   abstract public function shortcode ( array $attributes );
