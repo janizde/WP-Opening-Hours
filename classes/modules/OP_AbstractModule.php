@@ -9,6 +9,11 @@ if ( class_exists( 'OP_AbstractModule' ) )
 abstract class OP_AbstractModule {
 
 	/**
+	 *	Constants
+	 */
+	const 	TEXTDOMAIN 	= 'opening-hours';
+
+	/**
 	 *	Instances
 	 *
 	 *	@access 			private

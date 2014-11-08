@@ -62,6 +62,7 @@ function op_requirements_error() {
  */
 if ( op_requirements_met() ) {
 	require_once( __DIR__ . '/classes/modules/OP_AbstractModule.php' );
+	require_once( __DIR__ . '/classes/shortcodes/OP_AbstractShortcode.php' );
 	require_once( __DIR__ . '/classes/OpeningHours.php' );
 
 	require_once( __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php' );
