@@ -60,8 +60,8 @@ function op_requirements_error() {
  * Check requirements and load main class
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.
  */
-if ( wpps_requirements_met() ) {
-	require_once( __DIR__ . '/classes/OP_Module.php' );
+if ( op_requirements_met() ) {
+	require_once( __DIR__ . '/classes/modules/OP_AbstractModule.php' );
 	require_once( __DIR__ . '/classes/OpeningHours.php' );
 
 	require_once( __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php' );
