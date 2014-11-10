@@ -37,6 +37,7 @@ class OpeningHours extends OP_AbstractModule {
 		$this->registerHookCallbacks();
 
 		$this->modules = array(
+			'OP_I18n'			=> OP_I18n::getInstance()
 		);
 	}
 

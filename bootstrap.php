@@ -62,6 +62,7 @@ function op_requirements_error() {
  */
 if ( op_requirements_met() ) {
 	require_once( __DIR__ . '/classes/modules/OP_AbstractModule.php' );
+	require_once( __DIR__ . '/classes/modules/OP_I18n.php' );
 	require_once( __DIR__ . '/classes/shortcodes/OP_AbstractShortcode.php' );
 	require_once( __DIR__ . '/classes/OpeningHours.php' );
 
@@ -69,7 +70,7 @@ if ( op_requirements_met() ) {
 	require_once( __DIR__ . '/includes/wp-detail-fields/detail-fields.php' );
 
 	if ( class_exists( 'OpeningHours' ) ) {
-		$GLOBALS['op'] = OpeningHours::get_instance();
+		$GLOBALS['op'] = OpeningHours::getInstance();
 		register_activation_hook(   __FILE__, array( $GLOBALS['op'], 'activate' ) );
 		register_deactivation_hook( __FILE__, array( $GLOBALS['op'], 'deactivate' ) );
 	}

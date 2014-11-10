@@ -29,7 +29,7 @@ abstract class OP_AbstractModule {
 	 *	@static
 	 * 	@return  				OP_Module
 	 */
-	public static function get_instance() {
+	public static function getInstance() {
 		$module = get_called_class();
 
 		if ( ! isset( self::$instances[ $module ] ) ) {
