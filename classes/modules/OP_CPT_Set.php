@@ -11,7 +11,11 @@ class OP_CPT_Set extends OP_AbstractModule {
   /**
    *  Constants
    */
-  const   CPT_SLUG  = 'op-set';
+  const   CPT_SLUG          = 'op-set';
+  const   META_BOX_ID       = 'op-set-periods';
+  const   META_BOX_CONTEXT  = 'advanced';
+  const   META_BOX_PRIORITY = 'high';
+  const   TEMPLATE_META_BOX = 'op-set-meta-box.php';
 
   /**
    *  Constructor
@@ -31,7 +35,9 @@ class OP_CPT_Set extends OP_AbstractModule {
    */
   public function registerHookCallbacks () {
 
-    add_action( 'init',     array( __CLASS__, 'registerPostType' ) );
+    add_action( 'init',             array( __CLASS__, 'registerPostType' ) );
+    add_action( 'admin_menu',       array( __CLASS__, 'cleanUpMenu' ) );
+    add_action( 'add_meta_boxes',   array( __CLASS__, 'registerMetaBox' ) );
 
   }
 
@@ -45,6 +51,59 @@ class OP_CPT_Set extends OP_AbstractModule {
   public static function registerPostType () {
 
     register_post_type( self::CPT_SLUG, self::getArguments() );
+
+  }
+
+  /**
+   *  Clean Up Menu
+   *
+   *  @access       public
+   *  @static
+   *  @wp_action    admin_menu
+   */
+  public static function cleanUpMenu () {
+
+    global $submenu;
+
+    /** Top Level: Registered via post_type op-set: Remove "Add New" Item */
+    unset( $submenu['edit.php?post_type=op-set'][10] );
+
+  }
+
+  /**
+   *  Register Meta Box
+   *
+   *  @access       public
+   *  @static
+   *  @wp_action    add_meta_boxes
+   */
+  public static function registerMetaBox () {
+
+    add_meta_box(
+      self::META_BOX_ID,
+      __( 'Opening Hours', self::TEXTDOMAIN ),
+      array( __CLASS__, 'renderMetaBox' ),
+      self::CPT_SLUG,
+      self::META_BOX_CONTEXT,
+      self::META_BOX_PRIORITY
+    );
+
+  }
+
+  /**
+   *  Render Meta Box
+   *
+   *  @access       public
+   *  @static
+   *  @param        WP_Post   $post
+   */
+  public static function renderMetaBox ( WP_Post $post ) {
+
+      $variables   = array(
+        'post'    => $post
+      );
+
+      echo self::renderTemplate( self::TEMPLATE_META_BOX, $variables );
 
   }
 
@@ -87,16 +146,17 @@ class OP_CPT_Set extends OP_AbstractModule {
 
     return array(
       'labels'             => self::getLabels(),
-  		'public'             => false,
-  		'publicly_queryable' => false,
-  		'show_ui'            => true,
-  		'show_in_menu'       => true,
-  		'query_var'          => true,
-  		'capability_type'    => 'page',
-  		'has_archive'        => true,
-  		'hierarchical'       => false,
-  		'menu_position'      => null,
-  		'supports'           => array( 'title' )
+      'public'             => false,
+      'publicly_queryable' => true,
+      'show_ui'            => true,
+      'show_in_menu'       => true,
+      'query_var'          => true,
+      'capability_type'    => 'page',
+      'has_archive'        => true,
+      'hierarchical'       => false,
+      'menu_position'      => 400,
+      'menu_icon'          => 'dashicons-clock',
+      'supports'           => array( 'title', 'custom-fields' )
     );
 
   }
