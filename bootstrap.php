@@ -61,10 +61,17 @@ function op_requirements_error() {
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.
  */
 if ( op_requirements_met() ) {
-	require_once( __DIR__ . '/classes/modules/OP_AbstractModule.php' );
-	require_once( __DIR__ . '/classes/modules/OP_I18n.php' );
-	require_once( __DIR__ . '/classes/shortcodes/OP_AbstractShortcode.php' );
-	require_once( __DIR__ . '/classes/OpeningHours.php' );
+
+	$classes 	= array(
+		'modules/OP_AbstractModule',
+		'modules/OP_I18n',
+		'modules/OP_CPT_Set',
+		'shortcodes/OP_AbstractShortcode',
+		'OpeningHours'
+	);
+
+	foreach ( $classes as $class )
+		require_once( __DIR__ . '/classes/' . $class . '.php' );
 
 	require_once( __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php' );
 	require_once( __DIR__ . '/includes/wp-detail-fields/detail-fields.php' );
