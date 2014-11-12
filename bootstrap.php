@@ -70,6 +70,7 @@ function op_plugin_path () {
 if ( op_requirements_met() ) {
 
 	$classes 	= array(
+		'misc/OP_ArrayObject',
 		'modules/OP_AbstractModule',
 		'modules/OP_I18n',
 		'modules/OP_CPT_Set',
