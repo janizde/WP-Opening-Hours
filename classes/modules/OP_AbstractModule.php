@@ -32,7 +32,7 @@ abstract class OP_AbstractModule {
 	public static function getInstance() {
 		$module = get_called_class();
 
-		if ( ! isset( self::$instances[ $module ] ) ) {
+		if ( !isset( self::$instances[ $module ] ) ) {
 			self::$instances[ $module ] = new $module();
 		}
 
@@ -56,9 +56,10 @@ abstract class OP_AbstractModule {
 		do_action( 'op_render_template_pre', $default_template_path, $variables );
 
 		$template_path = locate_template( basename( $default_template_path ) );
-		if ( ! $template_path ) {
-			$template_path = dirname( __DIR__ ) . '/views/' . $default_template_path;
-		}
+
+		if ( !$template_path )
+			$template_path = op_plugin_path() . 'views/' . $default_template_path;
+
 		$template_path = apply_filters( 'op_template_path', $template_path );
 
 		if ( is_file( $template_path ) ) {

@@ -56,6 +56,13 @@ function op_requirements_error() {
 	require_once( dirname( __FILE__ ) . '/views/requirements-error.php' );
 }
 
+/**
+ *	Returns Plugin Directory Path
+ */
+function op_plugin_path () {
+	return plugin_dir_path( __FILE__ );
+}
+
 /*
  * Check requirements and load main class
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.

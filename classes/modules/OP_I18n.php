@@ -47,5 +47,24 @@ class OP_I18n extends OP_AbstractModule {
     load_plugin_textdomain( self::TEXTDOMAIN, false, 'wp-opening-hours' . self::LANGUAGE_PATH );
 
   }
+
+  /**
+   *  Get Weekdays Array
+   *
+   *  @access       public
+   *  @static
+   *  @return       array
+   */
+  public static function getWeekdays () {
+    return array(
+      'monday'      => __( 'Monday', self::TEXTDOMAIN ),
+      'tuesday'		  => __( 'Tuesday', self::TEXTDOMAIN ),
+      'wednesday'		=> __( 'Wednesday', self::TEXTDOMAIN ),
+      'thursday'		=> __( 'Thursday', self::TEXTDOMAIN ),
+      'friday'		  => __( 'Friday', self::TEXTDOMAIN ),
+      'saturday'		=> __( 'Saturday', self::TEXTDOMAIN ),
+      'sunday'		  => __( 'Sunday', self::TEXTDOMAIN )
+    );
+  }
 }
 ?>

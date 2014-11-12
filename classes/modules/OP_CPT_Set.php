@@ -17,6 +17,9 @@ class OP_CPT_Set extends OP_AbstractModule {
   const   META_BOX_PRIORITY = 'high';
   const   TEMPLATE_META_BOX = 'op-set-meta-box.php';
 
+  const   NONCE_NAME        = 'op-update-set-nonce';
+  const   NONCE_VALUE       = 'op-set-opening-hours';
+
   /**
    *  Constructor
    *
@@ -24,7 +27,7 @@ class OP_CPT_Set extends OP_AbstractModule {
    */
   public function __construct () {
 
-    $this->registerHookCallbacks();
+    self::registerHookCallbacks();
 
   }
 
@@ -32,8 +35,9 @@ class OP_CPT_Set extends OP_AbstractModule {
    *  Register Hook Callbacks
    *
    *  @access       public
+   *  @static
    */
-  public function registerHookCallbacks () {
+  public static function registerHookCallbacks () {
 
     add_action( 'init',             array( __CLASS__, 'registerPostType' ) );
     add_action( 'admin_menu',       array( __CLASS__, 'cleanUpMenu' ) );
