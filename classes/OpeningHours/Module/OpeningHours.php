@@ -3,10 +3,12 @@
  *  Opening Hours: Module: Opening Hours
  */
 
-if ( class_exists( 'OP_OpeningHours' ) )
+namespace OpeningHours\Module;
+
+if ( class_exists( 'OpeningHours\Module\OpeningHours' ) )
   return;
 
-class OP_OpeningHours extends OP_AbstractModule {
+class OpeningHours extends AbstractModule {
 
   /**
    *  Sets
@@ -83,7 +85,7 @@ class OP_OpeningHours extends OP_AbstractModule {
    *
    *  @access     public
    *  @param      int     $currentSetId
-   *  @return     OP_OpeningHours
+   *  @return     OpeningHours
    */
   public function setCurrentSetId ( $currentSetId ) {
     $this->currentSetId = $currentSetId;
@@ -95,7 +97,7 @@ class OP_OpeningHours extends OP_AbstractModule {
    *
    *  @access     public
    *  @param      int     $setId
-   *  @return     OP_Set
+   *  @return     OpeningHours\Entity\Set
    */
   public function getSet ( $setId ) {
     if ( array_key_exists( $setId, $this->getSets() ) )
@@ -106,7 +108,7 @@ class OP_OpeningHours extends OP_AbstractModule {
    *  Getter: Current Set
    *
    *  @access     public
-   *  @return     OP_Set
+   *  @return     OpeningHours\Entity\Set
    */
   public function getCurrentSet () {
     if ( !is_int( $this->getCurrentSetId() ) )

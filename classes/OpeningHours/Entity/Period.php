@@ -3,10 +3,12 @@
  *  Opening Hours: Entity: Period
  */
 
-if ( class_exists( 'OP_Period' ) )
+namespace OpeningHours\Entity;
+
+if ( class_exists( 'OpeningHours\Entity\Period' ) )
   return;
 
-class OP_Period {
+class Period {
 
   /**
    *  Config
@@ -21,7 +23,7 @@ class OP_Period {
    *
    *  @access     public
    *  @param      array     $config
-   *  @return     OP_Period
+   *  @return     Period
    */
   public function __construct ( array $config ) {
 
@@ -35,7 +37,7 @@ class OP_Period {
    *  Set Up
    *
    *  @access     public
-   *  @return     OP_Period
+   *  @return     Period
    */
   public function setUp () {
 
@@ -58,7 +60,7 @@ class OP_Period {
    *
    *  @access     public
    *  @param      array   $config
-   *  @return     OP_Period
+   *  @return     Period
    */
   public function setConfig ( array $config ) {
     $this->config = $config;

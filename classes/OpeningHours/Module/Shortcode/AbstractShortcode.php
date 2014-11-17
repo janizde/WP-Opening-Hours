@@ -1,12 +1,18 @@
 <?php
 /**
- *  Opening Hours: Shortcodes: AsbtractShortcode
+ *  Opening Hours: Module: Shortcode: AbstractShortcode
  */
 
-if ( class_exists( 'OP_AbstractShortCode' ) )
+namespace OpeningHours\Module\Shortcode;
+
+use OpeningHours\Module\AbstractModule;
+
+use InvalidArgumentException;
+
+if ( class_exists( 'OpeningHours\Module\Shortcode\AbstractShortcode' ) )
   return;
 
-abstract class OP_AbstractShortcode extends OP_AbstractModule {
+abstract class AbstractShortcode extends AbstractModule {
 
   /**
    *  Shortcode Tag

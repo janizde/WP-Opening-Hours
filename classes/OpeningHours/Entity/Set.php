@@ -3,10 +3,16 @@
  *  Opening Hours: Entity: Set
  */
 
-if ( class_exists( 'OP_Set' ) )
+namespace OpeningHours\Entity;
+
+use OpeningHours\Misc\ArrayObject;
+
+use WP_Post;
+
+if ( class_exists( 'OpeningHours\Entity\Set' ) )
   return;
 
-class OP_Set {
+class Set {
 
   /**
    *  Config
@@ -20,7 +26,7 @@ class OP_Set {
    *  Periods
    *
    *  @access     protected
-   *  @type       OP_ArrayObject
+   *  @type       ArrayObject
    */
   protected $periods;
 
@@ -68,11 +74,11 @@ class OP_Set {
    *
    *  @access     public
    *  @param      array     $config
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function __construct ( array $config ) {
 
-    $this->setPeriods( new OP_ArrayObject );
+    $this->setPeriods( new ArrayObject );
 
     if ( $config !== null and count( $config ) ) :
       $this->setConfig( $config );
@@ -87,7 +93,7 @@ class OP_Set {
    *  Set Up
    *
    *  @access     public
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function setUp () {
 
@@ -97,8 +103,8 @@ class OP_Set {
       return $this;
 
     foreach ( $config['periods'] as $periodConfig ) :
-      if ( OP_Period::isValidConfig( $periodConfig ) )
-        $this->getPeriods()->addElement( new OP_Period( $periodConfig ) );
+      if ( Period::isValidConfig( $periodConfig ) )
+        $this->getPeriods()->addElement( new Period( $periodConfig ) );
     endforeach;
 
     return $this;
@@ -120,7 +126,7 @@ class OP_Set {
    *
    *  @access     protected
    *  @param      array       $config
-   *  @return     OP_Set
+   *  @return     Set
    */
   protected function setConfig ( array $config ) {
     $this->config = $config;
@@ -131,7 +137,7 @@ class OP_Set {
    *  Getter: Periods
    *
    *  @access     public
-   *  @return     array
+   *  @return     ArrayObject
    */
   public function getPeriods () {
     return $this->periods;
@@ -142,7 +148,7 @@ class OP_Set {
    *
    *  @access     public
    *  @param      array     $periods
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function setPeriods ( array $periods ) {
     $this->getPeriods()->exchangeArray( $periods );
@@ -164,7 +170,7 @@ class OP_Set {
    *
    *  @access     public
    *  @param      int     $id
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function setId ( $id ) {
     $this->id = $id;
@@ -186,7 +192,7 @@ class OP_Set {
    *
    *  @access     public
    *  @param      WP_Post|int   $post
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function setPost ( $post ) {
 
@@ -220,7 +226,7 @@ class OP_Set {
    *
    *  @access     public
    *  @param      int       $parentId
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function setParentId ( $parentId ) {
     $this->parentId = $parentId;
@@ -244,7 +250,7 @@ class OP_Set {
    *
    *  @access     public
    *  @param      WP_Post|int   $parentPost
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function setParentPost ( $parentPost ) {
 
@@ -278,7 +284,7 @@ class OP_Set {
    *
    *  @access     public
    *  @param      bool    $hasParent
-   *  @return     OP_Set
+   *  @return     Set
    */
   public function setHasParent ( $hasParent ) {
     $this->hasParent = $hasParent;

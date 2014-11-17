@@ -3,17 +3,21 @@
  *  Opening Hours: Misc: Collection
  */
 
-if ( class_exists( 'OP_ArrayObject' ) )
+namespace OpeningHours\Misc;
+
+use ArrayObject as PHPArrayObject;
+
+if ( class_exists( 'OpeningHours\Misc\ArrayObject' ) )
   return;
 
-class OP_ArrayObject extends ArrayObject {
+class ArrayObject extends PHPArrayObject {
 
   /**
    *  Add Element
    *
    *  @access     public
    *  @param      mixed     $element
-   *  @return     OP_ArrayObject
+   *  @return     ArrayObject
    */
   public function addElement ( $element ) {
     $this->append( $element );
@@ -24,7 +28,7 @@ class OP_ArrayObject extends ArrayObject {
    *
    *  @access     public
    *  @param      mixed     $element
-   *  @return     OP_ArrayObject
+   *  @return     ArrayObject
    */
   public function removeElement ( $element ) {
     foreach ( $this as $id => $walkerElement ) :
@@ -39,7 +43,7 @@ class OP_ArrayObject extends ArrayObject {
    *
    *  @access     public
    *  @param      string|int  $id
-   *  @return     OP_ArrayObject
+   *  @return     ArrayObject
    */
   public function removeElementById ( $id ) {
     if ( $this->offsetExists( $id ) )
@@ -54,7 +58,7 @@ class OP_ArrayObject extends ArrayObject {
    *  @access     public
    *  @param      mixed     $oldElement
    *  @param      mixed     $newElement
-   *  @return     OP_ArrayObject
+   *  @return     ArrayObject
    */
   public function exchangeElement ( $oldElement, $newElement ) {
     foreach ( $this as $id => $walkerElement ) :

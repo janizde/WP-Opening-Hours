@@ -70,24 +70,24 @@ function op_plugin_path () {
 if ( op_requirements_met() ) {
 
 	$classes 	= array(
-		'misc/OP_ArrayObject',
-		'entities/OP_Set',
-		'entities/OP_Period',
-		'modules/OP_AbstractModule',
-		'modules/OP_I18n',
-		'modules/OP_CPT_Set',
-		'shortcodes/OP_AbstractShortcode',
+		'Misc/ArrayObject',
+		'Entity/Set',
+		'Entity/Period',
+		'Module/AbstractModule',
+		'Module/I18n',
+		'Module/CustomPostType/Set',
+		'Module/Shortcode/AbstractShortcode',
 		'OpeningHours'
 	);
 
 	foreach ( $classes as $class )
-		require_once( __DIR__ . '/classes/' . $class . '.php' );
+		require_once( __DIR__ . '/classes/OpeningHours/' . $class . '.php' );
 
 	require_once( __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php' );
 	require_once( __DIR__ . '/includes/wp-detail-fields/detail-fields.php' );
 
-	if ( class_exists( 'OpeningHours' ) ) {
-		$GLOBALS['op'] = OpeningHours::getInstance();
+	if ( class_exists( 'OpeningHours\OpeningHours' ) ) {
+		$GLOBALS['op'] = OpeningHours\OpeningHours::getInstance();
 		register_activation_hook(   __FILE__, array( $GLOBALS['op'], 'activate' ) );
 		register_deactivation_hook( __FILE__, array( $GLOBALS['op'], 'deactivate' ) );
 	}

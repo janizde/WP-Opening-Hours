@@ -3,10 +3,16 @@
  *  Opening Hours: Module: CPT: Set
  */
 
-if ( class_exists( 'OP_CPT_Set' ) )
+namespace OpeningHours\Module\CustomPostType;
+
+use OpeningHours\Module\AbstractModule;
+
+use WP_Post;
+
+if ( class_exists( 'OpeningHours\Module\CustomPostType\Set' ) )
   return;
 
-class OP_CPT_Set extends OP_AbstractModule {
+class Set extends AbstractModule {
 
   /**
    *  Constants

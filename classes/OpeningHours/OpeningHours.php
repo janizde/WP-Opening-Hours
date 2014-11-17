@@ -3,15 +3,15 @@
  *	Opening Hours
  */
 
+namespace OpeningHours;
+
+use OpeningHours\Module\AbstractModule;
+use OpeningHours\Module as Module;
+
 if ( class_exists( 'OpeningHours' ) )
 	return;
 
-/**
- * Main / front controller class
- *
- * WordPress_Plugin_Skeleton is an object-oriented/MVC base for building WordPress plugins
- */
-class OpeningHours extends OP_AbstractModule {
+class OpeningHours extends AbstractModule {
 
 	/**
 	 *	Modules
@@ -37,8 +37,8 @@ class OpeningHours extends OP_AbstractModule {
 		$this->registerHookCallbacks();
 
 		$this->modules = array(
-			'OP_I18n'			=> OP_I18n::getInstance(),
-			'OP_CPT_Set'	=> OP_CPT_Set::getInstance()
+			'I18n'								=> Module\I18n::getInstance(),
+			'CustomPostType\Set'	=> Module\CustomPostType\Set::getInstance()
 		);
 	}
 

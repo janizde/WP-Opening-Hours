@@ -3,10 +3,12 @@
  *	Opening Hours: Module: Asbtract Module
  */
 
-if ( class_exists( 'OP_AbstractModule' ) )
+namespace OpeningHours\Module;
+
+if ( class_exists( 'OpeningHours\Module\AbstractModule' ) )
 	return;
 
-abstract class OP_AbstractModule {
+abstract class AbstractModule {
 
 	/**
 	 *	Constants
