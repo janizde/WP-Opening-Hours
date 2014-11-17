@@ -6,6 +6,7 @@
 namespace OpeningHours\Entity;
 
 use OpeningHours\Misc\ArrayObject;
+use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
 use WP_Post;
 
@@ -73,17 +74,25 @@ class Set {
    *  Constructor
    *
    *  @access     public
-   *  @param      array     $config
+   *  @param      WP_Post|int     $config
    *  @return     Set
    */
-  public function __construct ( array $config ) {
+  public function __construct ( $post ) {
 
     $this->setPeriods( new ArrayObject );
 
-    if ( $config !== null and count( $config ) ) :
-      $this->setConfig( $config );
-      $this->setUp();
-    endif;
+    if ( !is_int( $post ) and !$post instanceof WP_Post )
+      throw new InvalidArgumentException( sprintf( 'Argument one for __construct has to be of type WP_Post or int. %s given', gettype( $post ) ) );
+
+    if ( is_int( $post ) )
+      $post = get_post( $post );
+
+    $this->setId( $post->ID );
+    $this->setPost( $post );
+    $this->setParentId( $post->ID );
+    $this->setParentPost( $post );
+
+    $this->setUp();
 
     return $this;
 
@@ -93,21 +102,18 @@ class Set {
    *  Set Up
    *
    *  @access     public
-   *  @return     Set
    */
   public function setUp () {
 
-    $config   = $this->getConfig();
+    // Check for applyable child posts
+    $childPosts   = get_posts( array(
+      'post_type'   => SetCpt::CPT_SLUG,
+      'post_parent' => $this->getId()
+    ) );
 
-    if ( !isset( $config['periods'] ) or !count( $config['periods'] ) )
-      return $this;
-
-    foreach ( $config['periods'] as $periodConfig ) :
-      if ( Period::isValidConfig( $periodConfig ) )
-        $this->getPeriods()->addElement( new Period( $periodConfig ) );
-    endforeach;
-
-    return $this;
+    // Skip if Set has no child posts
+    if ( !count( $childPosts ) )
+      return;
 
   }
 

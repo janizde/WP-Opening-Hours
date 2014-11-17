@@ -21,6 +21,7 @@ class Set extends AbstractModule {
   const   META_BOX_ID       = 'op-set-periods';
   const   META_BOX_CONTEXT  = 'advanced';
   const   META_BOX_PRIORITY = 'high';
+  const   PERIODS_META_KEY  = '_op-set-periods';
   const   TEMPLATE_META_BOX = 'op-set-meta-box.php';
 
   const   NONCE_NAME        = 'op-update-set-nonce';
@@ -45,9 +46,10 @@ class Set extends AbstractModule {
    */
   public static function registerHookCallbacks () {
 
-    add_action( 'init',             array( __CLASS__, 'registerPostType' ) );
-    add_action( 'admin_menu',       array( __CLASS__, 'cleanUpMenu' ) );
-    add_action( 'add_meta_boxes',   array( __CLASS__, 'registerMetaBox' ) );
+    add_action( 'init',               array( __CLASS__, 'registerPostType' ) );
+    add_action( 'admin_menu',         array( __CLASS__, 'cleanUpMenu' ) );
+    add_action( 'add_meta_boxes',     array( __CLASS__, 'registerMetaBox' ) );
+    add_action( 'add_detail_fields',  array( __CLASS__, 'registerDetailFields' ) );
 
   }
 
@@ -114,6 +116,61 @@ class Set extends AbstractModule {
       );
 
       echo self::renderTemplate( self::TEMPLATE_META_BOX, $variables );
+
+  }
+
+  /**
+   *  Register Detail Fields
+   *
+   *  @access       public
+   *  @static
+   *  @wp_action    add_detail_fields
+   */
+  public static function registerDetailFields () {
+
+    /** Field: Description */
+    register_detail_field( self::CPT_SLUG, array(
+      'type'    => 'textarea',
+      'slug'    => 'description',
+      'caption' => __( 'Description', self::TEXTDOMAIN )
+    ) );
+
+    /** Field: Ignore Date Range */
+    register_detail_field( self::CPT_SLUG, array(
+      'type'    => 'checkbox',
+      'slug'    => 'ignore-date-range',
+      'caption' => __( 'Date Range', self::TEXTDOMAIN ),
+      'options' => array(
+        'ignore'    => __( 'Ignore Date Range', self::TEXTDOMAIN )
+      )
+    ) );
+
+    /** Field: Date Start */
+    register_detail_field( self::CPT_SLUG, array(
+      'type'    => 'date',
+      'slug'    => 'date-start',
+      'caption' => __( 'Date Start', self::TEXTDOMAIN ),
+    ) );
+
+    /** Field: Date End */
+    register_detail_field( self::CPT_SLUG, array(
+      'type'    => 'date',
+      'slug'    => 'date-end',
+      'caption' => __( 'Date End', self::TEXTDOMAIN )
+    ) );
+
+    /** Field: Week Scheme */
+    register_detail_field( self::CPT_SLUG, array(
+      'type'        => 'radio',
+      'slug'        => 'week-scheme',
+      'caption'     => __( 'Week Scheme', self::TEXTDOMAIN ),
+      'default-val' => 'all',
+      'options'     => array(
+        'all'         => __( 'Every week', self::TEXTDOMAIN ),
+        'even'        => __( 'Even weeks only', self::TEXTDOMAIN ),
+        'odd'         => __( 'Odd weeks only', self::TEXTDOMAIN )
+      )
+    ) );
 
   }
 

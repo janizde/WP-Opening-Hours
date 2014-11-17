@@ -5,6 +5,10 @@
 
 namespace OpeningHours\Module;
 
+use OpeningHours\Misc\ArrayObject;
+use OpeningHours\Entity\Set as SetEntity;
+use OpeningHours\Module\CustomPostType\Set as SetCpt;
+
 if ( class_exists( 'OpeningHours\Module\OpeningHours' ) )
   return;
 
@@ -14,9 +18,9 @@ class OpeningHours extends AbstractModule {
    *  Sets
    *
    *  @access     protected
-   *  @type       array
+   *  @type       ArrayObject
    */
-  protected $sets   = array();
+  protected $sets;
 
   /**
    *  Current Set Id
@@ -33,6 +37,8 @@ class OpeningHours extends AbstractModule {
    */
   public function __construct () {
 
+    $this->setSets( new ArrayCollection );
+
     $this->registerHookCallbacks();
 
   }
@@ -44,8 +50,40 @@ class OpeningHours extends AbstractModule {
    */
   public function registerHookCallbacks () {
 
+    add_filter( 'detail_fields_metabox_context',    array( __CLASS__, 'modifyDetailFieldContext' ) );
 
+  }
 
+  /**
+   *  Set Up
+   *
+   *  @access     public
+   *  @wp_action  init
+   */
+  public function setUp () {
+
+    // Get all parent op-set posts
+    $posts  = get_posts( array(
+      'post_type'     => SetCpt::CPT_SLUG,
+      'post_parent'   => 0
+    ) );
+
+    foreach ( $posts as $post ) :
+      $this->getSets()->addElement( new SetEntity( $post ) );
+    endforeach;
+
+  }
+
+  /**
+   *  Modify Detail Field Context
+   *  Forces Detail Fields Meta Box to show up in sidebar
+   *
+   *  @access     public
+   *  @static
+   *  @return     string
+   */
+  public static function modifyDetailFieldContext () {
+    return 'side';
   }
 
   /**
@@ -63,9 +101,9 @@ class OpeningHours extends AbstractModule {
    *
    *  @access     protected
    *  @param      array     $sets
-   *  @return     OP_OpeningHours
+   *  @return     ArrayObject
    */
-  public function setSets ( array $sets ) {
+  public function setSets ( ArrayObject $sets ) {
     $this->sets   = $sets;
     return $this
   }
