@@ -157,7 +157,7 @@ class OP_CPT_Set extends OP_AbstractModule {
       'query_var'          => true,
       'capability_type'    => 'page',
       'has_archive'        => true,
-      'hierarchical'       => false,
+      'hierarchical'       => true,
       'menu_position'      => 400,
       'menu_icon'          => 'dashicons-clock',
       'supports'           => array( 'title', 'custom-fields' )

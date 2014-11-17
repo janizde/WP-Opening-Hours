@@ -30,6 +30,7 @@ class OP_ArrayObject extends ArrayObject {
     foreach ( $this as $id => $walkerElement ) :
       if ( $element === $walkerElement ) :
         $this->offsetUnset( $id );
+      endif;
     endforeach;
   }
 
@@ -45,6 +46,23 @@ class OP_ArrayObject extends ArrayObject {
       $this->offsetUnset( $id );
 
     return $this;
+  }
+
+  /**
+   *  Exchange Element
+   *
+   *  @access     public
+   *  @param      mixed     $oldElement
+   *  @param      mixed     $newElement
+   *  @return     OP_ArrayObject
+   */
+  public function exchangeElement ( $oldElement, $newElement ) {
+    foreach ( $this as $id => $walkerElement ) :
+      if ( $walkerElement === $oldElement ) :
+        $this->offsetUnset( $id );
+        $this->offsetSet( $id, $newElement );
+      endif;
+    endforeach;
   }
 
 }

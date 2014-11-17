@@ -41,8 +41,6 @@ class OP_Period {
 
     $config   = $this->getConfig();
 
-    
-
   }
 
   /**
@@ -51,7 +49,7 @@ class OP_Period {
    *  @access     public
    *  @return     array
    */
-  public function getConfig () {
+  public function getConfig () {
     return $this->config;
   }
 

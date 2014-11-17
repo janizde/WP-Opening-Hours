@@ -71,6 +71,8 @@ if ( op_requirements_met() ) {
 
 	$classes 	= array(
 		'misc/OP_ArrayObject',
+		'entities/OP_Set',
+		'entities/OP_Period',
 		'modules/OP_AbstractModule',
 		'modules/OP_I18n',
 		'modules/OP_CPT_Set',
