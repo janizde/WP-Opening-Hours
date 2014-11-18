@@ -105,7 +105,7 @@ class Set {
    */
   public function setUp () {
 
-    // Check for applyable child posts
+    // Check for appliable child posts
     $childPosts   = get_posts( array(
       'post_type'   => SetCpt::CPT_SLUG,
       'post_parent' => $this->getId()
@@ -114,6 +114,17 @@ class Set {
     // Skip if Set has no child posts
     if ( !count( $childPosts ) )
       return;
+
+    // Determine child Post
+
+    $post_meta = get_pot_meta( SetCpt::PERIODS_META_KEY, $this->getId() );
+
+    if ( self::isValidConfig( $post_meta ) )
+      $this->setConfig( $post_meta );
+
+    foreach ( $this->getConfig() as $periodConfig ) :
+      $this->getPeriods()->addElement( new Period( $periodConfig ) );
+    endforeach;
 
   }
 
