@@ -5,9 +5,6 @@
 
 namespace OpeningHours\Module;
 
-if ( class_exists( 'OpeningHours\Module\I18n' ) )
-  return;
-
 class I18n extends AbstractModule {
 
   /**

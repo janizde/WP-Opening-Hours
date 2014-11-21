@@ -10,9 +10,6 @@ use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
 use WP_Post;
 
-if ( class_exists( 'OpeningHours\Entity\Set' ) )
-  return;
-
 class Set {
 
   /**

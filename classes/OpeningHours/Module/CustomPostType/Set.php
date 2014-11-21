@@ -9,9 +9,6 @@ use OpeningHours\Module\AbstractModule;
 
 use WP_Post;
 
-if ( class_exists( 'OpeningHours\Module\CustomPostType\Set' ) )
-  return;
-
 class Set extends AbstractModule {
 
   /**

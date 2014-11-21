@@ -9,9 +9,6 @@ use OpeningHours\Misc\ArrayObject;
 use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
-if ( class_exists( 'OpeningHours\Module\OpeningHours' ) )
-  return;
-
 class OpeningHours extends AbstractModule {
 
   /**

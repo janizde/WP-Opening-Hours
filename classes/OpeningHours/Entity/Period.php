@@ -10,9 +10,6 @@ use OpeningHours\Module\I18n;
 use DateTime;
 use DateInterval;
 
-if ( class_exists( 'OpeningHours\Entity\Period' ) )
-  return;
-
 class Period {
 
   /**

@@ -5,9 +5,6 @@
 
 namespace OpeningHours\Module;
 
-if ( class_exists( 'OpeningHours\Module\AbstractModule' ) )
-	return;
-
 abstract class AbstractModule {
 
 	/**

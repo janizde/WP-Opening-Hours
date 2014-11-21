@@ -9,9 +9,6 @@ use OpeningHours\Module\AbstractModule;
 
 use InvalidArgumentException;
 
-if ( class_exists( 'OpeningHours\Module\Shortcode\AbstractShortcode' ) )
-  return;
-
 abstract class AbstractShortcode extends AbstractModule {
 
   /**

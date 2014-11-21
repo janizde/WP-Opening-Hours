@@ -7,9 +7,6 @@ namespace OpeningHours\Misc;
 
 use ArrayObject as PHPArrayObject;
 
-if ( class_exists( 'OpeningHours\Misc\ArrayObject' ) )
-  return;
-
 class ArrayObject extends PHPArrayObject {
 
   /**

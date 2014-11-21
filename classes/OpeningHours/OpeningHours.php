@@ -8,9 +8,6 @@ namespace OpeningHours;
 use OpeningHours\Module\AbstractModule;
 use OpeningHours\Module as Module;
 
-if ( class_exists( 'OpeningHours' ) )
-	return;
-
 class OpeningHours extends AbstractModule {
 
 	/**
