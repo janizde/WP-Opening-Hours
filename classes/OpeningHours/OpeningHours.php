@@ -35,6 +35,7 @@ class OpeningHours extends AbstractModule {
 
 		$this->modules = array(
 			'I18n'								=> Module\I18n::getInstance(),
+			'Ajax'								=> Module\Ajax::getInstance(),
 			'CustomPostType\Set'	=> Module\CustomPostType\Set::getInstance()
 		);
 	}
