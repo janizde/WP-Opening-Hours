@@ -150,7 +150,7 @@ class Period {
    *  @access     public
    *  @return     int
    */
-  public function getWeekday () {
+  public function getWeekday () {
     return $this->weekday;
   }
 

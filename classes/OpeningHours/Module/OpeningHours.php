@@ -105,7 +105,7 @@ class OpeningHours extends AbstractModule {
    */
   public function setSets ( ArrayObject $sets ) {
     $this->sets   = $sets;
-    return $this
+    return $this;
   }
 
   /**
