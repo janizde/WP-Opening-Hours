@@ -47,7 +47,8 @@ class Ajax extends AbstractModule {
    */
   public static function registerActions () {
 
-    self::registerAjaxAction( 'op_render_periods_day', 'renderPeriodsDay' );
+    self::registerAjaxAction( 'op_render_periods_day',    'renderPeriodsDay'    );
+    self::registerAjayAction( 'op_render_single_period',  'renderSinglePeriod'  );
 
   }
 
@@ -79,7 +80,8 @@ class Ajax extends AbstractModule {
       'ajax/op-set-periods-day.php',
       array(
         'day'   => $day,
-        'set'   => $set
+        'set'   => $set,
+        'empty' => $empty
       ),
       'always'
     );
@@ -100,13 +102,16 @@ class Ajax extends AbstractModule {
     $timeStart  = $_POST[ 'timeStart' ];
     $timeEnd    = $_POST[ 'timeEnd' ];
 
+    $empty      = ( empty( $timeStart ) or empty( $timeEnd ) or !is_int( $weekday ) );
+
     echo self::renderTemplate(
       'ajax/op-set-period.php',
       array(
         'config'    => array(
           'timeStart' => $timeStart,
           'timeEnd'   => $timeEnd,
-          'weekday'   => $weekday
+          'weekday'   => $weekday,
+          'empty'     => $empty
         )
       ),
       'always'
