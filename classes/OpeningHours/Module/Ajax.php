@@ -28,17 +28,17 @@ class Ajax extends AbstractModule {
    */
   public function __construct() {
 
-    self::registerHookCallbacks();
+    self::registerActions();
 
   }
 
   /**
-   *  Register Hook Callbacks
+   *  Register Actions
    *
    *  @access     public
    *  @static
    */
-  public static function registerHookCallbacks () {
+  public static function registerActions () {
 
 
 
@@ -81,7 +81,7 @@ class Ajax extends AbstractModule {
    *  @param      callable  $callback
    *  @return     Ajax
    */
-  protected static addAction ( $hook, $callback ) {
+  protected static function addAction ( $hook, $callback ) {
     self::$actions[ $hook ] = $callback;
   }
 
