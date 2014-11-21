@@ -13,8 +13,8 @@ class I18n extends AbstractModule {
   const   LANGUAGE_PATH         = '/language/';
   const   STD_TIME_FORMAT       = 'H:i';
   const   STD_DATE_FORMAT       = 'Y-m-d';
-  const   STD_TIME_FORMAT_REGEX = '';
-  const   STD_DATE_FORMAT_REGEX = '';
+  const   STD_TIME_FORMAT_REGEX = '([0-9]{1,2}:[0-9]{2})';
+  const   STD_DATE_FORMAT_REGEX = '([0-9]{4}(-[0-9]{2}){2})';
 
   /**
    *  Date Format
