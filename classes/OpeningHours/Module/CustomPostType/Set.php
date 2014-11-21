@@ -131,7 +131,7 @@ class Set extends AbstractModule {
       'slug'    => 'description',
       'caption' => __( 'Description', self::TEXTDOMAIN )
     ) );
-
+    
     /** Field: Ignore Date Range */
     register_detail_field( self::CPT_SLUG, array(
       'type'    => 'checkbox',
@@ -146,7 +146,7 @@ class Set extends AbstractModule {
     register_detail_field( self::CPT_SLUG, array(
       'type'    => 'date',
       'slug'    => 'date-start',
-      'caption' => __( 'Date Start', self::TEXTDOMAIN ),
+      'caption' => __( 'Date Start', self::TEXTDOMAIN )
     ) );
 
     /** Field: Date End */
@@ -220,7 +220,7 @@ class Set extends AbstractModule {
       'hierarchical'       => true,
       'menu_position'      => 400,
       'menu_icon'          => 'dashicons-clock',
-      'supports'           => array( 'title', 'custom-fields' )
+      'supports'           => array( 'title', 'custom-fields', 'page-attributes' )
     );
 
   }

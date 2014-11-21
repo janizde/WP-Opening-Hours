@@ -135,8 +135,7 @@ class OpeningHours extends AbstractModule {
    *  @return     OpeningHours\Entity\Set
    */
   public function getSet ( $setId ) {
-    if ( array_key_exists( $setId, $this->getSets() ) )
-      return $this->sets[ $setId ];
+    return $this->getSets()->offsetGet( $setId );
   }
 
   /**
@@ -146,8 +145,8 @@ class OpeningHours extends AbstractModule {
    *  @return     OpeningHours\Entity\Set
    */
   public function getCurrentSet () {
-    if ( !is_int( $this->getCurrentSetId() ) )
-      return $this->getSet( $this->getCurrentSetId() );
+    if ( is_int( $this->getCurrentSetId() ) )
+      return $this->getSets()->offsetGet( $this->getCurrentSedId() );
   }
 
 }
