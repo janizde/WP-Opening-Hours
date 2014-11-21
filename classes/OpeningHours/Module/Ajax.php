@@ -48,7 +48,7 @@ class Ajax extends AbstractModule {
   public static function registerActions () {
 
     self::registerAjaxAction( 'op_render_periods_day',    'renderPeriodsDay'    );
-    self::registerAjayAction( 'op_render_single_period',  'renderSinglePeriod'  );
+    self::registerAjaxAction( 'op_render_single_period',  'renderSinglePeriod'  );
 
   }
 
