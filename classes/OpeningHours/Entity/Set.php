@@ -129,6 +129,24 @@ class Set {
   }
 
   /**
+   *  Is Valid Config
+   *  Validates configuration array
+   *
+   *  @access     public
+   *  @static
+   *  @param      array     $configuration
+   *  @return     bool
+   */
+  public static function isValidConfig ( $config ) {
+
+    if ( !is_array( $config ) )
+      return false;
+
+    return true;
+
+  }
+
+  /**
    *  Getter: Config
    *
    *  @access     public

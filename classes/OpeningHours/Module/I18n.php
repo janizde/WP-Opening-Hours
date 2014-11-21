@@ -13,7 +13,11 @@ class I18n extends AbstractModule {
   /**
    *  Constants
    */
-  const   LANGUAGE_PATH  = '/language/';
+  const   LANGUAGE_PATH         = '/language/';
+  const   STD_TIME_FORMAT       = 'H:i';
+  const   STD_DATE_FORMAT       = 'Y-m-d';
+  const   STD_TIME_FORMAT_REGEX = '';
+  const   STD_DATE_FORMAT_REGEX = '';
 
   /**
    *  Date Format
