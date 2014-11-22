@@ -114,7 +114,7 @@ class Set {
 
     // Determine child Post
 
-    $post_meta = get_pot_meta( SetCpt::PERIODS_META_KEY, $this->getId() );
+    $post_meta = get_post_meta( SetCpt::PERIODS_META_KEY, $this->getId() );
 
     if ( self::isValidConfig( $post_meta ) )
       $this->setConfig( $post_meta );
@@ -176,14 +176,40 @@ class Set {
   }
 
   /**
+   *  Getter: Periods By Day
+   *
+   *  @access     public
+   *  @param      array|int   $day
+   *  @return     array
+   */
+  public function getPeriodsByDay ( $days ) {
+
+    if ( !is_array( $days ) and !is_numeric( $days ) )
+      throw new InvalidArgumentException( sprintf( 'Argument 1 of getPeriodsByDay must be integer or array. %s given.', gettype( $days ) ) );
+
+    if ( !is_array( $days ) )
+      $days  = array( $day );
+
+    $periods  = array();
+
+    foreach ( $this->getPeriods() as $period ) :
+      if ( in_array( $period->getWeekday(), $days ) )
+        $periods[]  = $period;
+    endforeach;
+
+    return $periods;
+
+  }
+
+  /**
    *  Setter: Periods
    *
    *  @access     public
-   *  @param      array     $periods
+   *  @param      ArrayObject $periods
    *  @return     Set
    */
-  public function setPeriods ( array $periods ) {
-    $this->getPeriods()->exchangeArray( $periods );
+  public function setPeriods ( ArrayObject $periods ) {
+    $this->periods = $periods;
     return $this;
   }
 

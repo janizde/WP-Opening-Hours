@@ -15,17 +15,19 @@ class OpeningHours extends AbstractModule {
    *  Sets
    *
    *  @access     protected
+   *  @static
    *  @type       ArrayObject
    */
-  protected $sets;
+  protected static $sets;
 
   /**
    *  Current Set Id
    *
    *  @access     protected
+   *  @static
    *  @type       int
    */
-  protected $currentSetId;
+  protected static $currentSetId;
 
   /**
    *  Constructor
@@ -34,9 +36,9 @@ class OpeningHours extends AbstractModule {
    */
   public function __construct () {
 
-    $this->setSets( new ArrayCollection );
+    self::setSets( new ArrayObject );
 
-    $this->registerHookCallbacks();
+    self::registerHookCallbacks();
 
   }
 
@@ -44,29 +46,32 @@ class OpeningHours extends AbstractModule {
    *  Register Hook Callbacks
    *
    *  @access     public
+   *  @static
    */
-  public function registerHookCallbacks () {
+  public static function registerHookCallbacks () {
 
     add_filter( 'detail_fields_metabox_context',    array( __CLASS__, 'modifyDetailFieldContext' ) );
+
+    add_action( 'init',       array( __CLASS__, 'init' ) );
 
   }
 
   /**
-   *  Set Up
+   *  Initializer
    *
    *  @access     public
+   *  @static
    *  @wp_action  init
    */
-  public function setUp () {
+  public static function init () {
 
     // Get all parent op-set posts
     $posts  = get_posts( array(
-      'post_type'     => SetCpt::CPT_SLUG,
-      'post_parent'   => 0
+      'post_type'     => SetCpt::CPT_SLUG
     ) );
 
     foreach ( $posts as $post ) :
-      $this->getSets()->addElement( new SetEntity( $post ) );
+      self::getSets()->offsetSet( $post->ID, new SetEntity( $post ) );
     endforeach;
 
   }
@@ -87,66 +92,68 @@ class OpeningHours extends AbstractModule {
    *  Getter: Sets
    *
    *  @access     public
-   *  @return     array
+   *  @static
+   *  @return     ArrayObject
    */
-  public function getSets () {
-    return $this->sets;
+  public static function getSets () {
+    return self::$sets;
   }
 
   /**
    *  Setter: Sets
    *
    *  @access     protected
+   *  @static
    *  @param      array     $sets
-   *  @return     ArrayObject
    */
-  public function setSets ( ArrayObject $sets ) {
-    $this->sets   = $sets;
-    return $this;
+  public static function setSets ( ArrayObject $sets ) {
+    self::$sets   = $sets;
   }
 
   /**
    *  Getter: Current Set Id
    *
    *  @access     public
+   *  @static
    *  @return     int
    */
-  public function getCurrentSetId () {
-    return $this->currentSetId;
+  public static function getCurrentSetId () {
+    return self::$currentSetId;
   }
 
   /**
    *  Setter: Current Set Id
    *
    *  @access     public
+   *  @static
    *  @param      int     $currentSetId
-   *  @return     OpeningHours
    */
-  public function setCurrentSetId ( $currentSetId ) {
-    $this->currentSetId = $currentSetId;
-    return $this;
+  public static function setCurrentSetId ( $currentSetId ) {
+    self::$currentSetId = (int) $currentSetId;
   }
 
   /**
    *  Getter: Set
    *
    *  @access     public
+   *  @static
    *  @param      int     $setId
    *  @return     OpeningHours\Entity\Set
    */
-  public function getSet ( $setId ) {
-    return $this->getSets()->offsetGet( $setId );
+  public static function getSet ( $setId ) {
+    return self::getSets()->offsetGet( $setId );
   }
 
   /**
    *  Getter: Current Set
    *
    *  @access     public
+   *  @static
    *  @return     OpeningHours\Entity\Set
    */
-  public function getCurrentSet () {
-    if ( is_int( $this->getCurrentSetId() ) )
-      return $this->getSets()->offsetGet( $this->getCurrentSedId() );
+  public static function getCurrentSet () {
+    $setId  = self::getCurrentSetId();
+    return  self::getSet( $setId );
   }
 
 }

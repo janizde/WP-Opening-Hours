@@ -3,11 +3,16 @@
  *	Opening Hours: Template: Part: Metabox OP Set
  */
 
-return;
+
+
+use OpeningHours\Module\I18n;
+use OpeningHours\Module\OpeningHours;
+
 global $post;
 
-$weekdays		= OP_I18n::getWeekdays();
+OpeningHours::setCurrentSetId( $post->ID );
 
+return;
 ?>
 
 <div class="opening-hours">
@@ -19,11 +24,11 @@ $weekdays		= OP_I18n::getWeekdays();
       </th>
 
       <th>
-        <?php _e('Start Time', OP_I18n::TEXTDOMAIN); ?>
+        <?php _e( 'Start Time', I18n::TEXTDOMAIN ); ?>
       </th>
 
       <th>
-        <?php _e('End Time', OP_I18n::TEXTDOMAIN); ?>
+        <?php _e( 'End Time', I18n::TEXTDOMAIN ); ?>
       </th>
 
       <th>
@@ -32,14 +37,14 @@ $weekdays		= OP_I18n::getWeekdays();
     </thead>
 
     <tbody>
-      <?php foreach ( $weekdays as $key => $name ) : ?>
+      <?php foreach ( I18n::getWeekdaysNumeric() as $id => $name ) : ?>
       <tr class="periods-day">
         <td class="col-name" valign="top">
           <?php echo $name; ?>
         </td>
 
         <td class="col-times" colspan="2" valign="top">
-          <div class="period-container" data-day="<?php echo $key; ?>">
+          <div class="period-container" data-day="<?php echo $id; ?>">
 
             <table class="period-table">
               <tbody>

@@ -6,6 +6,7 @@
 namespace OpeningHours\Module\CustomPostType;
 
 use OpeningHours\Module\AbstractModule;
+use OpeningHours\Module\OpeningHours;
 
 use WP_Post;
 
@@ -112,7 +113,9 @@ class Set extends AbstractModule {
         'post'    => $post
       );
 
-      echo self::renderTemplate( self::TEMPLATE_META_BOX, $variables );
+      OpeningHours::setCurrentSetId( $post->ID );
+
+      echo self::renderTemplate( self::TEMPLATE_META_BOX, $variables, 'once' );
 
   }
 
@@ -131,7 +134,7 @@ class Set extends AbstractModule {
       'slug'    => 'description',
       'caption' => __( 'Description', self::TEXTDOMAIN )
     ) );
-    
+
     /** Field: Ignore Date Range */
     register_detail_field( self::CPT_SLUG, array(
       'type'    => 'checkbox',

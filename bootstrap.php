@@ -74,6 +74,7 @@ if ( op_requirements_met() ) {
 		'Entity/Set',
 		'Entity/Period',
 		'Module/AbstractModule',
+		'Module/OpeningHours',
 		'Module/I18n',
 		'Module/Ajax',
 		'Module/CustomPostType/Set',

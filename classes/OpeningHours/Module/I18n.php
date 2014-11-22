@@ -136,5 +136,16 @@ class I18n extends AbstractModule {
       'sunday'      => __( 'Sunday', self::TEXTDOMAIN )
     );
   }
+
+  /**
+   *  Get Weekdays Numeric
+   *
+   *  @access       public
+   *  @static
+   *  @return       array
+   */
+  public static function getWeekdaysNumeric () {
+    return array_values( self::getWeekdays() );  
+  }
 }
 ?>
