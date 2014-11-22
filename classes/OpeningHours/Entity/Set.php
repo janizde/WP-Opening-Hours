@@ -10,6 +10,7 @@ use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
 use WP_Post;
+use DateTime;
 
 class Set {
 
@@ -158,6 +159,8 @@ class Set {
       if ( !count( $this->getPeriodsByDay( $id ) ) )
         $this->getPeriods()->addElement( new Period( array(
           'weekday'   => $id,
+          'timeStart' => new DateTime( '00:00' ),
+          'timeEnd'   => new DateTime( '00:00' ),
           'dummy'     => true
         ) ) );
 

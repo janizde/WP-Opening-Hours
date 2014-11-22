@@ -1,5 +1,3 @@
-<?php print_r( $period ); ?>
-
 <tr class="period">
 
   <td class="col-time-start">
@@ -7,7 +5,7 @@
     name="opening-hours[<?php echo $period->getWeekday(); ?>][start][]"
     type="text"
     class="input-timepicker input-start-time"
-    value="<?php if ( !$period->isDummy() ) echo $period->getTimeStart( true ); ?>" />
+    value="<?php echo $period->getTimeStart( true ); ?>" />
   </td>
 
   <td class="col-time-end">
@@ -15,7 +13,7 @@
     name="opening-hours[<?php echo $period->getWeekday(); ?>][end][]"
     type="text"
     class="input-timepicker input-end-time"
-    value="<?php if ( !$period->isDummy() ) echo $period->getTimeEnd( true ); ?>" />
+    value="<?php echo $period->getTimeEnd( true ); ?>" />
   </td>
 
   <td class="col-delete-period">

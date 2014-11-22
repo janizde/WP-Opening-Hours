@@ -48,9 +48,9 @@ OpeningHours::getCurrentSet()->addDummyPeriods();
               <tbody>
 
               <?php
-
               foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $id ) as $period ) :
-                OpeningHours::renderTemplate(
+
+                echo OpeningHours::renderTemplate(
                   'ajax/op-set-period.php',
                   array(
                     'period'  => $period
