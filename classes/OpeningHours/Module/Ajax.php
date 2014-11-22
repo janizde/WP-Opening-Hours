@@ -104,14 +104,21 @@ class Ajax extends AbstractModule {
 
     $empty      = ( empty( $timeStart ) or empty( $timeEnd ) or !is_int( $weekday ) );
 
+    if ( !$empty ) :
+      $period   = new Period( array(
+        'weekday'   => $weekday,
+        'timeStart' => $timeStart,
+        'timeEnd'   => $timeEnd
+      ) );
+    else :
+      $period   = new Period;
+    endif;
+
     echo self::renderTemplate(
       'ajax/op-set-period.php',
       array(
         'config'    => array(
-          'timeStart' => $timeStart,
-          'timeEnd'   => $timeEnd,
-          'weekday'   => $weekday,
-          'empty'     => $empty
+          'period'    => $period
         )
       ),
       'always'

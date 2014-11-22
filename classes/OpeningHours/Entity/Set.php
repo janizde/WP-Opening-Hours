@@ -6,6 +6,7 @@
 namespace OpeningHours\Entity;
 
 use OpeningHours\Misc\ArrayObject;
+use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
 use WP_Post;
@@ -113,11 +114,13 @@ class Set {
       return;
 
     // Determine child Post
-
     $post_meta = get_post_meta( SetCpt::PERIODS_META_KEY, $this->getId() );
 
     if ( self::isValidConfig( $post_meta ) )
       $this->setConfig( $post_meta );
+
+    if ( !is_array( $this->getConfig() ) or !count( $this->getConfig() ) )
+      return;
 
     foreach ( $this->getConfig() as $periodConfig ) :
       $this->getPeriods()->addElement( new Period( $periodConfig ) );
@@ -140,6 +143,25 @@ class Set {
       return false;
 
     return true;
+
+  }
+
+  /**
+   *  Add Dummy Periods
+   *
+   *  @access     public
+   */
+  public function addDummyPeriods() {
+
+    foreach ( I18n::getWeekdaysNumeric() as $id => $name ) :
+
+      if ( !count( $this->getPeriodsByDay( $id ) ) )
+        $this->getPeriods()->addElement( new Period( array(
+          'weekday'   => $id,
+          'dummy'     => true
+        ) ) );
+
+    endforeach;
 
   }
 

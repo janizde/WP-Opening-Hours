@@ -3,8 +3,6 @@
  *	Opening Hours: Template: Part: Metabox OP Set
  */
 
-
-
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 
@@ -12,7 +10,7 @@ global $post;
 
 OpeningHours::setCurrentSetId( $post->ID );
 
-return;
+OpeningHours::getCurrentSet()->addDummyPeriods();
 ?>
 
 <div class="opening-hours">
@@ -49,35 +47,19 @@ return;
             <table class="period-table">
               <tbody>
 
-                <?php foreach ( $wp_opening_hours->getCurrentSet()->getPeriodsByDay( $key ) as $period ) : ?>
+              <?php
 
-                <tr class="period">
+              foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $id ) as $period ) :
+                OpeningHours::renderTemplate(
+                  'ajax/op-set-period.php',
+                  array(
+                    'period'  => $period
+                  ),
+                  'always'
+                );
+              endforeach;
 
-                  <td class="col-time-start">
-                    <input
-                      name="opening-hours[<?php echo $key; ?>][start][]"
-                      type="text"
-                      class="input-timepicker input-start-time"
-                      value="<?php if ( !$period->getIsDummy() ) echo $period->getStartTimeString(); ?>" />
-                  </td>
-
-                  <td class="col-time-end">
-                    <input
-                      name="opening-hours[<?php echo $key; ?>][end][]"
-                      type="text"
-                      class="input-timepicker input-end-time"
-                      value="<?php if ( !$period->getIsDummy() ) echo $period->getEndTimeString(); ?>" />
-                  </td>
-
-                  <td class="col-delete-period">
-                    <a class="button delete-period has-icon red">
-                      <i class="dashicons dashicons-no-alt"></i>
-                    </a>
-                  </td>
-
-                </tr>
-
-                <?php endforeach; ?>
+              ?>
 
               </tbody>
             </table>

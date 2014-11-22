@@ -53,16 +53,32 @@ class Period {
   protected $timeDifference;
 
   /**
+   *  Is Dummy
+   *
+   *  @access     protected
+   *  @type       bool
+   */
+  protected $isDummy;
+
+  /**
    *  Constructor
    *
    *  @access     public
    *  @param      array     $config
    *  @return     Period
    */
-  public function __construct ( array $config ) {
+  public function __construct ( $config = array() ) {
 
-    if ( $config !== null and count( $config ) )
+    if ( $config !== null and count( $config ) ) :
       $this->setConfig( $config );
+    else :
+      $this->setConfig( array(
+        'weekday'   => null,
+        'timeStart' => null,
+        'timeEnd'   => null,
+        'dummy'     => true
+      ) );
+    endif;
 
     $this->setUp();
 
@@ -82,22 +98,21 @@ class Period {
     if ( !is_array( $config ) )
       throw new InvalidArgumentException( sprintf( '$config is not an array in Set %d', $this->getId() ) );
 
+    $defaultConfig  = array(
+      'weekday'   => null,
+      'timeStart' => null,
+      'timeEnd'   => null,
+      'dummy'     => false
+    );
+
+    $config   = wp_parse_args( $config, $defaultConfig );
+
     extract( $config );
 
-    if ( !isset( $weekday ) or !is_int( $weekday ) )
-      throw new InvalidArgumentException( sprintf( 'No proper weekday set in configuration for Set %d', $this->getId() ) );
-
     $this->setWeekday( $weekday );
-
-    if ( !isset( $timeStart ) or !is_string( $timeStart ) )
-      throw new InvalidArgumentException( sprintf( 'No proper timeStart set in configuration for Set %d', $this->getId() ) );
-
     $this->setTimeStart( $timeStart );
-
-    if ( !isset( $timeEnd ) or !is_string( $timeEnd ) )
-      throw new InvalidArgumentException( sprintf( 'No proper timeEnd set in configuration for Set %d', $this->getId() ) );
-
     $this->setTimeEnd( $timeEnd );
+    $this->setIsDummy( $dummy );
 
     return $this;
 
@@ -225,6 +240,27 @@ class Period {
     $this->updateTimeDifference();
 
     return $this;
+  }
+
+  /**
+   *  Getter: Is Dummy
+   *
+   *  @access     public
+   *  @return     bool
+   */
+  public function isDummy () {
+    return $this->isDummy;
+  }
+
+  /**
+   *  Setter: Is Dummy
+   *
+   *  @access     public
+   *  @param      bool    $isDummy
+   *  @return     Period
+   */
+  public function setIsDummy ( $isDummy ) {
+    $this->isDummy = $isDummy;
   }
 
 }
