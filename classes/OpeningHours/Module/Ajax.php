@@ -7,7 +7,9 @@ namespace OpeningHours\Module;
 
 use OpeningHours\OpeningHours as OpeningHoursWrap;
 use OpeningHours\Module\OpeningHours;
+use OpeningHours\Module\I18n;
 use OpeningHours\Entity\Set;
+use OpeningHours\Entity\Period;
 
 class Ajax extends AbstractModule {
 
@@ -33,8 +35,6 @@ class Ajax extends AbstractModule {
    */
   public function __construct() {
 
-    add_action( 'wp_enqueue_scripts',   array( __CLASS__, 'injectAjaxUrl' ) );
-
     self::registerActions();
 
   }
@@ -59,6 +59,8 @@ class Ajax extends AbstractModule {
    *  @static
    */
   public static function renderPeriodsDay () {
+
+    error_log( 'action' );
 
     $day    = $_POST[ 'day' ];
     $setId  = $_POST[ 'set' ];
@@ -102,24 +104,19 @@ class Ajax extends AbstractModule {
     $timeStart  = $_POST[ 'timeStart' ];
     $timeEnd    = $_POST[ 'timeEnd' ];
 
-    $empty      = ( empty( $timeStart ) or empty( $timeEnd ) or !is_int( $weekday ) );
+    $config     = array(
+      'weekday'   => $weekday
+    );
 
-    if ( !$empty ) :
-      $period   = new Period( array(
-        'weekday'   => $weekday,
-        'timeStart' => $timeStart,
-        'timeEnd'   => $timeEnd
-      ) );
-    else :
-      $period   = new Period;
-    endif;
+    $config[ 'timeStart' ]  = ( I18n::isValidTime( $timeStart ) ) ? $timeStart  : '00:00';
+    $config[ 'timeEnd' ]    = ( I18n::isValidTime( $timeEnd ) )   ? $timeEnd    : '00:00';
+
+    $period = new Period( $config );
 
     echo self::renderTemplate(
       'ajax/op-set-period.php',
       array(
-        'config'    => array(
-          'period'    => $period
-        )
+        'period'  => $period
       ),
       'always'
     );
@@ -144,7 +141,7 @@ class Ajax extends AbstractModule {
 
     $callback = array( __CLASS__, $method );
 
-    add_action( WP_ACTION_PREFIX . $hook, $callback );
+    add_action( self::WP_ACTION_PREFIX . $hook, $callback );
 
     self::addAction( $hook, $callback );
 
@@ -156,14 +153,15 @@ class Ajax extends AbstractModule {
    *
    *  @access     public
    *  @static
+   *  @param      string    $handle
    */
-  public static function injectAjaxUrl () {
+  public static function injectAjaxUrl ( $handle ) {
 
     wp_localize_script(
-    OpeningHoursWrap::PREFIX . 'js-backend',
-    self::JS_AJAX_OBJECT,
-    array(
-      'ajax_url'    => admin_url( 'admin-ajax.php' )
+      $handle,
+      self::JS_AJAX_OBJECT,
+      array(
+        'ajax_url'    => admin_url( 'admin-ajax.php' )
       )
     );
 
@@ -178,7 +176,7 @@ class Ajax extends AbstractModule {
    *  @param      string    $message
    */
   protected static function terminate ( $message ) {
-    trigger_error( $message );
+    error_log( $message );
     die();
   }
 

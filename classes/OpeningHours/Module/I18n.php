@@ -73,6 +73,18 @@ class I18n extends AbstractModule {
   }
 
   /**
+   *  Is Valid Time
+   *
+   *  @access       public
+   *  @static
+   *  @param        string    $time
+   *  @return       bool
+   */
+  public static function isValidTime ( $time ) {
+    return ( preg_match( self::STD_TIME_FORMAT_REGEX, $time ) === 1 );  
+  }
+
+  /**
    *  Getter: Date Format
    *
    *  @access       public
@@ -145,7 +157,7 @@ class I18n extends AbstractModule {
    *  @return       array
    */
   public static function getWeekdaysNumeric () {
-    return array_values( self::getWeekdays() );  
+    return array_values( self::getWeekdays() );
   }
 }
 ?>

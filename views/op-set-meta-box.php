@@ -42,7 +42,7 @@ OpeningHours::getCurrentSet()->addDummyPeriods();
         </td>
 
         <td class="col-times" colspan="2" valign="top">
-          <div class="period-container" data-day="<?php echo $id; ?>">
+          <div class="period-container" data-day="<?php echo $id; ?>" data-set="<?php echo OpeningHours::getCurrentSet()->getId(); ?>">
 
             <table class="period-table">
               <tbody>

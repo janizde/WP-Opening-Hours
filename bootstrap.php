@@ -63,6 +63,15 @@ function op_plugin_path () {
 	return plugin_dir_path( __FILE__ );
 }
 
+/**
+ *	Bootstrap File Path
+ *
+ *	@return 	string
+ */
+function op_bootstrap_file () {
+	return __FILE__;
+}
+
 /*
  * Check requirements and load main class
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.

@@ -1,41 +1,79 @@
 /**
- * Wrapper function to safely use $
+ *	Opening Hours: Javascript
  */
-function wppsWrapper( $ ) {
-	var wpps = {
 
-		/**
-		 * Main entry point
-		 */
-		init: function () {
-			wpps.prefix      = 'wpps_';
-			wpps.templateURL = $( '#template-url' ).val();
-			wpps.ajaxPostURL = $( '#ajax-post-url' ).val();
+/** Set Meta Box */
+jQuery.fn.opPeriodsDay 		= function () {
 
-			wpps.registerEventHandlers();
-		},
+	var wrap 		= jQuery( this );
 
-		/**
-		 * Registers event handlers
-		 */
-		registerEventHandlers: function () {
-			$( '#example-container' ).children( 'a' ).click( wpps.exampleHandler );
-		},
+	if ( wrap.length > 1 ) {
+		wrap.each( function( index, element ) {
+			jQuery( element ).opPeriodsDay();
+		} );
 
-		/**
-		 * Example event handler
-		 *
-		 * @param object event
-		 */
-		exampleHandler: function ( event ) {
-			alert( $( this ).attr( 'href' ) );
+		return;
+	}
 
-			event.preventDefault();
-		}
-	}; // end wpps
+	var periodContainer = wrap.find( '.period-container' );
+	var tbody 					= periodContainer.find( 'tbody' );
 
-	$( document ).ready( wpps.init );
+	var btnAddPeriod 		= wrap.find( 'a.add-period' );
 
-} // end wppsWrapper()
+	function addPeriod () {
 
-wppsWrapper( jQuery );
+		data 	= {
+			'action'	: 'op_render_single_period',
+			'weekday'	: periodContainer.attr( 'data-day' ),
+			'set'			: periodContainer.attr( 'data-set' )
+		};
+
+		jQuery.post( ajax_object.ajax_url, data, function ( response ) {
+			var newPeriod 	= jQuery( response ).clone();
+
+			newPeriod.opSinglePeriod();
+
+			tbody.append( newPeriod );
+		} );
+
+	}
+
+	btnAddPeriod.click( function() {
+		addPeriod();
+	} );
+
+}
+
+/** Set Meta Box Period */
+jQuery.fn.opSinglePeriod 	= function () {
+
+	var wrap 		= jQuery( this );
+
+	if ( wrap.length > 1 ) {
+		wrap.each( function( index, element ) {
+			jQuery( element ).opSinglePeriod();
+		} );
+
+		return;
+	}
+
+	var inputTimeStart 	= wrap.find( '.input-time-start' );
+	var inputTimeEnd 		= wrap.find( '.input-time-end' );
+	var btnDeletePeriod	= wrap.find( '.delete-period' );
+
+	function deletePeriod () {
+		wrap.remove();
+	}
+
+	btnDeletePeriod.click( function() {
+		deletePeriod();
+	} );
+
+}
+
+/**
+ *	Mapping
+ */
+jQuery( document ).ready( function() {
+	jQuery( 'tr.periods-day' ).opPeriodsDay();
+} );

@@ -62,7 +62,7 @@ class OpeningHours extends AbstractModule {
 	public static function loadResources() {
 		wp_register_script(
 			self::PREFIX . 'js-backend',
-			plugins_url( 'javascript/opening-hours-backend.js', dirname( __FILE__ ) ),
+			plugins_url ( 'javascript/opening-hours-backend.js', op_bootstrap_file() ),
 			array( 'jquery' ),
 			self::VERSION,
 			true
@@ -70,7 +70,7 @@ class OpeningHours extends AbstractModule {
 
 		wp_register_style(
 			self::PREFIX . 'admin',
-			plugins_url( 'css/opening-hours-backend.css', dirname( __FILE__ ) ),
+			plugins_url( 'css/opening-hours-backend.css', op_plugin_path() ),
 			array(),
 			self::VERSION,
 			'all'
@@ -80,6 +80,8 @@ class OpeningHours extends AbstractModule {
 			// Backend Styles and Scripts
 			wp_enqueue_style( self::PREFIX . 'css-backend' );
 			wp_enqueue_script( self::PREFIX . 'js-backend' );
+
+			Module\Ajax::injectAjaxUrl( self::PREFIX . 'js-backend' );
 		} else {
 			// Frontend Styles and Scripts
 		}
