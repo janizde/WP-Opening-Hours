@@ -114,8 +114,8 @@ class Set {
     if ( !count( $childPosts ) )
       return;
 
-    // Determine child Post
-    $post_meta = get_post_meta( SetCpt::PERIODS_META_KEY, $this->getId() );
+    // Load Config
+    $post_meta = get_post_meta( $this->getId(), SetCpt::PERIODS_META_KEY, true );
 
     if ( self::isValidConfig( $post_meta ) )
       $this->setConfig( $post_meta );
@@ -156,13 +156,18 @@ class Set {
 
     foreach ( I18n::getWeekdaysNumeric() as $id => $name ) :
 
-      if ( !count( $this->getPeriodsByDay( $id ) ) )
-        $this->getPeriods()->addElement( new Period( array(
+      if ( !count( $this->getPeriodsByDay( $id ) ) ) :
+
+        $newPeriod = new Period( array(
           'weekday'   => $id,
           'timeStart' => new DateTime( '00:00' ),
           'timeEnd'   => new DateTime( '00:00' ),
           'dummy'     => true
-        ) ) );
+          ) );
+
+        $this->getPeriods()->addElement( $newPeriod );
+
+      endif;
 
     endforeach;
 
@@ -213,7 +218,7 @@ class Set {
       throw new InvalidArgumentException( sprintf( 'Argument 1 of getPeriodsByDay must be integer or array. %s given.', gettype( $days ) ) );
 
     if ( !is_array( $days ) )
-      $days  = array( $day );
+      $days  = array( $days );
 
     $periods  = array();
 

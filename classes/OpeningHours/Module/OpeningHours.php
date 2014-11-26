@@ -58,7 +58,6 @@ class OpeningHours extends AbstractModule {
 
   /**
    *  Initializer
-   *
    *  @access     public
    *  @static
    *  @wp_action  init
@@ -70,9 +69,19 @@ class OpeningHours extends AbstractModule {
       'post_type'     => SetCpt::CPT_SLUG
     ) );
 
-    foreach ( $posts as $post ) :
-      self::getSets()->offsetSet( $post->ID, new SetEntity( $post ) );
+    // Collect all Post Ids
+    $postIds  = array();
+
+    foreach ( $posts as $singlePost ) :
+      self::getSets()->offsetSet( $singlePost->ID, new SetEntity( $singlePost ) );
+      $postIds[] = $singlePost->ID;
     endforeach;
+
+    global $post;
+
+    // Set current Set to global $post
+    if ( $post instanceof WP_Post and in_array( $post->ID, $postIds ) )
+      self::setCurrentPostId( $post->ID );
 
   }
 

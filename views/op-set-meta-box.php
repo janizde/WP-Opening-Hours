@@ -5,12 +5,15 @@
 
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
+use OpeningHours\Module\CustomPostType\Set;
 
 global $post;
 
 OpeningHours::setCurrentSetId( $post->ID );
 
 OpeningHours::getCurrentSet()->addDummyPeriods();
+
+wp_nonce_field( Set::NONCE_VALUE, Set::NONCE_NAME );
 ?>
 
 <div class="opening-hours">
@@ -49,7 +52,6 @@ OpeningHours::getCurrentSet()->addDummyPeriods();
 
               <?php
               foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $id ) as $period ) :
-
                 echo OpeningHours::renderTemplate(
                   'ajax/op-set-period.php',
                   array(

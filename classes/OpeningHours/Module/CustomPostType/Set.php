@@ -7,6 +7,7 @@ namespace OpeningHours\Module\CustomPostType;
 
 use OpeningHours\Module\AbstractModule;
 use OpeningHours\Module\OpeningHours;
+use OpeningHours\Entity\Set as SetEntity;
 
 use WP_Post;
 
@@ -19,7 +20,7 @@ class Set extends AbstractModule {
   const   META_BOX_ID       = 'op-set-periods';
   const   META_BOX_CONTEXT  = 'advanced';
   const   META_BOX_PRIORITY = 'high';
-  const   PERIODS_META_KEY  = '_op-set-periods';
+  const   PERIODS_META_KEY  = '_op_set_periods';
   const   TEMPLATE_META_BOX = 'op-set-meta-box.php';
 
   const   NONCE_NAME        = 'op-update-set-nonce';
@@ -48,6 +49,7 @@ class Set extends AbstractModule {
     add_action( 'admin_menu',         array( __CLASS__, 'cleanUpMenu' ) );
     add_action( 'add_meta_boxes',     array( __CLASS__, 'registerMetaBox' ) );
     add_action( 'add_detail_fields',  array( __CLASS__, 'registerDetailFields' ) );
+    add_action( 'save_post',          array( __CLASS__, 'saveData' ) );
 
   }
 
@@ -171,6 +173,45 @@ class Set extends AbstractModule {
         'odd'         => __( 'Odd weeks only', self::TEXTDOMAIN )
       )
     ) );
+
+  }
+
+  /**
+   *  Save Data
+   *
+   *  @access       public
+   *  @static
+   *  @wp_action    save_post
+   */
+  public static function saveData () {
+
+    // Verify Nonce
+    if ( !wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_VALUE ) )
+      return;
+
+    $config     = $_POST['opening-hours'];
+    $newConfig  = array();
+
+    foreach ( $config as $weekday => $dayConfig ) :
+      for ( $i = 0; $i <= count( $dayConfig['start'] ); $i++ ) :
+
+        if ( ( empty( $dayConfig['start'][ $i ] ) or empty( $dayConfig['end'][ $i ] ) ) or
+          ( $dayConfig['start'][ $i ] == '00:00' and $dayConfig['end'][ $i ] == '00:00' ) )
+          continue;
+
+        $newConfig[]  = array(
+          'weekday'   => $weekday,
+          'timeStart' => $dayConfig['start'][ $i ],
+          'timeEnd'   => $dayConfig['end'][ $i ],
+          'dummy'     => false
+        );
+
+      endfor;
+    endforeach;
+
+    global $post;
+
+    update_post_meta( $post->ID, self::PERIODS_META_KEY, $newConfig );
 
   }
 
