@@ -76,4 +76,5 @@ jQuery.fn.opSinglePeriod 	= function () {
  */
 jQuery( document ).ready( function() {
 	jQuery( 'tr.periods-day' ).opPeriodsDay();
+	jQuery( 'tr.period' ).opSinglePeriod();
 } );

@@ -5,6 +5,8 @@
 
 namespace OpeningHours\Module;
 
+use DateTimeZone;
+
 class I18n extends AbstractModule {
 
   /**
@@ -35,6 +37,15 @@ class I18n extends AbstractModule {
   protected static $timeFormat;
 
   /**
+   *  Date Time Zone
+   *
+   *  @access     protected
+   *  @static
+   *  @type       DateTimeZone;
+   */
+  protected static $dateTimeZone;
+
+  /**
    *  Constructor
    *
    *  @access       public
@@ -56,6 +67,34 @@ class I18n extends AbstractModule {
   public function registerHookCallbacks() {
 
     add_action( 'plugins_loaded',       array( __CLASS__, 'registerTextdomain' ) );
+    add_action( 'init',                 array( __CLASS__, 'init' ) );
+
+  }
+
+  /**
+   *  Init
+   *
+   *  @access       public
+   *  @static
+   *  @wp_action    init
+   */
+  public static function init () {
+
+    /**
+     *  Get Timezone from wp_options.
+     *  GMT offset timezone Settings are converted to string timezone identifiers
+     *  n:30 GMT offset settings are floored to n:00!
+     */
+    if ( !empty( get_option( 'timezone_string' ) ) ) :
+      $time_zone_string   = get_option( 'timezone_string' );
+
+    elseif ( !empty( get_option( 'gmt_offset' ) ) ) :
+      $offset             = floatval( floor( get_option( 'gmt_offset' ) ) ) * 3600;
+      $time_zone_string   = timezone_name_from_abbr( null, $offset, 0 );
+
+    endif;
+
+    self::setDateTimeZone( new DateTimeZone( $time_zone_string ) );
 
   }
 
@@ -81,7 +120,7 @@ class I18n extends AbstractModule {
    *  @return       bool
    */
   public static function isValidTime ( $time ) {
-    return ( preg_match( self::STD_TIME_FORMAT_REGEX, $time ) === 1 );  
+    return ( preg_match( self::STD_TIME_FORMAT_REGEX, $time ) === 1 );
   }
 
   /**
@@ -128,6 +167,28 @@ class I18n extends AbstractModule {
    */
   public static function setTimeFormat ( $timeFormat ) {
     self::$timeFormat = $timeFormat;
+  }
+
+  /**
+   *  Getter: Date Time Zone
+   *
+   *  @access       public
+   *  @static
+   *  @return       DateTimeZone
+   */
+  public static function getDateTimeZone () {
+    return self::$dateTimeZone;
+  }
+
+  /**
+   *  Setter: Date Time Zone
+   *
+   *  @access       protected
+   *  @static
+   *  @param        DateTimeZone  $dateTimeZone
+   */
+  protected static function setDateTimeZone ( DateTimeZone $dateTimeZone ) {
+    self::$dateTimeZone = $dateTimeZone;
   }
 
   /**
