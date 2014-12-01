@@ -174,6 +174,44 @@ class Set {
   }
 
   /**
+   *  Is Open – Opening Hours
+   *  only evaluates standard opening periods
+   *
+   *  @access       public
+   *  @return       bool
+   */
+  public function isOpenOpeningHours () {
+
+    foreach ( $this->getPeriods() as $period ) :
+
+      if ( $period->isOpen() )
+        return true;
+
+    endforeach;
+
+    return false;
+
+  }
+
+  /**
+   *  Is Open
+   *  evaluates all aspects
+   *
+   *  @access       public
+   *  @return       bool
+   */
+  public function isOpen () {
+
+    /** Holidays */
+
+    /** Special Openings */
+
+    /** Opening Hours */
+    return $this->isOpenOpeningHours();
+
+  }
+
+  /**
    *  Getter: Config
    *
    *  @access     public

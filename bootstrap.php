@@ -88,6 +88,7 @@ if ( op_requirements_met() ) {
 		'Module/Ajax',
 		'Module/CustomPostType/Set',
 		'Module/Shortcode/AbstractShortcode',
+		'Module/Shortcode/IsOpen',
 		'OpeningHours'
 	);
 

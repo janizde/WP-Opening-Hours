@@ -5,6 +5,7 @@
 
 namespace OpeningHours\Module;
 
+use DateTime;
 use DateTimeZone;
 
 class I18n extends AbstractModule {
@@ -44,6 +45,15 @@ class I18n extends AbstractModule {
    *  @type       DateTimeZone;
    */
   protected static $dateTimeZone;
+
+  /**
+   *  Time Now
+   *
+   *  @access     protected
+   *  @static
+   *  @type       DateTime
+   */
+  protected static $timeNow;
 
   /**
    *  Constructor
@@ -95,6 +105,11 @@ class I18n extends AbstractModule {
     endif;
 
     self::setDateTimeZone( new DateTimeZone( $time_zone_string ) );
+
+    /**
+     *  Save current time in property $timeNow
+     */
+    self::setTimeNow( new DateTime( 'now', self::getDateTimeZone() ) );
 
   }
 
@@ -189,6 +204,28 @@ class I18n extends AbstractModule {
    */
   protected static function setDateTimeZone ( DateTimeZone $dateTimeZone ) {
     self::$dateTimeZone = $dateTimeZone;
+  }
+
+  /**
+   *  Getter: Time Now
+   *
+   *  @access       public
+   *  @static
+   *  @return       DateTime
+   */
+  public static function getTimeNow () {
+    return self::$timeNow;
+  }
+
+  /**
+   *  Setter: Time Now
+   *
+   *  @access       protected
+   *  @static
+   *  @param        DateTime    $timeNow
+   */
+  protected static function setTimeNow ( DateTime $timeNow ) {
+    self::$timeNow = $timeNow;
   }
 
   /**

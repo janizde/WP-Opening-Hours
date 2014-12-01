@@ -28,6 +28,14 @@ abstract class AbstractShortcode extends AbstractModule {
   protected $defaultAttributes = array();
 
   /**
+   *  Template Path
+   *
+   *  @access     protected
+   *  @type       string
+   */
+  protected $templatePath;
+
+  /**
    *  Constructor
    *
    *  @access     public
@@ -56,6 +64,8 @@ abstract class AbstractShortcode extends AbstractModule {
    *  @wp_acton   int
    */
   public function registerShortcode () {
+
+    $this->init();
 
     try {
       $this->validate();
@@ -98,6 +108,27 @@ abstract class AbstractShortcode extends AbstractModule {
     ob_end_clean();
 
     return $shortcodeMarkup;
+
+  }
+
+  /**
+   *  Render Shortcode Template
+   *
+   *  @access     protected
+   *  @param      array     $variables
+   *  @param      string    $require
+   *  @return     string
+   */
+  public function renderShortcodeTemplate ( array $variables, $require = 'always' ) {
+
+    if ( empty( $this->getTemplatePath() ) )
+      return;
+
+    return self::renderTemplate(
+      $this->getTemplatePath(),
+      $variables,
+      $require
+    );
 
   }
 
@@ -146,6 +177,27 @@ abstract class AbstractShortcode extends AbstractModule {
   }
 
   /**
+   *  Getter: Template Path
+   *
+   *  @access     public
+   *  @return     string
+   */
+  public function getTemplatePath () {
+    return $this->templatePath;
+  }
+
+  /**
+   *  Setter: Template Path
+   *
+   *  @access     protected
+   *  @param      string    $templatePath
+   *  @return     AbstractShortcode
+   */
+  protected function setTemplatePath ( $templatePath ) {
+    $this->templatePath = $templatePath;
+  }
+
+  /**
    *  Shortcode Function
    *
    *  @access     public
@@ -153,6 +205,15 @@ abstract class AbstractShortcode extends AbstractModule {
    *  @param      array     $attributes
    */
   abstract public function shortcode ( array $attributes );
+
+  /**
+   *  Init
+   *  Sets up attributes
+   *
+   *  @access    protected
+   *  @abstract
+   */
+  abstract protected function init ();
 
 }
 ?>
