@@ -135,7 +135,9 @@ class I18n extends AbstractModule {
    *  @return       bool
    */
   public static function isValidTime ( $time ) {
+
     return ( preg_match( self::STD_TIME_FORMAT_REGEX, $time ) === 1 );
+
   }
 
   /**
@@ -150,7 +152,24 @@ class I18n extends AbstractModule {
 
     $dateTime->setTimezone( self::getDateTimeZone() );
     return $dateTime;
-    
+
+  }
+
+  /**
+   *  Is Today
+   *
+   *  @access       public
+   *  @static
+   *  @param        int     $day
+   *  @return       bool
+   */
+  public static function isToday ( $day ) {
+
+    if ( !is_numeric( $today ) )
+      return false;
+
+    return ( ( (int) self::getTimeNow()->format( 'N' ) -1 ) == (int) $day );
+
   }
 
   /**

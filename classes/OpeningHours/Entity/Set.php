@@ -11,6 +11,7 @@ use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
 use WP_Post;
 use DateTime;
+use InvalidArgumentException;
 
 class Set {
 
@@ -212,6 +213,27 @@ class Set {
   }
 
   /**
+   *  Get Sets from Posts
+   *
+   *  @access     public
+   *  @static
+   *  @param      array     $posts
+   *  @return     array
+   */
+  public static function getSetsFromPosts ( array $posts ) {
+
+    foreach ( $posts as &$post ) :
+
+      if ( $post instanceof WP_Post or is_numeric( $post ) )
+        $post   = new Set( $post );
+
+    endforeach;
+
+    return $posts;
+
+  }
+
+  /**
    *  Getter: Config
    *
    *  @access     public
@@ -264,6 +286,23 @@ class Set {
       if ( in_array( $period->getWeekday(), $days ) )
         $periods[]  = $period;
     endforeach;
+
+    return $periods;
+
+  }
+
+  /**
+   *  Getter: (all) Periods Grouped By Day
+   *
+   *  @access       public
+   *  @return       array
+   */
+  public function getPeriodsGroupedByDay () {
+
+    $periods  = array();
+
+    foreach ( I18n::getWeekdaysNumeric() as $id => $caption )
+      $periods[ $id ]   = $this->getPeriodsByDay( $id );
 
     return $periods;
 

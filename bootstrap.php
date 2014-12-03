@@ -89,6 +89,7 @@ if ( op_requirements_met() ) {
 		'Module/CustomPostType/Set',
 		'Module/Shortcode/AbstractShortcode',
 		'Module/Shortcode/IsOpen',
+		'Module/Shortcode/Overview',
 		'OpeningHours'
 	);
 

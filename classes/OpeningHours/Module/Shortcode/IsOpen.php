@@ -13,11 +13,11 @@ class IsOpen extends AbstractShortcode {
   /**
    *  Init
    *
-   *  @access     public
+   *  @access     protected
    */
   protected function init() {
 
-    $this->setShortcodeTag( 'is-open' );
+    $this->setShortcodeTag( 'op-is-open' );
 
     $default_attributes   = array(
       'set_id'        => null,

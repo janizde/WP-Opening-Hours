@@ -126,14 +126,6 @@ class Period {
    */
   public function isOpen () {
 
-
-    print_r( array(
-      $this->getTimeStart()->getTimestamp(),
-      I18n::getTimeNow()->getTimestamp(),
-      $this->getTimeEnd()->getTimestamp(),
-      ( $this->getTimeStart()->getTimestamp() <= I18n::getTimeNow()->getTimestamp() and I18n::getTimeNow()->getTimestamp() <= $this->getTimeEnd()->getTimestamp() )
-      ) );
-
     return ( $this->getTimeStart() <= I18n::getTimeNow() and I18n::getTimeNow() <= $this->getTimeEnd() );
 
   }
@@ -151,6 +143,18 @@ class Period {
     $timeDifference = $this->getTimeEnd()->diff( $this->getTimeStart() );
 
     $this->timeDifference = $timeDifference;
+
+  }
+
+  /**
+   *  Get Formatted Time Range
+   *
+   *  @access     public
+   *  @return     string
+   */
+  public function getFormattedTimeRange () {
+
+    return $this->getTimeStart( true ) . ' – ' . $this->getTimeEnd( true );
 
   }
 

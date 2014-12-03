@@ -13,6 +13,7 @@ abstract class AbstractShortcode extends AbstractModule {
 
   /**
    *  Shortcode Tag
+   *  The tag used for the shortcode
    *
    *  @access     protected
    *  @type       string
@@ -21,6 +22,9 @@ abstract class AbstractShortcode extends AbstractModule {
 
   /**
    *  Default Attributes
+   *  Associative array with:
+   *    key:    attribute name
+   *    value:  default value
    *
    *  @access     protected
    *  @type       array
@@ -28,7 +32,19 @@ abstract class AbstractShortcode extends AbstractModule {
   protected $defaultAttributes = array();
 
   /**
+   *  Valid Attribute Values
+   *  Associative array with:
+   *    key:    attribute name
+   *    value:  numeric/sequencial array with accepted values. First array element is default/fallback value.
+   *
+   *  @access     protected
+   *  @type       array
+   */
+  protected $validAttributeValues = array();
+
+  /**
    *  Template Path
+   *  Path to template file to render shortcode in. Default directory is /views/
    *
    *  @access     protected
    *  @type       string
@@ -133,6 +149,50 @@ abstract class AbstractShortcode extends AbstractModule {
   }
 
   /**
+   *  Filter Attributes
+   *  applies filters on each attribute
+   *
+   *  @access     protected
+   *  @static
+   *  @param      array       $attributes
+   *  @return     array
+   */
+  protected static function filterAttributes ( array $attributes ) {
+
+    if ( empty( $this->getShortcodeTag() ) ) :
+      trigger_error( 'Tried to filter shortcode attributes before shortcode tag has been set.' );
+      return;
+    endif;
+
+    $validValues  = $this->getValidAttributeValues();
+
+    foreach ( $attributes as $key => &$value ) :
+
+      /** Apply WordPress filters */
+      $filter_hook  = $this->getShortcodeTag() . '_' . $key;
+
+      $value  = apply_filters( $filter_hook, $value );
+
+      /** Check if value is valid */
+      if ( isset( $validValues[ $key ] )
+        and is_array( $validValues[ $key ] )
+        and count( $validValues[ $key ] )
+        and !in_array( $value, $validValues[ $key ] )
+        and isset( $validValues[ $key ][0] ) ) :
+
+        $value  = $validValues[ $key ][0];
+
+      endif;
+
+    endforeach;
+
+    unset( $key, $value );
+
+    return $attributes;
+
+  }
+
+  /**
    *  Getter: Shortcode Tag
    *
    *  @access     public
@@ -147,7 +207,7 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    *  @access     public
    *  @param      string    $shortcodeTag
-   *  @return     OP_AbstractShortcode
+   *  @return     AbstractShortcode
    */
   public function setShortcodeTag ( $shortcodeTag ) {
     $this->shortcodeTag     = apply_filters( 'op_shortcode_tag', $shortcodeTag );
@@ -169,11 +229,32 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    *  @access     protected
    *  @param      array     $defaultAttributes
-   *  @return     OP_AbstractShortcode
+   *  @return     AbstractShortcode
    */
   protected function setDefaultAttributes ( array $defaultAttributes ) {
     $this->defaultAttributes  = $defaultAttributes;
     return $this;
+  }
+
+  /**
+   *  Getter: Valid Attribute Values
+   *
+   *  @access     public
+   *  @return     array
+   */
+  public function getValidAttributeValues () {
+    return $this->validAttributeValues;
+  }
+
+  /**
+   *  Setter: Valid Attribute Values
+   *
+   *  @access     protected
+   *  @param      array     $validAttributeValues
+   *  @return     AbstractShortcode
+   */
+  protected function setValidAttributeValues ( array $validAttributeValues ) {
+    $this->validAttributeValues = $validAttributeValues;
   }
 
   /**
