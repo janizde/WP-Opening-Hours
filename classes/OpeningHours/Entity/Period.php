@@ -126,6 +126,14 @@ class Period {
    */
   public function isOpen () {
 
+
+    print_r( array(
+      $this->getTimeStart()->getTimestamp(),
+      I18n::getTimeNow()->getTimestamp(),
+      $this->getTimeEnd()->getTimestamp(),
+      ( $this->getTimeStart()->getTimestamp() <= I18n::getTimeNow()->getTimestamp() and I18n::getTimeNow()->getTimestamp() <= $this->getTimeEnd()->getTimestamp() )
+      ) );
+
     return ( $this->getTimeStart() <= I18n::getTimeNow() and I18n::getTimeNow() <= $this->getTimeEnd() );
 
   }
@@ -214,7 +222,7 @@ class Period {
     if ( is_string( $timeStart ) ) :
       $this->timeStart = new DateTime( $timeStart, I18n::getDateTimeZone() );
     elseif ( $timeStart instanceof DateTime ) :
-      $this->timeStart = $timeStart;
+      $this->timeStart = I18n::applyTimeZone( $timeStart );
     endif;
 
     $this->updateTimeDifference();
@@ -246,7 +254,7 @@ class Period {
     if ( is_string( $timeEnd ) ) :
       $this->timeEnd = new DateTime( $timeEnd, I18n::getDateTimeZone() );
     elseif ( $timeEnd instanceof DateTime ) :
-      $this->timeEnd = $timeEnd;
+      $this->timeEnd = I18n::applyTimeZone( $timeEnd );
     endif;
 
     $this->updateTimeDifference();

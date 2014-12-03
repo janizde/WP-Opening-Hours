@@ -139,6 +139,21 @@ class I18n extends AbstractModule {
   }
 
   /**
+   *  Apply Time Zone
+   *
+   *  @access       public
+   *  @static
+   *  @param        DateTime  $dateTime
+   *  @return       DateTime
+   */
+  public static function applyTimeZone ( DateTime $dateTime ) {
+
+    $dateTime->setTimezone( self::getDateTimeZone() );
+    return $dateTime;
+    
+  }
+
+  /**
    *  Getter: Date Format
    *
    *  @access       public
