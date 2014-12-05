@@ -165,7 +165,7 @@ class I18n extends AbstractModule {
    */
   public static function isToday ( $day ) {
 
-    if ( !is_numeric( $today ) )
+    if ( !is_numeric( $day ) )
       return false;
 
     return ( ( (int) self::getTimeNow()->format( 'N' ) -1 ) == (int) $day );

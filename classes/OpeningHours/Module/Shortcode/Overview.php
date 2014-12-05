@@ -43,7 +43,7 @@ class Overview extends AbstractShortcode {
     $this->setDefaultAttributes( $default_attributes );
 
     $valid_attribute_values = array(
-      'highlight'         => array( 'period', 'day' ),
+      'highlight'         => array( 'nothing', 'period', 'day' ),
       'display_as'        => array( 'accordion', 'single-tables' ),
       'show_closed_day'   => array( false, true )
     );
@@ -68,13 +68,15 @@ class Overview extends AbstractShortcode {
       foreach ( $set_ids as &$id )
         $id   = (int) $id;
 
+      unset( $id );
+
     elseif ( is_numeric( $attributes ) ) :
       $set_ids  = array( (int) $attributes[ 'set_ids' ] );
 
     elseif ( !is_array( $attributes[ 'set_ids' ] ) ) :
       add_admin_notice( sprintf( '<b>%s:</b> %s',
         __( 'Shortcode Opening Hours Overview', I18n::TEXTDOMAIN ),
-        sprintf( 'Property %s not properly set.', 'set_ids' )
+        sprintf( __( 'Property %s not properly set.', I18n::TEXTDOMAIN ), 'set_ids' )
       ) );
 
       return;

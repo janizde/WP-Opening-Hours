@@ -35,7 +35,7 @@ abstract class AbstractShortcode extends AbstractModule {
    *  Valid Attribute Values
    *  Associative array with:
    *    key:    attribute name
-   *    value:  numeric/sequencial array with accepted values. First array element is default/fallback value.
+   *    value:  sequencial array with accepted values. First array element is default/fallback value.
    *
    *  @access     protected
    *  @type       array
