@@ -42,6 +42,10 @@ class OpeningHours extends AbstractModule {
 			'Shortcode\IsOpen'		=> Module\Shortcode\IsOpen::getInstance(),
 			'Shortcode\Overview'	=> Module\Shortcode\Overview::getInstance()
 		);
+
+		$this->widgets = array(
+
+		);
 	}
 
 	/**
@@ -50,8 +54,24 @@ class OpeningHours extends AbstractModule {
 	 *	@access 		public
 	 */
 	public function registerHookCallbacks() {
-		add_action( 'wp_enqueue_scripts',    __CLASS__ . '::loadResources' );
-		add_action( 'admin_enqueue_scripts', __CLASS__ . '::loadResources' );
+		add_action( 'wp_enqueue_scripts',    array( __CLASS__, 'loadResources' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'loadResources' ) );
+	}
+
+	/**
+	 *	Register Widgets
+	 *	@access 			public
+	 *	@static
+	 *	@wp_action 		widgets_init
+	 */
+	public static function registerWidgets () {
+
+		if ( !is_array( $this->widgets ) )
+			return;
+
+		foreach ( $this->widgets as $widgetClass )
+			$widgetClass::registerWidget();
+
 	}
 
 
@@ -80,13 +100,17 @@ class OpeningHours extends AbstractModule {
 		);
 
 		if ( is_admin() ) {
+
 			// Backend Styles and Scripts
 			wp_enqueue_style( self::PREFIX . 'css-backend' );
 			wp_enqueue_script( self::PREFIX . 'js-backend' );
 
 			Module\Ajax::injectAjaxUrl( self::PREFIX . 'js-backend' );
+
 		} else {
+
 			// Frontend Styles and Scripts
+			
 		}
 	}
 

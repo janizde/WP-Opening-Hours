@@ -52,7 +52,7 @@ abstract class AbstractWidget extends WP_Widget {
    *  Instance
    *  associative array with:
    *    key:    string w/ field name
-   *    value:  mixed field value
+   *    value:  mixed w/ field value
    *
    *  @access     protected
    *  @type       array
@@ -130,6 +130,19 @@ abstract class AbstractWidget extends WP_Widget {
 
     foreach ( $this->getFields() as $field )
       echo $this->renderField( $field[ 'name' ] );
+
+  }
+
+  /**
+   *  Register Widget
+   *  registers the Widget class in WordPress. Gets called in \OpeningHours\OpeningHours
+   *
+   *  @access     public
+   *  @static
+   */
+  public static function registerWidget () {
+
+    register_widget( get_called_class() );
 
   }
 
