@@ -227,6 +227,19 @@ abstract class AbstractShortcode extends AbstractModule {
   }
 
   /**
+   *  Getter: Default Attribute (single)
+   *
+   *  @access     public
+   *  @param      string    $attribute_name
+   *  @return     mixed
+   */
+  public function getDefaultAttribute ( $attribute_name ) {
+    return ( isset( $this->defaultAttributes[ $attribute_name ] ) )
+      ? $this->defaultAttributes[ $attribute_name ]
+      : null;
+  }
+
+  /**
    *  Setter: Default Attributes
    *
    *  @access     protected

@@ -28,7 +28,7 @@ class Overview extends AbstractShortcode {
       'set_ids'                   => array(),
       'title'                     => null,
       'show_closed_days'          => false,
-      'highlight'                 => 'period',
+      'highlight'                 => 'nothing',
       'display_as'                => 'accordion',
       'table_classes'             => null,
       'row_classes'               => null,

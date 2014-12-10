@@ -5,6 +5,7 @@
 
 namespace OpeningHours\Module\Widget;
 
+use OpeningHours\Module\I18n;
 use OpeningHours\Module\Shortcode\AbstractShortcode;
 use OpeningHours\Misc\ArrayObject;
 
@@ -132,8 +133,33 @@ abstract class AbstractWidget extends WP_Widget {
       return;
     endif;
 
-    foreach ( $this->getFields() as $field )
-      echo $this->renderField( $field[ 'name' ] );
+    $extended   = array();
+
+    foreach ( $this->getFields() as $field ) :
+
+      if ( $field[ 'extended' ] !== true ) :
+        echo $this->renderField( $field[ 'name' ] );
+      else :
+        $extended[]   = $field;
+      endif;
+
+    endforeach;
+
+    if ( !count( $extended ) )
+      return;
+
+    echo '<div class="extended-settings">';
+
+      echo '<p><a class="collapse-toggle">' . __( 'More Settings', I18n::TEXTDOMAIN ) . '</a></p>';
+
+      echo '<div class="settings-container hidden">';
+
+      foreach ( $extended as $field )
+        echo $this->renderField( $field[ 'name' ] );
+
+      echo '</div>';
+
+    echo '</div>';
 
   }
 

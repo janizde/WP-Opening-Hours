@@ -93,18 +93,21 @@ class OpeningHours extends AbstractModule {
 		);
 
 		wp_register_style(
-			self::PREFIX . 'admin',
-			plugins_url( 'css/opening-hours-backend.css', op_plugin_path() ),
-			array(),
-			self::VERSION,
-			'all'
+			self::PREFIX . 'css-backend',
+			plugins_url( 'css/opening-hours-backend.css', op_bootstrap_file() )
 		);
 
 		if ( is_admin() ) {
 
 			// Backend Styles and Scripts
+			wp_enqueue_script( 'jquery-ui' );
 			wp_enqueue_style( self::PREFIX . 'css-backend' );
 			wp_enqueue_script( self::PREFIX . 'js-backend' );
+
+			if ( !wp_script_is('jquery-ui') ) :
+				wp_register_script( 'jquery-ui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array( 'jquery' ) );
+				wp_enqueue_script( 'jquery-ui' );
+			endif;
 
 			Module\Ajax::injectAjaxUrl( self::PREFIX . 'js-backend' );
 

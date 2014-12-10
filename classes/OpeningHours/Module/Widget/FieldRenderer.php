@@ -8,6 +8,7 @@
 namespace OpeningHours\Module\Widget;
 
 use OpeningHours\Module\AbstractModule;
+use OpeningHours\Module\Shortcode\AbstractShortcode;
 
 use WP_Widget;
 use InvalidArgumentException;
@@ -58,6 +59,10 @@ class FieldRenderer extends AbstractModule {
 
     extract( $field );
 
+    $placeholder = ( isset( $default_placeholder ) and $default_placeholder === true and $widget->getShortcode() instanceof AbstractShortcode )
+      ? 'placeholder="'. $widget->getShortcode()->getDefaultAttribute( $name ) . '"'
+      : null;
+
     ob_start();
 
     /** Start of Field Element */
@@ -75,12 +80,12 @@ class FieldRenderer extends AbstractModule {
         case 'time' :
         case 'email' :
         case 'url' :
-          echo '<input class="widefat" type="'. $type .'" id="'. $wp_id .'" name="'. $wp_name .'" value="'. $value .'" />';
+          echo '<input class="widefat" type="'. $type .'" id="'. $wp_id .'" name="'. $wp_name .'" value="'. $value .'" '. $placeholder .' />';
           break;
 
         /** Field Type: textarea */
         case 'textarea' :
-          echo '<textarea class="widefat" id="'. $wp_id .'" name="'. $wp_name .'">' . $value . '</textarea>';
+          echo '<textarea class="widefat" id="'. $wp_id .'" name="'. $wp_name .'" '. $placeholder .'>' . $value . '</textarea>';
           break;
 
         /** Field Types: select, select-multi */
