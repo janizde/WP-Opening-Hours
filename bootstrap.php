@@ -92,6 +92,7 @@ if ( op_requirements_met() ) {
 		'Module/Shortcode/Overview',
 		'Module/Widget/AbstractWidget',
 		'Module/Widget/FieldRenderer',
+		'Module/Widget/Overview',
 		'OpeningHours'
 	);
 

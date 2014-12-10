@@ -109,6 +109,30 @@ class OpeningHours extends AbstractModule {
   }
 
   /**
+   *  Get Sets Options
+   *  returns a numeric array with:
+   *    key:    int with set id
+   *    value:  string with set name
+   *
+   *  @access     public
+   *  @static
+   *  @return     array
+   */
+  public static function getSetsOptions () {
+
+    $sets   = array();
+
+    foreach ( self::getSets() as $set ) :
+
+      $sets[ $set->getId() ]  = $set->getPost()->post_title;
+
+    endforeach;
+
+    return $sets;
+
+  }
+
+  /**
    *  Setter: Sets
    *
    *  @access     protected

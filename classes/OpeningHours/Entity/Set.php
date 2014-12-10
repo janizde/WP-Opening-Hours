@@ -149,6 +149,17 @@ class Set {
   }
 
   /**
+   *  Is Parent
+   *  checks if this set is a parent set
+   *
+   *  @access     public
+   *  @return     bool
+   */
+  public function isParent () {
+    return ( $this->getId() === $this->getParentId() );
+  }
+
+  /**
    *  Add Dummy Periods
    *
    *  @access     public

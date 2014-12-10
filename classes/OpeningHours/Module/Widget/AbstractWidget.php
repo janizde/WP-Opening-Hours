@@ -79,6 +79,10 @@ abstract class AbstractWidget extends WP_Widget {
 
     $this->init();
 
+    $this->registerFields();
+
+    parent::__construct( $this->getWidgetId(), $this->getTitle(), $this->getDescription() );
+
   }
 
   /**
@@ -147,13 +151,68 @@ abstract class AbstractWidget extends WP_Widget {
   }
 
   /**
+   *  Render Shortcode
+   *  calls a shortcode with args
+   *
+   *  @access     public
+   *  @static
+   *  @param      string    $shortcode_tag
+   *  @param      array     $args
+   *  @param      array     $instance
+   *  @param      bool      $return
+   *  @return     string    depends on $return
+   */
+  public static function renderShortcode ( $shortcode_tag, array $args, array $instance, $return = false ) {
+
+    $shortcode_format         = '[%s%s]';
+    $attribute_format         = ' %s=%s';
+    $attribute_string_format  = ' %s="%s"';
+
+    $attributes         = array_merge( $args, $instance );
+
+    $attribute_string   = '';
+
+    foreach ( $attributes as $key => $value ) :
+
+      if ( is_string( $value ) and !is_numeric( $value ) ) :
+        $attribute_string   .= sprintf( $attribute_string_format, $key, $value );
+
+      elseif ( is_bool( $value ) ) :
+        $attribute_string   .= sprintf( $attribute_format, $key, ( $value ) ? 'true' : 'false' );
+
+      else :
+        $attribute_string   .= sprintf( $attribute_format, $key, (string) $value );
+
+      endif;
+
+    endforeach;
+
+    $shortcode  = sprintf( $shortcode_format, $shortcode_tag, $attribute_string );
+
+    if ( $return )
+      return do_shortcode( $shortcode );
+
+    echo do_shortcode( $shortcode );
+
+  }
+
+  /**
    *  Init
    *  set up widget configuration
    *
    *  @access     protected
    *  @abstract
    */
-  abstract public function init ();
+  abstract protected function init ();
+
+  /**
+   *  Register Fields
+   *  Add all fields for this Widget
+   *
+   *  @access     protected
+   *  @abstract
+   */
+  abstract protected function registerFields ();
 
   /**
    *  Widget Content

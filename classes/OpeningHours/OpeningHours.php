@@ -44,7 +44,7 @@ class OpeningHours extends AbstractModule {
 		);
 
 		$this->widgets = array(
-
+			'OpeningHours\Module\Widget\Overview'
 		);
 	}
 
@@ -56,15 +56,16 @@ class OpeningHours extends AbstractModule {
 	public function registerHookCallbacks() {
 		add_action( 'wp_enqueue_scripts',    array( __CLASS__, 'loadResources' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'loadResources' ) );
+
+		add_action( 'widgets_init', 		array( $this, 'registerWidgets' ) );
 	}
 
 	/**
 	 *	Register Widgets
 	 *	@access 			public
-	 *	@static
 	 *	@wp_action 		widgets_init
 	 */
-	public static function registerWidgets () {
+	public function registerWidgets () {
 
 		if ( !is_array( $this->widgets ) )
 			return;
@@ -110,7 +111,7 @@ class OpeningHours extends AbstractModule {
 		} else {
 
 			// Frontend Styles and Scripts
-			
+
 		}
 	}
 
