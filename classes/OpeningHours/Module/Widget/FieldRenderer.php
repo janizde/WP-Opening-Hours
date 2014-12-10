@@ -38,7 +38,7 @@ class FieldRenderer extends AbstractModule {
     $field  = $widget->getField( $field_name );
 
     try {
-      $field  = self::validateFuield( $field, $widget );
+      $field  = self::validateField( $field, $widget );
 
     } catch ( InvalidArgumentException $e ) {
       add_admin_notice( $e->getMessage(), 'error' );
@@ -75,7 +75,7 @@ class FieldRenderer extends AbstractModule {
 
         /** Field Type: select */
         case 'select' :
-          echo '<select class="widefat" id="'. $wp_id .'" name="'. $wp_name .'">';
+          echo '<select class="widefat" id="'. $wp_id .'" name="'. $wp_name .'" size="1">';
 
           foreach ( $options as $key => $caption ) :
             $selected   = ( $key == $value ) ? 'selected="selected"' : null;
@@ -88,6 +88,12 @@ class FieldRenderer extends AbstractModule {
       endswitch;
 
     echo '</p>';
+
+    $output = ob_get_contents();
+
+    ob_clean();
+
+    return $output;
 
   }
 
@@ -108,19 +114,19 @@ class FieldRenderer extends AbstractModule {
      *  Validation
      */
     if ( !count( $field ) )
-      throw new InvalidArgumentException( sprintf( __( 'Field configuration has to be array. %s given', self::TEXTDOMAIN ), gettype( $field ) ) );
+      self::terminate( sprintf( __( 'Field configuration has to be array. %s given', self::TEXTDOMAIN ), gettype( $field ) ), $widget );
 
     if ( empty( $field[ 'name' ] ) or !is_string( $field[ 'name' ] ) )
-      throw new InvalidArgumentException( __( 'Field name is empty or not a string.', self::TEXTDOMAIN ) );
+      self::terminate( __( 'Field name is empty or not a string.', self::TEXTDOMAIN ), $widget );
 
     if ( !isset( $field[ 'type' ] ) )
-      throw new InvalidArgumentException( sprintf( __( 'No Type option set for field %s.', self::TEXTDOMAIN ), '<b>' . $field[ 'name' ] . '</b>' ) );
+      self::terminate( sprintf( __( 'No Type option set for field %s.', self::TEXTDOMAIN ), '<b>' . $field[ 'name' ] . '</b>' ), $widget );
 
     if ( !in_array( $field[ 'type' ], self::getValidFieldTypes() ) )
-      throw new InvalidArgumentException( sprintf( __( 'Field type %s provided for field %s is not a valid type.', '<b>' . $field[ 'type' ] . '</b>', '<b>' . $field[ 'name' ] . '</b>' ) ) );
+      self::terminate( sprintf( __( 'Field type %s provided for field %s is not a valid type.', '<b>' . $field[ 'type' ] . '</b>', '<b>' . $field[ 'name' ] . '</b>' ) ), $widget );
 
     if ( $field[ 'type' ] == 'select' and ( !isset( $field[ 'options' ] ) or !is_array( $field[ 'options' ] ) ) )
-      throw new InvalidArgumentException( sprintf( __( 'Field %s with field type select, required the options array.', self::TEXTDOMAIN ), $field[ 'name' ] ) );
+      self::terminate( sprintf( __( 'Field %s with field type select, required the options array.', self::TEXTDOMAIN ), $field[ 'name' ] ), $widget );
 
     /**
      *  Filter

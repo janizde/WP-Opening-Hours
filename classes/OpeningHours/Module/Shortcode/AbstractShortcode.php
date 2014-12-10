@@ -135,10 +135,12 @@ abstract class AbstractShortcode extends AbstractModule {
    *  @param      string    $require
    *  @return     string
    */
-  public function renderShortcodeTemplate ( array $variables, $require = 'always' ) {
+  public function renderShortcodeTemplate ( array $attributes, $variables = array(), $require = 'always' ) {
 
     if ( empty( $this->getTemplatePath() ) )
       return;
+
+    $variables[ 'attributes' ] = (array) $attributes;
 
     return self::renderTemplate(
       $this->getTemplatePath(),

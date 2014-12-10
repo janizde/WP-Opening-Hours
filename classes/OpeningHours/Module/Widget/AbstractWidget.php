@@ -13,13 +13,13 @@ use WP_Widget;
 abstract class AbstractWidget extends WP_Widget {
 
   /**
-   *  Id
+   *  Widget Id
    *  string with unique widget identifier
    *
    *  @access     protected
    *  @type       string
    */
-  protected $id;
+  protected $widgetId;
 
   /**
    *  Title
@@ -144,7 +144,7 @@ abstract class AbstractWidget extends WP_Widget {
 
   /**
    *  Widget Content
-   *  use this method in the child class instead of the standerd WP_Widget::widget()
+   *  use this method in the child class instead of the standard WP_Widget::widget()
    *
    *  @access     protected
    *  @abstract
@@ -154,24 +154,24 @@ abstract class AbstractWidget extends WP_Widget {
   abstract protected function widgetContent ( array $args, array $instance );
 
   /**
-   *  Getter: Id
+   *  Getter: Widget Id
    *
    *  @access     public
    *  @return     string
    */
-  public function getId () {
-    return $this->id;
+  public function getWidgetId () {
+    return $this->widgetId;
   }
 
   /**
-   *  Setter: Id
+   *  Setter: Widget Id
    *
    *  @access     protected
-   *  @param      string      $id
+   *  @param      string      $widgetId
    *  @return     AbstractWidget
    */
-  protected function setId ( $id ) {
-    $this->id = $id;
+  protected function setWidgetId ( $widgetId ) {
+    $this->widgetId = $widgetId;
     return $this;
   }
 
