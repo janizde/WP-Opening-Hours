@@ -9,6 +9,9 @@ use OpeningHours\Misc\ArrayObject;
 use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
+use WP_Screen;
+use WP_Post;
+
 class OpeningHours extends AbstractModule {
 
   /**
@@ -52,36 +55,108 @@ class OpeningHours extends AbstractModule {
 
     add_filter( 'detail_fields_metabox_context',    array( __CLASS__, 'modifyDetailFieldContext' ) );
 
-    add_action( 'init',       array( __CLASS__, 'init' ) );
+    add_action( 'init',               array( __CLASS__, 'init' ) );
+    add_action( 'current_screen',     array( __CLASS__, 'init_admin' ) );
+
 
   }
 
   /**
-   *  Initializer
-   *  @access     public
-   *  @static
-   *  @wp_action  init
+   * Initializer
+   * initializes all parent posts and loads children
+   * gets called on every init
+   *
+   * @access     public
+   * @static
+   * @wp_action  init
    */
   public static function init () {
 
     // Get all parent op-set posts
     $posts  = get_posts( array(
-      'post_type'     => SetCpt::CPT_SLUG
+      'post_type'     => SetCpt::CPT_SLUG,
+      'post_parent'   => 0,
+      'numberposts'   => -1
     ) );
-
-    // Collect all Post Ids
-    $postIds  = array();
 
     foreach ( $posts as $singlePost ) :
       self::getSets()->offsetSet( $singlePost->ID, new SetEntity( $singlePost ) );
-      $postIds[] = $singlePost->ID;
     endforeach;
+
+    self::initCurrentSet();
+
+  }
+
+  /**
+   * Initializer Admin
+   * Initializes all Set posts for post_type op_set admin screen
+   * Overwrites Sets that have been set in init()
+   *
+   * @access    public
+   * @static
+   * @wp_action current_screen
+   */
+  public static function init_admin () {
+
+    $screen   = get_current_screen();
+
+    if ( !$screen instanceof WP_Screen ) :
+      trigger_error( sprintf( '%s::%s(): get_current_screen() may be hooked too early. Return value is not an instance of WP_Screen.', __CLASS__, __METHOD__ ) );
+      return;
+    endif;
+
+    /**
+     * Skip if current screen is no op_set post edit screen
+     */
+    if ( !$screen->base == 'post' or !$screen->post_type == SetCpt::CPT_SLUG )
+      return;
+
+    /**
+     * Redo Child Set mechanism
+     */
+    add_action( SetEntity::WP_ACTION_BEFORE_SETUP, function ( SetEntity $set ) {
+
+      $parent_post    = $set->getParentPost();
+
+      $set->setId( $parent_post->ID );
+      $set->setPost( $parent_post );
+
+    } );
+
+    /**
+     * Load new ArrayObject into sets property
+     */
+    self::setSets( new ArrayObject );
+
+    $posts    = get_posts( array(
+      'post_type'     => SetCpt::CPT_SLUG,
+      'numberposts'   => -1
+    ) );
+
+    foreach ( $posts as $single_post ) :
+      self::getSets()->offsetSet( $single_post->ID, new SetEntity( $single_post ) );
+    endforeach;
+
+    self::initCurrentSet();
+
+  }
+
+  /**
+   * Init current Set
+   * checks global posts and sets current set
+   *
+   * @access      protected
+   * @static
+   */
+  protected static function initCurrentSet () {
 
     global $post;
 
-    // Set current Set to global $post
-    if ( $post instanceof WP_Post and in_array( $post->ID, $postIds ) )
-      self::setCurrentPostId( $post->ID );
+    if ( !$post instanceof WP_Post )
+      return;
+
+    if ( self::getSets()->offsetGet( $post->ID ) instanceof SetEntity )
+      self::setCurrentSetId( $post->ID );
 
   }
 

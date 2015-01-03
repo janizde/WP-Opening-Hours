@@ -16,6 +16,11 @@ use InvalidArgumentException;
 class Set {
 
   /**
+   * Constants
+   */
+  const WP_ACTION_BEFORE_SETUP    = 'op_set_before_setup';
+
+  /**
    *  Config
    *
    *  @access     protected
@@ -121,11 +126,28 @@ class Set {
       'post_parent' => $this->getId()
     ) );
 
-    // Skip if Set has no child posts
-    if ( !count( $childPosts ) )
-      return;
+    foreach ( $childPosts as $post ) :
 
-    // Load Config
+      if ( self::childMatchesCriteria( $post ) ) :
+        $this->setId( $post->ID );
+        $this->setPost( $post );
+      endif;
+
+    endforeach;
+
+    /**
+     * Action:    op_set_before_setup
+     *
+     * @param     Set     Set object
+     */
+    do_action(
+      self::WP_ACTION_BEFORE_SETUP,
+      $this
+    );
+
+    /**
+     * Load Config
+     */
     $post_meta = get_post_meta( $this->getId(), SetCpt::PERIODS_META_KEY, true );
 
     if ( self::isValidConfig( $post_meta ) )
@@ -165,6 +187,56 @@ class Set {
   public static function isValidConfig ( $config ) {
 
     if ( !is_array( $config ) )
+      return false;
+
+    return true;
+
+  }
+
+  /**
+   * Child Matches Criteria
+   * checks if child posts matches the set criteria
+   *
+   * @access    public
+   * @static
+   * @param     WP_Post     $post
+   * @return    bool
+   */
+  public static function childMatchesCriteria ( WP_Post $post ) {
+
+    $detail_date_start  = get_post_detail( 'date-start', $post->ID );
+    $detail_date_end    = get_post_detail( 'date-end', $post->ID );
+    $detail_week_scheme = get_post_detail( 'week-scheme', $post->ID );
+
+    $detail_date_start  = ( !empty( $detail_date_start ) ) ? new DateTime( $detail_date_start, I18n::getDateTimeZone() ) : null;
+    $detail_date_end    = ( !empty( $detail_date_end ) ) ? new DateTime( $detail_date_end, I18n::getDateTimeZone() ) : null;
+
+    /**
+     * Skip if no criteria is set
+     */
+    if ( $detail_date_start == null and $detail_date_end == null and ( $detail_week_scheme == 'all' or empty( $detail_week_scheme ) ) )
+      return false;
+
+    $date_time_now      = I18n::getTimeNow();
+
+    /**
+     * Date Range
+     */
+    if ( $detail_date_start != null and $date_time_now < $detail_date_start )
+      return false;
+
+    if ( $detail_date_end != null and $date_time_now > $detail_date_end )
+      return false;
+
+    /**
+     * Week Scheme
+     */
+    $week_number_modulo = (int) $date_time_now->format('W') % 2;
+
+    if ( $detail_week_scheme == 'even' and $week_number_modulo === 1 )
+      return false;
+
+    if ( $detail_week_scheme == 'odd' and $week_number_modulo === 0 )
       return false;
 
     return true;
@@ -440,8 +512,8 @@ class Set {
    */
   public function getParentPost () {
     return ( !$this->hasParent() and !$this->parentPost instanceof WP_Post )
-      ? $this->getPost()
-      : $this->parentPost();
+      ? $this->post
+      : $this->parentPost;
   }
 
   /**
@@ -511,4 +583,3 @@ class Set {
   }
 
 }
-?>

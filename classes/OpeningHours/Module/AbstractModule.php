@@ -22,11 +22,11 @@ abstract class AbstractModule {
 
 
 	/**
-	 *	Provides access to a single instance of a module using the singleton pattern
+	 * Provides access to a single instance of a module using the singleton pattern
 	 *
-	 * 	@access 				public
-	 *	@static
-	 * 	@return  				AbstractModule
+	 * @access 				public
+	 * @static
+	 * @return  			AbstractModule
 	 */
 	public static function getInstance() {
 		$module = get_called_class();
@@ -46,12 +46,14 @@ abstract class AbstractModule {
 	 * in sub-directories to avoid cluttering the root folder. In both cases, the theme/plugin will have access to the variables so they can
 	 * fully customize the output.
 	 *
-	 * 	@param  				string|bool 	$default_template_path
-	 * 	@param  				array  			$variables
-	 * 	@param  				string 			$require
-	 * 	@return 				string
+	 * @access				public
+	 * @static
+	 * @param  				string|bool 	$default_template_path
+	 * @param  				array  			$variables
+	 * @param  				string 			$require
+	 * @return 				string
 	 */
-	protected static function renderTemplate( $default_template_path = false, $variables = array(), $require = 'once' ) {
+	public static function renderTemplate( $default_template_path = false, $variables = array(), $require = 'once' ) {
 		do_action( 'op_render_template_pre', $default_template_path, $variables );
 
 		$template_path = locate_template( basename( $default_template_path ) );

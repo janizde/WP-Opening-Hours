@@ -137,16 +137,6 @@ class Set extends AbstractModule {
       'caption' => __( 'Description', self::TEXTDOMAIN )
     ) );
 
-    /** Field: Ignore Date Range */
-    register_detail_field( self::CPT_SLUG, array(
-      'type'    => 'checkbox',
-      'slug'    => 'ignore-date-range',
-      'caption' => __( 'Date Range', self::TEXTDOMAIN ),
-      'options' => array(
-        'ignore'    => __( 'Ignore Date Range', self::TEXTDOMAIN )
-      )
-    ) );
-
     /** Field: Date Start */
     register_detail_field( self::CPT_SLUG, array(
       'type'    => 'date',

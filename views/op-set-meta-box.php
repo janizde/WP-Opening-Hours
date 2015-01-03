@@ -6,6 +6,7 @@
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\CustomPostType\Set;
+use OpeningHours\Module\Entity\Set as SetEntity;
 
 global $post;
 

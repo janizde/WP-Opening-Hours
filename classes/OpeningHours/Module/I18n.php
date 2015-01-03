@@ -289,7 +289,9 @@ class I18n extends AbstractModule {
    *  @return       DateTime
    */
   public static function getTimeNow () {
-    return self::$timeNow;
+    return ( self::$timeNow instanceof DateTime )
+      ? self::$timeNow
+      : new DateTime( 'now' );
   }
 
   /**
