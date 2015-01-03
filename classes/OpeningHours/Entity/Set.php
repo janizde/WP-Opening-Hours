@@ -64,17 +64,27 @@ class Set {
   protected $parentPost;
 
   /**
+   * Description
+   * Description meta from CPT Set
+   *
+   * @access      protected
+   * @type        string
+   */
+  protected $description;
+
+  /**
    *  Has Parent
    *
    *  @access     protected
    *  @type       bool
    */
+  protected $hasParent;
 
   /**
    *  Constructor
    *
    *  @access     public
-   *  @param      WP_Post|int     $config
+   *  @param      WP_Post|int     $post
    *  @return     Set
    */
   public function __construct ( $post ) {
@@ -105,7 +115,7 @@ class Set {
    */
   public function setUp () {
 
-    // Check for appliable child posts
+    // Check for Child Posts
     $childPosts   = get_posts( array(
       'post_type'   => SetCpt::CPT_SLUG,
       'post_parent' => $this->getId()
@@ -128,6 +138,19 @@ class Set {
       $this->getPeriods()->addElement( new Period( $periodConfig ) );
     endforeach;
 
+    $post_detail_description  = get_post_detail( 'description', $this->getId() );
+    $post_parent_detail_description = get_post_detail( 'description', $this->getParentId() );
+
+    /**
+     * Set Description
+     */
+    if ( !empty( $post_detail_description ) ) :
+      $this->setDescription( $post_detail_description );
+
+    elseif ( !empty( $post_parent_detail_description ) ):
+      $this->setDescription( $post_parent_detail_description );
+
+    endif;
   }
 
   /**
@@ -136,7 +159,7 @@ class Set {
    *
    *  @access     public
    *  @static
-   *  @param      array     $configuration
+   *  @param      array     $config
    *  @return     bool
    */
   public static function isValidConfig ( $config ) {
@@ -280,7 +303,7 @@ class Set {
    *  Getter: Periods By Day
    *
    *  @access     public
-   *  @param      array|int   $day
+   *  @param      array|int   $days
    *  @return     array
    */
   public function getPeriodsByDay ( $days ) {
@@ -443,6 +466,26 @@ class Set {
 
     return $this;
 
+  }
+
+  /**
+   * Getter: Description
+   *
+   * @access      public
+   * @return      bool
+   */
+  public function getDescription () {
+    return $this->description;
+  }
+
+  /**
+   * Setter: Description
+   *
+   * @access      protected
+   * @param       string        $description
+   */
+  protected function setDescription ( $description ) {
+    $this->description    = $description;
   }
 
   /**

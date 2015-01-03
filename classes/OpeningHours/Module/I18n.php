@@ -95,16 +95,17 @@ class I18n extends AbstractModule {
      *  GMT offset timezone Settings are converted to string timezone identifiers
      *  n:30 GMT offset settings are floored to n:00!
      */
-    if ( !empty( get_option( 'timezone_string' ) ) ) :
-      $time_zone_string   = get_option( 'timezone_string' );
+    $timezone_string    = get_option( 'timezone_string' );
+    $gmt_offset         = get_option( 'gmt_offset' );
 
-    elseif ( !empty( get_option( 'gmt_offset' ) ) ) :
+    if ( !empty( $gmt_offset ) and empty( $timezone_string ) ) :
       $offset             = floatval( floor( get_option( 'gmt_offset' ) ) ) * 3600;
-      $time_zone_string   = timezone_name_from_abbr( null, $offset, 0 );
-
+      $timezone_string    = timezone_name_from_abbr( null, $offset, 0 );
     endif;
 
-    self::setDateTimeZone( new DateTimeZone( $time_zone_string ) );
+    self::setDateTimeZone( new DateTimeZone( $timezone_string ) );
+
+    date_default_timezone_set( $timezone_string );
 
     /**
      *  Save current time in property $timeNow
@@ -156,6 +157,40 @@ class I18n extends AbstractModule {
   }
 
   /**
+   * Apply week context
+   * sets the date of a DateTime object to a specific weekday in the current week
+   *
+   * @access        public
+   * @static
+   * @param         DateTime    $date_time
+   * @param         int         $weekday
+   * @return        DateTime
+   */
+  public static function applyWeekContext( DateTime $date_time, $weekday ) {
+
+    if ( $weekday < 1 or $weekday > 7 )
+      return $date_time;
+
+    $weekdays   = static::getWeekdaysUntranslated();
+
+    $string     = 'next ' . $weekdays[ $weekday - 1 ];
+
+    $timestamp  = strtotime( $string );
+
+    if ( static::isToday( $weekday ) )
+      $timestamp  = time();
+
+    $date_time->setDate(
+        date( 'Y', $timestamp ),
+        date( 'm', $timestamp ),
+        date( 'd', $timestamp )
+    );
+
+    return $date_time;
+
+  }
+
+  /**
    *  Is Today
    *
    *  @access       public
@@ -168,7 +203,13 @@ class I18n extends AbstractModule {
     if ( !is_numeric( $day ) )
       return false;
 
-    return ( ( (int) self::getTimeNow()->format( 'N' ) -1 ) == (int) $day );
+    if ( self::getTimeNow() instanceof DateTime ) :
+      $date_time    = self::getTimeNow();
+    else :
+      $date_time    = new DateTime( 'now' );
+    endif;
+
+    return ( ( (int) $date_time->format( 'N' ) -1 ) == (int) $day );
 
   }
 
@@ -271,13 +312,32 @@ class I18n extends AbstractModule {
    */
   public static function getWeekdays () {
     return array(
-      'monday'      => __( 'Monday', self::TEXTDOMAIN ),
-      'tuesday'     => __( 'Tuesday', self::TEXTDOMAIN ),
+      'monday'      => __( 'Monday',    self::TEXTDOMAIN ),
+      'tuesday'     => __( 'Tuesday',   self::TEXTDOMAIN ),
       'wednesday'   => __( 'Wednesday', self::TEXTDOMAIN ),
-      'thursday'    => __( 'Thursday', self::TEXTDOMAIN ),
-      'friday'      => __( 'Friday', self::TEXTDOMAIN ),
-      'saturday'    => __( 'Saturday', self::TEXTDOMAIN ),
-      'sunday'      => __( 'Sunday', self::TEXTDOMAIN )
+      'thursday'    => __( 'Thursday',  self::TEXTDOMAIN ),
+      'friday'      => __( 'Friday',    self::TEXTDOMAIN ),
+      'saturday'    => __( 'Saturday',  self::TEXTDOMAIN ),
+      'sunday'      => __( 'Sunday',    self::TEXTDOMAIN )
+    );
+  }
+
+  /**
+   * Get Weekdays untranslated
+   *
+   * @access        public
+   * @static
+   * @return        array
+   */
+  public static function getWeekdaysUntranslated () {
+    return array(
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
     );
   }
 

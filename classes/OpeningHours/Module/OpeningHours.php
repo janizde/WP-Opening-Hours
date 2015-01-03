@@ -109,14 +109,14 @@ class OpeningHours extends AbstractModule {
   }
 
   /**
-   *  Get Sets Options
-   *  returns a numeric array with:
-   *    key:    int with set id
-   *    value:  string with set name
+   * Get Sets Options
+   * returns a numeric array with:
+   *   key:     int with set id
+   *   value:   string with set name
    *
-   *  @access     public
-   *  @static
-   *  @return     array
+   * @access      public
+   * @static
+   * @return      array
    */
   public static function getSetsOptions () {
 
@@ -137,7 +137,7 @@ class OpeningHours extends AbstractModule {
    *
    *  @access     protected
    *  @static
-   *  @param      array     $sets
+   *  @param      ArrayObject     $sets
    */
   public static function setSets ( ArrayObject $sets ) {
     self::$sets   = $sets;
@@ -171,7 +171,7 @@ class OpeningHours extends AbstractModule {
    *  @access     public
    *  @static
    *  @param      int     $setId
-   *  @return     OpeningHours\Entity\Set
+   *  @return     \OpeningHours\Entity\Set
    */
   public static function getSet ( $setId ) {
     return self::getSets()->offsetGet( $setId );
@@ -182,7 +182,7 @@ class OpeningHours extends AbstractModule {
    *
    *  @access     public
    *  @static
-   *  @return     OpeningHours\Entity\Set
+   *  @return     \OpeningHours\Entity\Set
    */
   public static function getCurrentSet () {
     $setId  = self::getCurrentSetId();

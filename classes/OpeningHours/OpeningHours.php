@@ -97,6 +97,11 @@ class OpeningHours extends AbstractModule {
 			plugins_url( 'css/opening-hours-backend.css', op_bootstrap_file() )
 		);
 
+		wp_register_style(
+			self::PREFIX . 'css-frontend',
+			plugins_url( 'css/opening-hours-frontend.css', op_bootstrap_file() )
+		);
+
 		if ( is_admin() ) {
 
 			// Backend Styles and Scripts
@@ -114,6 +119,7 @@ class OpeningHours extends AbstractModule {
 		} else {
 
 			// Frontend Styles and Scripts
+			wp_enqueue_style( self::PREFIX . 'css-frontend' );
 
 		}
 	}

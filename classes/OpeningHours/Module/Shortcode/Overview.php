@@ -6,7 +6,6 @@
 namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Module\I18n;
-use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Entity\Set as SetEntity;
 
 class Overview extends AbstractShortcode {
@@ -28,6 +27,7 @@ class Overview extends AbstractShortcode {
       'set_ids'                   => array(),
       'title'                     => null,
       'show_closed_days'          => false,
+      'show_description'          => true,
       'highlight'                 => 'nothing',
       'display_as'                => 'accordion',
       'table_classes'             => null,
@@ -35,6 +35,7 @@ class Overview extends AbstractShortcode {
       'cell_classes'              => null,
       'cell_heading_classes'      => null,
       'cell_periods_classes'      => null,
+      'cell_description_classes'  => 'op-set-description',
       'highlighted_period_class'  => 'highlighted',
       'highlighted_day_class'     => 'highlighted',
       'table_id_prefix'           => 'op-table-set-'
@@ -45,7 +46,8 @@ class Overview extends AbstractShortcode {
     $valid_attribute_values = array(
       'highlight'         => array( 'nothing', 'period', 'day' ),
       'display_as'        => array( 'accordion', 'single-tables' ),
-      'show_closed_day'   => array( false, true )
+      'show_closed_day'   => array( false, true ),
+      'show_description'  => array( true, false )
     );
 
     $this->setValidAttributeValues( $valid_attribute_values );
@@ -65,11 +67,6 @@ class Overview extends AbstractShortcode {
     if ( is_string( $attributes[ 'set_ids' ] ) ) :
       $set_ids = explode( ',', $attributes[ 'set_ids' ] );
 
-      foreach ( $set_ids as &$id )
-        $id   = (int) $id;
-
-      unset( $id );
-
     elseif ( is_numeric( $attributes ) ) :
       $set_ids  = array( (int) $attributes[ 'set_ids' ] );
 
@@ -82,6 +79,12 @@ class Overview extends AbstractShortcode {
       return;
 
     endif;
+
+    if ( !count( $set_ids ) or !is_array( $set_ids ) )
+      return;
+
+    foreach ( (array) $set_ids as $key => $id )
+      $set_ids[ $key ]   = (int) $id;
 
     $sets   = SetEntity::getSetsFromPosts( $set_ids );
 

@@ -6,7 +6,6 @@
 namespace OpeningHours\Module\Widget;
 
 use OpeningHours\Module\I18n;
-use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\Shortcode\Overview as OverviewShortcode;
 
 class Overview extends AbstractWidget {
@@ -81,7 +80,13 @@ class Overview extends AbstractWidget {
     /** Field: Show Closed Days */
     $this->addField( 'show_closed_days', array(
       'type'    => 'checkbox',
-      'caption' => __( 'Show closed days.', I18n::TEXTDOMAIN )
+      'caption' => __( 'Show closed days', I18n::TEXTDOMAIN )
+    ) );
+
+    /** Field: Show Description */
+    $this->addField( 'show_description', array(
+      'type'    => 'checkbox',
+      'caption' => __( 'Show Set Description', I18n::TEXTDOMAIN )
     ) );
 
     /**
@@ -174,8 +179,5 @@ class Overview extends AbstractWidget {
     $this->renderShortcode( self::SHORTCODE, $args, $instance );
 
   }
-
-
-
 }
 ?>

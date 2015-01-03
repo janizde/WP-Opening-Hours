@@ -36,17 +36,21 @@ class FieldRenderer extends AbstractModule {
   protected static $optionsFieldTypes = array( 'select', 'select-multi' );
 
   /**
-   *  Render Field
-   *  renders the widget form field and returns markup as string
+   * Render Field
+   * renders the widget form field and returns markup as string
    *
-   *  @access     public
-   *  @static
-   *  @param      WP_Widget   $widget
-   *  @param      string      $field_name
+   * @access      public
+   * @static
+   * @param       WP_Widget   $widget
+   * @param       string      $field_name
+   * @return      void
    */
   public static function renderField ( WP_Widget $widget, $field_name ) {
 
-    $field  = $widget->getField( $field_name );
+    $field              = $widget->getField( $field_name );
+    $instance           = $widget->getInstance();
+
+    $field[ 'value' ]   = $instance[ $field_name ];
 
     try {
       $field  = self::validateField( $field, $widget );
@@ -98,13 +102,19 @@ class FieldRenderer extends AbstractModule {
           $wp_name    = ( $is_multi ) ? $wp_name . '[]' : $wp_name;
           $style      = ( $is_multi ) ? 'style="height: 50px;"' : null;
 
-          echo '<select class="widefat" id="'. $wp_id .'" name="'. $wp_name .'" size="'. $size .'" '. $style .'>';
+          echo '<select class="widefat" id="'. $wp_id .'" name="'. $wp_name .'" size="'. $size .'" '. $style .' '. $multi .'>';
 
           foreach ( $options as $key => $caption ) :
 
             $selected   = 'selected="selected"';
-            $selected   = ( $is_multi and in_array( $key, (array) $value ) ) ? $selected : null;
-            $selected   = ( !$is_multi and $key == $value ) ? $selected : null;
+
+            if ( $is_multi ) :
+              $selected   = ( in_array( $key, (array) $value ) ) ? $selected : null;
+
+            else :
+              $selected   = ( $key == $value ) ? $selected : null;
+
+            endif;
 
             echo '<option value="'. $key .'" '. $selected .'>'. $caption .'</option>';
           endforeach;

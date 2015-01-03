@@ -2,7 +2,39 @@
 
   use OpeningHours\Module\I18n;
 
+  /**
+   * @var       $attributes         array (associative) w/ shortcode attributes
+   */
+
   extract( $attributes );
+
+  /**
+   * Variables defined by extraction
+   *
+   * @var       $before_widget      string w/ html before widget
+   * @var       $after_widget       string w/ html after widget
+   * @var       $before_title       string w/ html before title
+   * @var       $after_title        string w/ html after title
+   *
+   * @var       $title              string w/ widget title
+   * @var       $sets               array (sequential) w/ Set objects
+   * @var       $highlight          string w/ identifier of what section to highlight
+   * @var       $weekdays           array (associative) w/ key: number representing day; value: translated day string/caption
+   * @var       $show_closed        bool whether to show closed days or not
+   * @var       $show_description   bool whether to show description or not
+   *
+   * @var       $table_classes      string w/ classes for table
+   * @var       $table_id_prefix    string w/ prefix for table's id attribute
+   * @var       $row_classes        string w/ classes for row
+   * @var       $cell_classes       string w/ classes for all table cells
+   *
+   * @var       $highlighted_day_class      string w/ class for highlighted day
+   * @var       $highlighted_period_class   string w/ class for highlighted period
+   * @var       $cell_heading_classes       string w/ classes for heading cells
+   * @var       $cell_periods_classes       string w/ classes for cells containing periods
+   * @var       $cell_description_classes   string w/ classes for description cell
+   * @var       $span_period_classes        string w/ classes for period time span
+   */
 
   echo $before_widget;
 
@@ -11,7 +43,21 @@
 
     foreach ( $sets as $set ) :
 
+      /**
+       * @var     $set      \OpeningHours\Entity\Set
+       */
+
       echo '<table class="op-table op-table-overview '. $table_classes .'" id="'. $table_id_prefix . $set->getId() .'">';
+
+      if ( $show_description and $set->getDescription() ) :
+        echo '<tr class="op-row op-row-description">';
+
+          echo '<td class="op-cell '. $cell_classes .' '. $cell_description_classes .'" colspan="2">';
+            echo $set->getDescription();
+          echo '</td>';
+
+        echo '</tr>';
+      endif;
 
       foreach ( $set->getPeriodsGroupedByDay() as $day => $periods ) :
 
@@ -26,6 +72,11 @@
           echo '<td class="op-cell op-cell-periods '. $cell_periods_classes .' '. $cell_classes .'">';
 
           foreach ( $periods as $period ) :
+
+            /**
+             * @var     $period     \OpeningHours\Entity\Period
+             */
+
             $highlighted_period   = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : null;
             echo '<span class="op-period-time '. $span_period_classes .' '. $highlighted_period .'">' . $period->getFormattedTimeRange() . '</span>';
           endforeach;
@@ -41,5 +92,3 @@
     endforeach;
 
   echo $after_widget;
-
-?>

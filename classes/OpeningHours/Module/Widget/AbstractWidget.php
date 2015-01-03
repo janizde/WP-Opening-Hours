@@ -118,11 +118,12 @@ abstract class AbstractWidget extends WP_Widget {
   }
 
   /**
-   *  Widget Form Function
-   *  gets called by WordPress to render widget form
+   * Widget Form Function
+   * gets called by WordPress to render widget form
    *
-   *  @access     public
-   *  @param      array     $instance
+   * @access      public
+   * @param       array     $instance
+   * @return      void
    */
   public function form ( array $instance ) {
 
@@ -200,12 +201,37 @@ abstract class AbstractWidget extends WP_Widget {
 
     foreach ( $attributes as $key => $value ) :
 
+      /**
+       * If value is a string and not numeric
+       */
       if ( is_string( $value ) and !is_numeric( $value ) ) :
+
+        // Skip if value is empty
+        if ( empty( $value ) )
+          continue;
+
         $attribute_string   .= sprintf( $attribute_string_format, $key, $value );
 
+      /**
+       * If value is boolean
+       */
       elseif ( is_bool( $value ) ) :
         $attribute_string   .= sprintf( $attribute_format, $key, ( $value ) ? 'true' : 'false' );
 
+      /**
+       * If value is an array
+       */
+      elseif ( is_array( $value ) ) :
+
+        // Skip if array does not contain any elements
+        if ( !count( $value ) )
+          continue;
+
+        $attribute_string   .= sprintf( $attribute_string_format, $key, implode( ',', $value ) );
+
+      /**
+       * Other Types (converted to string)
+       */
       else :
         $attribute_string   .= sprintf( $attribute_format, $key, (string) $value );
 

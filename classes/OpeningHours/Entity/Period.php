@@ -13,59 +13,66 @@ use DateInterval;
 class Period {
 
   /**
-   *  Config
+   * Config
+   * sequential config array
    *
-   *  @access     protected
-   *  @type       array
+   * @access     protected
+   * @type       array
    */
   protected $config;
 
   /**
-   *  Weekday
+   * Weekday
+   * weekdays represented by integer. Monday: 0 - Sunday: 7
    *
-   *  @access     protected
-   *  @type       int
+   * @access     protected
+   * @type       int
    */
   protected $weekday;
 
   /**
-   *  Time Start
+   * Time Start
+   * DateTime object representing the period's start time in the current week
    *
-   *  @access     protected
-   *  @type       DateTime
+   * @access     protected
+   * @type       DateTime
    */
   protected $timeStart;
 
   /**
-   *  Time End
+   * Time End
+   * DateTime object representing the period's end time in the current week
    *
-   *  @access     protected
-   *  @type       DateTime
+   * @access     protected
+   * @type       DateTime
    */
   protected $timeEnd;
 
   /**
-   *  Time Difference
+   * Time Difference
+   * DateInterval representing the difference between timeStart and timeEnd
+   * Automatically updated in setters for timeStart and timeEnd
    *
-   *  @access     protected
-   *  @type       DateInterval
+   * @access     protected
+   * @type       DateInterval
    */
   protected $timeDifference;
 
   /**
-   *  Is Dummy
+   * Is Dummy
+   * Flags Period as dummy
    *
-   *  @access     protected
-   *  @type       bool
+   * @access     protected
+   * @type       bool
    */
   protected $isDummy;
 
   /**
-   *  Constructor
+   * Constructor
    *
-   *  @access     public
-   *  @param      array     $config
-   *  @return     Period
+   * @access     public
+   * @param      array     $config
+   * @return     Period
    */
   public function __construct ( $config = array() ) {
 
@@ -86,10 +93,11 @@ class Period {
   }
 
   /**
-   *  Set Up
+   * Set Up
    *
-   *  @access     public
-   *  @return     Period
+   * @access     public
+   * @return     Period
+   * @throws     InvalidArgumentException
    */
   public function setUp () {
 
@@ -108,6 +116,15 @@ class Period {
     $config   = wp_parse_args( $config, $defaultConfig );
 
     extract( $config );
+
+    /**
+     * Variables defined by extract
+     *
+     * @var     $weekday      int representing weekday (1-7)
+     * @var     $timeStart    string|DateTime w/ time that the period starts
+     * @var     $timeEnd      string|DateTime w/ time that the period ends
+     * @var     $dummy        bool whether period is a dummy or not
+     */
 
     $this->setWeekday( $weekday );
     $this->setTimeStart( $timeStart );
@@ -224,10 +241,14 @@ class Period {
    */
   public function setTimeStart ( $timeStart ) {
     if ( is_string( $timeStart ) ) :
-      $this->timeStart = new DateTime( $timeStart, I18n::getDateTimeZone() );
+      $date_time = new DateTime( $timeStart, I18n::getDateTimeZone() );
     elseif ( $timeStart instanceof DateTime ) :
-      $this->timeStart = I18n::applyTimeZone( $timeStart );
+      $date_time = I18n::applyTimeZone( $timeStart );
     endif;
+
+    $date_time = I18n::applyWeekContext( $date_time, $this->getWeekday() );
+
+    $this->timeStart = $date_time;
 
     $this->updateTimeDifference();
 
@@ -256,10 +277,14 @@ class Period {
    */
   public function setTimeEnd ( $timeEnd ) {
     if ( is_string( $timeEnd ) ) :
-      $this->timeEnd = new DateTime( $timeEnd, I18n::getDateTimeZone() );
+      $date_time = new DateTime( $timeEnd, I18n::getDateTimeZone() );
     elseif ( $timeEnd instanceof DateTime ) :
-      $this->timeEnd = I18n::applyTimeZone( $timeEnd );
+      $date_time = I18n::applyTimeZone( $timeEnd );
     endif;
+
+    $date_time = I18n::applyWeekContext( $date_time, $this->getWeekday() );
+
+    $this->timeEnd  = $date_time;
 
     $this->updateTimeDifference();
 

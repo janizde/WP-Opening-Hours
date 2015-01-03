@@ -1,6 +1,6 @@
 <?php
 /**
- *	Opening Hours: Module: Asbtract Module
+ *	Opening Hours: Module: Abstract Module
  */
 
 namespace OpeningHours\Module;
@@ -26,7 +26,7 @@ abstract class AbstractModule {
 	 *
 	 * 	@access 				public
 	 *	@static
-	 * 	@return  				OP_Module
+	 * 	@return  				AbstractModule
 	 */
 	public static function getInstance() {
 		$module = get_called_class();
@@ -46,7 +46,7 @@ abstract class AbstractModule {
 	 * in sub-directories to avoid cluttering the root folder. In both cases, the theme/plugin will have access to the variables so they can
 	 * fully customize the output.
 	 *
-	 * 	@param  				string 			$default_template_path
+	 * 	@param  				string|bool 	$default_template_path
 	 * 	@param  				array  			$variables
 	 * 	@param  				string 			$require
 	 * 	@return 				string

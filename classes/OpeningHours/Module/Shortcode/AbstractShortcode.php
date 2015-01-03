@@ -100,7 +100,7 @@ abstract class AbstractShortcode extends AbstractModule {
    */
   public function validate () {
 
-    if ( empty( $this->getShortcodeTag() ) )
+    if ( empty( $this->shortcodeTag ) )
       throw new InvalidArgumentException( __( 'Shortcode has no tagname and could not be registered', self::TEXTDOMAIN ) );
 
   }
@@ -131,13 +131,13 @@ abstract class AbstractShortcode extends AbstractModule {
    *  Render Shortcode Template
    *
    *  @access     protected
-   *  @param      array     $variables
+   *  @param      array     $attributes
    *  @param      string    $require
    *  @return     string
    */
   public function renderShortcodeTemplate ( array $attributes, $variables = array(), $require = 'always' ) {
 
-    if ( empty( $this->getTemplatePath() ) )
+    if ( empty( $this->templatePath ) )
       return;
 
     $variables[ 'attributes' ] = (array) $attributes;
@@ -159,9 +159,9 @@ abstract class AbstractShortcode extends AbstractModule {
    *  @param      array       $attributes
    *  @return     array
    */
-  protected static function filterAttributes ( array $attributes ) {
+  protected function filterAttributes ( array $attributes ) {
 
-    if ( empty( $this->getShortcodeTag() ) ) :
+    if ( empty( $this->shortcodeTag ) ) :
       trigger_error( 'Tried to filter shortcode attributes before shortcode tag has been set.' );
       return;
     endif;
