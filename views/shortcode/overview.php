@@ -23,6 +23,7 @@
    * @var       $show_closed        bool whether to show closed days or not
    * @var       $show_description   bool whether to show description or not
    *
+   * @var       $caption_closed     string w/ caption for closed days
    * @var       $table_classes      string w/ classes for table
    * @var       $table_id_prefix    string w/ prefix for table's id attribute
    * @var       $row_classes        string w/ classes for row
@@ -70,6 +71,9 @@
           echo '</th>';
 
           echo '<td class="op-cell op-cell-periods '. $cell_periods_classes .' '. $cell_classes .'">';
+
+          if ( !count( $periods ) )
+            echo '<span class="op-closed">'. $caption_closed .'</span>';
 
           foreach ( $periods as $period ) :
 

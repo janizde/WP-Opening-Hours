@@ -29,7 +29,7 @@ class Overview extends AbstractShortcode {
       'show_closed_days'          => false,
       'show_description'          => true,
       'highlight'                 => 'nothing',
-      'display_as'                => 'accordion',
+      'caption_closed'            => __( 'Closed', I18n::TEXTDOMAIN ),
       'table_classes'             => null,
       'row_classes'               => null,
       'cell_classes'              => null,
@@ -45,7 +45,6 @@ class Overview extends AbstractShortcode {
 
     $valid_attribute_values = array(
       'highlight'         => array( 'nothing', 'period', 'day' ),
-      'display_as'        => array( 'accordion', 'single-tables' ),
       'show_closed_day'   => array( false, true ),
       'show_description'  => array( true, false )
     );

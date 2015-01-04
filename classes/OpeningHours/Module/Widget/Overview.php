@@ -67,16 +67,6 @@ class Overview extends AbstractWidget {
       )
     ) );
 
-    /** Field: Display As */
-    $this->addField( 'display_as', array(
-      'type'    => 'select',
-      'caption' => __( 'Display Sets as', I18n::TEXTDOMAIN ),
-      'options' => array(
-        'accordion'     => __( 'Accordion', I18n::TEXTDOMAIN ),
-        'single-tables' => __( 'Single Tables', I18n::TEXTDOMAIN )
-      )
-    ) );
-
     /** Field: Show Closed Days */
     $this->addField( 'show_closed_days', array(
       'type'    => 'checkbox',
@@ -92,6 +82,15 @@ class Overview extends AbstractWidget {
     /**
      *  Extended Fields
      */
+
+    /** Field: Closed Caption */
+    $this->addField( 'caption_closed', array(
+      'type'      => 'text',
+      'caption'   => __( 'Closed Caption', I18n::TEXTDOMAIN ),
+      'extended'  => true,
+
+      'default_placeholder' => true
+    ) );
 
     /** Field: Table Classes */
     $this->addField( 'table_classes', array(

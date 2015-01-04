@@ -18,3 +18,7 @@ tr.op-row-day.highlighted th {
 span.op-period-time.highlighted {
     color:          green;
 }
+
+span.op-closed {
+    color:          red;
+}
