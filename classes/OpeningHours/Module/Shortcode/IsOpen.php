@@ -27,10 +27,13 @@ class IsOpen extends AbstractShortcode {
       'after_widget'  => null,
       'before_title'  => null,
       'after_title'   => null,
-      'title'         => null
+      'title'         => null,
+      'classes'       => null
     );
 
     $this->setDefaultAttributes( $default_attributes );
+
+    $this->setValidAttributeValues( array() );
 
     $this->setTemplatePath( 'shortcode/is-open.php' );
 
@@ -57,7 +60,7 @@ class IsOpen extends AbstractShortcode {
     $is_open    = $set->isOpen();
 
     $attributes[ 'is-open' ]    = $is_open;
-    $attributes[ 'classes' ]    = ( $is_open ) ? 'op-open' : 'op-closed';
+    $attributes[ 'classes' ]    .= ( $is_open ) ? 'op-open' : 'op-closed';
     $attributes[ 'text' ]       = ( $is_open ) ? $attributes[ 'open_text' ] : $attributes[ 'closed_text' ];
 
     echo $this->renderShortcodeTemplate( $attributes );
