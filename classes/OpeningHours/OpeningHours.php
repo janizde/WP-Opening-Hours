@@ -31,6 +31,7 @@ class OpeningHours extends AbstractModule {
 	 *	@access 		protected
 	 */
 	protected function __construct() {
+
 		$this->registerHookCallbacks();
 
 		$this->modules = array(
@@ -47,6 +48,7 @@ class OpeningHours extends AbstractModule {
 			'OpeningHours\Module\Widget\Overview',
 			'OpeningHours\Module\Widget\IsOpen'
 		);
+
 	}
 
 	/**

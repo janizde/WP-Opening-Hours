@@ -77,6 +77,9 @@ class Overview extends AbstractShortcode {
 
       return;
 
+    elseif ( is_array( $attributes[ 'set_ids' ] ) ) :
+      $set_ids  = $attributes[ 'set_ids' ];
+
     endif;
 
     if ( !count( $set_ids ) or !is_array( $set_ids ) )

@@ -175,7 +175,7 @@ class Overview extends AbstractWidget {
    */
   protected function widgetContent ( array $args, array $instance ) {
 
-    $this->renderShortcode( self::SHORTCODE, $args, $instance );
+    echo OverviewShortcode::getInstance()->renderShortcode( array_merge( $args, $instance ) );
 
   }
 }

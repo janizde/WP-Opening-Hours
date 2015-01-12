@@ -96,7 +96,7 @@ class IsOpen extends AbstractWidget {
      */
     protected function widgetContent ( array $args, array $instance ) {
 
-        echo $this->renderShortcode( self::SHORTCODE, $args, $instance );
+        echo IsOpenShortcode::getInstance()->renderShortcode( array_merge( $args, $instance ) );
 
     }
 

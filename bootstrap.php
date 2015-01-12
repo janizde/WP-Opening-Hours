@@ -79,6 +79,7 @@ function op_bootstrap_file () {
 if ( op_requirements_met() ) {
 
 	$classes 	= array(
+		'Misc/Helpers',
 		'Misc/ArrayObject',
 		'Entity/Set',
 		'Entity/Period',

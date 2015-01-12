@@ -6,6 +6,7 @@
 namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Module\AbstractModule;
+use OpeningHours\Misc\Helpers;
 
 use InvalidArgumentException;
 
@@ -35,7 +36,7 @@ abstract class AbstractShortcode extends AbstractModule {
    *  Valid Attribute Values
    *  Associative array with:
    *    key:    attribute name
-   *    value:  sequencial array with accepted values. First array element is default/fallback value.
+   *    value:  sequential array with accepted values. First array element is default/fallback value.
    *
    *  @access     protected
    *  @type       array
@@ -114,6 +115,11 @@ abstract class AbstractShortcode extends AbstractModule {
    */
   public function renderShortcode ( array $attributes ) {
 
+    /**
+     * Unset empty values to prevent them from overwriting defaults
+     */
+    $attributes   = Helpers::unsetEmptyValues( $attributes );
+
     $attributes   = shortcode_atts( $this->getDefaultAttributes(), $attributes, $this->getShortcodeTag() );
 
     ob_start();
@@ -128,12 +134,13 @@ abstract class AbstractShortcode extends AbstractModule {
   }
 
   /**
-   *  Render Shortcode Template
+   * Render Shortcode Template
    *
-   *  @access     protected
-   *  @param      array     $attributes
-   *  @param      string    $require
-   *  @return     string
+   * @access      protected
+   * @param       array     $attributes
+   * @param       array     $variables
+   * @param       string    $require
+   * @return      string
    */
   public function renderShortcodeTemplate ( array $attributes, $variables = array(), $require = 'always' ) {
 

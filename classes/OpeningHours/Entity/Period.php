@@ -164,6 +164,29 @@ class Period {
   }
 
   /**
+   * Update Week Context
+   * applies week context on start and end time
+   * handles periods that exceed midnight
+   *
+   * @access      public
+   */
+  public function updateWeekContext () {
+
+    if ( !$this->getTimeStart() instanceof DateTime or !$this->getTimeEnd() instanceof DateTime )
+      return;
+
+    I18n::applyWeekContext( $this->getTimeStart(), $this->getWeekday() );
+    I18n::applyWeekContext( $this->getTimeEnd(), $this->getWeekday() );
+
+    if ( $this->getTimeStart()->getTimestamp() >= $this->getTimeEnd()->getTimestamp() ) :
+
+      // Add one day
+      $this->getTimeEnd()->add( new DateInterval( 'P1D' ) );
+    endif;
+
+  }
+
+  /**
    *  Get Formatted Time Range
    *
    *  @access     public
@@ -246,11 +269,10 @@ class Period {
       $date_time = I18n::applyTimeZone( $timeStart );
     endif;
 
-    $date_time = I18n::applyWeekContext( $date_time, $this->getWeekday() );
-
     $this->timeStart = $date_time;
 
     $this->updateTimeDifference();
+    $this->updateWeekContext();
 
     return $this;
   }
@@ -276,17 +298,17 @@ class Period {
    *  @return     Set
    */
   public function setTimeEnd ( $timeEnd ) {
+
     if ( is_string( $timeEnd ) ) :
       $date_time = new DateTime( $timeEnd, I18n::getDateTimeZone() );
     elseif ( $timeEnd instanceof DateTime ) :
       $date_time = I18n::applyTimeZone( $timeEnd );
     endif;
 
-    $date_time = I18n::applyWeekContext( $date_time, $this->getWeekday() );
-
     $this->timeEnd  = $date_time;
 
     $this->updateTimeDifference();
+    $this->updateWeekContext();
 
     return $this;
   }
