@@ -22,3 +22,7 @@ span.op-period-time.highlighted {
 span.op-closed {
     color:          red;
 }
+
+span.op-open {
+    color:          green;
+}

@@ -9,6 +9,7 @@ use OpeningHours\Module\I18n;
 
 use DateTime;
 use DateInterval;
+use DateTimeZone;
 
 class Period {
 
@@ -89,7 +90,11 @@ class Period {
 
     $this->setUp();
 
-    return $this;
+    add_action( I18n::WP_ACTION_TIMEZONE_LOADED, array(
+      $this,
+      'updateDateTimezone'
+    ) );
+
   }
 
   /**
@@ -131,6 +136,8 @@ class Period {
     $this->setTimeEnd( $timeEnd );
     $this->setIsDummy( $dummy );
 
+    $this->updateDateTimezone();
+
     return $this;
 
   }
@@ -143,7 +150,9 @@ class Period {
    */
   public function isOpen () {
 
-    return ( $this->getTimeStart() <= I18n::getTimeNow() and I18n::getTimeNow() <= $this->getTimeEnd() );
+    $is_open  = ( $this->getTimeStart() <= I18n::getTimeNow() and I18n::getTimeNow() <= $this->getTimeEnd() );
+
+    return $is_open;
 
   }
 
@@ -183,6 +192,40 @@ class Period {
       // Add one day
       $this->getTimeEnd()->add( new DateInterval( 'P1D' ) );
     endif;
+
+  }
+
+  /**
+   * Update DateTimeZone
+   * updates the DateTimeZone on timeStart and timeEnd
+   *
+   * @access      public
+   */
+  public function updateDateTimezone () {
+
+    $timezone   = I18n::getDateTimeZone();
+
+    if ( !$timezone instanceof DateTimeZone )
+      return;
+
+    /**
+     * Instantiate new DateTime objects to keep time
+     * otherwise time would be converted
+     */
+
+    $timeStart  = new DateTime(
+      $this->getTimeStart()->format( I18n::STD_DATE_TIME_FORMAT ),
+      $timezone
+    );
+
+    $this->setTimeStart( $timeStart );
+
+    $timeEnd    = new DateTime(
+      $this->getTimeEnd()->format( I18n::STD_DATE_TIME_FORMAT ),
+      $timezone
+    );
+
+    $this->setTimeEnd( $timeEnd );
 
   }
 

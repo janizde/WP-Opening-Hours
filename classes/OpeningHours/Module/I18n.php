@@ -16,8 +16,11 @@ class I18n extends AbstractModule {
   const   LANGUAGE_PATH         = '/language/';
   const   STD_TIME_FORMAT       = 'H:i';
   const   STD_DATE_FORMAT       = 'Y-m-d';
+  const   STD_DATE_TIME_FORMAT  = 'Y-m-d H:i';
   const   STD_TIME_FORMAT_REGEX = '([0-9]{1,2}:[0-9]{2})';
   const   STD_DATE_FORMAT_REGEX = '([0-9]{4}(-[0-9]{2}){2})';
+
+  const   WP_ACTION_TIMEZONE_LOADED   = 'op_timezone_loaded';
 
   /**
    *  Date Format
@@ -111,6 +114,8 @@ class I18n extends AbstractModule {
      *  Save current time in property $timeNow
      */
     self::setTimeNow( new DateTime( 'now', self::getDateTimeZone() ) );
+
+    do_action( static::WP_ACTION_TIMEZONE_LOADED );
 
   }
 
