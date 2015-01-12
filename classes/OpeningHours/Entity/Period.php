@@ -230,6 +230,37 @@ class Period {
   }
 
   /**
+   * Sort Strategy
+   * sorts period by day and time
+   *
+   * @access        public
+   * @static
+   * @param         Period      $period_1
+   * @param         Period      $period_2
+   * @return        int
+   */
+  public static function sortStrategy ( Period $period_1, Period $period_2 ) {
+
+    if ( $period_1->getWeekday() < $period_2->getWeekday() ) :
+      return -1;
+
+    elseif ( $period_1->getWeekday() > $period_2->getWeekday() ) :
+      return 1;
+
+    elseif ( $period_1->getTimeStart() < $period_2->getTimeStart() ) :
+      return -1;
+
+    elseif ( $period_1->getTimeStart() > $period_2->getTimeStart() ) :
+      return 1;
+
+    else :
+      return 0;
+
+    endif;
+
+  }
+
+  /**
    *  Get Formatted Time Range
    *
    *  @access     public

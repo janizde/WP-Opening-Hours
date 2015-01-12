@@ -160,6 +160,11 @@ class Set {
       $this->getPeriods()->addElement( new Period( $periodConfig ) );
     endforeach;
 
+    /**
+     * Sort Periods
+     */
+    $this->sortPeriods();
+
     $post_detail_description  = get_post_detail( 'description', $this->getId() );
     $post_parent_detail_description = get_post_detail( 'description', $this->getParentId() );
 
@@ -315,6 +320,45 @@ class Set {
 
     /** Opening Hours */
     return $this->isOpenOpeningHours();
+
+  }
+
+  /**
+   * Sort Periods
+   * sorts periods with Period::sortStrategy
+   *
+   * @access        public
+   */
+  public function sortPeriods () {
+
+    $this->getPeriods()->uasort( array( 'OpeningHours\Entity\Period', 'sortStrategy' ) );
+
+  }
+
+  /**
+   * Get Next Open Period
+   * returns the next open period
+   *
+   * @access        public
+   * @return        Period
+   */
+  public function getNextOpenPeriod () {
+
+    $found_period   = false;
+
+    for ( $week_offset = 0; $found_period; $week_offset++ ) :
+
+      if ( $week_offset === 0 ) :
+        /**
+         * No Week Offset ( $week_offset == 0 )
+         */
+
+
+      else:
+
+      endif;
+
+    endfor;
 
   }
 
