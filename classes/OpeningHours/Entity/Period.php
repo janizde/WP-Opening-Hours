@@ -95,6 +95,11 @@ class Period {
       'updateDateTimezone'
     ) );
 
+    add_action( I18n::WP_ACTION_TIMEZONE_LOADED, array(
+      $this,
+      'updateWeekContext'
+    ) );
+
   }
 
   /**
@@ -241,13 +246,7 @@ class Period {
    */
   public static function sortStrategy ( Period $period_1, Period $period_2 ) {
 
-    if ( $period_1->getWeekday() < $period_2->getWeekday() ) :
-      return -1;
-
-    elseif ( $period_1->getWeekday() > $period_2->getWeekday() ) :
-      return 1;
-
-    elseif ( $period_1->getTimeStart() < $period_2->getTimeStart() ) :
+    if ( $period_1->getTimeStart() < $period_2->getTimeStart() ) :
       return -1;
 
     elseif ( $period_1->getTimeStart() > $period_2->getTimeStart() ) :

@@ -11,6 +11,7 @@ use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
 use WP_Post;
 use DateTime;
+use DateInterval;
 use InvalidArgumentException;
 
 class Set {
@@ -344,17 +345,34 @@ class Set {
    */
   public function getNextOpenPeriod () {
 
-    $found_period   = false;
+    $this->sortPeriods();
 
-    for ( $week_offset = 0; $found_period; $week_offset++ ) :
+    $now            = I18n::getTimeNow();
+
+    for ( $week_offset = 0; true; $week_offset++ ) :
 
       if ( $week_offset === 0 ) :
-        /**
-         * No Week Offset ( $week_offset == 0 )
-         */
 
+        foreach ( $this->getPeriods() as $period ) :
+
+          if ( $period->getTimeStart() > $now )
+            return $period;
+
+        endforeach;
 
       else:
+
+        $time_difference  = new DateInterval( 'P' . 7 * $week_offset . 'D' );
+
+        foreach ( $this->getPeriods() as $period ) :
+
+          $time_start     = &$period->getTimeStart();
+          $time_start->add( $time_difference );
+
+          if ( $time_start > $now )
+            return $period;
+
+        endforeach;
 
       endif;
 

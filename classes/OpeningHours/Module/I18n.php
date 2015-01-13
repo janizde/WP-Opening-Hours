@@ -7,6 +7,7 @@ namespace OpeningHours\Module;
 
 use DateTime;
 use DateTimeZone;
+use DateInterval;
 
 class I18n extends AbstractModule {
 
@@ -173,23 +174,23 @@ class I18n extends AbstractModule {
    */
   public static function applyWeekContext( DateTime $date_time, $weekday ) {
 
-    if ( $weekday < 1 or $weekday > 7 )
+    if ( $weekday < 0 or $weekday > 6 )
       return $date_time;
 
-    $weekdays   = static::getWeekdaysUntranslated();
+    $now    = I18n::getTimeNow();
+    $today  = (int) $now->format( 'N' );
 
-    $string     = 'next ' . $weekdays[ $weekday - 1 ];
+    $offset   = ( $weekday + 8 - $today ) % 7;
 
-    $timestamp  = strtotime( $string );
-
-    if ( static::isToday( $weekday ) )
-      $timestamp  = time();
+    $interval = new DateInterval( 'P' . $offset . 'D' );
 
     $date_time->setDate(
-        date( 'Y', $timestamp ),
-        date( 'm', $timestamp ),
-        date( 'd', $timestamp )
+        $now->format( 'Y' ),
+        $now->format( 'm' ),
+        $now->format( 'd' )
     );
+
+    $date_time->add( $interval );
 
     return $date_time;
 
@@ -214,7 +215,7 @@ class I18n extends AbstractModule {
       $date_time    = new DateTime( 'now' );
     endif;
 
-    return ( ( (int) $date_time->format( 'N' ) -1 ) == (int) $day );
+    return ( ( (int) $date_time->format( 'N' ) ) == (int) $day );
 
   }
 
