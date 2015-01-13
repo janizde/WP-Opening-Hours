@@ -55,6 +55,12 @@ class IsOpen extends AbstractWidget {
             'options_strategy'  => 'callback'
         ) );
 
+        /** Field: Show Next Open Period */
+        $this->addField( 'show_next', array(
+            'type'          => 'checkbox',
+            'caption'       => __( 'Show next open Period', I18n::TEXTDOMAIN )
+        ) );
+
         /**
          * Extended Fields
          */
@@ -72,6 +78,15 @@ class IsOpen extends AbstractWidget {
         $this->addField( 'closed_text', array(
             'type'          => 'text',
             'caption'       => __( 'Caption if closed', I18n::TEXTDOMAIN ),
+            'extended'      => true,
+
+            'default_placeholder'   => true
+        ) );
+
+        /** Field: Next Period Format */
+        $this->addField( 'next_format', array(
+            'type'          => 'text',
+            'caption'       => __( 'Next Period String Format', I18n::TEXTDOMAIN ),
             'extended'      => true,
 
             'default_placeholder'   => true

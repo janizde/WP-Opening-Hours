@@ -26,3 +26,7 @@ span.op-closed {
 span.op-open {
     color:          green;
 }
+
+span.op-next-period {
+    display:        block;
+}

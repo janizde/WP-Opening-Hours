@@ -175,10 +175,14 @@ abstract class AbstractShortcode extends AbstractModule {
 
     $validValues  = $this->getValidAttributeValues();
 
+    $filter_hook_attributes   = 'op_' . $this->getShortcodeTag() . '_attributes';
+
+    $attributes   = apply_filters( $filter_hook_attributes, $attributes );
+
     foreach ( $attributes as $key => &$value ) :
 
       /** Apply WordPress filters */
-      $filter_hook  = $this->getShortcodeTag() . '_' . $key;
+      $filter_hook  = 'op_' . $this->getShortcodeTag() . '_' . $key;
 
       $value  = apply_filters( $filter_hook, $value );
 

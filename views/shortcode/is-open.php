@@ -15,6 +15,8 @@ extract( $attributes );
  *
  * @var     $title              string w/ widget title
  * @var     $text               string w/ status text for widget
+ * @var     $next_string        string w/ string for next period
+ * @var     $next_period_classes  string w/ classes for next period span
  *
  * @var     $classes            string w/ classes for span
  */
@@ -25,5 +27,8 @@ echo $before_widget;
     echo $before_title . $title . $after_title;
 
   echo '<span class="'. $classes .'">'. $text .'</span>';
+
+  if ( is_string( $next_string ) )
+    echo '<span class="op-next-period '. $next_period_classes .'">' . $next_string . '</span>';
 
 echo $after_widget;
