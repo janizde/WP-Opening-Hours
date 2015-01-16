@@ -6,6 +6,7 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Module\I18n;
+use OpeningHours\Module\CustomPostType\Set;
 
 use WP_Post;
 
@@ -68,6 +69,5 @@ class Holidays extends AbstractMetaBox {
     protected static function saveData ( $post_id, WP_Post $post, $update ) {
 
     }
-
 
 }

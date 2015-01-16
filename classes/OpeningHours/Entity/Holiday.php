@@ -5,6 +5,7 @@
 
 namespace OpeningHours\Entity;
 
+use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Module\I18n;
 
 use DateTime;
@@ -68,19 +69,41 @@ class Holiday {
         if ( !isset( $config[ 'dateStart' ] ) )
             throw new InvalidArgumentException( 'dateStart not set in Holiday config.' );
 
-        if ( !preg_match( I18n::STD_DATE_FORMAT, $config[ 'dateStart' ] ) )
+        if ( !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config[ 'dateStart' ] ) )
             throw new InvalidArgumentException( sprintf( 'dateStart in config does not correspond with standard date regex %s. %s given.', I18n::STD_DATE_FORMAT, $config[ 'dateStart' ] ) );
 
         if ( !isset( $config[ 'dateEnd' ] ) )
             throw new InvalidArgumentException( 'dateEnd not set in Holiday config.' );
 
-        if ( !preg_match( I18n::STD_DATE_FORMAT, $config[ 'dateEnd' ] ) )
+        if ( !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config[ 'dateEnd' ] ) )
             throw new InvalidArgumentException( sprintf( 'dateEnd in config does not correspond with standard date regex %s. %s given.', I18n::STD_DATE_FORMAT, $config[ 'dateEnd' ] ) );
 
         if ( !isset( $config[ 'dummy' ] ) or !is_bool( $config[ 'dummy' ] ) )
             $config[ 'dummy' ]  = false;
 
         return $config;
+
+    }
+
+    /**
+     * Sort Strategy
+     * sorts Holiday objects by dateStart (ASC)
+     *
+     * @access          public
+     * @static
+     * @param           Holiday         $holiday_1
+     * @param           Holiday         $holiday_2
+     * @return          int
+     */
+    public static function sortStrategy ( Holiday $holiday_1, Holiday $holiday_2 ) {
+
+        if ( $holiday_1->getDateStart() > $holiday_2->getTimeStart() ) :
+            return 1;
+        elseif ( $holiday_1->getDateStart() < $holiday_2->getTimeStart() ) :
+            return -1;
+        else :
+            return 0;
+        endif;
 
     }
 
@@ -154,7 +177,7 @@ class Holiday {
      */
     protected function setDateUniversal ( $date, $property ) {
 
-        if ( is_string( $date ) and ( preg_match( I18n::STD_DATE_FORMAT, $date ) or preg_match( I18n::STD_DATE_TIME_FORMAT, $date ) ) )
+        if ( is_string( $date ) and ( preg_match( I18n::STD_DATE_FORMAT_REGEX, $date ) or preg_match( I18n::STD_DATE_FORMAT_REGEX . ' ' . I18n::STD_TIME_FORMAT_REGEX, $date ) ) )
             $date  = new DateTime( $date );
 
         if ( $date instanceof DateTime )
