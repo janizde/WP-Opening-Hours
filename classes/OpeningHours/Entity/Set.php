@@ -22,50 +22,58 @@ class Set {
   const WP_ACTION_BEFORE_SETUP    = 'op_set_before_setup';
 
   /**
-   *  Config
+   * Config
    *
-   *  @access     protected
-   *  @type       array
+   * @access     protected
+   * @type       array
    */
   protected $config;
 
   /**
-   *  Periods
+   * Periods
    *
-   *  @access     protected
-   *  @type       ArrayObject
+   * @access     protected
+   * @type       ArrayObject
    */
   protected $periods;
 
   /**
-   *  Id
+   * Holidays
    *
-   *  @access     protected
-   *  @type       int
+   * @access      protected
+   * @type        ArrayObject
+   */
+  protected $holidays;
+
+  /**
+   * Id
+   *
+   * @access      protected
+   * @type        int
    */
   protected $id;
 
   /**
-   *  Post
+   * Post
    *
-   *  @access     protected
-   *  @type       WP_Post
+   * @access     protected
+   * @type       WP_Post
    */
   protected $post;
 
   /**
-   *  Parent Id
+   * Parent Id
    *
-   *  @access     protected
-   *  @type       int
+   * @access     protected
+   * @type       int
    */
   protected $parentId;
 
   /**
-   *  Parent Post
+   * Parent Post
    *
-   *  @access     protected
-   *  @type       WP_Post
+   * @access     protected
+   * @type       WP_Post
    */
   protected $parentPost;
 
@@ -79,23 +87,24 @@ class Set {
   protected $description;
 
   /**
-   *  Has Parent
+   * Has Parent
    *
-   *  @access     protected
-   *  @type       bool
+   * @access     protected
+   * @type       bool
    */
   protected $hasParent;
 
   /**
-   *  Constructor
+   * Constructor
    *
-   *  @access     public
-   *  @param      WP_Post|int     $post
-   *  @return     Set
+   * @access     public
+   * @param      WP_Post|int     $post
+   * @return     Set
    */
   public function __construct ( $post ) {
 
     $this->setPeriods( new ArrayObject );
+    $this->setHolidays( new ArrayObject );
 
     if ( !is_int( $post ) and !$post instanceof WP_Post )
       throw new InvalidArgumentException( sprintf( 'Argument one for __construct has to be of type WP_Post or int. %s given', gettype( $post ) ) );
@@ -115,9 +124,9 @@ class Set {
   }
 
   /**
-   *  Set Up
+   * Set Up
    *
-   *  @access     public
+   * @access     public
    */
   public function setUp () {
 
@@ -182,13 +191,13 @@ class Set {
   }
 
   /**
-   *  Is Valid Config
-   *  Validates configuration array
+   * Is Valid Config
+   * Validates configuration array
    *
-   *  @access     public
-   *  @static
-   *  @param      array     $config
-   *  @return     bool
+   * @access     public
+   * @static
+   * @param      array     $config
+   * @return     bool
    */
   public static function isValidConfig ( $config ) {
 
@@ -250,20 +259,20 @@ class Set {
   }
 
   /**
-   *  Is Parent
-   *  checks if this set is a parent set
+   * Is Parent
+   * checks if this set is a parent set
    *
-   *  @access     public
-   *  @return     bool
+   * @access     public
+   * @return     bool
    */
   public function isParent () {
     return ( $this->getId() === $this->getParentId() );
   }
 
   /**
-   *  Add Dummy Periods
+   * Add Dummy Periods
    *
-   *  @access     public
+   * @access     public
    */
   public function addDummyPeriods() {
 
@@ -287,11 +296,11 @@ class Set {
   }
 
   /**
-   *  Is Open – Opening Hours
-   *  only evaluates standard opening periods
+   * Is Open – Opening Hours
+   * only evaluates standard opening periods
    *
-   *  @access       public
-   *  @return       bool
+   * @access       public
+   * @return       bool
    */
   public function isOpenOpeningHours () {
 
@@ -307,11 +316,11 @@ class Set {
   }
 
   /**
-   *  Is Open
-   *  evaluates all aspects
+   * Is Open
+   * evaluates all aspects
    *
-   *  @access       public
-   *  @return       bool
+   * @access       public
+   * @return       bool
    */
   public function isOpen () {
 
@@ -333,6 +342,18 @@ class Set {
   public function sortPeriods () {
 
     $this->getPeriods()->uasort( array( 'OpeningHours\Entity\Period', 'sortStrategy' ) );
+
+  }
+
+  /**
+   * Sort Holidays
+   * sorts holidays with Holiday::sortStrategy
+   *
+   * @access        public
+   */
+  public function sortHolidays () {
+
+    $this->getHolidays()->uasort( array( 'OpeningHours\Entity\Holiday', 'sortStrategy' ) );
 
   }
 
@@ -381,12 +402,12 @@ class Set {
   }
 
   /**
-   *  Get Sets from Posts
+   * Get Sets from Posts
    *
-   *  @access     public
-   *  @static
-   *  @param      array     $posts
-   *  @return     array
+   * @access     public
+   * @static
+   * @param      array     $posts
+   * @return     array
    */
   public static function getSetsFromPosts ( array $posts ) {
 
@@ -402,21 +423,21 @@ class Set {
   }
 
   /**
-   *  Getter: Config
+   * Getter: Config
    *
-   *  @access     public
-   *  @return     array
+   * @access     public
+   * @return     array
    */
   public function getConfig () {
     return $this->config;
   }
 
   /**
-   *  Setter: Config
+   * Setter: Config
    *
-   *  @access     protected
-   *  @param      array       $config
-   *  @return     Set
+   * @access     protected
+   * @param      array       $config
+   * @return     Set
    */
   protected function setConfig ( array $config ) {
     $this->config = $config;
@@ -424,21 +445,21 @@ class Set {
   }
 
   /**
-   *  Getter: Periods
+   * Getter: Periods
    *
-   *  @access     public
-   *  @return     ArrayObject
+   * @access     public
+   * @return     ArrayObject
    */
   public function getPeriods () {
     return $this->periods;
   }
 
   /**
-   *  Getter: Periods By Day
+   * Getter: Periods By Day
    *
-   *  @access     public
-   *  @param      array|int   $days
-   *  @return     array
+   * @access     public
+   * @param      array|int   $days
+   * @return     array
    */
   public function getPeriodsByDay ( $days ) {
 
@@ -460,10 +481,10 @@ class Set {
   }
 
   /**
-   *  Getter: (all) Periods Grouped By Day
+   * Getter: (all) Periods Grouped By Day
    *
-   *  @access       public
-   *  @return       array
+   * @access       public
+   * @return       array
    */
   public function getPeriodsGroupedByDay () {
 
@@ -477,11 +498,11 @@ class Set {
   }
 
   /**
-   *  Setter: Periods
+   * Setter: Periods
    *
-   *  @access     public
-   *  @param      ArrayObject $periods
-   *  @return     Set
+   * @access     public
+   * @param      ArrayObject $periods
+   * @return     Set
    */
   public function setPeriods ( ArrayObject $periods ) {
     $this->periods = $periods;
@@ -489,21 +510,41 @@ class Set {
   }
 
   /**
-   *  Getter: Id
+   * Getter: Holidays
    *
-   *  @access     public
-   *  @return     int
+   * @access      public
+   * @return      ArrayObject
+   */
+  public function getHolidays () {
+    return $this->holidays;
+  }
+
+  /**
+   * Setter: Holidays
+   *
+   * @access      protected
+   * @param       ArrayObject     $holidays
+   */
+  public function setHolidays ( ArrayObject $holidays ) {
+    $this->holidays = $holidays;
+  }
+
+  /**
+   * Getter: Id
+   *
+   * @access     public
+   * @return     int
    */
   public function getId () {
     return $this->id;
   }
 
   /**
-   *  Setter: Id
+   * Setter: Id
    *
-   *  @access     public
-   *  @param      int     $id
-   *  @return     Set
+   * @access     public
+   * @param      int     $id
+   * @return     Set
    */
   public function setId ( $id ) {
     $this->id = $id;
@@ -511,21 +552,21 @@ class Set {
   }
 
   /**
-   *  Getter: Post
+   * Getter: Post
    *
-   *  @access     public
-   *  @return     WP_Post
+   * @access     public
+   * @return     WP_Post
    */
   public function getPost () {
     return $this->post;
   }
 
   /**
-   *  Setter: Post
+   * Setter: Post
    *
-   *  @access     public
-   *  @param      WP_Post|int   $post
-   *  @return     Set
+   * @access     public
+   * @param      WP_Post|int   $post
+   * @return     Set
    */
   public function setPost ( $post ) {
 
@@ -545,21 +586,21 @@ class Set {
   }
 
   /**
-   *  Getter: Parent Id
+   * Getter: Parent Id
    *
-   *  @access     public
-   *  @return     int
+   * @access     public
+   * @return     int
    */
   public function getParentId () {
     return $this->parentId;
   }
 
   /**
-   *  Setter: Parent Id
+   * Setter: Parent Id
    *
-   *  @access     public
-   *  @param      int       $parentId
-   *  @return     Set
+   * @access     public
+   * @param      int       $parentId
+   * @return     Set
    */
   public function setParentId ( $parentId ) {
     $this->parentId = $parentId;
@@ -567,10 +608,10 @@ class Set {
   }
 
   /**
-   *  Getter: Parent Post
+   * Getter: Parent Post
    *
-   *  @access     public
-   *  @return     WP_Post
+   * @access     public
+   * @return     WP_Post
    */
   public function getParentPost () {
     return ( !$this->hasParent() and !$this->parentPost instanceof WP_Post )
@@ -579,11 +620,11 @@ class Set {
   }
 
   /**
-   *  Setter: Parent Post
+   * Setter: Parent Post
    *
-   *  @access     public
-   *  @param      WP_Post|int   $parentPost
-   *  @return     Set
+   * @access     public
+   * @param      WP_Post|int   $parentPost
+   * @return     Set
    */
   public function setParentPost ( $parentPost ) {
 
@@ -623,21 +664,21 @@ class Set {
   }
 
   /**
-   *  Getter: Has Parent
+   * Getter: Has Parent
    *
-   *  @access     public
-   *  @return     bool
+   * @access     public
+   * @return     bool
    */
   public function hasParent () {
     return $this->hasParent;
   }
 
   /**
-   *  Setter: Has Parent
+   * Setter: Has Parent
    *
-   *  @access     public
-   *  @param      bool    $hasParent
-   *  @return     Set
+   * @access     public
+   * @param      bool    $hasParent
+   * @return     Set
    */
   public function setHasParent ( $hasParent ) {
     $this->hasParent = $hasParent;

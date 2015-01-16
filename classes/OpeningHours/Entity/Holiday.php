@@ -5,7 +5,6 @@
 
 namespace OpeningHours\Entity;
 
-use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Module\I18n;
 
 use DateTime;
@@ -43,6 +42,15 @@ class Holiday {
     protected $dateEnd;
 
     /**
+     * Dummy
+     * bool telling whether holiday is a dummy or not
+     *
+     * @access          protected
+     * @type            bool
+     */
+    protected $dummy;
+
+    /**
      * Constructor
      *
      * @access          public
@@ -52,6 +60,54 @@ class Holiday {
 
         /** validate/filter config and set property */
         $this->setConfig( static::validateConfig( $config ) );
+
+    }
+
+    /**
+     * Set Up
+     * sets up holiday object
+     *
+     * @access          protected
+     */
+    protected function setUp () {
+
+        $config = $this->getConfig();
+
+        $this->setDateStart( new DateTime( $config[ 'dateStart' ] ) );
+        $this->setDateEnd( new DateTime( $config[ 'dateEnd' ] ) );
+        $this->setDummy( $config[ 'dummy' ] );
+
+    }
+
+    /**
+     * Is Closed
+     * determines if venue is currently closed due to this holiday object
+     *
+     * @access          public
+     * @param           DateTime        $now
+     * @return          bool
+     */
+    public function isClosed ( $now = null ) {
+
+        if ( $now === null )
+            $now = I18n::getTimeNow();
+
+        return ( $this->getDateStart() <= $now and $this->getDateEnd() >= $now );
+
+    }
+
+    /**
+     * Is Open
+     * determines if venue is not closed due to this holiday object
+     * complement of isClosed
+     *
+     * @access          public
+     * @param           DateTime        $now
+     * @return          bool
+     */
+    public function isOpen ( $now = null ) {
+
+        return !$this->isClosed( $now );
 
     }
 
@@ -164,7 +220,7 @@ class Holiday {
      * @param           DateTime|string $dateEnd
      */
     protected function setDateEnd ( $dateEnd ) {
-        $this->setDateUniversal( $dateEnd, 'dateEnd' );
+        $this->setDateUniversal( $dateEnd, 'dateEnd', true );
     }
 
     /**
@@ -173,9 +229,10 @@ class Holiday {
      *
      * @access          protected
      * @param           DateTime|string $date
+     * @param           bool            $end_of_day
      * @param           string          $property
      */
-    protected function setDateUniversal ( $date, $property ) {
+    protected function setDateUniversal ( $date, $property, $end_of_day = false ) {
 
         if ( is_string( $date ) and ( preg_match( I18n::STD_DATE_FORMAT_REGEX, $date ) or preg_match( I18n::STD_DATE_FORMAT_REGEX . ' ' . I18n::STD_TIME_FORMAT_REGEX, $date ) ) )
             $date  = new DateTime( $date );
@@ -183,8 +240,33 @@ class Holiday {
         if ( $date instanceof DateTime )
             throw new InvalidArgumentException( sprintf( 'Argument one for %s has to be of type string or DateTime, %s given', __CLASS__ . '::' . __METHOD__, gettype( $date ) ) );
 
+        $date   = I18n::applyTimeZone( $date );
+
+        if ( $end_of_day === true )
+            $date->setTime( 23, 59, 59 );
+
         $this->$property  = I18n::applyTimeZone( $date );
 
+    }
+
+    /**
+     * Getter: Dummy
+     *
+     * @access          public
+     * @return          bool
+     */
+    public function isDummy () {
+        return $this->dummy;
+    }
+
+    /**
+     * Setter: Dummy
+     *
+     * @access          protected
+     * @param           bool            $dummy
+     */
+    protected function setDummy ( $dummy ) {
+        $this->dummy = (bool) $dummy;
     }
 
 }
