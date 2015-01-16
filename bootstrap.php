@@ -88,6 +88,8 @@ if ( op_requirements_met() ) {
 		'Module/I18n',
 		'Module/Ajax',
 		'Module/CustomPostType/Set',
+		'Module/CustomPostType/MetaBox/AbstractMetaBox',
+		'Module/CustomPostType/MetaBox/OpeningHours',
 		'Module/Shortcode/AbstractShortcode',
 		'Module/Shortcode/IsOpen',
 		'Module/Shortcode/Overview',

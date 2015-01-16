@@ -7,7 +7,6 @@ namespace OpeningHours\Module\CustomPostType;
 
 use OpeningHours\Module\AbstractModule;
 use OpeningHours\Module\OpeningHours;
-use OpeningHours\Entity\Set as SetEntity;
 
 use WP_Post;
 
@@ -27,6 +26,17 @@ class Set extends AbstractModule {
   const   NONCE_VALUE       = 'op-set-opening-hours';
 
   /**
+   * Meta Boxes
+   * associative array of MetaBox modules with:
+   *  key:      string w/ MetaBox identifier
+   *  value:    MetaBox singleton object
+   *
+   * @access      protected
+   * @type        array
+   */
+  protected static $metaBoxes;
+
+  /**
    *  Constructor
    *
    *  @access       public
@@ -34,6 +44,10 @@ class Set extends AbstractModule {
   public function __construct () {
 
     self::registerHookCallbacks();
+
+    static::setMetaBoxes( array(
+      'OpeningHours'    => MetaBox\OpeningHours::getInstance()
+    ) );
 
   }
 
@@ -47,9 +61,7 @@ class Set extends AbstractModule {
 
     add_action( 'init',               array( __CLASS__, 'registerPostType' ) );
     add_action( 'admin_menu',         array( __CLASS__, 'cleanUpMenu' ) );
-    add_action( 'add_meta_boxes',     array( __CLASS__, 'registerMetaBox' ) );
     add_action( 'add_detail_fields',  array( __CLASS__, 'registerDetailFields' ) );
-    add_action( 'save_post',          array( __CLASS__, 'saveData' ) );
 
   }
 
@@ -79,45 +91,6 @@ class Set extends AbstractModule {
 
     /** Top Level: Registered via post_type op-set: Remove "Add New" Item */
     unset( $submenu['edit.php?post_type=op-set'][10] );
-
-  }
-
-  /**
-   *  Register Meta Box
-   *
-   *  @access       public
-   *  @static
-   *  @wp_action    add_meta_boxes
-   */
-  public static function registerMetaBox () {
-
-    add_meta_box(
-      self::META_BOX_ID,
-      __( 'Opening Hours', self::TEXTDOMAIN ),
-      array( __CLASS__, 'renderMetaBox' ),
-      self::CPT_SLUG,
-      self::META_BOX_CONTEXT,
-      self::META_BOX_PRIORITY
-    );
-
-  }
-
-  /**
-   *  Render Meta Box
-   *
-   *  @access       public
-   *  @static
-   *  @param        WP_Post   $post
-   */
-  public static function renderMetaBox ( WP_Post $post ) {
-
-      $variables   = array(
-        'post'    => $post
-      );
-
-      OpeningHours::setCurrentSetId( $post->ID );
-
-      echo self::renderTemplate( self::TEMPLATE_META_BOX, $variables, 'once' );
 
   }
 
@@ -163,45 +136,6 @@ class Set extends AbstractModule {
         'odd'         => __( 'Odd weeks only', self::TEXTDOMAIN )
       )
     ) );
-
-  }
-
-  /**
-   *  Save Data
-   *
-   *  @access       public
-   *  @static
-   *  @wp_action    save_post
-   */
-  public static function saveData () {
-
-    // Verify Nonce
-    if ( !wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_VALUE ) )
-      return;
-
-    $config     = $_POST['opening-hours'];
-    $newConfig  = array();
-
-    foreach ( $config as $weekday => $dayConfig ) :
-      for ( $i = 0; $i <= count( $dayConfig['start'] ); $i++ ) :
-
-        if ( ( empty( $dayConfig['start'][ $i ] ) or empty( $dayConfig['end'][ $i ] ) ) or
-          ( $dayConfig['start'][ $i ] == '00:00' and $dayConfig['end'][ $i ] == '00:00' ) )
-          continue;
-
-        $newConfig[]  = array(
-          'weekday'   => $weekday,
-          'timeStart' => $dayConfig['start'][ $i ],
-          'timeEnd'   => $dayConfig['end'][ $i ],
-          'dummy'     => false
-        );
-
-      endfor;
-    endforeach;
-
-    global $post;
-
-    update_post_meta( $post->ID, self::PERIODS_META_KEY, $newConfig );
 
   }
 
@@ -257,6 +191,27 @@ class Set extends AbstractModule {
       'supports'           => array( 'title', 'custom-fields', 'page-attributes' )
     );
 
+  }
+
+  /**
+   * Getter: Meta Boxes
+   *
+   * @access        public
+   * @return        array
+   */
+  public static function getMetaBoxes () {
+    return static::$metaBoxes;
+  }
+
+  /**
+   * Setter: Meta Boxes
+   *
+   * @access        protected
+   * @static
+   * @param         array         $metaBoxes
+   */
+  protected static function setMetaBoxes ( array $metaBoxes ) {
+    static::$metaBoxes = $metaBoxes;
   }
 
 }

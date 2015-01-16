@@ -1,20 +1,13 @@
 <?php
 /**
- *	Opening Hours: Template: Part: Metabox OP Set
+ *	Opening Hours: Template: Part: MetaBox OP Set
  */
 
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
-use OpeningHours\Module\CustomPostType\Set;
-use OpeningHours\Module\Entity\Set as SetEntity;
+use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as MetaBox;
 
-global $post;
-
-OpeningHours::setCurrentSetId( $post->ID );
-
-OpeningHours::getCurrentSet()->addDummyPeriods();
-
-wp_nonce_field( Set::NONCE_VALUE, Set::NONCE_NAME );
+MetaBox::nonceField();
 ?>
 
 <div class="opening-hours">
