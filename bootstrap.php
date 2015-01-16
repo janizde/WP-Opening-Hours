@@ -90,6 +90,7 @@ if ( op_requirements_met() ) {
 		'Module/CustomPostType/Set',
 		'Module/CustomPostType/MetaBox/AbstractMetaBox',
 		'Module/CustomPostType/MetaBox/OpeningHours',
+		'Module/CustomPostType/MetaBox/Holidays',
 		'Module/Shortcode/AbstractShortcode',
 		'Module/Shortcode/IsOpen',
 		'Module/Shortcode/Overview',

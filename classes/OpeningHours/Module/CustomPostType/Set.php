@@ -6,9 +6,6 @@
 namespace OpeningHours\Module\CustomPostType;
 
 use OpeningHours\Module\AbstractModule;
-use OpeningHours\Module\OpeningHours;
-
-use WP_Post;
 
 class Set extends AbstractModule {
 
@@ -21,7 +18,6 @@ class Set extends AbstractModule {
   const   META_BOX_PRIORITY = 'high';
   const   PERIODS_META_KEY  = '_op_set_periods';
   const   TEMPLATE_META_BOX = 'op-set-meta-box.php';
-
   const   NONCE_NAME        = 'op-update-set-nonce';
   const   NONCE_VALUE       = 'op-set-opening-hours';
 
@@ -46,7 +42,8 @@ class Set extends AbstractModule {
     self::registerHookCallbacks();
 
     static::setMetaBoxes( array(
-      'OpeningHours'    => MetaBox\OpeningHours::getInstance()
+      'OpeningHours'    => MetaBox\OpeningHours::getInstance(),
+      'Holidays'        => MetaBox\Holidays::getInstance()
     ) );
 
   }

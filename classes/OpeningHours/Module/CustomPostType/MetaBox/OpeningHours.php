@@ -61,7 +61,7 @@ class OpeningHours extends AbstractMetaBox {
             'set'       => OpeningHoursModule::getCurrentSet()
         );
 
-        echo static::renderTemplate( static::TEMPLATE_PATH, $variables, 'always' );
+        echo static::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );
 
     }
 
