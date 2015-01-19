@@ -178,6 +178,19 @@ class Holiday {
     }
 
     /**
+     * Factory: Dummy Holiday
+     *
+     * @access          public
+     * @static
+     * @return          Holiday
+     */
+    public static function createDummyPeriod () {
+        return new Holiday( array(
+            'dummy'     => true
+        ) );
+    }
+
+    /**
      * Getter: Config
      * generates config array for Holiday object
      *
