@@ -6,6 +6,7 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Module\I18n;
+use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\CustomPostType\Set;
 
 use WP_Post;
@@ -21,7 +22,7 @@ class Holidays extends AbstractMetaBox {
     const WP_NONCE_NAME     = 'op-set-holidays';
     const WP_NONCE_ACTION   = 'save_data';
 
-    const PERIODS_META_KEY  = '_op_set_holidays';
+    const HOLIDAYS_META_KEY = '_op_set_holidays';
 
     /**
      * Register Meta Box
@@ -50,6 +51,14 @@ class Holidays extends AbstractMetaBox {
      * @param           WP_Post         $post
      */
     public static function renderMetaBox ( WP_Post $post ) {
+
+        OpeningHours::setCurrentSetId( $post->ID );
+
+        $set    = OpeningHours::getCurrentSet();
+
+        $set->getHolidays()->addElement( new Holiday( array(
+            'dummy'     => true
+        ) ) );
 
         $variables = array();
 

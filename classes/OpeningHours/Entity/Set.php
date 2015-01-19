@@ -8,6 +8,7 @@ namespace OpeningHours\Entity;
 use OpeningHours\Misc\ArrayObject;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
+use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;
 
 use WP_Post;
 use DateTime;
@@ -22,14 +23,6 @@ class Set {
   const WP_ACTION_BEFORE_SETUP    = 'op_set_before_setup';
 
   /**
-   * Config
-   *
-   * @access     protected
-   * @type       array
-   */
-  protected $config;
-
-  /**
    * Periods
    *
    * @access     protected
@@ -38,7 +31,7 @@ class Set {
   protected $periods;
 
   /**
-   * Holidays
+   * Holidays0
    *
    * @access      protected
    * @type        ArrayObject
@@ -155,25 +148,9 @@ class Set {
       $this
     );
 
-    /**
-     * Load Config
-     */
-    $post_meta = get_post_meta( $this->getId(), SetCpt::PERIODS_META_KEY, true );
+    $this->loadPeriods();
 
-    if ( self::isValidConfig( $post_meta ) )
-      $this->setConfig( $post_meta );
-
-    if ( !is_array( $this->getConfig() ) or !count( $this->getConfig() ) )
-      return;
-
-    foreach ( $this->getConfig() as $periodConfig ) :
-      $this->getPeriods()->addElement( new Period( $periodConfig ) );
-    endforeach;
-
-    /**
-     * Sort Periods
-     */
-    $this->sortPeriods();
+    $this->loadHolidays();
 
     $post_detail_description  = get_post_detail( 'description', $this->getId() );
     $post_parent_detail_description = get_post_detail( 'description', $this->getParentId() );
@@ -191,20 +168,43 @@ class Set {
   }
 
   /**
-   * Is Valid Config
-   * Validates configuration array
+   * Load Periods
+   * get config from post meta and add period objects
    *
-   * @access     public
-   * @static
-   * @param      array     $config
-   * @return     bool
+   * @access      protected
    */
-  public static function isValidConfig ( $config ) {
+  public function loadPeriods () {
 
-    if ( !is_array( $config ) )
-      return false;
+    $post_meta = get_post_meta( $this->getId(), SetCpt::PERIODS_META_KEY, true );
 
-    return true;
+    if ( !is_array( $post_meta ) or !count( $post_meta ) )
+      return;
+
+    foreach ( $post_meta as $periodConfig ) :
+      $this->getPeriods()->addElement( new Period( $periodConfig ) );
+    endforeach;
+
+    $this->sortPeriods();
+
+  }
+
+  /**
+   * Load Holidays
+   * get config from post meta and add holiday objects
+   *
+   * @access      protected
+   */
+  public function loadHolidays () {
+
+    $post_meta  = get_post_meta( $this->getId(), HolidaysMetaBox::HOLIDAYS_META_KEY, true );
+
+    if ( !is_array( $post_meta ) or !count( $post_meta ) )
+      return;
+
+    foreach ( $post_meta as $config )
+      $this->getHolidays()->addElement( new Holiday( $config ) );
+
+    $this->sortHolidays();
 
   }
 
@@ -420,28 +420,6 @@ class Set {
 
     return $posts;
 
-  }
-
-  /**
-   * Getter: Config
-   *
-   * @access     public
-   * @return     array
-   */
-  public function getConfig () {
-    return $this->config;
-  }
-
-  /**
-   * Setter: Config
-   *
-   * @access     protected
-   * @param      array       $config
-   * @return     Set
-   */
-  protected function setConfig ( array $config ) {
-    $this->config = $config;
-    return $config;
   }
 
   /**

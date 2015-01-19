@@ -13,15 +13,13 @@ use InvalidArgumentException;
 class Holiday {
 
     /**
-     * Config
-     * associative config array with:
-     *  key:    config key
-     *  value:  config value
+     * Name
+     * string with holiday name
      *
      * @access          protected
-     * @type            array
+     * @type            string
      */
-    protected $config;
+    protected $name;
 
     /**
      * Date Start
@@ -59,7 +57,9 @@ class Holiday {
     public function __construct ( array $config ) {
 
         /** validate/filter config and set property */
-        $this->setConfig( static::validateConfig( $config ) );
+        $config     = static::validateConfig( $config );
+
+        $this->setUp( $config );
 
     }
 
@@ -68,11 +68,11 @@ class Holiday {
      * sets up holiday object
      *
      * @access          protected
+     * @param           array           $config
      */
-    protected function setUp () {
+    protected function setUp ( array $config ) {
 
-        $config = $this->getConfig();
-
+        $this->setName( $config[ 'name' ] );
         $this->setDateStart( new DateTime( $config[ 'dateStart' ] ) );
         $this->setDateEnd( new DateTime( $config[ 'dateEnd' ] ) );
         $this->setDummy( $config[ 'dummy' ] );
@@ -125,17 +125,20 @@ class Holiday {
         if ( !isset( $config[ 'dateStart' ] ) )
             throw new InvalidArgumentException( 'dateStart not set in Holiday config.' );
 
-        if ( !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config[ 'dateStart' ] ) )
+        if ( !$config[ 'dateStart' ] instanceof DateTime and !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config[ 'dateStart' ] ) )
             throw new InvalidArgumentException( sprintf( 'dateStart in config does not correspond with standard date regex %s. %s given.', I18n::STD_DATE_FORMAT, $config[ 'dateStart' ] ) );
 
         if ( !isset( $config[ 'dateEnd' ] ) )
             throw new InvalidArgumentException( 'dateEnd not set in Holiday config.' );
 
-        if ( !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config[ 'dateEnd' ] ) )
+        if ( !$config[ 'dateEnd' ] instanceof DateTime and !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config[ 'dateEnd' ] ) )
             throw new InvalidArgumentException( sprintf( 'dateEnd in config does not correspond with standard date regex %s. %s given.', I18n::STD_DATE_FORMAT, $config[ 'dateEnd' ] ) );
 
         if ( !isset( $config[ 'dummy' ] ) or !is_bool( $config[ 'dummy' ] ) )
             $config[ 'dummy' ]  = false;
+
+        if ( !$config[ 'dummy' ] and ( !isset( $config[ 'name' ] ) or empty( $config[ 'name' ] ) ) )
+            throw new InvalidArgumentException( 'name not set in Holiday config.' );
 
         return $config;
 
@@ -153,9 +156,9 @@ class Holiday {
      */
     public static function sortStrategy ( Holiday $holiday_1, Holiday $holiday_2 ) {
 
-        if ( $holiday_1->getDateStart() > $holiday_2->getTimeStart() ) :
+        if ( $holiday_1->getDateStart() > $holiday_2->getDateStart() ) :
             return 1;
-        elseif ( $holiday_1->getDateStart() < $holiday_2->getTimeStart() ) :
+        elseif ( $holiday_1->getDateStart() < $holiday_2->getDateStart() ) :
             return -1;
         else :
             return 0;
@@ -164,23 +167,54 @@ class Holiday {
     }
 
     /**
+     * To String
+     * converts config array to json
+     *
+     * @access          public
+     * @return          string
+     */
+    public function __toString () {
+        return json_encode( $this->getConfig() );
+    }
+
+    /**
      * Getter: Config
+     * generates config array for Holiday object
      *
      * @access          public
      * @return          array
      */
     public function getConfig () {
-        return $this->config;
+
+        $config     = array(
+            'name'      => $this->getName(),
+            'dateStart' => $this->getDateStart()->format( I18n::STD_DATE_FORMAT ),
+            'dateEnd'   => $this->getDateEnd()->format( I18n::STD_DATE_FORMAT ),
+            'dummy'     => $this->isDummy()
+        );
+
+        return $config;
+
     }
 
     /**
-     * Setter: Config
+     * Getter: Name
+     *
+     * @access          public
+     * @return          string
+     */
+    public function getName () {
+        return $this->name;
+    }
+
+    /**
+     * Setter: Name
      *
      * @access          protected
-     * @param           array           $config
+     * @param           string          $name
      */
-    protected function setConfig ( array $config ) {
-        $this->config = $config;
+    protected function setName ( $name ) {
+        $this->name = $name;
     }
 
     /**
