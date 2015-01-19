@@ -257,6 +257,19 @@ class Period {
   }
 
   /**
+   * Factory: Dummy Period
+   *
+   * @access      public
+   * @static
+   * @return      Period
+   */
+  public static function getDummyPeriod () {
+    return new Period( array(
+      'dummy'   => true
+    ) );
+  }
+
+  /**
    * Getter: Config
    * generates config array
    *
