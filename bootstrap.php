@@ -83,6 +83,7 @@ if ( op_requirements_met() ) {
 		'Misc/ArrayObject',
 		'Entity/Set',
 		'Entity/Period',
+		'Entity/Holiday',
 		'Module/AbstractModule',
 		'Module/OpeningHours',
 		'Module/I18n',

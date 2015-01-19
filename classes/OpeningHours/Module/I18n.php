@@ -273,7 +273,11 @@ class I18n extends AbstractModule {
    *  @return       DateTimeZone
    */
   public static function getDateTimeZone () {
-    return self::$dateTimeZone;
+    if ( self::$dateTimeZone instanceof DateTimeZone ) :
+      return self::$dateTimeZone;
+    else :
+      return new DateTimeZone( date_default_timezone_get() );
+    endif;
   }
 
   /**

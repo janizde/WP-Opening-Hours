@@ -5,11 +5,10 @@
 
 namespace OpeningHours\Module;
 
-use OpeningHours\OpeningHours as OpeningHoursWrap;
-use OpeningHours\Module\OpeningHours;
-use OpeningHours\Module\I18n;
 use OpeningHours\Entity\Set;
 use OpeningHours\Entity\Period;
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 
 class Ajax extends AbstractModule {
 
@@ -49,6 +48,7 @@ class Ajax extends AbstractModule {
 
     self::registerAjaxAction( 'op_render_periods_day',    'renderPeriodsDay'    );
     self::registerAjaxAction( 'op_render_single_period',  'renderSinglePeriod'  );
+    self::registerAjaxAction( 'op_render_single_dummy_holiday', 'renderSingleDummyHoliday' );
 
   }
 
@@ -119,6 +119,26 @@ class Ajax extends AbstractModule {
         'period'  => $period
       ),
       'always'
+    );
+
+    die();
+
+  }
+
+  /**
+   * Action: Render Single Dummy Holiday
+   *
+   * @access      public
+   * @static
+   */
+  public static function renderSingleDummyHoliday () {
+
+    echo self::renderTemplate(
+        Holidays::TEMPLATE_PATH_SINGLE,
+        array(
+          'holiday'   => Holiday::createDummyPeriod()
+        ),
+        'once'
     );
 
     die();
