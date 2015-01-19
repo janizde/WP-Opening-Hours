@@ -10,17 +10,9 @@ use OpeningHours\Module\I18n;
 use DateTime;
 use DateInterval;
 use DateTimeZone;
+use InvalidArgumentException;
 
 class Period {
-
-  /**
-   * Config
-   * sequential config array
-   *
-   * @access     protected
-   * @type       array
-   */
-  protected $config;
 
   /**
    * Weekday
@@ -77,18 +69,16 @@ class Period {
    */
   public function __construct ( $config = array() ) {
 
-    if ( $config !== null and count( $config ) ) :
-      $this->setConfig( $config );
-    else :
-      $this->setConfig( array(
+    if ( $config === null or !count( $config ) ) :
+      $config = array(
         'weekday'   => null,
         'timeStart' => null,
         'timeEnd'   => null,
         'dummy'     => true
-      ) );
+      );
     endif;
 
-    $this->setUp();
+    $this->setUp( $config );
 
     add_action( I18n::WP_ACTION_TIMEZONE_LOADED, array(
       $this,
@@ -105,16 +95,14 @@ class Period {
   /**
    * Set Up
    *
-   * @access     public
-   * @return     Period
-   * @throws     InvalidArgumentException
+   * @access      public
+   * @param       array     $config
+   * @throws      InvalidArgumentException
    */
-  public function setUp () {
-
-    $config   = $this->getConfig();
+  public function setUp ( array $config ) {
 
     if ( !is_array( $config ) )
-      throw new InvalidArgumentException( sprintf( '$config is not an array in Set %d', $this->getId() ) );
+      throw new InvalidArgumentException( '$config is not an array in Period' );
 
     $defaultConfig  = array(
       'weekday'   => null,
@@ -142,8 +130,6 @@ class Period {
     $this->setIsDummy( $dummy );
 
     $this->updateDateTimezone();
-
-    return $this;
 
   }
 
@@ -260,6 +246,37 @@ class Period {
   }
 
   /**
+   * To String
+   * returns json string from Period config
+   *
+   * @access      public
+   * @return      string
+   */
+  public function __toString () {
+    return json_encode( $this->getConfig() );
+  }
+
+  /**
+   * Getter: Config
+   * generates config array
+   *
+   * @access      public
+   * @return      array
+   */
+  public function getConfig () {
+
+    $config   = array(
+      'weekday'   => $this->getWeekday(),
+      'timeStart' => $this->getTimeStart()->format( I18n::STD_DATE_TIME_FORMAT ),
+      'timeEnd'   => $this->getTimeEnd()->format( I18n::STD_DATE_TIME_FORMAT ),
+      'dummy'     => $this->isDummy()
+    );
+
+    return $config;
+
+  }
+
+  /**
    *  Get Formatted Time Range
    *
    *  @access     public
@@ -269,28 +286,6 @@ class Period {
 
     return $this->getTimeStart( true ) . ' – ' . $this->getTimeEnd( true );
 
-  }
-
-  /**
-   *  Getter: Config
-   *
-   *  @access     public
-   *  @return     array
-   */
-  public function getConfig () {
-    return $this->config;
-  }
-
-  /**
-   *  Setter: Config
-   *
-   *  @access     public
-   *  @param      array   $config
-   *  @return     Period
-   */
-  public function setConfig ( array $config ) {
-    $this->config = $config;
-    return $this;
   }
 
   /**
@@ -408,4 +403,3 @@ class Period {
   }
 
 }
-?>
