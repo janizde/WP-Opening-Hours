@@ -72,39 +72,28 @@ function op_bootstrap_file () {
 	return __FILE__;
 }
 
+/**
+ * OP Autoload
+ *
+ * @param			string			$class_name
+ */
+function op_autoload ( $class_name ) {
+
+	$filepath 	= op_plugin_path() . 'classes/' . str_replace( '\\', '/', $class_name ) . '.php';
+
+	if ( file_exists( $filepath ) ) :
+		require_once( $filepath );
+	endif;
+
+}
+
+spl_autoload_register( 'op_autoload' );
+
 /*
  * Check requirements and load main class
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.
  */
 if ( op_requirements_met() ) {
-
-	$classes 	= array(
-		'Misc/Helpers',
-		'Misc/ArrayObject',
-		'Entity/Set',
-		'Entity/Period',
-		'Entity/Holiday',
-		'Module/AbstractModule',
-		'Module/OpeningHours',
-		'Module/I18n',
-		'Module/Ajax',
-		'Module/CustomPostType/Set',
-		'Module/CustomPostType/MetaBox/AbstractMetaBox',
-		'Module/CustomPostType/MetaBox/OpeningHours',
-		'Module/CustomPostType/MetaBox/Holidays',
-		'Module/Shortcode/AbstractShortcode',
-		'Module/Shortcode/IsOpen',
-		'Module/Shortcode/Overview',
-		'Module/Shortcode/Holidays',
-		'Module/Widget/AbstractWidget',
-		'Module/Widget/FieldRenderer',
-		'Module/Widget/Overview',
-		'Module/Widget/IsOpen',
-		'OpeningHours'
-	);
-
-	foreach ( $classes as $class )
-		require_once( __DIR__ . '/classes/OpeningHours/' . $class . '.php' );
 
 	require_once( __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php' );
 	require_once( __DIR__ . '/includes/wp-detail-fields/detail-fields.php' );
