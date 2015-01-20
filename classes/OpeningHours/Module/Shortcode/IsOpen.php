@@ -96,7 +96,7 @@ class IsOpen extends AbstractShortcode {
 
     endif;
 
-    $attributes[ 'is-open' ]      = $is_open;
+    $attributes[ 'is_open' ]      = $is_open;
     $attributes[ 'classes' ]      .= ( $is_open ) ? 'op-open' : 'op-closed';
     $attributes[ 'text' ]         = ( $is_open ) ? $attributes[ 'open_text' ] : $attributes[ 'closed_text' ];
     $attributes[ 'next_period' ]  = $set->getNextOpenPeriod();

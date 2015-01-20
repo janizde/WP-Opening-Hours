@@ -17,6 +17,7 @@ extract( $attributes );
  * @var     $text               string w/ status text for widget
  * @var     $next_string        string w/ string for next period
  * @var     $next_period_classes  string w/ classes for next period span
+ * @var     $is_open            bool whether set is open or not
  *
  * @var     $classes            string w/ classes for span
  */
@@ -28,7 +29,7 @@ echo $before_widget;
 
   echo '<span class="'. $classes .'">'. $text .'</span>';
 
-  if ( is_string( $next_string ) )
+  if ( !$is_open and is_string( $next_string ) )
     echo '<span class="op-next-period '. $next_period_classes .'">' . $next_string . '</span>';
 
 echo $after_widget;
