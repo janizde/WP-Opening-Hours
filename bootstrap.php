@@ -8,7 +8,7 @@ Author:      Jannik Portz (@janizde)
 Author URI:  http://jannikportz.de
 */
 
-/*
+/**
  * This plugin was built on top of WordPress-Plugin-Skeleton by Ian Dunn.
  * See https://github.com/iandunn/WordPress-Plugin-Skeleton for details.
  */
@@ -28,21 +28,12 @@ define( 'OP_REQUIRED_WP_VERSION',  '3.1' );                          // because 
  */
 function op_requirements_met() {
 	global $wp_version;
-	//require_once( ABSPATH . '/wp-admin/includes/plugin.php' );		// to get is_plugin_active() early
 
-	if ( version_compare( PHP_VERSION, OP_REQUIRED_PHP_VERSION, '<' ) ) {
+	if ( version_compare( PHP_VERSION, OP_REQUIRED_PHP_VERSION, '<' ) )
 		return false;
-	}
 
-	if ( version_compare( $wp_version, OP_REQUIRED_WP_VERSION, '<' ) ) {
+	if ( version_compare( $wp_version, OP_REQUIRED_WP_VERSION, '<' ) )
 		return false;
-	}
-
-	/*
-	if ( ! is_plugin_active( 'plugin-directory/plugin-file.php' ) ) {
-		return false;
-	}
-	*/
 
 	return true;
 }
@@ -89,7 +80,7 @@ function op_autoload ( $class_name ) {
 
 spl_autoload_register( 'op_autoload' );
 
-/*
+/**
  * Check requirements and load main class
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.
  */

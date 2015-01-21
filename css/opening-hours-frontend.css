@@ -30,3 +30,10 @@ span.op-open {
 span.op-next-period {
     display:        block;
 }
+
+/**
+ *  Shortcode: Holidays
+ */
+.op-holiday.highlighted td {
+    color:          green;
+}

@@ -1,6 +1,7 @@
 <?php
 
   use OpeningHours\Module\I18n;
+  use OpeningHours\Module\OpeningHours;
 
   /**
    * @var       $attributes         array (associative) w/ shortcode attributes
@@ -47,6 +48,8 @@
       /**
        * @var     $set      \OpeningHours\Entity\Set
        */
+
+      OpeningHours::setCurrentSetId( $set->getId() );
 
       echo '<table class="op-table op-table-overview '. $table_classes .'" id="'. $table_id_prefix . $set->getId() .'">';
 

@@ -6,6 +6,7 @@
 namespace OpeningHours\Entity;
 
 use OpeningHours\Module\I18n;
+use OpeningHours\Module\OpeningHours;
 
 use DateTime;
 use DateInterval;
@@ -134,16 +135,55 @@ class Period {
   }
 
   /**
-   *  Is Open
+   * Is Open Strict
+   * checks if Period is currently open regardless of Holidays and SpecialOpenings
    *
-   *  @access     public
-   *  @return     bool
+   * @access      public
+   * @param       DateTime      $now
+   * @return      bool
    */
-  public function isOpen () {
+  public function isOpenStrict ( $now = null ) {
 
-    $is_open  = ( $this->getTimeStart() <= I18n::getTimeNow() and I18n::getTimeNow() <= $this->getTimeEnd() );
+    if ( !$now instanceof DateTime or $now === null )
+      $now  = I18n::getTimeNow();
+
+    $is_open  = ( $this->getTimeStart() <= $now and $now <= $this->getTimeEnd() );
 
     return $is_open;
+
+  }
+
+  /**
+   * Is Open
+   * checks if Period is currently open also regarding Holidays and SpecialOpenings
+   *
+   * @access      public
+   * @param       DateTime  $now
+   * @param       int       $set_id
+   * @return      bool
+   */
+  public function isOpen ( $now = null, $set_id = null ) {
+
+    $set  = ( $set_id === null ) ? OpeningHours::getCurrentSet() : OpeningHours::getSet( $set_id );
+
+    if ( $set instanceof Set and $set->isHolidayActive( $now ) )
+      return false;
+
+    return $this->isOpenStrict( $now );
+
+  }
+
+  /**
+   * Will Be Open
+   * checks whether Period will be regularly open and not overridden due to Holidays or Special Openings
+   *
+   * @access      public
+   * @param       int       $set_id
+   * @return      bool
+   */
+  public function willBeOpen ( $set_id = null ) {
+
+    return $this->isOpen( $this->getTimeStart(), $set_id );
 
   }
 
@@ -254,6 +294,24 @@ class Period {
    */
   public function __toString () {
     return json_encode( $this->getConfig() );
+  }
+
+  /**
+   * Get Copy
+   * returns a copy of the current Period and adds up a DateInterval
+   *
+   * @access      public
+   * @param       DateInterval    $offset
+   * @return      Period
+   */
+  public function getCopy ( DateInterval $offset ) {
+
+    $period     = &$this;
+    $period->getTimeStart()->add( $offset );
+    $period->getTimeEnd()->add( $offset );
+
+    return $period;
+
   }
 
   /**

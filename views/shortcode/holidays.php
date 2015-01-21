@@ -35,9 +35,9 @@ echo $before_widget;
 
         foreach ( $holidays as $holiday ) :
 
-            $highlighted    = ( $highlight and $holiday->isClosed() ) ? $class_highlighted : null;
+            $highlighted    = ( $highlight and $holiday->isActive() ) ? $class_highlighted : null;
 
-            echo '<tr class="'. $class_holiday .'">';
+            echo '<tr class="'. $class_holiday .' '. $highlighted .'">';
 
                 echo '<td class="col-name">' . $holiday->getName() . '</td>';
 

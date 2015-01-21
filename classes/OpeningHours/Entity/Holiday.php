@@ -80,34 +80,19 @@ class Holiday {
     }
 
     /**
-     * Is Closed
-     * determines if venue is currently closed due to this holiday object
+     * Is Active
+     * determines if current Holiday is active
      *
      * @access          public
      * @param           DateTime        $now
      * @return          bool
      */
-    public function isClosed ( $now = null ) {
+    public function isActive ( $now = null ) {
 
         if ( $now === null )
             $now = I18n::getTimeNow();
 
         return ( $this->getDateStart() <= $now and $this->getDateEnd() >= $now );
-
-    }
-
-    /**
-     * Is Open
-     * determines if venue is not closed due to this holiday object
-     * complement of isClosed
-     *
-     * @access          public
-     * @param           DateTime        $now
-     * @return          bool
-     */
-    public function isOpen ( $now = null ) {
-
-        return !$this->isClosed( $now );
 
     }
 

@@ -299,14 +299,36 @@ class Set {
    * Is Open – Opening Hours
    * only evaluates standard opening periods
    *
-   * @access       public
-   * @return       bool
+   * @access      public
+   * @param       DateTime      $now
+   * @return      bool
    */
-  public function isOpenOpeningHours () {
+  public function isOpenOpeningHours ( $now = null ) {
 
     foreach ( $this->getPeriods() as $period ) :
 
-      if ( $period->isOpen() )
+      if ( $period->isOpen( $now ) )
+        return true;
+
+    endforeach;
+
+    return false;
+
+  }
+
+  /**
+   * Is Holiday Active
+   * checks if any holiday in set is currently active
+   *
+   * @access      public
+   * @param       DateTime      $now
+   * @return      bool
+   */
+  public function isHolidayActive ( $now = null ) {
+
+    foreach ( $this->getHolidays() as $holiday ) :
+
+      if ( $holiday->isActive( $now ) )
         return true;
 
     endforeach;
@@ -319,17 +341,20 @@ class Set {
    * Is Open
    * evaluates all aspects
    *
-   * @access       public
-   * @return       bool
+   * @access      public
+   * @param       DateTime      $now
+   * @return      bool
    */
-  public function isOpen () {
+  public function isOpen ( $now = null ) {
 
     /** Holidays */
+    if ( $this->isHolidayActive( $now ) )
+      return false;
 
     /** Special Openings */
 
     /** Opening Hours */
-    return $this->isOpenOpeningHours();
+    return $this->isOpenOpeningHours( $now );
 
   }
 
@@ -361,14 +386,13 @@ class Set {
    * Get Next Open Period
    * returns the next open period
    *
-   * @access        public
-   * @return        Period
+   * @access      public
+   * @param       DateTime      $now
+   * @return      Period
    */
-  public function getNextOpenPeriod () {
+  public function getNextOpenPeriod ( $now = null ) {
 
     $this->sortPeriods();
-
-    $now            = I18n::getTimeNow();
 
     for ( $week_offset = 0; true; $week_offset++ ) :
 
@@ -376,7 +400,7 @@ class Set {
 
         foreach ( $this->getPeriods() as $period ) :
 
-          if ( $period->getTimeStart() > $now )
+          if ( $period->willBeOpen( $this->getId() ) )
             return $period;
 
         endforeach;
@@ -387,11 +411,10 @@ class Set {
 
         foreach ( $this->getPeriods() as $period ) :
 
-          $time_start     = &$period->getTimeStart();
-          $time_start->add( $time_difference );
+          $new_period   = $period->getCopy( $time_difference );
 
-          if ( $time_start > $now )
-            return $period;
+          if ( $new_period->willBeOpen( $this->getId() ) )
+            return $new_period;
 
         endforeach;
 

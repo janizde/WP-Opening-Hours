@@ -15,7 +15,7 @@ use OpeningHours\Module\I18n;
 
 $name       = $holiday->getName();
 $dateStart  = ( $holiday->isDummy() ) ? null : $holiday->getDateStart()->format( I18n::STD_DATE_FORMAT );
-$dateEnd    = ( $holiday->isDummy() ) ? null : $holiday->getDateStart()->format( I18n::STD_DATE_FORMAT );
+$dateEnd    = ( $holiday->isDummy() ) ? null : $holiday->getDateEnd()->format( I18n::STD_DATE_FORMAT );
 
 echo '<tr class="op-holiday">';
 
