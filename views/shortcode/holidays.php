@@ -4,7 +4,6 @@
  */
 
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\I18n;
 
 extract( $attributes );
 
