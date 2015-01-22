@@ -23,7 +23,7 @@ class IsOpen extends AbstractWidget {
 
         $this->setWidgetId( 'widget_op_is_open' );
 
-        $this->setTitle( __( 'Opening Hours: Is Open Status' ) );
+        $this->setTitle( __( 'Opening Hours: Is Open Status', I18n::TEXTDOMAIN ) );
 
         $this->setDescription( __( 'Shows a box saying whether a specific set is currently open or closed based on Periods.', I18n::TEXTDOMAIN ) );
 

@@ -47,7 +47,8 @@ class OpeningHours extends AbstractModule {
 
 		$this->widgets = array(
 			'OpeningHours\Module\Widget\Overview',
-			'OpeningHours\Module\Widget\IsOpen'
+			'OpeningHours\Module\Widget\IsOpen',
+			'OpeningHours\Module\Widget\Holidays'
 		);
 
 	}
