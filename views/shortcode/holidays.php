@@ -18,10 +18,12 @@ extract( $attributes );
  *
  * @var         $set                Set object
  * @var         $holidays           ArrayObject w/ Holiday objects of set
+ * @var         $highlight          bool whether highlight active Holiday or not
  * @var         $title              string w/ Widget title
  *
  * @var         $class_holiday      string w/ class for holiday row
  * @var         $class_highlighted  string w/ class for highlighted Holiday
+ * @var         $date_format        string w/ PHP date format
  */
 
 echo $before_widget;
@@ -41,9 +43,9 @@ echo $before_widget;
 
                 echo '<td class="col-name">' . $holiday->getName() . '</td>';
 
-                echo '<td class="col-date-start">'. $holiday->getDateStart()->format( I18n::getDateFormat() ) .'</td>';
+                echo '<td class="col-date-start">'. $holiday->getDateStart()->format( $date_format ) .'</td>';
 
-                echo '<td class="col-date-end">'. $holiday->getDateEnd()->format( I18n::getDateFormat() ) .'</td>';
+                echo '<td class="col-date-end">'. $holiday->getDateEnd()->format( $date_format ) .'</td>';
 
             echo '</tr>';
 

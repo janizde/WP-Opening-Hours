@@ -6,6 +6,7 @@
 namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Entity\Set;
+use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 
 class Holidays extends AbstractShortcode {
@@ -30,7 +31,8 @@ class Holidays extends AbstractShortcode {
             'after_title'       => null,
 
             'class_holiday'     => 'op-holiday',
-            'class_highlighted' => 'highlighted'
+            'class_highlighted' => 'highlighted',
+            'date_format'       => I18n::getDateFormat()
         );
 
         $this->setDefaultAttributes( $default_attributes );

@@ -83,6 +83,15 @@ class Holidays extends AbstractWidget {
             'default_placeholder'   => true
         ) );
 
+        /** Field: Date Format */
+        $this->addField( 'date_format', array(
+            'type'          => 'text',
+            'caption'       => __( 'Date Format', I18n::TEXTDOMAIN ),
+            'extended'      => true,
+
+            'default_placeholder'   => true
+        ) );
+
     }
 
     /**
