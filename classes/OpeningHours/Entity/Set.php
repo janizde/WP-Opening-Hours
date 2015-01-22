@@ -387,10 +387,9 @@ class Set {
    * returns the next open period
    *
    * @access      public
-   * @param       DateTime      $now
    * @return      Period
    */
-  public function getNextOpenPeriod ( $now = null ) {
+  public function getNextOpenPeriod () {
 
     $this->sortPeriods();
 
