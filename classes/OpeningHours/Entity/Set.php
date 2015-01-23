@@ -498,6 +498,93 @@ class Set {
   }
 
   /**
+   * Getter: (all) Periods Grouped By Day and Compressed
+   * applies some kind of array_unique on the array. Days with same Periods are uniqued to one array element with a comma separated string containing the day IDs
+   *
+   * @access      public
+   * @return      array
+   */
+  public function getPeriodsGroupedByDayCompressed () {
+
+    $periods_array      = $this->getPeriodsGroupedByDay();
+
+    $new_periods_array  = array();
+
+    $compressed         = array();
+
+    $days               = range( 0, 6 );
+
+    foreach ( $days as $day_1 ) :
+
+      if ( in_array( $day_1, $compressed ) )
+        continue;
+
+      $keys   = array(
+        $day_1
+      );
+
+      foreach ( $days as $day_2 ) :
+
+        if ( $day_1 == $day_2 )
+          continue;
+
+        if ( in_array( $day_2, $compressed ) )
+          continue;
+
+        if ( $this->daysEqual( $day_1, $day_2 ) )
+          $keys[] = $day_2;
+
+      endforeach;
+
+      $new_periods_array[ implode( ',', $keys ) ]  = $periods_array[ $day_1 ];
+
+      $compressed   = array_merge( $compressed, $keys );
+
+    endforeach;
+
+    return $new_periods_array;
+
+  }
+
+  /**
+   * Days equal
+   * checks if two days have equal Periods
+   *
+   * @access      public
+   * @param       int       $day_1
+   * @param       int       $day_2
+   * @param       array     $periods_by_day
+   * @return      bool
+   */
+  public function daysEqual ( $day_1, $day_2, $periods_by_day = null ) {
+
+    if ( $day_1 == $day_2 )
+      return true;
+
+    if ( $periods_by_day === null or !is_array( $periods_by_day ) )
+      $periods_by_day   = $this->getPeriodsGroupedByDay();
+
+    if ( !count( $periods_by_day[ $day_1 ] ) and !count( $periods_by_day[ $day_2 ] ) )
+      return true;
+
+    if ( count( $periods_by_day[ $day_1 ] ) != count( $periods_by_day[ $day_2 ] ) )
+      return false;
+
+    for ( $i = 0; $i < count( $periods_by_day[ $day_1 ] ); $i++ ) :
+
+      $period_1   = $periods_by_day[ $day_1 ][ $i ];
+      $period_2   = $periods_by_day[ $day_2 ][ $i ];
+
+      if ( !$period_1->equals( $period_2, true ) )
+        return false;
+
+    endfor;
+
+    return true;
+
+  }
+
+  /**
    * Setter: Periods
    *
    * @access     public
