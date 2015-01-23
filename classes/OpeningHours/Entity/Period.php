@@ -297,6 +297,48 @@ class Period {
   }
 
   /**
+   * Equals
+   * compares this Period to another Period
+   *
+   * @access      public
+   * @param       Period      $other
+   * @param       bool        $ignore_day
+   * @return      bool
+   */
+  public function equals ( Period $other, $ignore_day = false ) {
+
+    $time_format  = 'Hi';
+
+    if ( !$ignore_day and $this->getWeekday() != $other->getWeekday() )
+      return false;
+
+    if ( $this->getTimeStart()->format( $time_format ) != $other->getTimeStart()->format( $time_format ) )
+      return false;
+
+    if ( $this->getTimeEnd()->format( $time_format ) != $other->getTimeEnd()->format( $time_format ) )
+      return false;
+
+    return true;
+
+  }
+
+  /**
+   * Compare Two ( static equals() )
+   *
+   * @access      public
+   * @static
+   * @param       Period      $period_1
+   * @param       Period      $period_2
+   * @param       bool        $ignore_day
+   * @return      bool
+   */
+  public static function compareTwo ( Period $period_1, Period $period_2, $ignore_day = false ) {
+
+    return $period_1->equals( $period_2, $ignore_day );
+
+  }
+
+  /**
    * Get Copy
    * returns a copy of the current Period and adds up a DateInterval
    *
