@@ -23,6 +23,8 @@
    * @var       $weekdays           array (associative) w/ key: number representing day; value: translated day string/caption
    * @var       $show_closed        bool whether to show closed days or not
    * @var       $show_description   bool whether to show description or not
+   * @var       $compress           bool whether to compress Opening Hours
+   * @var       $short              bool whether to use short day captions
    *
    * @var       $caption_closed     string w/ caption for closed days
    * @var       $table_classes      string w/ classes for table
@@ -63,14 +65,18 @@
         echo '</tr>';
       endif;
 
-      foreach ( $set->getPeriodsGroupedByDay() as $day => $periods ) :
+      $periods    = ( $compress )
+        ? $set->getPeriodsGroupedByDayCompressed()
+        : $set->getPeriodsGroupedByDay();
+
+      foreach ( $periods as $day => $periods ) :
 
         $highlighted_day  = ( $highlight == 'day' and I18n::isToday( $day ) ) ? $highlighted_day_class : null;
 
         echo '<tr class="op-row op-row-day '. $row_classes .' '. $highlighted_day .'">';
 
           echo '<th scope="row" class="op-cell op-cell-heading '. $cell_heading_classes .' '. $cell_classes .'">';
-            echo $weekdays[ $day ];
+            echo I18n::getDayCaption( $day, $short );
           echo '</th>';
 
           echo '<td class="op-cell op-cell-periods '. $cell_periods_classes .' '. $cell_classes .'">';

@@ -29,6 +29,8 @@ class Overview extends AbstractShortcode {
       'show_closed_days'          => false,
       'show_description'          => true,
       'highlight'                 => 'nothing',
+      'compress'                  => false,
+      'short'                     => false,
       'caption_closed'            => __( 'Closed', I18n::TEXTDOMAIN ),
       'table_classes'             => null,
       'row_classes'               => null,

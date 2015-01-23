@@ -220,6 +220,53 @@ class I18n extends AbstractModule {
   }
 
   /**
+   * Get Day Caption
+   *
+   * @access      public
+   * @static
+   * @param       string|int|array  $days
+   * @param       bool              $short
+   * @return      string
+   */
+  public static function getDayCaption ( $days, $short = false ) {
+
+    $weekdays   = ( $short )
+      ? static::getWeekdaysShortNumeric()
+      : static::getWeekdaysNumeric();
+
+    if ( is_int( $days ) or is_numeric( $days ) )
+      return $weekdays[ $days ];
+
+    if ( is_string( $days ) and strpos( $days, ',' ) )
+      $days     = explode( ',', $days );
+
+    if ( !is_array( $days ) )
+      return "";
+
+    if ( count( $days ) === 1 )
+      return static::getDayCaption( $days );
+
+    sort( $days );
+    $days   = array_values( $days );
+
+    $first_el   = $days[0];
+    $last_el    = $days[ count( $days ) - 1 ];
+
+    if ( $days == range( $first_el, $last_el ) ) :
+      $result_format  = "%s – %s";
+      return sprintf( $result_format, $weekdays[ $first_el ], $weekdays[ $last_el ] );
+    endif;
+
+    $strings    = array();
+
+    foreach ( $days as $day )
+      $strings[]  = $weekdays[ $day ];
+
+    return implode( ", ", $strings );
+
+  }
+
+  /**
    *  Getter: Date Format
    *
    *  @access       public
@@ -363,5 +410,35 @@ class I18n extends AbstractModule {
   public static function getWeekdaysNumeric () {
     return array_values( self::getWeekdays() );
   }
+
+  /**
+   * Get Weekdays Short
+   *
+   * @access      public
+   * @static
+   * @return      array
+   */
+  public static function getWeekdaysShort () {
+    return array(
+      'monday'    => __( 'Mon.', static::TEXTDOMAIN ),
+      'tuesday'   => __( 'Tue.', static::TEXTDOMAIN ),
+      'wednesday' => __( 'Wed.', static::TEXTDOMAIN ),
+      'thursday'  => __( 'Thu.', static::TEXTDOMAIN ),
+      'friday'    => __( 'Fri.', static::TEXTDOMAIN ),
+      'saturday'  => __( 'Sat.', static::TEXTDOMAIN ),
+      'sunday'    => __( 'Sun.', static::TEXTDOMAIN ),
+    );
+  }
+
+  /**
+   * Get Weekdays Short Numeric
+   *
+   * @access      public
+   * @static
+   * @return      array
+   */
+  public static function getWeekdaysShortNumeric () {
+    return array_values( static::getWeekdaysShort() );
+  }
+
 }
-?>

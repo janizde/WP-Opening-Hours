@@ -79,6 +79,18 @@ class Overview extends AbstractWidget {
       'caption' => __( 'Show Set Description', I18n::TEXTDOMAIN )
     ) );
 
+    /** Field: Compress */
+    $this->addField( 'compress', array(
+      'type'    => 'checkbox',
+      'caption' => __( 'Compress Opening Hours', I18n::TEXTDOMAIN )
+    ) );
+
+    /** Field: Short */
+    $this->addField( 'short', array(
+      'type'    => 'checkbox',
+      'caption' => __( 'Use hort day captions', I18n::TEXTDOMAIN )
+    ) );
+
     /**
      *  Extended Fields
      */
