@@ -148,6 +148,27 @@ class I18n extends AbstractModule {
   }
 
   /**
+   * Merge Date Into Time
+   *
+   * @access        public
+   * @static
+   * @param         DateTime    $date
+   * @param         DateTime    $time
+   * @return        DateTime
+   */
+  public static function mergeDateIntoTime ( DateTime $date, DateTime $time ) {
+
+    $time->setDate(
+        $date->format('Y'),
+        $date->format('m'),
+        $date->format('d')
+    );
+
+    return $time;
+
+  }
+
+  /**
    *  Apply Time Zone
    *
    *  @access       public
