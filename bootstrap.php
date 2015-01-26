@@ -18,8 +18,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'OP_NAME',                 'Opening Hours' );
-define( 'OP_REQUIRED_PHP_VERSION', '5.3' );                          // because of get_called_class()
+define( 'OP_REQUIRED_PHP_VERSION', '5.3' );                          // because of get_called_class() / namespaces
 define( 'OP_REQUIRED_WP_VERSION',  '3.1' );                          // because of esc_textarea()
+
+require_once( 'includes/admin-notice-helper/admin-notice-helper.php' );
+require_once( 'includes/wp-detail-fields/detail-fields.php' );
+
+function op_admin_notice_php () {
+	add_notice(
+		sprintf(
+			__( 'Plugin Opening Hours requires at least PHP Version %s. Your Installation of WordPress is currently running on PHP %s', 'opening-hours' ),
+			OP_REQUIRED_PHP_VERSION,
+			PHP_VERSION )
+	);
+}
+
+function op_admin_notice_wp () {
+	global $wp_version;
+
+	add_notice(
+		sprintf(
+			__( 'Plugin Opening Hours requires at least WordPress version %s. Your Installation of WordPress is running on WordPress %s', 'opening-hours' ),
+			OP_REQUIRED_WP_VERSION,
+			$wp_version
+		)
+	);
+}
 
 /**
  * Checks if the system requirements are met
@@ -29,22 +53,17 @@ define( 'OP_REQUIRED_WP_VERSION',  '3.1' );                          // because 
 function op_requirements_met() {
 	global $wp_version;
 
-	if ( version_compare( PHP_VERSION, OP_REQUIRED_PHP_VERSION, '<' ) )
+	if ( version_compare( PHP_VERSION, OP_REQUIRED_PHP_VERSION, '<' ) ) :
+		add_action( 'init', 'op_admin_notice_php' );
 		return false;
+	endif;
 
-	if ( version_compare( $wp_version, OP_REQUIRED_WP_VERSION, '<' ) )
+	if ( version_compare( $wp_version, OP_REQUIRED_WP_VERSION, '<' ) ) :
+		add_action( 'init', 'op_admin_notice_wp' );
 		return false;
+	endif;
 
 	return true;
-}
-
-/**
- * Prints an error that the system requirements weren't met.
- */
-function op_requirements_error() {
-	global $wp_version;
-
-	require_once( dirname( __FILE__ ) . '/views/requirements-error.php' );
 }
 
 /**
@@ -72,9 +91,8 @@ function op_autoload ( $class_name ) {
 
 	$filepath 	= op_plugin_path() . 'classes/' . str_replace( '\\', '/', $class_name ) . '.php';
 
-	if ( file_exists( $filepath ) ) :
+	if ( file_exists( $filepath ) )
 		require_once( $filepath );
-	endif;
 
 }
 
@@ -84,16 +102,8 @@ spl_autoload_register( 'op_autoload' );
  * Check requirements and load main class
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.
  */
-if ( op_requirements_met() ) {
+if ( op_requirements_met() ) :
 
-	require_once( __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php' );
-	require_once( __DIR__ . '/includes/wp-detail-fields/detail-fields.php' );
+	require_once( 'run.php' );
 
-	if ( class_exists( 'OpeningHours\OpeningHours' ) ) {
-		$GLOBALS['op'] = OpeningHours\OpeningHours::getInstance();
-		register_activation_hook( __FILE__, array( $GLOBALS['op'], 'activate' ) );
-		register_deactivation_hook( __FILE__, array( $GLOBALS['op'], 'deactivate' ) );
-	}
-} else {
-	add_action( 'admin_notices', 'op_requirements_error' );
-}
+endif;
