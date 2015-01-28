@@ -3,7 +3,12 @@
  * OpeningHours: Views: Shortcode: Holidays
  */
 
+use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\Set;
+
+/**
+ * @var         $attributes         array w/ attributes
+ */
 
 extract( $attributes );
 
@@ -35,6 +40,10 @@ echo $before_widget;
         echo '<tbody>';
 
         foreach ( $holidays as $holiday ) :
+
+            /**
+             * @var         $holiday        Holiday object
+             */
 
             $highlighted    = ( $highlight and $holiday->isActive() ) ? $class_highlighted : null;
 

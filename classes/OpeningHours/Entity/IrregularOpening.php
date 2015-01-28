@@ -136,6 +136,42 @@ class IrregularOpening {
     }
 
     /**
+     * Is Open
+     *
+     * @access          public
+     * @param           DateTime        $now
+     * @return          bool
+     */
+    public function isOpen ( DateTime $now = null ) {
+
+        if ( $now == null )
+            $now    = I18n::getTimeNow();
+
+        return ( $this->getTimeStart() <= $now and $this->getTimeEnd() >= $now );
+
+    }
+
+    /**
+     * Get Formatted Time Range
+     *
+     * @access          public
+     * @param           string          $time_format
+     * @param           string          $output_format
+     * @return          string
+     */
+    public function getFormattedTimeRange( $time_format = null, $output_format = "%s – %s" ) {
+
+        if ( $time_format == null )
+            $time_format    = I18n::getTimeFormat();
+
+        if ( !$this->getTimeStart() instanceof DateTime or !$this->getTimeEnd() instanceof DateTime )
+            return "";
+
+        return sprintf( $output_format, $this->getTimeStart()->format( $time_format ), $this->getTimeEnd()->format( $time_format ) );
+
+    }
+
+    /**
      * Get Config
      *
      * @access          public
