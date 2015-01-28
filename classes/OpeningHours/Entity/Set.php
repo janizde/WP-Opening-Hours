@@ -9,6 +9,7 @@ use OpeningHours\Misc\ArrayObject;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;
+use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as IrregularOpeningsMetaBox;
 
 use WP_Post;
 use DateTime;
@@ -37,6 +38,14 @@ class Set {
    * @type        ArrayObject
    */
   protected $holidays;
+
+  /**
+   * Irregular Openings
+   *
+   * @access      protected
+   * @type        ArrayObject
+   */
+  protected $irregularOpenings;
 
   /**
    * Id
@@ -98,6 +107,7 @@ class Set {
 
     $this->setPeriods( new ArrayObject );
     $this->setHolidays( new ArrayObject );
+    $this->setIrregularOpenings( new ArrayObject );
 
     if ( !is_int( $post ) and !$post instanceof WP_Post )
       throw new InvalidArgumentException( sprintf( 'Argument one for __construct has to be of type WP_Post or int. %s given', gettype( $post ) ) );
@@ -152,6 +162,8 @@ class Set {
 
     $this->loadHolidays();
 
+    $this->loadIrregularOpenings();
+
     $post_detail_description  = get_post_detail( 'description', $this->getId() );
     $post_parent_detail_description = get_post_detail( 'description', $this->getParentId() );
 
@@ -180,8 +192,8 @@ class Set {
     if ( !is_array( $post_meta ) or !count( $post_meta ) )
       return;
 
-    foreach ( $post_meta as $periodConfig ) :
-      $this->getPeriods()->addElement( new Period( $periodConfig ) );
+    foreach ( $post_meta as $config ) :
+      $this->getPeriods()->addElement( new Period( $config ) );
     endforeach;
 
     $this->sortPeriods();
@@ -205,6 +217,25 @@ class Set {
       $this->getHolidays()->addElement( new Holiday( $config ) );
 
     $this->sortHolidays();
+
+  }
+
+  /**
+   * Load Irregular Openings
+   *
+   * @access      protected
+   */
+  public function loadIrregularOpenings () {
+
+    $post_meta  = get_post_meta( $this->getId(), IrregularOpeningsMetaBox::IRREGULAR_OPENINGS_META_KEY, true );
+
+    if ( !is_array( $post_meta ) or !count( $post_meta ) )
+      return;
+
+    foreach ( $post_meta as $config )
+      $this->getIrregularOpenings()->addElement( new IrregularOpening( $config ) );
+
+    $this->sortIrregularOpenings();
 
   }
 
@@ -379,6 +410,17 @@ class Set {
   public function sortHolidays () {
 
     $this->getHolidays()->uasort( array( 'OpeningHours\Entity\Holiday', 'sortStrategy' ) );
+
+  }
+
+  /**
+   * Sort Irregular Openings
+   *
+   * @access        public
+   */
+  public function sortIrregularOpenings () {
+
+    $this->getIrregularOpenings()->uasort( array( 'OpeningHours\Entity\IrregularOpening', 'sortStrategy' ) );
 
   }
 
@@ -614,6 +656,26 @@ class Set {
    */
   public function setHolidays ( ArrayObject $holidays ) {
     $this->holidays = $holidays;
+  }
+
+  /**
+   * Getter: Irregular Openings
+   *
+   * @access      public
+   * @return      ArrayObject
+   */
+  public function getIrregularOpenings () {
+    return $this->irregularOpenings;
+  }
+
+  /**
+   * Setter: Irregular Openings
+   *
+   * @access      protected
+   * @param       ArrayObject     $irregularOpenings
+   */
+  protected function setIrregularOpenings ( ArrayObject $irregularOpenings ) {
+    $this->irregularOpenings  = $irregularOpenings;
   }
 
   /**

@@ -32,7 +32,7 @@ echo '<tr class="op-holiday">';
     echo '</td>';
 
     echo '<td class="col-remove">';
-        echo '<button class="button remove-holiday">x</button>';
+        echo '<button class="button button-remove remove-holiday">x</button>';
     echo '</td>';
 
 echo '</tr>';

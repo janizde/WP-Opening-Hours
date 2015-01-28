@@ -48,7 +48,7 @@ use OpeningHours\Misc\ArrayObject;
         </tbody>
     </table>
 
-    <button class="button button-primary add-holiday">
+    <button class="button button-primary button-add add-holiday">
         <?php _e( 'Add New Holiday', I18n::TEXTDOMAIN ); ?>
     </button>
 

@@ -8,12 +8,14 @@ namespace OpeningHours\Module;
 use OpeningHours\Entity\Set;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
+use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings;
 
 class Ajax extends AbstractModule {
 
   /**
-   *  Contants
+   *  Constants
    */
   const   WP_ACTION_PREFIX  = 'wp_ajax_';
   const   JS_AJAX_OBJECT    = 'ajax_object';
@@ -49,6 +51,7 @@ class Ajax extends AbstractModule {
     self::registerAjaxAction( 'op_render_periods_day',    'renderPeriodsDay'    );
     self::registerAjaxAction( 'op_render_single_period',  'renderSinglePeriod'  );
     self::registerAjaxAction( 'op_render_single_dummy_holiday', 'renderSingleDummyHoliday' );
+    self::registerAjaxAction( 'op_render_single_dummy_irregular_opening', 'renderSingleDummyIrregularOpening' );
 
   }
 
@@ -137,6 +140,28 @@ class Ajax extends AbstractModule {
         Holidays::TEMPLATE_PATH_SINGLE,
         array(
           'holiday'   => Holiday::createDummyPeriod()
+        ),
+        'once'
+    );
+
+    die();
+
+  }
+
+  /**
+   * Action: Render Single Dummy Irregular Opening
+   *
+   * @access      public
+   * @static
+   */
+  public static function renderSingleDummyIrregularOpening () {
+
+    error_log( 'action' );
+
+    echo self::renderTemplate(
+        IrregularOpenings::TEMPLATE_PATH_SINGLE,
+        array (
+          'io'        => IrregularOpening::createDummy()
         ),
         'once'
     );

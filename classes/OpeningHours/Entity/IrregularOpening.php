@@ -5,6 +5,7 @@
 
 namespace OpeningHours\Entity;
 
+use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings;
 use OpeningHours\Module\I18n;
 
 use DateInterval;
@@ -81,13 +82,13 @@ class IrregularOpening {
             return $config;
         endif;
 
-        if ( !preg_match( $config[ 'timeStart' ], I18n::STD_TIME_FORMAT_REGEX ) )
+        if ( !preg_match( I18n::STD_TIME_FORMAT_REGEX, $config[ 'timeStart' ] ) )
             throw new InvalidArgumentException( "timeStart in config is not in valid time format" );
 
-        if ( !preg_match( $config[ 'timeEnd' ], I18n::STD_TIME_FORMAT_REGEX ) )
+        if ( !preg_match( I18n::STD_TIME_FORMAT_REGEX, $config[ 'timeEnd' ] ) )
             throw new InvalidArgumentException( "timeEnd in config is not in valid time format" );
 
-        if ( !preg_match( $config[ 'date' ], I18n::STD_DATE_FORMAT_REGEX ) )
+        if ( !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config[ 'date' ] ) )
             throw new InvalidArgumentException( "date in config is not in valid date format" );
 
         if ( !isset( $config[ 'name' ] ) or empty( $config[ 'name' ] ) )
@@ -121,6 +122,9 @@ class IrregularOpening {
      * @access          public
      */
     public function updateTime () {
+
+        if ( !$this->getTimeStart() instanceof DateTime or !$this->getTimeEnd() instanceof DateTime )
+            return;
 
         if (
             $this->getTimeStart()->format( I18n::STD_DATE_FORMAT ) === $this->getTimeEnd()->format( I18n::STD_DATE_FORMAT )
@@ -157,6 +161,31 @@ class IrregularOpening {
     public function __toString () {
 
         return json_encode( $this->getConfig() );
+
+    }
+
+    /**
+     * Sort Strategy
+     * sorts Irregular Openings by start-time (ASC)
+     *
+     * @access          public
+     * @static
+     * @param           IrregularOpening    $io_1
+     * @param           IrregularOpening    $io_2
+     * @return          int
+     */
+    public static function sortStrategy ( IrregularOpening $io_1, IrregularOpening $io_2 ) {
+
+        if ( $io_1->getTimeStart() < $io_2->getTimeStart() ) :
+            return -1;
+
+        elseif ( $io_1->getTimeStart() > $io_2->getTimeStart() ) :
+            return 1;
+
+        else :
+            return 0;
+
+        endif;
 
     }
 

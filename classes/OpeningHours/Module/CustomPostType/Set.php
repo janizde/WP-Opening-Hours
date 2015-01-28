@@ -42,8 +42,9 @@ class Set extends AbstractModule {
     self::registerHookCallbacks();
 
     static::setMetaBoxes( array(
-      'OpeningHours'    => MetaBox\OpeningHours::getInstance(),
-      'Holidays'        => MetaBox\Holidays::getInstance()
+      'OpeningHours'      => MetaBox\OpeningHours::getInstance(),
+      'Holidays'          => MetaBox\Holidays::getInstance(),
+      'IrregularOpenings' => MetaBox\IrregularOpenings::getInstance()
     ) );
 
   }
