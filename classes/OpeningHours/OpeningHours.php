@@ -92,44 +92,40 @@ class OpeningHours extends AbstractModule {
 	 *	@wp_action 		wp_enqueue_scripts, admin_enqueue_scripts
 	 */
 	public static function loadResources() {
+
 		wp_register_script(
-			self::PREFIX . 'js-backend',
-			plugins_url ( 'javascript/opening-hours-backend.js', op_bootstrap_file() ),
+			self::PREFIX . 'js',
+			plugins_url ( 'javascript/opening-hours.js', op_bootstrap_file() ),
 			array( 'jquery' ),
 			self::VERSION,
 			true
 		);
 
 		wp_register_style(
-			self::PREFIX . 'css-backend',
-			plugins_url( 'css/opening-hours-backend.css', op_bootstrap_file() )
+			self::PREFIX . 'css',
+			plugins_url( 'css/opening-hours.css', op_bootstrap_file() )
 		);
 
-		wp_register_style(
-			self::PREFIX . 'css-frontend',
-			plugins_url( 'css/opening-hours-frontend.css', op_bootstrap_file() )
-		);
+		if ( is_admin() ) :
 
-		if ( is_admin() ) {
+            // Backend Styles and Scripts
+            wp_enqueue_script('jquery-ui');
 
-			// Backend Styles and Scripts
-			wp_enqueue_script( 'jquery-ui' );
-			wp_enqueue_style( self::PREFIX . 'css-backend' );
-			wp_enqueue_script( self::PREFIX . 'js-backend' );
 
-			if ( !wp_script_is('jquery-ui') ) :
-				wp_register_script( 'jquery-ui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array( 'jquery' ) );
-				wp_enqueue_script( 'jquery-ui' );
-			endif;
+            if (!wp_script_is('jquery-ui')) :
+                wp_register_script('jquery-ui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array('jquery'));
+                wp_enqueue_script('jquery-ui');
+            endif;
 
-			Module\Ajax::injectAjaxUrl( self::PREFIX . 'js-backend' );
+        endif;
 
-		} else {
+        Module\Ajax::injectAjaxUrl( self::PREFIX . 'js' );
 
-			// Frontend Styles and Scripts
-			wp_enqueue_style( self::PREFIX . 'css-frontend' );
 
-		}
+        // Frontend Styles and Scripts
+        wp_enqueue_style( self::PREFIX . 'css' );
+        wp_enqueue_script( self::PREFIX . 'js' );
+
 	}
 
 	/**

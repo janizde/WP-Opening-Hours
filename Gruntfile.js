@@ -52,7 +52,7 @@ module.exports = function (grunt) {
         },
 
         watch:      {
-            files:      ['less/_*.less', 'javascript/_*.js'],
+            files:      ['less/main.less', 'less/_*.less', 'javascript/_*.js'],
             tasks:      ['dev']
         }
     });
