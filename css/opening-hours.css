@@ -1,39 +1,31 @@
 /**
  *  Shortcode: Overview
  */
-
 span.op-period-time {
-    display:        block;
+  display: block;
 }
-
 td.op-set-description {
-    font-size:      1.5em;
+  font-size: 1.5em;
 }
-
 tr.op-row-day.highlighted td,
 tr.op-row-day.highlighted th {
-    color:          green;
+  color: green;
 }
-
 span.op-period-time.highlighted {
-    color:          green;
+  color: green;
 }
-
 span.op-closed {
-    color:          red;
+  color: red;
 }
-
 span.op-open {
-    color:          green;
+  color: green;
 }
-
 span.op-next-period {
-    display:        block;
+  display: block;
 }
-
 /**
  *  Shortcode: Holidays
  */
 .op-holiday.highlighted td {
-    color:          green;
+  color: green;
 }
