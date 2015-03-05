@@ -4,3 +4,6 @@
 [submodule "includes/wp-detail-fields"]
 	path = includes/wp-detail-fields
 	url = https://github.com/janizde/WP-Detail-Fields.git
+[submodule "includes/jquery-ui-timepicker"]
+	path = includes/jquery-ui-timepicker
+	url = https://github.com/fgelinas/timepicker.git

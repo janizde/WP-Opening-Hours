@@ -1,7 +1,7 @@
 table.form-opening-hours {
 
   width:      100%;
-  max-width:  600px;
+  max-width:  500px;
 
   margin:     auto;
 
@@ -13,6 +13,9 @@ table.form-opening-hours {
   @col-delete-width:  20%;
 
   @screen-breakpoint: 782px;
+
+  @color-green:       green;
+  @color-red:         red;
 
   tbody {
 
@@ -30,6 +33,13 @@ table.form-opening-hours {
 
         tr.period {
 
+          .input-timepicker {
+            width:      70px;
+            box-shadow: none;
+            background: #efefef;
+            border:     1px solid #cccccc;
+            text-align: center;
+          }
 
           .col-time-start, .col-time-end {
             width:      @col-time-width;
@@ -39,6 +49,17 @@ table.form-opening-hours {
           .col-delete-period {
             width:      @col-delete-width;
             text-align: left;
+
+            .delete-period {
+              color:    @color-red;
+              border:   1px solid @color-red;
+
+              background: desaturate( lighten( @color-red, 45% ), 30% );
+
+              box-shadow: none;
+
+              padding-top:  3px;
+            }
           }
         }
       }
@@ -51,6 +72,17 @@ table.form-opening-hours {
 
     td.col-options {
       width:    @col-options-width;
+
+      .add-period {
+        color:      @color-green;
+        border:     1px solid @color-green;
+
+        background: desaturate( lighten( @color-green, 60% ), 30% );
+
+        box-shadow: none;
+
+        padding-top: 4px;
+      }
     }
   }
 

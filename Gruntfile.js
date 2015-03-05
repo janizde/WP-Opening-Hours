@@ -4,7 +4,7 @@ module.exports = function (grunt) {
         pkg:        grunt.file.readJSON( 'package.json' ),
 
         jshint:     {
-            files:      [ 'Gruntfile.js', 'javascript/*.js' ],
+            files:      [ 'Gruntfile.js', 'javascript/_*.js' ],
             options:    {
                 globals:    {
                     jQuery:     true
@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 
         concat:     {
             dist:       {
-                src:        ['javascript/_*.js'],
+                src:        ['javascript/_*.js', 'includes/jquery-ui-timepicker/jquery.ui.timepicker.js'],
                 dest:       'javascript/opening-hours.js'
             }
         },

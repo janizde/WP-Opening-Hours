@@ -47,7 +47,7 @@ MetaBox::nonceField();
 
         <td class="col-options" valign="top">
           <a class="button add-period green has-icon">
-            <i class="dashicons dashicons-plus" style="margin-top: 4px;"></i>
+            <i class="dashicons dashicons-plus"></i>
           </a>
         </td>
       </tr>

@@ -3,7 +3,7 @@
   <td class="col-time-start">
     <input
     name="opening-hours[<?php echo $period->getWeekday(); ?>][start][]"
-    type="time"
+    type="text"
     class="input-timepicker input-time-end"
     value="<?php echo $period->getTimeStart( true ); ?>" />
   </td>
@@ -11,7 +11,7 @@
   <td class="col-time-end">
     <input
     name="opening-hours[<?php echo $period->getWeekday(); ?>][end][]"
-    type="time"
+    type="text"
     class="input-timepicker input-time-end"
     value="<?php echo $period->getTimeEnd( true ); ?>" />
   </td>

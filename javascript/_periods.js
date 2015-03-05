@@ -16,13 +16,13 @@ jQuery.fn.opPeriodsDay 		= function () {
     }
 
     var periodContainer = wrap.find( '.period-container' );
-    var tbody 					= periodContainer.find( 'tbody' );
+    var tbody 		    = periodContainer.find( 'tbody' );
 
-    var btnAddPeriod 		= wrap.find( 'a.add-period' );
+    var btnAddPeriod 	= wrap.find( 'a.add-period' );
 
     function addPeriod () {
 
-        data 	= {
+        var data 	= {
             'action'	: 'op_render_single_period',
             'weekday'	: periodContainer.attr( 'data-day' ),
             'set'			: periodContainer.attr( 'data-set' )
@@ -58,6 +58,7 @@ jQuery.fn.opSinglePeriod 	= function () {
     }
 
     var btnDeletePeriod	= wrap.find( '.delete-period' );
+    var inputs_tp       = wrap.find( '.input-timepicker' );
 
     function deletePeriod () {
         wrap.remove();
@@ -65,6 +66,12 @@ jQuery.fn.opSinglePeriod 	= function () {
 
     btnDeletePeriod.click( function() {
         deletePeriod();
+    } );
+
+    inputs_tp.timepicker();
+
+    inputs_tp.focus( function () {
+        inputs_tp.blur();
     } );
 
 };

@@ -1,6 +1,43 @@
+.ui-timepicker {
+  background: #444444;
+  margin-top: 5px;
+}
+.ui-timepicker .ui-timepicker-table .ui-timepicker-title {
+  color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+}
+.ui-timepicker .ui-timepicker-table .ui-timepicker-hours {
+  border-right: 1px solid #ffffff;
+}
+.ui-timepicker .ui-timepicker-table table.ui-timepicker th.periods {
+  color: white;
+  font-weight: bold;
+  padding-right: 5px;
+}
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-hour-cell a,
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-minute-cell a {
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  padding-left: 3px;
+  padding-right: 3px;
+  border: 1px solid transparent;
+}
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-hour-cell a:hover,
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-minute-cell a:hover {
+  border-color: #0074a2;
+}
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-hour-cell a.ui-state-active,
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-minute-cell a.ui-state-active,
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-hour-cell a.ui-state-active:hover,
+.ui-timepicker .ui-timepicker-table table.ui-timepicker td.ui-timepicker-minute-cell a.ui-state-active:hover {
+  background: #0074a2;
+  border-color: transparent;
+}
 table.form-opening-hours {
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
   margin: auto;
 }
 table.form-opening-hours tbody td {
@@ -13,6 +50,13 @@ table.form-opening-hours tbody td.col-times {
 table.form-opening-hours tbody td.col-times table.period-table {
   width: 100%;
 }
+table.form-opening-hours tbody td.col-times table.period-table tr.period .input-timepicker {
+  width: 70px;
+  box-shadow: none;
+  background: #efefef;
+  border: 1px solid #cccccc;
+  text-align: center;
+}
 table.form-opening-hours tbody td.col-times table.period-table tr.period .col-time-start,
 table.form-opening-hours tbody td.col-times table.period-table tr.period .col-time-end {
   width: 40%;
@@ -22,12 +66,26 @@ table.form-opening-hours tbody td.col-times table.period-table tr.period .col-de
   width: 20%;
   text-align: left;
 }
+table.form-opening-hours tbody td.col-times table.period-table tr.period .col-delete-period .delete-period {
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  background: #fbe9e9;
+  box-shadow: none;
+  padding-top: 3px;
+}
 table.form-opening-hours tbody td.col-name {
   width: 20%;
   font-weight: bold;
 }
 table.form-opening-hours tbody td.col-options {
   width: 10%;
+}
+table.form-opening-hours tbody td.col-options .add-period {
+  color: #008000;
+  border: 1px solid #008000;
+  background: #bef4be;
+  box-shadow: none;
+  padding-top: 4px;
 }
 @media (max-width: 782px) {
   table.form-opening-hours td,
