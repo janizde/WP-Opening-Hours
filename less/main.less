@@ -1,52 +1,5 @@
-/**
- *  Shortcode: Overview
- */
-span.op-period-time {
-  display:        block;
-}
+@import "_meta-box-periods";
+@import "_meta-box-donation";
 
-td.op-set-description {
-  font-size:      1.5em;
-}
-
-tr.op-row-day.highlighted td,
-tr.op-row-day.highlighted th {
-  color:          green;
-}
-
-span.op-period-time.highlighted {
-  color:          green;
-}
-
-span.op-closed {
-  color:          red;
-}
-
-span.op-open {
-  color:          green;
-}
-
-span.op-next-period {
-  display:        block;
-}
-
-/**
- *  Shortcode: Holidays
- */
-.op-holiday.highlighted td {
-  color:          green;
-}
-
-/**
- *  Donation
- */
-#op-paypal-select-amount {
-  display:      inline-block;
-  margin-top:   -35px;
-  margin-right: 15px;
-}
-
-#op-paypal-donation-submit {
-  cursor:       pointer;
-  display:      inline-block;
-}
+@import "_shortcode-overview";
+@import "_shortcode-holidays";

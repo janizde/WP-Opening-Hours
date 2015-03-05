@@ -1,0 +1,76 @@
+table.form-opening-hours {
+
+  width:      100%;
+  max-width:  600px;
+
+  margin:     auto;
+
+  @col-day-width:     20%;
+  @col-times-width:   60%;
+  @col-options-width: 10%;
+
+  @col-time-width:    40%;
+  @col-delete-width:  20%;
+
+  @screen-breakpoint: 782px;
+
+  tbody {
+
+    td {
+      padding-left:   0;
+      padding-right:  0;
+    }
+
+    td.col-times {
+
+      width:    @col-times-width;
+
+      table.period-table {
+        width:    100%;
+
+        tr.period {
+
+
+          .col-time-start, .col-time-end {
+            width:      @col-time-width;
+            text-align: center;
+          }
+
+          .col-delete-period {
+            width:      @col-delete-width;
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    td.col-name {
+      width:        @col-day-width;
+      font-weight:  bold;
+    }
+
+    td.col-options {
+      width:    @col-options-width;
+    }
+  }
+
+  // responsive
+  @media ( max-width: @screen-breakpoint ) {
+    td, th {
+      display:    table-cell;
+    }
+  }
+
+  @media ( max-width: 530px ) {
+
+    .input-timepicker {
+      font-size:      12px;
+    }
+
+    .button {
+      padding:        3px 5px;
+    }
+
+  }
+  // /responsive
+}

@@ -13,24 +13,6 @@ MetaBox::nonceField();
 <div class="opening-hours">
 
   <table class="form-table form-opening-hours">
-    <thead>
-      <th>
-        <!-- empty -->
-      </th>
-
-      <th>
-        <?php _e( 'Start Time', I18n::TEXTDOMAIN ); ?>
-      </th>
-
-      <th>
-        <?php _e( 'End Time', I18n::TEXTDOMAIN ); ?>
-      </th>
-
-      <th>
-        <!-- empty -->
-      </th>
-    </thead>
-
     <tbody>
       <?php foreach ( I18n::getWeekdaysNumeric() as $id => $name ) : ?>
       <tr class="periods-day">
