@@ -215,3 +215,7 @@ span.op-next-period {
 .op-holiday.highlighted td {
   color: green;
 }
+.op-irregular-openings tr.op-irregular-opening.highlighted td,
+.op-irregular-openings tr.op-irregular-opening.highlighted th {
+  color: green;
+}

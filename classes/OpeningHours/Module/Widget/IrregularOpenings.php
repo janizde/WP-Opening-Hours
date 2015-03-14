@@ -89,6 +89,7 @@ class IrregularOpenings extends AbstractWidget {
             'type'          => 'text',
             'caption'       => __( 'PHP Date Format', I18n::TEXTDOMAIN ),
             'extended'      => true,
+	        'description'   => sprintf( '<a href="http://bit.ly/16Wsegh" target="blank">%s</a>', __( 'More about PHP date and time formats.', I18n::TEXTDOMAIN ) ),
 
             'default_placeholder'   => true
         ) );
@@ -98,6 +99,7 @@ class IrregularOpenings extends AbstractWidget {
             'type'          => 'text',
             'caption'       => __( 'PHP Time Format', I18n::TEXTDOMAIN ),
             'extended'      => true,
+            'description'   => sprintf( '<a href="http://bit.ly/16Wsegh" target="blank">%s</a>', __( 'More about PHP date and time formats.', I18n::TEXTDOMAIN ) ),
 
             'default_placeholder'   => true
         ) );
