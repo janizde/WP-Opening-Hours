@@ -5,7 +5,6 @@
 
 namespace OpeningHours\Entity;
 
-use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings;
 use OpeningHours\Module\I18n;
 
 use DateInterval;
@@ -135,8 +134,26 @@ class IrregularOpening {
 
     }
 
+	/**
+	 * Is Active
+	 * checks whether this IrregularOpening is active on the given date.
+	 *
+	 * @access          public
+	 * @param           DateTime        $now
+	 * @return          bool
+	 */
+	public function isActive ( DateTime $now = null ) {
+
+		if ( $now == null )
+			$now    = I18n::getTimeNow();
+
+		return ( $this->getDate()->format( I18n::STD_DATE_FORMAT ) == $now->format( I18n::STD_DATE_FORMAT ) );
+
+	}
+
     /**
      * Is Open
+     * checks whether the venue is actually open due to the IrregularOpening
      *
      * @access          public
      * @param           DateTime        $now
@@ -146,6 +163,9 @@ class IrregularOpening {
 
         if ( $now == null )
             $now    = I18n::getTimeNow();
+
+	    if ( !$this->isActive( $now ) )
+		    return false;
 
         return ( $this->getTimeStart() <= $now and $this->getTimeEnd() >= $now );
 

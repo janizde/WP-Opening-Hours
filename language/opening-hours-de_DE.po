@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Opening Hours Plugin 2.0\n"
-"POT-Creation-Date: 2015-03-04 16:37+0100\n"
-"PO-Revision-Date: 2015-03-04 16:42+0100\n"
+"POT-Creation-Date: 2015-03-05 16:49+0100\n"
+"PO-Revision-Date: 2015-03-05 16:49+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: Jannik Portz <hello@jannikportz.de>\n"
 "Language: de_DE\n"
@@ -190,6 +190,14 @@ msgstr "Sa."
 #: classes/OpeningHours/Module/I18n.php:450
 msgid "Sun."
 msgstr "So."
+
+#: classes/OpeningHours/Module/I18n.php:477
+msgid "Hour"
+msgstr "Stunde"
+
+#: classes/OpeningHours/Module/I18n.php:478
+msgid "Minute"
+msgstr "Minute"
 
 #: classes/OpeningHours/Module/Shortcode/AbstractShortcode.php:105
 msgid "Shortcode has no tagname and could not be registered"
@@ -447,13 +455,11 @@ msgstr "Endzeit"
 msgid "Add New Irregular Opening"
 msgstr "Ausnahme hinzufügen"
 
-#: views/op-set-meta-box.php:22
-msgid "Start Time"
-msgstr "Startzeit"
+#~ msgid "Start Time"
+#~ msgstr "Startzeit"
 
-#: views/op-set-meta-box.php:26
-msgid "End Time"
-msgstr "Endzeit"
+#~ msgid "End Time"
+#~ msgstr "Endzeit"
 
 #~ msgid "Date Format"
 #~ msgstr "Datumsformat"

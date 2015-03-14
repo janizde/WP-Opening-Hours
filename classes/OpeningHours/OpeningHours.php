@@ -123,6 +123,8 @@ class OpeningHours extends AbstractModule {
     wp_enqueue_style( self::PREFIX . 'css' );
     wp_enqueue_script( self::PREFIX . 'js' );
 
+		wp_localize_script( self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations() );
+
 	}
 
 	/**

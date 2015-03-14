@@ -93,16 +93,11 @@ jQuery.fn.opSingleHoliday 	= function () {
     }
 
     var removeButton 	= wrap.find( '.remove-holiday' );
-    var inputDateStart	= wrap.find( 'input[name=dateStart]' );
-    var inputDateEnd	= wrap.find( 'input[name=dateEnd]' );
+    var inputDateStart	= wrap.find( 'input.date-start' );
+    var inputDateEnd	= wrap.find( 'input.date-end' );
 
     function remove () {
         wrap.remove();
-    }
-
-    function syncInputs () {
-        inputDateEnd.attr( 'min', inputDateStart.val() );
-        inputDateStart.attr( 'max', inputDateEnd.val() );
     }
 
     removeButton.click( function (e) {
@@ -111,15 +106,19 @@ jQuery.fn.opSingleHoliday 	= function () {
         remove();
     } );
 
-    inputDateStart.change( function () {
-        syncInputs();
-    } );
+    inputDateStart.datepicker({
+        dateFormat:     'yy-mm-dd',
+        onClose:        function ( date ) {
+            inputDateEnd.datepicker("option", "minDate", date);
+        }
+    });
 
-    inputDateEnd.change( function () {
-        syncInputs();
-    } );
-
-    syncInputs();
+    inputDateEnd.datepicker({
+        dateFormat:     'yy-mm-dd',
+        onClose:        function ( date ) {
+            inputDateStart.datepicker("option", "maxDate", date);
+        }
+    });
 
 };
 
@@ -324,7 +323,10 @@ jQuery.fn.opSinglePeriod 	= function () {
         deletePeriod();
     } );
 
-    inputs_tp.timepicker();
+    inputs_tp.timepicker({
+        hourText:       translations.tp_hour,
+        minuteText:     translations.tp_minute
+    });
 
     inputs_tp.focus( function () {
         inputs_tp.blur();

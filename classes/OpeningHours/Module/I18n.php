@@ -462,4 +462,22 @@ class I18n extends AbstractModule {
     return array_values( static::getWeekdaysShort() );
   }
 
+	/**
+	 * Get Javascript Translations
+	 *
+	 * @access      public
+	 * @static
+	 * @return      array
+	 */
+	public static function getJavascriptTranslations () {
+
+		return array(
+
+			/** jQuery UI Timepicker */
+			'tp_hour'    => __( 'Hour', static::TEXTDOMAIN ),
+			'tp_minute'  => __( 'Minute', static::TEXTDOMAIN )
+		);
+
+	}
+
 }

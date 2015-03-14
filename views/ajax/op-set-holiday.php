@@ -24,11 +24,11 @@ echo '<tr class="op-holiday">';
     echo '</td>';
 
     echo '<td class="col-date-start">';
-        echo '<input type="date" name="'. Holidays::GLOBAL_POST_KEY .'[dateStart][]" class="widefat" value="'. $dateStart .'" />';
+        echo '<input type="text" name="'. Holidays::GLOBAL_POST_KEY .'[dateStart][]" class="widefat date-start" value="'. $dateStart .'" />';
     echo '</td>';
 
     echo '<td class="col-date-end">';
-        echo '<input type="date" name="'. Holidays::GLOBAL_POST_KEY .'[dateEnd][]" class="widefat" value="'. $dateEnd .'" />';
+        echo '<input type="text" name="'. Holidays::GLOBAL_POST_KEY .'[dateEnd][]" class="widefat date-end" value="'. $dateEnd .'" />';
     echo '</td>';
 
     echo '<td class="col-remove">';

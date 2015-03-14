@@ -68,7 +68,10 @@ jQuery.fn.opSinglePeriod 	= function () {
         deletePeriod();
     } );
 
-    inputs_tp.timepicker();
+    inputs_tp.timepicker({
+        hourText:       translations.tp_hour,
+        minuteText:     translations.tp_minute
+    });
 
     inputs_tp.focus( function () {
         inputs_tp.blur();

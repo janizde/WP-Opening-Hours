@@ -35,6 +35,70 @@
   background: #0074a2;
   border-color: transparent;
 }
+.ui-datepicker {
+  background: #444444;
+  margin-top: 5px;
+}
+.ui-datepicker .ui-datepicker-header {
+  position: relative;
+}
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-next {
+  display: inline-block;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  color: transparent;
+  width: 22px;
+}
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-prev:before,
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-next:before {
+  color: #ffffff;
+  background: #0074a2;
+  display: inline-block;
+  padding: 2px 7px;
+}
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-prev {
+  left: 5px;
+}
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-prev:before {
+  content: '<';
+}
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-next {
+  right: 5px;
+}
+.ui-datepicker .ui-datepicker-header a.ui-datepicker-next:before {
+  content: '>';
+}
+.ui-datepicker .ui-datepicker-header .ui-datepicker-title {
+  display: block;
+  text-align: center;
+  margin-top: 5px;
+  color: #ffffff;
+}
+.ui-datepicker .ui-state-default {
+  display: inline-block;
+  width: 25px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  color: #ffffff;
+  text-decoration: none;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.ui-datepicker .ui-state-default:hover {
+  border-color: #0074a2;
+}
+.ui-datepicker .ui-state-default.ui-state-active {
+  background: #0074a2;
+}
+.ui-datepicker .ui-datepicker-unselectable span.ui-state-default {
+  background: #333333;
+  cursor: default;
+}
+.ui-datepicker .ui-datepicker-unselectable span.ui-state-default:hover {
+  border-color: transparent;
+}
 table.form-opening-hours {
   width: 100%;
   max-width: 500px;
@@ -109,6 +173,19 @@ table.form-opening-hours tbody td.col-options .add-period {
 #op-paypal-donation-submit {
   cursor: pointer;
   display: inline-block;
+}
+table.op-holidays {
+  width: 100%;
+}
+table.op-holidays .col-name {
+  width: 50%;
+}
+table.op-holidays .col-date-start,
+table.op-holidays .col-date-end {
+  width: 20%;
+}
+table.op-holidays .col-remove {
+  width: 10%;
 }
 span.op-period-time {
   display: block;
