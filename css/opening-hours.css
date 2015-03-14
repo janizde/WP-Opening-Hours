@@ -1,3 +1,6 @@
+.widget .extended-settings .collapse-toggle {
+  cursor: pointer;
+}
 .ui-timepicker {
   background: #444444;
   margin-top: 5px;

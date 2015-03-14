@@ -15,7 +15,7 @@ jQuery.fn.opExtendedSettings = function () {
         return;
     }
 
-    var container 	= wrap.find( '.settings-container' );
+    var container 	    = wrap.find( '.settings-container' );
     var toggle 			= wrap.find( '.collapse-toggle' );
 
     toggle.click( function( e ) {
@@ -32,5 +32,9 @@ jQuery.fn.opExtendedSettings = function () {
 jQuery( document ).ready( function() {
 
     jQuery( '.extended-settings' ).opExtendedSettings();
+
+    jQuery( document ).on( 'widget-updated widget-added', function ( e, widget ) {
+        jQuery( widget ).find( '.extended-settings' ).opExtendedSettings();
+    } );
 
 } );
