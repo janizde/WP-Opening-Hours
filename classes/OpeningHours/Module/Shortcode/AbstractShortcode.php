@@ -129,6 +129,10 @@ abstract class AbstractShortcode extends AbstractModule {
     $shortcodeMarkup  = ob_get_contents();
     ob_end_clean();
 
+	  $filter_hook  = 'op_shortcode_' . $this->getShortcodeTag() . '_markup';
+
+	  apply_filters( $filter_hook, $shortcodeMarkup, static::getInstance() );
+
     return $shortcodeMarkup;
 
   }
@@ -175,16 +179,16 @@ abstract class AbstractShortcode extends AbstractModule {
 
     $validValues  = $this->getValidAttributeValues();
 
-    $filter_hook_attributes   = 'op_' . $this->getShortcodeTag() . '_attributes';
+    $filter_hook_attributes   = 'op_shortcode_' . $this->getShortcodeTag() . '_attributes';
 
-    $attributes   = apply_filters( $filter_hook_attributes, $attributes );
+    $attributes   = apply_filters( $filter_hook_attributes, $attributes, static::getInstance() );
 
     foreach ( $attributes as $key => &$value ) :
 
       /** Apply WordPress filters */
-      $filter_hook  = 'op_' . $this->getShortcodeTag() . '_' . $key;
+      $filter_hook  = 'op_shortcode_' . $this->getShortcodeTag() . '_' . $key;
 
-      $value  = apply_filters( $filter_hook, $value );
+      $value  = apply_filters( $filter_hook, $value, static::getInstance() );
 
       /** Check if value is valid */
       if ( isset( $validValues[ $key ] )
