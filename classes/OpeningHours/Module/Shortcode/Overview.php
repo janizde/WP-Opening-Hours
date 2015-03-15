@@ -40,7 +40,8 @@ class Overview extends AbstractShortcode {
       'cell_description_classes'  => 'op-set-description',
       'highlighted_period_class'  => 'highlighted',
       'highlighted_day_class'     => 'highlighted',
-      'table_id_prefix'           => 'op-table-set-'
+      'table_id_prefix'           => 'op-table-set-',
+	    'time_format'               => I18n::getTimeFormat()
     );
 
     $this->setDefaultAttributes( $default_attributes );

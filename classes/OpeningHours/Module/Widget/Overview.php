@@ -176,6 +176,16 @@ class Overview extends AbstractWidget {
       'default_placeholder' => true
     ) );
 
+	  /** Field: Time Format */
+	  $this->addField( 'time_format', array(
+		  'type'      => 'text',
+		  'caption'   => __( 'PHP Time Format', I18n::TEXTDOMAIN ),
+		  'extended'  => true,
+		  'description'   => sprintf( '<a href="http://bit.ly/16Wsegh" target="blank">%s</a>', __( 'More about PHP date and time formats.', I18n::TEXTDOMAIN ) ),
+
+		  'default_placeholder'   => true
+	  ) );
+
   }
 
   /**

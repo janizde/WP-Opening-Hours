@@ -38,6 +38,7 @@
    * @var       $cell_periods_classes       string w/ classes for cells containing periods
    * @var       $cell_description_classes   string w/ classes for description cell
    * @var       $span_period_classes        string w/ classes for period time span
+   * @var       $time_format                string w/ PHP time format to format start and end time of a period with
    */
 
   echo $before_widget;
@@ -91,7 +92,7 @@
              */
 
             $highlighted_period   = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : null;
-            echo '<span class="op-period-time '. $span_period_classes .' '. $highlighted_period .'">' . $period->getFormattedTimeRange() . '</span>';
+            echo '<span class="op-period-time '. $span_period_classes .' '. $highlighted_period .'">' . $period->getFormattedTimeRange( $time_format ) . '</span>';
           endforeach;
 
           echo '</td>';

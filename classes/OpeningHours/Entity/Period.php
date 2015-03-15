@@ -389,15 +389,17 @@ class Period {
 
   }
 
-  /**
-   *  Get Formatted Time Range
-   *
-   *  @access     public
-   *  @return     string
-   */
-  public function getFormattedTimeRange () {
+	/**
+	 * Get Formatted Time Range
+	 * returns the formatted string with start and end time for this Period
+	 *
+	 * @access      public
+	 * @param       string      $time_format
+	 * @return      string
+	 */
+  public function getFormattedTimeRange ( $time_format = null ) {
 
-    return $this->getTimeStart( true ) . ' – ' . $this->getTimeEnd( true );
+    return $this->getTimeStart( true, $time_format ) . ' – ' . $this->getTimeEnd( true, $time_format );
 
   }
 
@@ -423,16 +425,17 @@ class Period {
     return $this;
   }
 
-  /**
-   *  Getter: Time Start
-   *
-   *  @access     public
-   *  @param      bool    $formatted
-   *  @return     DateTime|string
-   */
-  public function getTimeStart ( $formatted = false ) {
+	/**
+	 * Getter: Time Start
+	 *
+	 * @access      public
+	 * @param       bool        $formatted
+	 * @param       string      $time_format
+	 * @return      DateTime|string
+	 */
+  public function getTimeStart ( $formatted = false, $time_format = null ) {
     return ( $formatted and $this->timeStart instanceof DateTime )
-      ? $this->timeStart->format( I18n::getTimeFormat() )
+      ? $this->timeStart->format( ( $time_format != null ) ? $time_format : I18n::getTimeFormat() )
       : $this->timeStart;
   }
 
@@ -458,16 +461,17 @@ class Period {
     return $this;
   }
 
-  /**
-   *  Getter: Time End
-   *
-   *  @access     public
-   *  @param      bool    $formatted
-   *  @return     DateTime|string
-   */
-  public function getTimeEnd ( $formatted = false ) {
+	/**
+	 * Getter: Time End
+	 *
+	 * @access      public
+	 * @param       bool        $formatted
+	 * @param       string      $time_format
+	 * @return      DateTime|string
+	 */
+  public function getTimeEnd ( $formatted = false, $time_format = null ) {
     return ( $formatted and $this->timeEnd instanceof DateTime )
-      ? $this->timeEnd->format( I18n::getTimeFormat() )
+      ? $this->timeEnd->format( ( $time_format != null ) ? $time_format : I18n::getTimeFormat() )
       : $this->timeEnd;
   }
 
