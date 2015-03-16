@@ -5,8 +5,9 @@
 
 namespace OpeningHours\Module\Shortcode;
 
+use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
-use OpeningHours\Entity\Set as SetEntity;
+use OpeningHours\Module\OpeningHours;
 
 class Overview extends AbstractShortcode {
 
@@ -24,7 +25,7 @@ class Overview extends AbstractShortcode {
       'after_title'               => '</h3>',
       'before_widget'             => '<div class="op-overview-shortcode">',
       'after_widget'              => '</div>',
-      'set_ids'                   => array(),
+      'set_id'                    => 0,
       'title'                     => null,
       'show_closed_days'          => false,
       'show_description'          => true,
@@ -66,37 +67,23 @@ class Overview extends AbstractShortcode {
    */
   public function shortcode ( array $attributes ) {
 
-    if ( is_string( $attributes[ 'set_ids' ] ) ) :
-      $set_ids = explode( ',', $attributes[ 'set_ids' ] );
+	  extract( $attributes );
 
-    elseif ( is_numeric( $attributes ) ) :
-      $set_ids  = array( (int) $attributes[ 'set_ids' ] );
+	  if ( !isset( $set_id ) or !is_numeric( $set_id ) or $set_id == 0 ) :
+		  trigger_error( "Set id not properly set in Opening Hours Overview shortcode" );
+	    return;
+	  endif;
 
-    elseif ( !is_array( $attributes[ 'set_ids' ] ) ) :
-      add_admin_notice( sprintf( '<b>%s:</b> %s',
-        __( 'Shortcode Opening Hours Overview', I18n::TEXTDOMAIN ),
-        sprintf( __( 'Property %s not properly set.', I18n::TEXTDOMAIN ), 'set_ids' )
-      ) );
+    $set_id   = (int) $set_id;
 
-      return;
+    $set      = OpeningHours::getSet( $set_id );
 
-    elseif ( is_array( $attributes[ 'set_ids' ] ) ) :
-      $set_ids  = $attributes[ 'set_ids' ];
+	  if ( !$set instanceof Set ) :
+		  trigger_error( sprintf( "Set with id %d does not exist", $set_id ) );
+	    return;
+	  endif;
 
-    endif;
-
-    if ( !count( $set_ids ) or !is_array( $set_ids ) )
-      return;
-
-    foreach ( (array) $set_ids as $key => $id )
-      $set_ids[ $key ]   = (int) $id;
-
-    $sets   = SetEntity::getSetsFromPosts( $set_ids );
-
-    if ( !count( $sets ) )
-      return;
-
-    $attributes[ 'sets' ]     = $sets;
+    $attributes[ 'set' ]      = $set;
     $attributes[ 'weekdays' ] = I18n::getWeekdaysNumeric();
 
     echo $this->renderShortcodeTemplate( $attributes );

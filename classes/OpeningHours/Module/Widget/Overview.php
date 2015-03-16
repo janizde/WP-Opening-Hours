@@ -47,13 +47,12 @@ class Overview extends AbstractWidget {
     ) );
 
     /** Field: Sets */
-    $this->addField( 'set_ids', array(
-      'type'    => 'select-multi',
-      'caption' => __( 'Sets to show', I18n::TEXTDOMAIN ),
+    $this->addField( 'set_id', array(
+      'type'    => 'select',
+      'caption' => __( 'Set to show', I18n::TEXTDOMAIN ),
       'options' => array( 'OpeningHours\Module\OpeningHours', 'getSetsOptions' ),
 
-      'options_strategy'  => 'callback',
-      'description'       => __( 'You may select multiple Sets by holding down the cmd/ctrl key.', I18n::TEXTDOMAIN )
+      'options_strategy'  => 'callback'
     ) );
 
     /** Field: Highlight */

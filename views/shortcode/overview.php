@@ -1,5 +1,6 @@
 <?php
 
+	use OpeningHours\Entity\Set;
   use OpeningHours\Module\I18n;
   use OpeningHours\Module\OpeningHours;
 
@@ -18,7 +19,7 @@
    * @var       $after_title        string w/ html after title
    *
    * @var       $title              string w/ widget title
-   * @var       $sets               array (sequential) w/ Set objects
+   * @var       $set                Set object to show opening hours of
    * @var       $highlight          string w/ identifier of what section to highlight
    * @var       $weekdays           array (associative) w/ key: number representing day; value: translated day string/caption
    * @var       $show_closed        bool whether to show closed days or not
@@ -46,63 +47,55 @@
     if ( $title )
       echo $before_title . $title . $after_title;
 
-    foreach ( $sets as $set ) :
+    OpeningHours::setCurrentSetId( $set->getId() );
 
-      /**
-       * @var     $set      \OpeningHours\Entity\Set
-       */
+    echo '<table class="op-table op-table-overview '. $table_classes .'" id="'. $table_id_prefix . $set->getId() .'">';
 
-      OpeningHours::setCurrentSetId( $set->getId() );
+    if ( $show_description and $set->getDescription() ) :
+      echo '<tr class="op-row op-row-description">';
 
-      echo '<table class="op-table op-table-overview '. $table_classes .'" id="'. $table_id_prefix . $set->getId() .'">';
+        echo '<td class="op-cell '. $cell_classes .' '. $cell_description_classes .'" colspan="2">';
+          echo $set->getDescription();
+        echo '</td>';
 
-      if ( $show_description and $set->getDescription() ) :
-        echo '<tr class="op-row op-row-description">';
+      echo '</tr>';
+    endif;
 
-          echo '<td class="op-cell '. $cell_classes .' '. $cell_description_classes .'" colspan="2">';
-            echo $set->getDescription();
-          echo '</td>';
+    $periods    = ( $compress )
+      ? $set->getPeriodsGroupedByDayCompressed()
+      : $set->getPeriodsGroupedByDay();
 
-        echo '</tr>';
-      endif;
+    foreach ( $periods as $day => $periods ) :
 
-      $periods    = ( $compress )
-        ? $set->getPeriodsGroupedByDayCompressed()
-        : $set->getPeriodsGroupedByDay();
+      $highlighted_day  = ( $highlight == 'day' and I18n::isToday( $day ) ) ? $highlighted_day_class : null;
 
-      foreach ( $periods as $day => $periods ) :
+      echo '<tr class="op-row op-row-day '. $row_classes .' '. $highlighted_day .'">';
 
-        $highlighted_day  = ( $highlight == 'day' and I18n::isToday( $day ) ) ? $highlighted_day_class : null;
+        echo '<th scope="row" class="op-cell op-cell-heading '. $cell_heading_classes .' '. $cell_classes .'">';
+          echo I18n::getDayCaption( $day, $short );
+        echo '</th>';
 
-        echo '<tr class="op-row op-row-day '. $row_classes .' '. $highlighted_day .'">';
+        echo '<td class="op-cell op-cell-periods '. $cell_periods_classes .' '. $cell_classes .'">';
 
-          echo '<th scope="row" class="op-cell op-cell-heading '. $cell_heading_classes .' '. $cell_classes .'">';
-            echo I18n::getDayCaption( $day, $short );
-          echo '</th>';
+        if ( !count( $periods ) )
+          echo '<span class="op-closed">'. $caption_closed .'</span>';
 
-          echo '<td class="op-cell op-cell-periods '. $cell_periods_classes .' '. $cell_classes .'">';
+        foreach ( $periods as $period ) :
 
-          if ( !count( $periods ) )
-            echo '<span class="op-closed">'. $caption_closed .'</span>';
+          /**
+           * @var     $period     \OpeningHours\Entity\Period
+           */
 
-          foreach ( $periods as $period ) :
+          $highlighted_period   = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : null;
+          echo '<span class="op-period-time '. $span_period_classes .' '. $highlighted_period .'">' . $period->getFormattedTimeRange( $time_format ) . '</span>';
+        endforeach;
 
-            /**
-             * @var     $period     \OpeningHours\Entity\Period
-             */
+        echo '</td>';
 
-            $highlighted_period   = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : null;
-            echo '<span class="op-period-time '. $span_period_classes .' '. $highlighted_period .'">' . $period->getFormattedTimeRange( $time_format ) . '</span>';
-          endforeach;
-
-          echo '</td>';
-
-        echo '</tr>';
-
-      endforeach;
-
-      echo '</table>';
+      echo '</tr>';
 
     endforeach;
+
+    echo '</table>';
 
   echo $after_widget;
