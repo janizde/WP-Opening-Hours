@@ -7,6 +7,7 @@
 
 namespace OpeningHours\Module;
 
+use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as PeriodsMetaBox;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 
 class Converter extends AbstractModule {
@@ -148,6 +149,79 @@ class Converter extends AbstractModule {
 	}
 
 	/**
+	 * Insert New Set
+	 * inserts the set-post
+	 *
+	 * @access      protected
+	 * @static
+	 * @return      int
+	 */
+	protected static function insertNewSet () {
+
+		$args   = array(
+			'post_title'    => __( 'OpeningHours', I18n::TEXTDOMAIN ),
+			'post_status'   => 'publish',
+			'post_type'     => SetCpt::CPT_SLUG,
+		);
+
+		return wp_insert_post( $args );
+
+	}
+
+	/**
+	 * Insert Periods
+	 * inserts the period option into the meta data for periods on the inserted post
+	 *
+	 * @access      protected
+	 * @static
+	 * @param       int         $post_id
+	 */
+	protected static function insertPeriods ( $post_id ) {
+
+		if ( !static::hasOld( static::OPTION_PERIODS ) )
+			return;
+
+		$meta     = get_option( static::OPTION_PERIODS );
+
+		if ( !is_array( $meta ) )
+			$meta   = json_decode( $meta, true );
+
+		$days   = array( 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' );
+
+		$config = array();
+
+		foreach ( $days as $n => $k ) :
+
+			if ( !array_key_exists( $k, $meta ) )
+				continue;
+
+			if ( !array_key_exists( 'times', $meta[ $k ] ) or !is_array( $meta[ $k ]['times'] ) or !count( $meta[ $k ]['times'] ) )
+				continue;
+
+			$times  = $meta[ $k ]['times'];
+
+			if ( count( $times[0] ) != count( $times[1] ) )
+				continue;
+
+			for ( $i = 0; $i < count( $imes[0] ); $i = $i + 2 ) :
+
+				$config[]   = array(
+					'weekday'   => $n,
+					'timeStart' => $times[0][ $i ] . ':' . $times[0][ $i + 1 ],
+					'timeEnd'   => $times[1][ $i ] . ':' . $times[1][ $i + 1 ],
+					'dummy'     => false
+				);
+
+			endfor;
+
+		endforeach;
+
+		if ( count( $config ) )
+			update_post_meta( $post_id, PeriodsMetaBox::PERIODS_META_KEY, $config );
+
+	}
+
+	/**
 	 * Delete Data
 	 * delete old data
 	 *
@@ -185,7 +259,8 @@ class Converter extends AbstractModule {
 		if ( $meta === false )
 			return false;
 
-		$meta     = json_decode( $meta, true );
+		if ( !is_array( $meta ) )
+			$meta     = json_decode( $meta, true );
 
 		if ( !is_array( $meta ) or !count( $meta ) ) :
 			delete_option( $key );
