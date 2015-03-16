@@ -219,3 +219,10 @@ span.op-next-period {
 .op-irregular-openings tr.op-irregular-opening.highlighted th {
   color: green;
 }
+.op-admin-notice-buttons {
+  margin-top: 10px;
+}
+.op-admin-notice-buttons a.button {
+  display: inline-block;
+  margin: 0 5px 0 0;
+}

@@ -35,9 +35,10 @@ class OpeningHours extends AbstractModule {
 		$this->registerHookCallbacks();
 
 		$this->modules = array(
-			'OpeningHours'			=> Module\OpeningHours::getInstance(),
+			'OpeningHours'  => Module\OpeningHours::getInstance(),
 			'I18n'					=> Module\I18n::getInstance(),
 			'Ajax'					=> Module\Ajax::getInstance(),
+			'Converter'     => Module\Converter::getInstance(),
 
 			'CustomPostType\Set'	=> Module\CustomPostType\Set::getInstance(),
 			'Shortcode\IsOpen'		=> Module\Shortcode\IsOpen::getInstance(),
