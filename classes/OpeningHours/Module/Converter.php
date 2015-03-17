@@ -7,8 +7,12 @@
 
 namespace OpeningHours\Module;
 
+use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;
+use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as IrregularOpeningsMetaBox;
 use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as PeriodsMetaBox;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
+
+use DateTime;
 
 class Converter extends AbstractModule {
 
@@ -18,6 +22,7 @@ class Converter extends AbstractModule {
 	const OPTION_PERIODS            = 'wp_opening_hours';
 	const OPTION_HOLIDAYS           = 'wp_opening_hours_holidays';
 	const OPTION_IRREGULAR_OPENINGS = 'wp_opening_hours_special_openings';
+	const OPTION_SETTINGS           = 'wp_opening_hours_settings';
 
 	/**
 	 * Converted
@@ -142,9 +147,15 @@ class Converter extends AbstractModule {
 	 */
 	protected static function convertData () {
 
-		/**
-		 * TODO: Write converter method
-		 */
+		$post_id  = static::insertNewSet();
+
+		static::insertPeriods( $post_id );
+		static::insertHolidays( $post_id );
+		static::insertIrregularOpenings( $post_id );
+
+		delete_option( static::OPTION_SETTINGS );
+
+		static::$converted = true;
 
 	}
 
@@ -178,6 +189,10 @@ class Converter extends AbstractModule {
 	 */
 	protected static function insertPeriods ( $post_id ) {
 
+		/**
+		 * TODO: Fix mechanism
+		 */
+
 		if ( !static::hasOld( static::OPTION_PERIODS ) )
 			return;
 
@@ -203,7 +218,9 @@ class Converter extends AbstractModule {
 			if ( count( $times[0] ) != count( $times[1] ) )
 				continue;
 
-			for ( $i = 0; $i < count( $imes[0] ); $i = $i + 2 ) :
+			print_r( $times );
+
+			for ( $i = 0; $i < count( $times[0] ); $i = $i + 2 ) :
 
 				$config[]   = array(
 					'weekday'   => $n,
@@ -222,6 +239,103 @@ class Converter extends AbstractModule {
 	}
 
 	/**
+	 * Insert Holidays
+	 *
+	 * @access      protected
+	 * @static
+	 * @param       int         $post_id
+	 */
+	protected static function insertHolidays ( $post_id ) {
+
+		if ( !static::hasOld( static::OPTION_HOLIDAYS ) )
+			return;
+
+		$meta     = get_option( static::OPTION_HOLIDAYS );
+
+		if ( !is_array( $meta ) )
+			$meta   = json_decode( $meta, true );
+
+		$config   = array();
+
+		foreach ( $meta as $h ) :
+
+			if ( !is_array( $h ) or !count( $h ) )
+				continue;
+
+			if ( !array_key_exists( 'name', $h ) or !array_key_exists( 'start', $h ) or !array_key_exists( 'end', $h ) )
+				continue;
+
+			$dateStart  = new DateTime( static::removeBackslashes( $h['start'] ) );
+			$dateEnd    = new DateTime( static::removeBackslashes( $h['end'] ) );
+
+			$config[]   = array(
+				'name'      => $h['name'],
+				'dateStart' => $dateStart->format( I18n::STD_DATE_FORMAT ),
+				'dateEnd'   => $dateEnd->format( I18n::STD_DATE_FORMAT )
+			);
+
+		endforeach;
+
+		if ( !count( $config ) )
+			return;
+
+		update_post_meta( $post_id, HolidaysMetaBox::HOLIDAYS_META_KEY, $config );
+
+	}
+
+	/**
+	 * Insert Irregular Openings
+	 *
+	 * @access      protected
+	 * @static
+	 * @param       int         $post_id
+	 */
+	protected static function insertIrregularOpenings ( $post_id ) {
+
+		/**
+		 * TODO: Fix mechanism
+		 */
+
+		if ( !static::hasOld( static::OPTION_IRREGULAR_OPENINGS ) )
+			return;
+
+		$meta     = get_option( static::OPTION_IRREGULAR_OPENINGS );
+
+		if ( !is_array( $meta ) )
+			$meta     = json_decode( $meta, true );
+
+		if ( !count( $meta ) )
+			return;
+
+		$config   = array();
+
+		foreach ( $meta as $io ) :
+
+			if ( !is_array( $io ) )
+				continue;
+
+			if ( !array_key_exists( 'name', $io ) or !array_key_exists( 'day', $io ) or !array_key_exists( 'start', $io ) or !array_key_exists( 'end', $io ) )
+				continue;
+
+			$date   = new DateTime( static::removeBackslashes( $io['date'] ) );
+
+			$config[]   = array(
+				'name'      => $io['name'],
+				'date'      => $date->format( I18n::STD_DATE_FORMAT ),
+				'timeStart' => $io['start'],
+				'timeEnd'   => $io['end']
+			);
+
+		endforeach;
+
+		if ( !count( $config ) )
+			return;
+
+		update_post_meta( $post_id, IrregularOpeningsMetaBox::IRREGULAR_OPENINGS_META_KEY, $config );
+
+	}
+
+	/**
 	 * Delete Data
 	 * delete old data
 	 *
@@ -233,7 +347,8 @@ class Converter extends AbstractModule {
 		foreach ( array(
 			static::OPTION_PERIODS,
 			static::OPTION_HOLIDAYS,
-			static::OPTION_IRREGULAR_OPENINGS
+			static::OPTION_IRREGULAR_OPENINGS,
+			static::OPTION_SETTINGS
 		) as $key )
 
 			delete_option( $key );
@@ -268,6 +383,21 @@ class Converter extends AbstractModule {
 		endif;
 
 		return true;
+
+	}
+
+	/**
+	 * Remove Backslashes
+	 * removes backslashes from date strings
+	 *
+	 * @access      protected
+	 * @static
+	 * @param       string      $string
+	 * @return      string
+	 */
+	protected static function removeBackslashes ( $string ) {
+
+		return str_replace( '\\', '', $string );
 
 	}
 }
