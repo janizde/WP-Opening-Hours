@@ -63,8 +63,6 @@ class Ajax extends AbstractModule {
    */
   public static function renderPeriodsDay () {
 
-    error_log( 'action' );
-
     $day    = $_POST[ 'day' ];
     $setId  = $_POST[ 'set' ];
 
@@ -155,8 +153,6 @@ class Ajax extends AbstractModule {
    * @static
    */
   public static function renderSingleDummyIrregularOpening () {
-
-    error_log( 'action' );
 
     echo self::renderTemplate(
         IrregularOpenings::TEMPLATE_PATH_SINGLE,

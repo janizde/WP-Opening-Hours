@@ -33,8 +33,6 @@ class Donation extends AbstractMetaBox {
      */
     public static function registerMetaBox () {
 
-        error_log( 'register' );
-
         add_meta_box(
             static::ID,
             __( 'Please Donate', I18n::TEXTDOMAIN ),

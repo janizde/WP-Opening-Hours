@@ -147,13 +147,6 @@ class IrregularOpening {
 		if ( $now == null )
 			$now    = I18n::getTimeNow();
 
-		error_log(  'test');
-
-		error_log( json_encode([
-			$this->getDate()->format( I18n::STD_DATE_FORMAT ),
-			$now->format( I18n::STD_DATE_FORMAT )
-		]) );
-
 		return ( $this->getDate()->format( I18n::STD_DATE_FORMAT ) == $now->format( I18n::STD_DATE_FORMAT ) );
 
 	}
@@ -168,8 +161,8 @@ class IrregularOpening {
      */
     public function isOpen ( DateTime $now = null ) {
 
-        if ( $now == null )
-            $now    = I18n::getTimeNow();
+      if ( $now == null )
+          $now    = I18n::getTimeNow();
 
 	    if ( !$this->isActive( $now ) )
 		    return false;

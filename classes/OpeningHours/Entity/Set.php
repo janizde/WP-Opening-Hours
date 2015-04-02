@@ -368,6 +368,20 @@ class Set {
 
   }
 
+	/**
+	 * Is Irregular Opening Active
+	 * checks if any irregular opening is currently active (based on the date)
+	 *
+	 * @access      public
+	 * @param       DateTime      $now
+	 * @return      true
+	 */
+	public function isIrregularOpeningActive ( DateTime $now = null ) {
+
+		return $this->getActiveIrregularOpening( $now ) instanceof IrregularOpening;
+
+	}
+
   /**
    * Is Open
    * evaluates all aspects
@@ -376,13 +390,20 @@ class Set {
    * @param       DateTime      $now
    * @return      bool
    */
-  public function isOpen ( $now = null ) {
+  public function isOpen ( DateTime $now = null ) {
 
     /** Holidays */
     if ( $this->isHolidayActive( $now ) )
       return false;
 
-    /** Special Openings */
+    /** Irregular Openings */
+	  if ( $this->isIrregularOpeningActive( $now ) ) :
+
+		  $io   = $this->getActiveIrregularOpening( $now );
+
+	    return $io->isOpen( $now );
+
+	  endif;
 
     /** Opening Hours */
     return $this->isOpenOpeningHours( $now );
@@ -587,6 +608,27 @@ class Set {
     return $new_periods_array;
 
   }
+
+	/**
+	 * Get Active Irregular Opening
+	 * returns first active irregular opening
+	 *
+	 * @access      public
+	 * @param       DateTime    $now
+	 * @return      IrregularOpening
+	 */
+	public function getActiveIrregularOpening ( DateTime $now = null ) {
+
+		foreach ( $this->getIrregularOpenings() as $io ) :
+
+			if ( $io->isActive() )
+				return $io;
+
+		endforeach;
+
+		return null;
+
+	}
 
   /**
    * Days equal
