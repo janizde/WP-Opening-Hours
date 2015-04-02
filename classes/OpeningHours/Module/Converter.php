@@ -378,7 +378,7 @@ class Converter extends AbstractModule {
 			$meta     = json_decode( $meta, true );
 
 		if ( !is_array( $meta ) or !count( $meta ) ) :
-			delete_option( $key );
+			delete_option( $meta_key );
 			return false;
 		endif;
 
