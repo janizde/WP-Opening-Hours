@@ -3,77 +3,83 @@
  */
 
 /** Irregular Openings Meta Box */
-jQuery.fn.opIOs 	= function () {
+jQuery.fn.opIOs = function () {
 
-    var wrap 		= jQuery( this );
+  var wrap = jQuery(this);
 
-    var ioWrap		= wrap.find( 'tbody' );
-    var addButton	= jQuery( wrap.find( '.add-io' ) );
+  var ioWrap = wrap.find('tbody');
+  var addButton = jQuery(wrap.find('.add-io'));
 
-    function init () {
-        ioWrap.find( 'tr.op-irregular-opening').each( function ( index, element ) {
-            jQuery( element ).opSingleIO();
-        } );
-    }
+  function init() {
+    ioWrap.find('tr.op-irregular-opening').each(function (index, element) {
+      jQuery(element).opSingleIO();
+    });
+  }
 
-    init();
+  init();
 
-    function add () {
+  function add() {
 
-        var data 	= {
-            'action'	:	'op_render_single_dummy_irregular_opening'
-        };
+    var data = {
+      'action': 'op_render_single_dummy_irregular_opening'
+    };
 
-        jQuery.post( ajax_object.ajax_url, data, function ( response ) {
-            var newIO 	= jQuery( response ).clone();
+    jQuery.post(ajax_object.ajax_url, data, function (response) {
+      var newIO = jQuery(response).clone();
 
-            newIO.opSingleIO();
+      newIO.opSingleIO();
 
-            ioWrap.append( newIO );
-        } );
+      ioWrap.append(newIO);
+    });
 
-    }
+  }
 
-    addButton.click( function (e) {
-        e.preventDefault();
+  addButton.click(function (e) {
+    e.preventDefault();
 
-        add();
-    } );
+    add();
+  });
 
 };
 
 /** Irregular Opening Item */
-jQuery.fn.opSingleIO 	= function () {
+jQuery.fn.opSingleIO = function () {
 
-    var wrap 	= jQuery( this );
+  var wrap = jQuery(this);
 
-    if ( wrap.length > 1 ) {
-        wrap.each( function( index, element ) {
-            jQuery( element).opSingleIO();
-        } );
+  if (wrap.length > 1) {
+    wrap.each(function (index, element) {
+      jQuery(element).opSingleIO();
+    });
 
-        return;
-    }
+    return;
+  }
 
-    var removeButton 	= jQuery( wrap.find( '.remove-io' ) );
+  var removeButton = wrap.find('.remove-io');
 
-    function remove () {
-        wrap.remove();
-    }
+  var inputDate = wrap.find('input.date');
 
-    removeButton.click( function (e) {
-        e.preventDefault();
+  inputDate.datepicker({
+    dateFormat: 'yy-mm-dd'
+  });
 
-        remove();
-    } );
+  function remove() {
+    wrap.remove();
+  }
+
+  removeButton.click(function (e) {
+    e.preventDefault();
+
+    remove();
+  });
 
 };
 
 /**
  * Mapping
  */
-jQuery( document ).ready( function () {
+jQuery(document).ready(function () {
 
-    jQuery( '#op-irregular-openings-wrap').opIOs();
+  jQuery('#op-irregular-openings-wrap').opIOs();
 
-} );
+});
