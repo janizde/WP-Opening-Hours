@@ -5,36 +5,36 @@
 /** Extended Settings */
 jQuery.fn.opExtendedSettings = function () {
 
-    var wrap 		= jQuery( this );
+  var wrap = jQuery(this);
 
-    if ( wrap.length > 1 ) {
-        wrap.each( function ( index, element ) {
-            jQuery( element ).opExtendedSettings();
-        } );
+  if (wrap.length > 1) {
+    wrap.each(function (index, element) {
+      jQuery(element).opExtendedSettings();
+    });
 
-        return;
-    }
+    return;
+  }
 
-    var container 	    = wrap.find( '.settings-container' );
-    var toggle 			= wrap.find( '.collapse-toggle' );
+  var container = wrap.find('.settings-container');
+  var toggle = wrap.find('.collapse-toggle');
 
-    toggle.click( function( e ) {
-        e.preventDefault();
+  toggle.click(function (e) {
+    e.preventDefault();
 
-        container.toggleClass( 'hidden' );
-    } );
+    container.toggleClass('hidden');
+  });
 
 };
 
 /**
- *	Mapping
+ *  Mapping
  */
-jQuery( document ).ready( function() {
+jQuery(document).ready(function () {
 
-    jQuery( '.extended-settings' ).opExtendedSettings();
+  jQuery('.extended-settings').opExtendedSettings();
 
-    jQuery( document ).on( 'widget-updated widget-added', function ( e, widget ) {
-        jQuery( widget ).find( '.extended-settings' ).opExtendedSettings();
-    } );
+  jQuery(document).on('widget-updated widget-added', function (e, widget) {
+    jQuery(widget).find('.extended-settings').opExtendedSettings();
+  });
 
-} );
+});

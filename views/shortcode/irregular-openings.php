@@ -33,8 +33,9 @@ extract( $attributes );
 
 echo $before_widget;
 
-if ( !empty( $title ) )
-    echo $before_title . $title . $after_title;
+if ( ! empty( $title ) ) {
+	echo $before_title . $title . $after_title;
+}
 
 echo '<table class="op-irregular-openings">';
 
@@ -42,21 +43,21 @@ echo '<tbody>';
 
 foreach ( $irregular_openings as $io ) :
 
-    /**
-     * @var         $io         IrregularOpening object
-     */
+	/**
+	 * @var         $io         IrregularOpening object
+	 */
 
-    $highlighted    = ( $highlight and $io->isActive() ) ? $class_highlighted : null;
+	$highlighted = ( $highlight and $io->isActive() ) ? $class_highlighted : null;
 
-    echo '<tr class="'. $class_io .' '. $highlighted .'">';
+	echo '<tr class="' . $class_io . ' ' . $highlighted . '">';
 
-        echo '<td class="col-name">' . $io->getName() . '</td>';
+	echo '<td class="col-name">' . $io->getName() . '</td>';
 
-        echo '<td class="col-date">'. $io->getDate()->format( $date_format ) .'</td>';
+	echo '<td class="col-date">' . $io->getDate()->format( $date_format ) . '</td>';
 
-        echo '<td class="col-time">'. $io->getFormattedTimeRange( $time_format ) .'</td>';
+	echo '<td class="col-time">' . $io->getFormattedTimeRange( $time_format ) . '</td>';
 
-    echo '</tr>';
+	echo '</tr>';
 
 endforeach;
 

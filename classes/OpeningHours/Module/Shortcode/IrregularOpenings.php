@@ -11,61 +11,62 @@ use OpeningHours\Module\OpeningHours;
 
 class IrregularOpenings extends AbstractShortcode {
 
-    /**
-     * Init
-     *
-     * @access          protected
-     */
-    protected function init () {
+	/**
+	 * Init
+	 *
+	 * @access          protected
+	 */
+	protected function init() {
 
-        $this->setShortcodeTag( 'op-irregular-openings' );
+		$this->setShortcodeTag( 'op-irregular-openings' );
 
-        $default_attributes     = array(
-            'title'             => null,
-            'set_id'            => null,
-            'highlight'         => false,
+		$default_attributes = array(
+			'title'             => null,
+			'set_id'            => null,
+			'highlight'         => false,
+			'before_widget'     => null,
+			'after_widget'      => null,
+			'before_title'      => null,
+			'after_title'       => null,
+			'class_io'          => 'op-irregular-opening',
+			'class_highlighted' => 'highlighted',
+			'date_format'       => I18n::getDateFormat(),
+			'time_format'       => I18n::getTimeFormat()
+		);
 
-            'before_widget'     => null,
-            'after_widget'      => null,
-            'before_title'      => null,
-            'after_title'       => null,
+		$this->setDefaultAttributes( $default_attributes );
 
-            'class_io'          => 'op-irregular-opening',
-            'class_highlighted' => 'highlighted',
-            'date_format'       => I18n::getDateFormat(),
-            'time_format'       => I18n::getTimeFormat()
-        );
+		$this->setTemplatePath( 'shortcode/irregular-openings.php' );
 
-        $this->setDefaultAttributes( $default_attributes );
+	}
 
-        $this->setTemplatePath( 'shortcode/irregular-openings.php' );
+	/**
+	 * Shortcode
+	 *
+	 * @access          public
+	 *
+	 * @param           array $attributes
+	 */
+	public function shortcode( array $attributes ) {
 
-    }
+		$set_id = $attributes['set_id'];
 
-    /**
-     * Shortcode
-     *
-     * @access          public
-     * @param           array           $attributes
-     */
-    public function shortcode ( array $attributes ) {
+		if ( ! is_numeric( $set_id ) ) {
+			return;
+		}
 
-        $set_id     = $attributes[ 'set_id' ];
+		$set = OpeningHours::getSet( $set_id );
 
-        if ( !is_numeric( $set_id ) )
-            return;
+		if ( ! $set instanceof Set ) {
+			return;
+		}
 
-        $set        = OpeningHours::getSet( $set_id );
+		$attributes['set']                = $set;
+		$attributes['irregular_openings'] = $set->getIrregularOpenings();
 
-        if ( !$set instanceof Set )
-            return;
+		echo $this->renderShortcodeTemplate( $attributes );
 
-        $attributes[ 'set' ]                    = $set;
-        $attributes[ 'irregular_openings' ]     = $set->getIrregularOpenings();
-
-        echo $this->renderShortcodeTemplate( $attributes );
-
-    }
+	}
 
 
 }

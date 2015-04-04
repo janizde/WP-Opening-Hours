@@ -32,35 +32,36 @@ extract( $attributes );
 
 echo $before_widget;
 
-    if ( !empty( $title ) )
-        echo $before_title . $title . $after_title;
+if ( ! empty( $title ) ) {
+	echo $before_title . $title . $after_title;
+}
 
-    echo '<table>';
+echo '<table>';
 
-        echo '<tbody>';
+echo '<tbody>';
 
-        foreach ( $holidays as $holiday ) :
+foreach ( $holidays as $holiday ) :
 
-            /**
-             * @var         $holiday        Holiday object
-             */
+	/**
+	 * @var         $holiday        Holiday object
+	 */
 
-            $highlighted    = ( $highlight and $holiday->isActive() ) ? $class_highlighted : null;
+	$highlighted = ( $highlight and $holiday->isActive() ) ? $class_highlighted : null;
 
-            echo '<tr class="'. $class_holiday .' '. $highlighted .'">';
+	echo '<tr class="' . $class_holiday . ' ' . $highlighted . '">';
 
-                echo '<td class="col-name">' . $holiday->getName() . '</td>';
+	echo '<td class="col-name">' . $holiday->getName() . '</td>';
 
-                echo '<td class="col-date-start">'. $holiday->getDateStart()->format( $date_format ) .'</td>';
+	echo '<td class="col-date-start">' . $holiday->getDateStart()->format( $date_format ) . '</td>';
 
-                echo '<td class="col-date-end">'. $holiday->getDateEnd()->format( $date_format ) .'</td>';
+	echo '<td class="col-date-end">' . $holiday->getDateEnd()->format( $date_format ) . '</td>';
 
-            echo '</tr>';
+	echo '</tr>';
 
-        endforeach;
+endforeach;
 
-        echo '</tbody>';
+echo '</tbody>';
 
-    echo '</table>';
+echo '</table>';
 
 echo $after_widget;

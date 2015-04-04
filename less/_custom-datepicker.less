@@ -1,91 +1,91 @@
 .ui-datepicker {
 
-  @color-bg:        #444444;
+  @color-bg: #444444;
   @color-bg-active: #0074a2;
-  @color-bg-hover:  darken( @color-bg-active, 10% );
+  @color-bg-hover: darken(@color-bg-active, 10%);
 
-  @color-text:      #ffffff;
+  @color-text: #ffffff;
 
-  background:       @color-bg;
-  margin-top:       5px;
+  background: @color-bg;
+  margin-top: 5px;
 
   .ui-datepicker-header {
-    position:       relative;
+    position: relative;
 
     a.ui-datepicker-prev, a.ui-datepicker-next {
-      display:      inline-block;
-      position:     absolute;
-      cursor:       pointer;
-      top:          0;
+      display: inline-block;
+      position: absolute;
+      cursor: pointer;
+      top: 0;
 
-      color:        transparent;
+      color: transparent;
 
-      width:        22px;
+      width: 22px;
 
       &:before {
-        color:      @color-text;
+        color: @color-text;
         background: @color-bg-active;
 
-        display:    inline-block;
-        padding:    2px 7px;
+        display: inline-block;
+        padding: 2px 7px;
       }
     }
 
     a.ui-datepicker-prev {
-      left:         5px;
+      left: 5px;
 
       &:before {
-        content:    '<';
+        content: '<';
       }
     }
 
     a.ui-datepicker-next {
-      right:        5px;
+      right: 5px;
 
       &:before {
-        content:    '>';
+        content: '>';
       }
     }
 
     .ui-datepicker-title {
-      display:      block;
-      text-align:   center;
+      display: block;
+      text-align: center;
 
-      margin-top:   5px;
+      margin-top: 5px;
 
-      color:        @color-text;
+      color: @color-text;
     }
   }
 
   .ui-state-default {
-    display:      inline-block;
-    width:        25px;
+    display: inline-block;
+    width: 25px;
 
-    padding-top:    3px;
+    padding-top: 3px;
     padding-bottom: 3px;
 
-    color:        @color-text;
+    color: @color-text;
 
-    text-decoration:  none;
-    text-align:       center;
+    text-decoration: none;
+    text-align: center;
 
-    border:       1px solid transparent;
+    border: 1px solid transparent;
 
     &:hover {
-      border-color:   @color-bg-active;
+      border-color: @color-bg-active;
     }
 
     &.ui-state-active {
-      background:     @color-bg-active;
+      background: @color-bg-active;
     }
   }
 
   .ui-datepicker-unselectable span.ui-state-default {
-    background:       #333333;
-    cursor:           default;
+    background: #333333;
+    cursor: default;
 
     &:hover {
-      border-color:   transparent;
+      border-color: transparent;
     }
   }
 }

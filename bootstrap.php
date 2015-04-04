@@ -17,14 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Access denied.' );
 }
 
-define( 'OP_NAME',                 'Opening Hours' );
+define( 'OP_NAME', 'Opening Hours' );
 define( 'OP_REQUIRED_PHP_VERSION', '5.3' );                          // because of get_called_class() / namespaces
-define( 'OP_REQUIRED_WP_VERSION',  '3.1' );                          // because of esc_textarea()
+define( 'OP_REQUIRED_WP_VERSION', '3.1' );                          // because of esc_textarea()
 
 require_once( 'includes/admin-notice-helper/admin-notice-helper.php' );
 require_once( 'includes/wp-detail-fields/detail-fields.php' );
 
-function op_admin_notice_php () {
+function op_admin_notice_php() {
 	add_notice(
 		sprintf(
 			__( 'Plugin Opening Hours requires at least PHP Version %s. Your Installation of WordPress is currently running on PHP %s', 'opening-hours' ),
@@ -33,7 +33,7 @@ function op_admin_notice_php () {
 	);
 }
 
-function op_admin_notice_wp () {
+function op_admin_notice_wp() {
 	global $wp_version;
 
 	add_notice(
@@ -55,11 +55,13 @@ function op_requirements_met() {
 
 	if ( version_compare( PHP_VERSION, OP_REQUIRED_PHP_VERSION, '<' ) ) :
 		add_action( 'init', 'op_admin_notice_php' );
+
 		return false;
 	endif;
 
 	if ( version_compare( $wp_version, OP_REQUIRED_WP_VERSION, '<' ) ) :
 		add_action( 'init', 'op_admin_notice_wp' );
+
 		return false;
 	endif;
 
@@ -67,32 +69,33 @@ function op_requirements_met() {
 }
 
 /**
- *	Returns Plugin Directory Path
+ *  Returns Plugin Directory Path
  */
-function op_plugin_path () {
+function op_plugin_path() {
 	return plugin_dir_path( __FILE__ );
 }
 
 /**
- *	Bootstrap File Path
+ *  Bootstrap File Path
  *
- *	@return 	string
+ * @return  string
  */
-function op_bootstrap_file () {
+function op_bootstrap_file() {
 	return __FILE__;
 }
 
 /**
  * OP Autoload
  *
- * @param			string			$class_name
+ * @param      string $class_name
  */
-function op_autoload ( $class_name ) {
+function op_autoload( $class_name ) {
 
-	$filepath 	= op_plugin_path() . 'classes/' . str_replace( '\\', '/', $class_name ) . '.php';
+	$filepath = op_plugin_path() . 'classes/' . str_replace( '\\', '/', $class_name ) . '.php';
 
-	if ( file_exists( $filepath ) )
+	if ( file_exists( $filepath ) ) {
 		require_once( $filepath );
+	}
 
 }
 

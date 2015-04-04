@@ -24,12 +24,14 @@ extract( $attributes );
 
 echo $before_widget;
 
-  if ( !empty( $title ) )
-    echo $before_title . $title . $after_title;
+if ( ! empty( $title ) ) {
+	echo $before_title . $title . $after_title;
+}
 
-  echo '<span class="'. $classes .'">'. $text .'</span>';
+echo '<span class="' . $classes . '">' . $text . '</span>';
 
-  if ( !$is_open and is_string( $next_string ) )
-    echo '<span class="op-next-period '. $next_period_classes .'">' . $next_string . '</span>';
+if ( ! $is_open and is_string( $next_string ) ) {
+	echo '<span class="op-next-period ' . $next_period_classes . '">' . $next_string . '</span>';
+}
 
 echo $after_widget;

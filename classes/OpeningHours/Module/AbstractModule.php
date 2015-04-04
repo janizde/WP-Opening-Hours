@@ -1,6 +1,6 @@
 <?php
 /**
- *	Opening Hours: Module: Abstract Module
+ *  Opening Hours: Module: Abstract Module
  */
 
 namespace OpeningHours\Module;
@@ -8,15 +8,15 @@ namespace OpeningHours\Module;
 abstract class AbstractModule {
 
 	/**
-	 *	Constants
+	 *  Constants
 	 */
-	const 	TEXTDOMAIN 	= 'opening-hours';
+	const  TEXTDOMAIN = 'opening-hours';
 
 	/**
-	 *	Instances
+	 *  Instances
 	 *
-	 *	@access 			private
-	 *	@type 				array
+	 * @access      private
+	 * @type        array
 	 */
 	private static $instances = array();
 
@@ -24,14 +24,14 @@ abstract class AbstractModule {
 	/**
 	 * Provides access to a single instance of a module using the singleton pattern
 	 *
-	 * @access 				public
+	 * @access        public
 	 * @static
-	 * @return  			AbstractModule
+	 * @return        AbstractModule
 	 */
 	public static function getInstance() {
 		$module = get_called_class();
 
-		if ( !isset( self::$instances[ $module ] ) ) {
+		if ( ! isset( self::$instances[ $module ] ) ) {
 			self::$instances[ $module ] = new $module();
 		}
 
@@ -46,20 +46,23 @@ abstract class AbstractModule {
 	 * in sub-directories to avoid cluttering the root folder. In both cases, the theme/plugin will have access to the variables so they can
 	 * fully customize the output.
 	 *
-	 * @access				public
+	 * @access        public
 	 * @static
-	 * @param  				string|bool 	$default_template_path
-	 * @param  				array  			$variables
-	 * @param  				string 			$require
-	 * @return 				string
+	 *
+	 * @param          string|bool $default_template_path
+	 * @param          array $variables
+	 * @param          string $require
+	 *
+	 * @return        string
 	 */
 	public static function renderTemplate( $default_template_path = false, $variables = array(), $require = 'once' ) {
 		do_action( 'op_render_template_pre', $default_template_path, $variables );
 
 		$template_path = locate_template( basename( $default_template_path ) );
 
-		if ( !$template_path )
+		if ( ! $template_path ) {
 			$template_path = op_plugin_path() . 'views/' . $default_template_path;
+		}
 
 		$template_path = apply_filters( 'op_template_path', $template_path );
 

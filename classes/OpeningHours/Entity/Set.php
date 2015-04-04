@@ -18,611 +18,657 @@ use InvalidArgumentException;
 
 class Set {
 
-  /**
-   * Constants
-   */
-  const WP_ACTION_BEFORE_SETUP    = 'op_set_before_setup';
-
-  /**
-   * Periods
-   *
-   * @access     protected
-   * @type       ArrayObject
-   */
-  protected $periods;
-
-  /**
-   * Holidays0
-   *
-   * @access      protected
-   * @type        ArrayObject
-   */
-  protected $holidays;
-
-  /**
-   * Irregular Openings
-   *
-   * @access      protected
-   * @type        ArrayObject
-   */
-  protected $irregularOpenings;
-
-  /**
-   * Id
-   *
-   * @access      protected
-   * @type        int
-   */
-  protected $id;
-
-  /**
-   * Post
-   *
-   * @access     protected
-   * @type       WP_Post
-   */
-  protected $post;
-
-  /**
-   * Parent Id
-   *
-   * @access     protected
-   * @type       int
-   */
-  protected $parentId;
-
-  /**
-   * Parent Post
-   *
-   * @access     protected
-   * @type       WP_Post
-   */
-  protected $parentPost;
-
-  /**
-   * Description
-   * Description meta from CPT Set
-   *
-   * @access      protected
-   * @type        string
-   */
-  protected $description;
-
-  /**
-   * Has Parent
-   *
-   * @access     protected
-   * @type       bool
-   */
-  protected $hasParent;
-
-  /**
-   * Constructor
-   *
-   * @access     public
-   * @param      WP_Post|int     $post
-   * @return     Set
-   */
-  public function __construct ( $post ) {
-
-    $this->setPeriods( new ArrayObject );
-    $this->setHolidays( new ArrayObject );
-    $this->setIrregularOpenings( new ArrayObject );
-
-    if ( !is_int( $post ) and !$post instanceof WP_Post )
-      throw new InvalidArgumentException( sprintf( 'Argument one for __construct has to be of type WP_Post or int. %s given', gettype( $post ) ) );
-
-    if ( is_int( $post ) )
-      $post = get_post( $post );
-
-    $this->setId( $post->ID );
-    $this->setPost( $post );
-    $this->setParentId( $post->ID );
-    $this->setParentPost( $post );
+	/**
+	 * Constants
+	 */
+	const WP_ACTION_BEFORE_SETUP = 'op_set_before_setup';
+
+	/**
+	 * Periods
+	 *
+	 * @access     protected
+	 * @type       ArrayObject
+	 */
+	protected $periods;
+
+	/**
+	 * Holidays0
+	 *
+	 * @access      protected
+	 * @type        ArrayObject
+	 */
+	protected $holidays;
+
+	/**
+	 * Irregular Openings
+	 *
+	 * @access      protected
+	 * @type        ArrayObject
+	 */
+	protected $irregularOpenings;
+
+	/**
+	 * Id
+	 *
+	 * @access      protected
+	 * @type        int
+	 */
+	protected $id;
+
+	/**
+	 * Post
+	 *
+	 * @access     protected
+	 * @type       WP_Post
+	 */
+	protected $post;
+
+	/**
+	 * Parent Id
+	 *
+	 * @access     protected
+	 * @type       int
+	 */
+	protected $parentId;
+
+	/**
+	 * Parent Post
+	 *
+	 * @access     protected
+	 * @type       WP_Post
+	 */
+	protected $parentPost;
+
+	/**
+	 * Description
+	 * Description meta from CPT Set
+	 *
+	 * @access      protected
+	 * @type        string
+	 */
+	protected $description;
+
+	/**
+	 * Has Parent
+	 *
+	 * @access     protected
+	 * @type       bool
+	 */
+	protected $hasParent;
+
+	/**
+	 * Constructor
+	 *
+	 * @access     public
+	 *
+	 * @param      WP_Post|int $post
+	 *
+	 * @return     Set
+	 */
+	public function __construct( $post ) {
+
+		$this->setPeriods( new ArrayObject );
+		$this->setHolidays( new ArrayObject );
+		$this->setIrregularOpenings( new ArrayObject );
+
+		if ( ! is_int( $post ) and ! $post instanceof WP_Post ) {
+			throw new InvalidArgumentException( sprintf( 'Argument one for __construct has to be of type WP_Post or int. %s given', gettype( $post ) ) );
+		}
+
+		if ( is_int( $post ) ) {
+			$post = get_post( $post );
+		}
+
+		$this->setId( $post->ID );
+		$this->setPost( $post );
+		$this->setParentId( $post->ID );
+		$this->setParentPost( $post );
 
-    $this->setUp();
+		$this->setUp();
 
-    return $this;
+		return $this;
 
-  }
+	}
 
-  /**
-   * Set Up
-   *
-   * @access     public
-   */
-  public function setUp () {
+	/**
+	 * Set Up
+	 *
+	 * @access     public
+	 */
+	public function setUp() {
 
-    // Check for Child Posts
-    $childPosts   = get_posts( array(
-      'post_type'   => SetCpt::CPT_SLUG,
-      'post_parent' => $this->getId()
-    ) );
+		// Check for Child Posts
+		$childPosts = get_posts( array(
+			'post_type'   => SetCpt::CPT_SLUG,
+			'post_parent' => $this->getId()
+		) );
 
-    foreach ( $childPosts as $post ) :
+		foreach ( $childPosts as $post ) :
 
-      if ( self::childMatchesCriteria( $post ) ) :
-        $this->setId( $post->ID );
-        $this->setPost( $post );
-      endif;
+			if ( self::childMatchesCriteria( $post ) ) :
+				$this->setId( $post->ID );
+				$this->setPost( $post );
+			endif;
 
-    endforeach;
+		endforeach;
 
-    /**
-     * Action:    op_set_before_setup
-     *
-     * @param     Set     Set object
-     */
-    do_action(
-      self::WP_ACTION_BEFORE_SETUP,
-      $this
-    );
+		/**
+		 * Action:    op_set_before_setup
+		 *
+		 * @param     Set     Set object
+		 */
+		do_action(
+			self::WP_ACTION_BEFORE_SETUP,
+			$this
+		);
 
-    $this->loadPeriods();
+		$this->loadPeriods();
 
-    $this->loadHolidays();
+		$this->loadHolidays();
 
-    $this->loadIrregularOpenings();
+		$this->loadIrregularOpenings();
 
-    $post_detail_description  = get_post_detail( 'description', $this->getId() );
-    $post_parent_detail_description = get_post_detail( 'description', $this->getParentId() );
+		$post_detail_description        = get_post_detail( 'description', $this->getId() );
+		$post_parent_detail_description = get_post_detail( 'description', $this->getParentId() );
 
-    /**
-     * Set Description
-     */
-    if ( !empty( $post_detail_description ) ) :
-      $this->setDescription( $post_detail_description );
+		/**
+		 * Set Description
+		 */
+		if ( ! empty( $post_detail_description ) ) :
+			$this->setDescription( $post_detail_description );
 
-    elseif ( !empty( $post_parent_detail_description ) ):
-      $this->setDescription( $post_parent_detail_description );
+		elseif ( ! empty( $post_parent_detail_description ) ):
+			$this->setDescription( $post_parent_detail_description );
 
-    endif;
-  }
+		endif;
+	}
 
-  /**
-   * Load Periods
-   * get config from post meta and add period objects
-   *
-   * @access      protected
-   */
-  public function loadPeriods () {
+	/**
+	 * Load Periods
+	 * get config from post meta and add period objects
+	 *
+	 * @access      protected
+	 */
+	public function loadPeriods() {
 
-    $post_meta = get_post_meta( $this->getId(), SetCpt::PERIODS_META_KEY, true );
+		$post_meta = get_post_meta( $this->getId(), SetCpt::PERIODS_META_KEY, true );
+
+		if ( ! is_array( $post_meta ) or ! count( $post_meta ) ) {
+			return;
+		}
+
+		foreach ( $post_meta as $config ) :
+			$this->getPeriods()->addElement( new Period( $config ) );
+		endforeach;
+
+		$this->sortPeriods();
 
-    if ( !is_array( $post_meta ) or !count( $post_meta ) )
-      return;
+	}
 
-    foreach ( $post_meta as $config ) :
-      $this->getPeriods()->addElement( new Period( $config ) );
-    endforeach;
+	/**
+	 * Load Holidays
+	 * get config from post meta and add holiday objects
+	 *
+	 * @access      protected
+	 */
+	public function loadHolidays() {
+
+		$post_meta = get_post_meta( $this->getId(), HolidaysMetaBox::HOLIDAYS_META_KEY, true );
+
+		if ( ! is_array( $post_meta ) or ! count( $post_meta ) ) {
+			return;
+		}
+
+		foreach ( $post_meta as $config ) {
+			$this->getHolidays()->addElement( new Holiday( $config ) );
+		}
+
+		$this->sortHolidays();
+
+	}
+
+	/**
+	 * Load Irregular Openings
+	 *
+	 * @access      protected
+	 */
+	public function loadIrregularOpenings() {
+
+		$post_meta = get_post_meta( $this->getId(), IrregularOpeningsMetaBox::IRREGULAR_OPENINGS_META_KEY, true );
+
+		if ( ! is_array( $post_meta ) or ! count( $post_meta ) ) {
+			return;
+		}
+
+		foreach ( $post_meta as $config ) {
+			$this->getIrregularOpenings()->addElement( new IrregularOpening( $config ) );
+		}
 
-    $this->sortPeriods();
+		$this->sortIrregularOpenings();
 
-  }
+	}
+
+	/**
+	 * Child Matches Criteria
+	 * checks if child posts matches the set criteria
+	 *
+	 * @access    public
+	 * @static
+	 *
+	 * @param     WP_Post $post
+	 *
+	 * @return    bool
+	 */
+	public static function childMatchesCriteria( WP_Post $post ) {
+
+		$detail_date_start  = get_post_detail( 'date-start', $post->ID );
+		$detail_date_end    = get_post_detail( 'date-end', $post->ID );
+		$detail_week_scheme = get_post_detail( 'week-scheme', $post->ID );
 
-  /**
-   * Load Holidays
-   * get config from post meta and add holiday objects
-   *
-   * @access      protected
-   */
-  public function loadHolidays () {
+		$detail_date_start = ( ! empty( $detail_date_start ) ) ? new DateTime( $detail_date_start, I18n::getDateTimeZone() ) : null;
+		$detail_date_end   = ( ! empty( $detail_date_end ) ) ? new DateTime( $detail_date_end, I18n::getDateTimeZone() ) : null;
 
-    $post_meta  = get_post_meta( $this->getId(), HolidaysMetaBox::HOLIDAYS_META_KEY, true );
+		/**
+		 * Skip if no criteria is set
+		 */
+		if ( $detail_date_start == null and $detail_date_end == null and ( $detail_week_scheme == 'all' or empty( $detail_week_scheme ) ) ) {
+			return false;
+		}
+
+		$date_time_now = I18n::getTimeNow();
+
+		/**
+		 * Date Range
+		 */
+		if ( $detail_date_start != null and $date_time_now < $detail_date_start ) {
+			return false;
+		}
+
+		if ( $detail_date_end != null and $date_time_now > $detail_date_end ) {
+			return false;
+		}
+
+		/**
+		 * Week Scheme
+		 */
+		$week_number_modulo = (int) $date_time_now->format( 'W' ) % 2;
 
-    if ( !is_array( $post_meta ) or !count( $post_meta ) )
-      return;
+		if ( $detail_week_scheme == 'even' and $week_number_modulo === 1 ) {
+			return false;
+		}
 
-    foreach ( $post_meta as $config )
-      $this->getHolidays()->addElement( new Holiday( $config ) );
+		if ( $detail_week_scheme == 'odd' and $week_number_modulo === 0 ) {
+			return false;
+		}
 
-    $this->sortHolidays();
+		return true;
 
-  }
+	}
 
-  /**
-   * Load Irregular Openings
-   *
-   * @access      protected
-   */
-  public function loadIrregularOpenings () {
+	/**
+	 * Is Parent
+	 * checks if this set is a parent set
+	 *
+	 * @access     public
+	 * @return     bool
+	 */
+	public function isParent() {
+		return ( $this->getId() === $this->getParentId() );
+	}
 
-    $post_meta  = get_post_meta( $this->getId(), IrregularOpeningsMetaBox::IRREGULAR_OPENINGS_META_KEY, true );
+	/**
+	 * Add Dummy Periods
+	 *
+	 * @access     public
+	 */
+	public function addDummyPeriods() {
 
-    if ( !is_array( $post_meta ) or !count( $post_meta ) )
-      return;
+		foreach ( I18n::getWeekdaysNumeric() as $id => $name ) :
 
-    foreach ( $post_meta as $config )
-      $this->getIrregularOpenings()->addElement( new IrregularOpening( $config ) );
+			if ( ! count( $this->getPeriodsByDay( $id ) ) ) :
 
-    $this->sortIrregularOpenings();
+				$newPeriod = new Period( array(
+					'weekday'   => $id,
+					'timeStart' => new DateTime( '00:00' ),
+					'timeEnd'   => new DateTime( '00:00' ),
+					'dummy'     => true
+				) );
 
-  }
+				$this->getPeriods()->addElement( $newPeriod );
 
-  /**
-   * Child Matches Criteria
-   * checks if child posts matches the set criteria
-   *
-   * @access    public
-   * @static
-   * @param     WP_Post     $post
-   * @return    bool
-   */
-  public static function childMatchesCriteria ( WP_Post $post ) {
+			endif;
 
-    $detail_date_start  = get_post_detail( 'date-start', $post->ID );
-    $detail_date_end    = get_post_detail( 'date-end', $post->ID );
-    $detail_week_scheme = get_post_detail( 'week-scheme', $post->ID );
+		endforeach;
 
-    $detail_date_start  = ( !empty( $detail_date_start ) ) ? new DateTime( $detail_date_start, I18n::getDateTimeZone() ) : null;
-    $detail_date_end    = ( !empty( $detail_date_end ) ) ? new DateTime( $detail_date_end, I18n::getDateTimeZone() ) : null;
+	}
 
-    /**
-     * Skip if no criteria is set
-     */
-    if ( $detail_date_start == null and $detail_date_end == null and ( $detail_week_scheme == 'all' or empty( $detail_week_scheme ) ) )
-      return false;
+	/**
+	 * Is Open – Opening Hours
+	 * only evaluates standard opening periods
+	 *
+	 * @access      public
+	 *
+	 * @param       DateTime $now
+	 *
+	 * @return      bool
+	 */
+	public function isOpenOpeningHours( $now = null ) {
 
-    $date_time_now      = I18n::getTimeNow();
+		foreach ( $this->getPeriods() as $period ) :
 
-    /**
-     * Date Range
-     */
-    if ( $detail_date_start != null and $date_time_now < $detail_date_start )
-      return false;
+			if ( $period->isOpen( $now ) ) {
+				return true;
+			}
 
-    if ( $detail_date_end != null and $date_time_now > $detail_date_end )
-      return false;
+		endforeach;
 
-    /**
-     * Week Scheme
-     */
-    $week_number_modulo = (int) $date_time_now->format('W') % 2;
+		return false;
 
-    if ( $detail_week_scheme == 'even' and $week_number_modulo === 1 )
-      return false;
+	}
 
-    if ( $detail_week_scheme == 'odd' and $week_number_modulo === 0 )
-      return false;
+	/**
+	 * Is Holiday Active
+	 * checks if any holiday in set is currently active
+	 *
+	 * @access      public
+	 *
+	 * @param       DateTime $now
+	 *
+	 * @return      bool
+	 */
+	public function isHolidayActive( $now = null ) {
 
-    return true;
+		foreach ( $this->getHolidays() as $holiday ) :
 
-  }
+			if ( $holiday->isActive( $now ) ) {
+				return true;
+			}
 
-  /**
-   * Is Parent
-   * checks if this set is a parent set
-   *
-   * @access     public
-   * @return     bool
-   */
-  public function isParent () {
-    return ( $this->getId() === $this->getParentId() );
-  }
+		endforeach;
 
-  /**
-   * Add Dummy Periods
-   *
-   * @access     public
-   */
-  public function addDummyPeriods() {
+		return false;
 
-    foreach ( I18n::getWeekdaysNumeric() as $id => $name ) :
-
-      if ( !count( $this->getPeriodsByDay( $id ) ) ) :
-
-        $newPeriod = new Period( array(
-          'weekday'   => $id,
-          'timeStart' => new DateTime( '00:00' ),
-          'timeEnd'   => new DateTime( '00:00' ),
-          'dummy'     => true
-          ) );
-
-        $this->getPeriods()->addElement( $newPeriod );
-
-      endif;
-
-    endforeach;
-
-  }
-
-  /**
-   * Is Open – Opening Hours
-   * only evaluates standard opening periods
-   *
-   * @access      public
-   * @param       DateTime      $now
-   * @return      bool
-   */
-  public function isOpenOpeningHours ( $now = null ) {
-
-    foreach ( $this->getPeriods() as $period ) :
-
-      if ( $period->isOpen( $now ) )
-        return true;
-
-    endforeach;
-
-    return false;
-
-  }
-
-  /**
-   * Is Holiday Active
-   * checks if any holiday in set is currently active
-   *
-   * @access      public
-   * @param       DateTime      $now
-   * @return      bool
-   */
-  public function isHolidayActive ( $now = null ) {
-
-    foreach ( $this->getHolidays() as $holiday ) :
-
-      if ( $holiday->isActive( $now ) )
-        return true;
-
-    endforeach;
-
-    return false;
-
-  }
+	}
 
 	/**
 	 * Is Irregular Opening Active
 	 * checks if any irregular opening is currently active (based on the date)
 	 *
 	 * @access      public
-	 * @param       DateTime      $now
+	 *
+	 * @param       DateTime $now
+	 *
 	 * @return      true
 	 */
-	public function isIrregularOpeningActive ( DateTime $now = null ) {
+	public function isIrregularOpeningActive( DateTime $now = null ) {
 
 		return $this->getActiveIrregularOpening( $now ) instanceof IrregularOpening;
 
 	}
 
-  /**
-   * Is Open
-   * evaluates all aspects
-   *
-   * @access      public
-   * @param       DateTime      $now
-   * @return      bool
-   */
-  public function isOpen ( DateTime $now = null ) {
+	/**
+	 * Is Open
+	 * evaluates all aspects
+	 *
+	 * @access      public
+	 *
+	 * @param       DateTime $now
+	 *
+	 * @return      bool
+	 */
+	public function isOpen( DateTime $now = null ) {
 
-    /** Holidays */
-    if ( $this->isHolidayActive( $now ) )
-      return false;
+		/** Holidays */
+		if ( $this->isHolidayActive( $now ) ) {
+			return false;
+		}
 
-    /** Irregular Openings */
-	  if ( $this->isIrregularOpeningActive( $now ) ) :
+		/** Irregular Openings */
+		if ( $this->isIrregularOpeningActive( $now ) ) :
 
-		  $io   = $this->getActiveIrregularOpening( $now );
+			$io = $this->getActiveIrregularOpening( $now );
 
-	    return $io->isOpen( $now );
+			return $io->isOpen( $now );
 
-	  endif;
+		endif;
 
-    /** Opening Hours */
-    return $this->isOpenOpeningHours( $now );
+		/** Opening Hours */
 
-  }
+		return $this->isOpenOpeningHours( $now );
 
-  /**
-   * Sort Periods
-   * sorts periods with Period::sortStrategy
-   *
-   * @access        public
-   */
-  public function sortPeriods () {
+	}
 
-    $this->getPeriods()->uasort( array( 'OpeningHours\Entity\Period', 'sortStrategy' ) );
+	/**
+	 * Sort Periods
+	 * sorts periods with Period::sortStrategy
+	 *
+	 * @access        public
+	 */
+	public function sortPeriods() {
 
-  }
+		$this->getPeriods()->uasort( array( 'OpeningHours\Entity\Period', 'sortStrategy' ) );
 
-  /**
-   * Sort Holidays
-   * sorts holidays with Holiday::sortStrategy
-   *
-   * @access        public
-   */
-  public function sortHolidays () {
+	}
 
-    $this->getHolidays()->uasort( array( 'OpeningHours\Entity\Holiday', 'sortStrategy' ) );
+	/**
+	 * Sort Holidays
+	 * sorts holidays with Holiday::sortStrategy
+	 *
+	 * @access        public
+	 */
+	public function sortHolidays() {
 
-  }
+		$this->getHolidays()->uasort( array( 'OpeningHours\Entity\Holiday', 'sortStrategy' ) );
 
-  /**
-   * Sort Irregular Openings
-   *
-   * @access        public
-   */
-  public function sortIrregularOpenings () {
+	}
 
-    $this->getIrregularOpenings()->uasort( array( 'OpeningHours\Entity\IrregularOpening', 'sortStrategy' ) );
+	/**
+	 * Sort Irregular Openings
+	 *
+	 * @access        public
+	 */
+	public function sortIrregularOpenings() {
 
-  }
+		$this->getIrregularOpenings()->uasort( array( 'OpeningHours\Entity\IrregularOpening', 'sortStrategy' ) );
 
-  /**
-   * Get Next Open Period
-   * returns the next open period
-   *
-   * @access      public
-   * @return      Period
-   */
-  public function getNextOpenPeriod () {
+	}
 
-    $this->sortPeriods();
+	/**
+	 * Get Next Open Period
+	 * returns the next open period
+	 *
+	 * @access      public
+	 * @return      Period
+	 */
+	public function getNextOpenPeriod() {
 
-    for ( $week_offset = 0; true; $week_offset++ ) :
+		$this->sortPeriods();
 
-      if ( $week_offset === 0 ) :
+		for ( $week_offset = 0; true; $week_offset ++ ) :
 
-        foreach ( $this->getPeriods() as $period ) :
+			if ( $week_offset === 0 ) :
 
-          if ( $period->willBeOpen( $this->getId() ) )
-            return $period;
+				foreach ( $this->getPeriods() as $period ) :
 
-        endforeach;
+					if ( $period->willBeOpen( $this->getId() ) ) {
+						return $period;
+					}
 
-      else:
+				endforeach;
 
-        $time_difference  = new DateInterval( 'P' . 7 * $week_offset . 'D' );
+			else:
 
-        foreach ( $this->getPeriods() as $period ) :
+				$time_difference = new DateInterval( 'P' . 7 * $week_offset . 'D' );
 
-          $new_period   = $period->getCopy( $time_difference );
+				foreach ( $this->getPeriods() as $period ) :
 
-          if ( $new_period->willBeOpen( $this->getId() ) )
-            return $new_period;
+					$new_period = $period->getCopy( $time_difference );
 
-        endforeach;
+					if ( $new_period->willBeOpen( $this->getId() ) ) {
+						return $new_period;
+					}
+
+				endforeach;
+
+			endif;
+
+		endfor;
 
-      endif;
+	}
 
-    endfor;
+	/**
+	 * Get Sets from Posts
+	 *
+	 * @access     public
+	 * @static
+	 *
+	 * @param      array $posts
+	 *
+	 * @return     array
+	 */
+	public static function getSetsFromPosts( array $posts ) {
 
-  }
+		foreach ( $posts as &$post ) :
 
-  /**
-   * Get Sets from Posts
-   *
-   * @access     public
-   * @static
-   * @param      array     $posts
-   * @return     array
-   */
-  public static function getSetsFromPosts ( array $posts ) {
+			if ( $post instanceof WP_Post or is_numeric( $post ) ) {
+				$post = new Set( $post );
+			}
 
-    foreach ( $posts as &$post ) :
+		endforeach;
 
-      if ( $post instanceof WP_Post or is_numeric( $post ) )
-        $post   = new Set( $post );
+		return $posts;
 
-    endforeach;
+	}
 
-    return $posts;
+	/**
+	 * Getter: Periods
+	 *
+	 * @access     public
+	 * @return     ArrayObject
+	 */
+	public function getPeriods() {
+		return $this->periods;
+	}
 
-  }
+	/**
+	 * Getter: Periods By Day
+	 *
+	 * @access     public
+	 *
+	 * @param      array|int $days
+	 *
+	 * @return     array
+	 */
+	public function getPeriodsByDay( $days ) {
 
-  /**
-   * Getter: Periods
-   *
-   * @access     public
-   * @return     ArrayObject
-   */
-  public function getPeriods () {
-    return $this->periods;
-  }
+		if ( ! is_array( $days ) and ! is_numeric( $days ) ) {
+			throw new InvalidArgumentException( sprintf( 'Argument 1 of getPeriodsByDay must be integer or array. %s given.', gettype( $days ) ) );
+		}
 
-  /**
-   * Getter: Periods By Day
-   *
-   * @access     public
-   * @param      array|int   $days
-   * @return     array
-   */
-  public function getPeriodsByDay ( $days ) {
+		if ( ! is_array( $days ) ) {
+			$days = array( $days );
+		}
 
-    if ( !is_array( $days ) and !is_numeric( $days ) )
-      throw new InvalidArgumentException( sprintf( 'Argument 1 of getPeriodsByDay must be integer or array. %s given.', gettype( $days ) ) );
+		$periods = array();
 
-    if ( !is_array( $days ) )
-      $days  = array( $days );
+		foreach ( $this->getPeriods() as $period ) :
+			if ( in_array( $period->getWeekday(), $days ) ) {
+				$periods[] = $period;
+			}
+		endforeach;
 
-    $periods  = array();
+		return $periods;
 
-    foreach ( $this->getPeriods() as $period ) :
-      if ( in_array( $period->getWeekday(), $days ) )
-        $periods[]  = $period;
-    endforeach;
+	}
 
-    return $periods;
+	/**
+	 * Getter: (all) Periods Grouped By Day
+	 *
+	 * @access       public
+	 * @return       array
+	 */
+	public function getPeriodsGroupedByDay() {
 
-  }
+		$periods = array();
 
-  /**
-   * Getter: (all) Periods Grouped By Day
-   *
-   * @access       public
-   * @return       array
-   */
-  public function getPeriodsGroupedByDay () {
+		foreach ( I18n::getWeekdaysNumeric() as $id => $caption ) {
+			$periods[ $id ] = $this->getPeriodsByDay( $id );
+		}
 
-    $periods  = array();
+		return $periods;
 
-    foreach ( I18n::getWeekdaysNumeric() as $id => $caption )
-      $periods[ $id ]   = $this->getPeriodsByDay( $id );
+	}
 
-    return $periods;
+	/**
+	 * Getter: (all) Periods Grouped By Day and Compressed
+	 * applies some kind of array_unique on the array. Days with same Periods are uniqued to one array element with a comma separated string containing the day IDs
+	 *
+	 * @access      public
+	 * @return      array
+	 */
+	public function getPeriodsGroupedByDayCompressed() {
 
-  }
+		$periods_array = $this->getPeriodsGroupedByDay();
 
-  /**
-   * Getter: (all) Periods Grouped By Day and Compressed
-   * applies some kind of array_unique on the array. Days with same Periods are uniqued to one array element with a comma separated string containing the day IDs
-   *
-   * @access      public
-   * @return      array
-   */
-  public function getPeriodsGroupedByDayCompressed () {
+		$new_periods_array = array();
 
-    $periods_array      = $this->getPeriodsGroupedByDay();
+		$compressed = array();
 
-    $new_periods_array  = array();
+		$days = range( 0, 6 );
 
-    $compressed         = array();
+		foreach ( $days as $day_1 ) :
 
-    $days               = range( 0, 6 );
+			if ( in_array( $day_1, $compressed ) ) {
+				continue;
+			}
 
-    foreach ( $days as $day_1 ) :
+			$keys = array(
+				$day_1
+			);
 
-      if ( in_array( $day_1, $compressed ) )
-        continue;
+			foreach ( $days as $day_2 ) :
 
-      $keys   = array(
-        $day_1
-      );
+				if ( $day_1 == $day_2 ) {
+					continue;
+				}
 
-      foreach ( $days as $day_2 ) :
+				if ( in_array( $day_2, $compressed ) ) {
+					continue;
+				}
 
-        if ( $day_1 == $day_2 )
-          continue;
+				if ( $this->daysEqual( $day_1, $day_2 ) ) {
+					$keys[] = $day_2;
+				}
 
-        if ( in_array( $day_2, $compressed ) )
-          continue;
+			endforeach;
 
-        if ( $this->daysEqual( $day_1, $day_2 ) )
-          $keys[] = $day_2;
+			$new_periods_array[ implode( ',', $keys ) ] = $periods_array[ $day_1 ];
 
-      endforeach;
+			$compressed = array_merge( $compressed, $keys );
 
-      $new_periods_array[ implode( ',', $keys ) ]  = $periods_array[ $day_1 ];
+		endforeach;
 
-      $compressed   = array_merge( $compressed, $keys );
+		return $new_periods_array;
 
-    endforeach;
-
-    return $new_periods_array;
-
-  }
+	}
 
 	/**
 	 * Get Active Irregular Opening
 	 * returns first active irregular opening
 	 *
 	 * @access      public
-	 * @param       DateTime    $now
+	 *
+	 * @param       DateTime $now
+	 *
 	 * @return      IrregularOpening
 	 */
-	public function getActiveIrregularOpening ( DateTime $now = null ) {
+	public function getActiveIrregularOpening( DateTime $now = null ) {
 
 		foreach ( $this->getIrregularOpenings() as $io ) :
 
-			if ( $io->isActive() )
+			if ( $io->isActive() ) {
 				return $io;
+			}
 
 		endforeach;
 
@@ -630,250 +676,276 @@ class Set {
 
 	}
 
-  /**
-   * Days equal
-   * checks if two days have equal Periods
-   *
-   * @access      public
-   * @param       int       $day_1
-   * @param       int       $day_2
-   * @param       array     $periods_by_day
-   * @return      bool
-   */
-  public function daysEqual ( $day_1, $day_2, $periods_by_day = null ) {
+	/**
+	 * Days equal
+	 * checks if two days have equal Periods
+	 *
+	 * @access      public
+	 *
+	 * @param       int $day_1
+	 * @param       int $day_2
+	 * @param       array $periods_by_day
+	 *
+	 * @return      bool
+	 */
+	public function daysEqual( $day_1, $day_2, $periods_by_day = null ) {
 
-    if ( $day_1 == $day_2 )
-      return true;
+		if ( $day_1 == $day_2 ) {
+			return true;
+		}
 
-    if ( $periods_by_day === null or !is_array( $periods_by_day ) )
-      $periods_by_day   = $this->getPeriodsGroupedByDay();
+		if ( $periods_by_day === null or ! is_array( $periods_by_day ) ) {
+			$periods_by_day = $this->getPeriodsGroupedByDay();
+		}
 
-    if ( !count( $periods_by_day[ $day_1 ] ) and !count( $periods_by_day[ $day_2 ] ) )
-      return true;
+		if ( ! count( $periods_by_day[ $day_1 ] ) and ! count( $periods_by_day[ $day_2 ] ) ) {
+			return true;
+		}
 
-    if ( count( $periods_by_day[ $day_1 ] ) != count( $periods_by_day[ $day_2 ] ) )
-      return false;
+		if ( count( $periods_by_day[ $day_1 ] ) != count( $periods_by_day[ $day_2 ] ) ) {
+			return false;
+		}
 
-    for ( $i = 0; $i < count( $periods_by_day[ $day_1 ] ); $i++ ) :
+		for ( $i = 0; $i < count( $periods_by_day[ $day_1 ] ); $i ++ ) :
 
-      $period_1   = $periods_by_day[ $day_1 ][ $i ];
-      $period_2   = $periods_by_day[ $day_2 ][ $i ];
+			$period_1 = $periods_by_day[ $day_1 ][ $i ];
+			$period_2 = $periods_by_day[ $day_2 ][ $i ];
 
-      if ( !$period_1->equals( $period_2, true ) )
-        return false;
+			if ( ! $period_1->equals( $period_2, true ) ) {
+				return false;
+			}
 
-    endfor;
+		endfor;
 
-    return true;
+		return true;
 
-  }
+	}
 
-  /**
-   * Setter: Periods
-   *
-   * @access     public
-   * @param      ArrayObject $periods
-   * @return     Set
-   */
-  public function setPeriods ( ArrayObject $periods ) {
-    $this->periods = $periods;
-    return $this;
-  }
+	/**
+	 * Setter: Periods
+	 *
+	 * @access     public
+	 *
+	 * @param      ArrayObject $periods
+	 *
+	 * @return     Set
+	 */
+	public function setPeriods( ArrayObject $periods ) {
+		$this->periods = $periods;
 
-  /**
-   * Getter: Holidays
-   *
-   * @access      public
-   * @return      ArrayObject
-   */
-  public function getHolidays () {
-    return $this->holidays;
-  }
+		return $this;
+	}
 
-  /**
-   * Setter: Holidays
-   *
-   * @access      protected
-   * @param       ArrayObject     $holidays
-   */
-  public function setHolidays ( ArrayObject $holidays ) {
-    $this->holidays = $holidays;
-  }
+	/**
+	 * Getter: Holidays
+	 *
+	 * @access      public
+	 * @return      ArrayObject
+	 */
+	public function getHolidays() {
+		return $this->holidays;
+	}
 
-  /**
-   * Getter: Irregular Openings
-   *
-   * @access      public
-   * @return      ArrayObject
-   */
-  public function getIrregularOpenings () {
-    return $this->irregularOpenings;
-  }
+	/**
+	 * Setter: Holidays
+	 *
+	 * @access      protected
+	 *
+	 * @param       ArrayObject $holidays
+	 */
+	public function setHolidays( ArrayObject $holidays ) {
+		$this->holidays = $holidays;
+	}
 
-  /**
-   * Setter: Irregular Openings
-   *
-   * @access      protected
-   * @param       ArrayObject     $irregularOpenings
-   */
-  protected function setIrregularOpenings ( ArrayObject $irregularOpenings ) {
-    $this->irregularOpenings  = $irregularOpenings;
-  }
+	/**
+	 * Getter: Irregular Openings
+	 *
+	 * @access      public
+	 * @return      ArrayObject
+	 */
+	public function getIrregularOpenings() {
+		return $this->irregularOpenings;
+	}
 
-  /**
-   * Getter: Id
-   *
-   * @access     public
-   * @return     int
-   */
-  public function getId () {
-    return $this->id;
-  }
+	/**
+	 * Setter: Irregular Openings
+	 *
+	 * @access      protected
+	 *
+	 * @param       ArrayObject $irregularOpenings
+	 */
+	protected function setIrregularOpenings( ArrayObject $irregularOpenings ) {
+		$this->irregularOpenings = $irregularOpenings;
+	}
 
-  /**
-   * Setter: Id
-   *
-   * @access     public
-   * @param      int     $id
-   * @return     Set
-   */
-  public function setId ( $id ) {
-    $this->id = $id;
-    return $this;
-  }
+	/**
+	 * Getter: Id
+	 *
+	 * @access     public
+	 * @return     int
+	 */
+	public function getId() {
+		return $this->id;
+	}
 
-  /**
-   * Getter: Post
-   *
-   * @access     public
-   * @return     WP_Post
-   */
-  public function getPost () {
-    return $this->post;
-  }
+	/**
+	 * Setter: Id
+	 *
+	 * @access     public
+	 *
+	 * @param      int $id
+	 *
+	 * @return     Set
+	 */
+	public function setId( $id ) {
+		$this->id = $id;
 
-  /**
-   * Setter: Post
-   *
-   * @access     public
-   * @param      WP_Post|int   $post
-   * @return     Set
-   */
-  public function setPost ( $post ) {
+		return $this;
+	}
 
-    if ( $post instanceof WP_Post ) :
-      $this->post = $post;
+	/**
+	 * Getter: Post
+	 *
+	 * @access     public
+	 * @return     WP_Post
+	 */
+	public function getPost() {
+		return $this->post;
+	}
 
-    elseif ( is_int( $post ) ) :
-      $this->post = get_post( $post );
+	/**
+	 * Setter: Post
+	 *
+	 * @access     public
+	 *
+	 * @param      WP_Post|int $post
+	 *
+	 * @return     Set
+	 */
+	public function setPost( $post ) {
 
-    else :
-      $this->post = null;
+		if ( $post instanceof WP_Post ) :
+			$this->post = $post;
 
-    endif;
+		elseif ( is_int( $post ) ) :
+			$this->post = get_post( $post );
 
-    return $this;
+		else :
+			$this->post = null;
 
-  }
+		endif;
 
-  /**
-   * Getter: Parent Id
-   *
-   * @access     public
-   * @return     int
-   */
-  public function getParentId () {
-    return $this->parentId;
-  }
+		return $this;
 
-  /**
-   * Setter: Parent Id
-   *
-   * @access     public
-   * @param      int       $parentId
-   * @return     Set
-   */
-  public function setParentId ( $parentId ) {
-    $this->parentId = $parentId;
-    return $this;
-  }
+	}
 
-  /**
-   * Getter: Parent Post
-   *
-   * @access     public
-   * @return     WP_Post
-   */
-  public function getParentPost () {
-    return ( !$this->hasParent() and !$this->parentPost instanceof WP_Post )
-      ? $this->post
-      : $this->parentPost;
-  }
+	/**
+	 * Getter: Parent Id
+	 *
+	 * @access     public
+	 * @return     int
+	 */
+	public function getParentId() {
+		return $this->parentId;
+	}
 
-  /**
-   * Setter: Parent Post
-   *
-   * @access     public
-   * @param      WP_Post|int   $parentPost
-   * @return     Set
-   */
-  public function setParentPost ( $parentPost ) {
+	/**
+	 * Setter: Parent Id
+	 *
+	 * @access     public
+	 *
+	 * @param      int $parentId
+	 *
+	 * @return     Set
+	 */
+	public function setParentId( $parentId ) {
+		$this->parentId = $parentId;
 
-    if ( $parentPost instanceof WP_Post ) :
-      $this->parentPost = $parentPost;
+		return $this;
+	}
 
-    elseif ( is_int( $parentPost ) ) :
-      $this->parentPost = get_post( $parentPost );
+	/**
+	 * Getter: Parent Post
+	 *
+	 * @access     public
+	 * @return     WP_Post
+	 */
+	public function getParentPost() {
+		return ( ! $this->hasParent() and ! $this->parentPost instanceof WP_Post )
+			? $this->post
+			: $this->parentPost;
+	}
 
-    else :
-      $this->parentPost = null;
+	/**
+	 * Setter: Parent Post
+	 *
+	 * @access     public
+	 *
+	 * @param      WP_Post|int $parentPost
+	 *
+	 * @return     Set
+	 */
+	public function setParentPost( $parentPost ) {
 
-    endif;
+		if ( $parentPost instanceof WP_Post ) :
+			$this->parentPost = $parentPost;
 
-    return $this;
+		elseif ( is_int( $parentPost ) ) :
+			$this->parentPost = get_post( $parentPost );
 
-  }
+		else :
+			$this->parentPost = null;
 
-  /**
-   * Getter: Description
-   *
-   * @access      public
-   * @return      bool
-   */
-  public function getDescription () {
-    return $this->description;
-  }
+		endif;
 
-  /**
-   * Setter: Description
-   *
-   * @access      protected
-   * @param       string        $description
-   */
-  protected function setDescription ( $description ) {
-    $this->description    = $description;
-  }
+		return $this;
 
-  /**
-   * Getter: Has Parent
-   *
-   * @access     public
-   * @return     bool
-   */
-  public function hasParent () {
-    return $this->hasParent;
-  }
+	}
 
-  /**
-   * Setter: Has Parent
-   *
-   * @access     public
-   * @param      bool    $hasParent
-   * @return     Set
-   */
-  public function setHasParent ( $hasParent ) {
-    $this->hasParent = $hasParent;
-    return $this;
-  }
+	/**
+	 * Getter: Description
+	 *
+	 * @access      public
+	 * @return      bool
+	 */
+	public function getDescription() {
+		return $this->description;
+	}
+
+	/**
+	 * Setter: Description
+	 *
+	 * @access      protected
+	 *
+	 * @param       string $description
+	 */
+	protected function setDescription( $description ) {
+		$this->description = $description;
+	}
+
+	/**
+	 * Getter: Has Parent
+	 *
+	 * @access     public
+	 * @return     bool
+	 */
+	public function hasParent() {
+		return $this->hasParent;
+	}
+
+	/**
+	 * Setter: Has Parent
+	 *
+	 * @access     public
+	 *
+	 * @param      bool $hasParent
+	 *
+	 * @return     Set
+	 */
+	public function setHasParent( $hasParent ) {
+		$this->hasParent = $hasParent;
+
+		return $this;
+	}
 
 }

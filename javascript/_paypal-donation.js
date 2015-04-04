@@ -1,44 +1,44 @@
-( function ( $ ) {
+(function ($) {
 
-    $.fn.opPaypalDonation = function () {
+  $.fn.opPaypalDonation = function () {
 
-        var template    = $('#op-template-paypal-donation-form');
-        var btn_submit  = $('#op-paypal-donation-submit');
-        var form;
-        var amount_s    = $('#op-paypal-select-amount');
-        var amount_i;
+    var template = $('#op-template-paypal-donation-form');
+    var btn_submit = $('#op-paypal-donation-submit');
+    var form;
+    var amount_s = $('#op-paypal-select-amount');
+    var amount_i;
 
-        if ( template.length < 1 )
-            return;
+    if (template.length < 1)
+      return;
 
-        function placeForm () {
+    function placeForm() {
 
-            form    = $( template.html() );
-            form.css('display', 'none');
-            $('body').append( form );
+      form = $(template.html());
+      form.css('display', 'none');
+      $('body').append(form);
 
-            amount_i    = form.find( '#op-paypal-input-amount' );
+      amount_i = form.find('#op-paypal-input-amount');
 
-        }
+    }
 
-        placeForm();
+    placeForm();
 
-        btn_submit.click( function (e) {
-            e.preventDefault();
+    btn_submit.click(function (e) {
+      e.preventDefault();
 
-            form.submit();
-        } );
+      form.submit();
+    });
 
-        amount_s.change( function () {
-            amount_i.val( amount_s.val() );
-        } );
+    amount_s.change(function () {
+      amount_i.val(amount_s.val());
+    });
 
-    };
+  };
 
-    $( document).ready( function () {
+  $(document).ready(function () {
 
-        $( window ).opPaypalDonation();
+    $(window).opPaypalDonation();
 
-    } );
+  });
 
-} )( jQuery );
+})(jQuery);

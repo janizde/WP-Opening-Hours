@@ -11,59 +11,60 @@ use OpeningHours\Module\OpeningHours;
 
 class Holidays extends AbstractShortcode {
 
-    /**
-     * Init
-     *
-     * @access          protected
-     */
-    protected function init () {
+	/**
+	 * Init
+	 *
+	 * @access          protected
+	 */
+	protected function init() {
 
-        $this->setShortcodeTag( 'op-holidays' );
+		$this->setShortcodeTag( 'op-holidays' );
 
-        $default_attributes     = array(
-            'title'     => null,
-            'set_id'    => null,
-            'highlight' => false,
+		$default_attributes = array(
+			'title'             => null,
+			'set_id'            => null,
+			'highlight'         => false,
+			'before_widget'     => null,
+			'after_widget'      => null,
+			'before_title'      => null,
+			'after_title'       => null,
+			'class_holiday'     => 'op-holiday',
+			'class_highlighted' => 'highlighted',
+			'date_format'       => I18n::getDateFormat()
+		);
 
-            'before_widget'     => null,
-            'after_widget'      => null,
-            'before_title'      => null,
-            'after_title'       => null,
+		$this->setDefaultAttributes( $default_attributes );
 
-            'class_holiday'     => 'op-holiday',
-            'class_highlighted' => 'highlighted',
-            'date_format'       => I18n::getDateFormat()
-        );
+		$this->setTemplatePath( 'shortcode/holidays.php' );
 
-        $this->setDefaultAttributes( $default_attributes );
+	}
 
-        $this->setTemplatePath( 'shortcode/holidays.php' );
+	/**
+	 * Shortcode
+	 *
+	 * @access          public
+	 *
+	 * @param           array $attributes
+	 */
+	public function shortcode( array $attributes ) {
 
-    }
+		$set_id = $attributes['set_id'];
 
-    /**
-     * Shortcode
-     *
-     * @access          public
-     * @param           array           $attributes
-     */
-    public function shortcode ( array $attributes ) {
+		if ( ! is_numeric( $set_id ) ) {
+			return;
+		}
 
-        $set_id     = $attributes[ 'set_id' ];
+		$set = OpeningHours::getSet( $set_id );
 
-        if ( !is_numeric( $set_id ) )
-            return;
+		if ( ! $set instanceof Set ) {
+			return;
+		}
 
-        $set        = OpeningHours::getSet( $set_id );
+		$attributes['set']      = $set;
+		$attributes['holidays'] = $set->getHolidays();
 
-        if ( !$set instanceof Set )
-            return;
+		echo $this->renderShortcodeTemplate( $attributes );
 
-        $attributes[ 'set' ]        = $set;
-        $attributes[ 'holidays' ]   = $set->getHolidays();
-
-        echo $this->renderShortcodeTemplate( $attributes );
-
-    }
+	}
 
 }

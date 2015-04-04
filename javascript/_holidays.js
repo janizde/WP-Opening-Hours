@@ -3,93 +3,93 @@
  */
 
 /** Holidays Meta Box */
-jQuery.fn.opHolidays 		= function () {
+jQuery.fn.opHolidays = function () {
 
-    var wrap 		= jQuery( this );
+  var wrap = jQuery(this);
 
-    var holidaysWrap	= wrap.find( 'tbody' );
-    var addButton		= wrap.find( '.add-holiday' );
+  var holidaysWrap = wrap.find('tbody');
+  var addButton = wrap.find('.add-holiday');
 
-    function init () {
-        holidaysWrap.find( 'tr.op-holiday').each( function ( index, element ) {
-            jQuery( element ).opSingleHoliday();
-        } );
-    }
+  function init() {
+    holidaysWrap.find('tr.op-holiday').each(function (index, element) {
+      jQuery(element).opSingleHoliday();
+    });
+  }
 
-    init();
+  init();
 
-    function add () {
+  function add() {
 
-        var data 	= {
-            'action'	:	'op_render_single_dummy_holiday'
-        };
+    var data = {
+      'action': 'op_render_single_dummy_holiday'
+    };
 
-        jQuery.post( ajax_object.ajax_url, data, function ( response ) {
-            var newHoliday 	= jQuery( response).clone();
+    jQuery.post(ajax_object.ajax_url, data, function (response) {
+      var newHoliday = jQuery(response).clone();
 
-            newHoliday.opSingleHoliday();
+      newHoliday.opSingleHoliday();
 
-            holidaysWrap.append( newHoliday );
-        } );
+      holidaysWrap.append(newHoliday);
+    });
 
-    }
+  }
 
-    addButton.click( function (e) {
-        e.preventDefault();
+  addButton.click(function (e) {
+    e.preventDefault();
 
-        add();
-    } );
+    add();
+  });
 
 };
 
 /** Holiday Item */
-jQuery.fn.opSingleHoliday 	= function () {
+jQuery.fn.opSingleHoliday = function () {
 
-    var wrap 	= jQuery( this );
+  var wrap = jQuery(this);
 
-    if ( wrap.length > 1 ) {
-        wrap.each( function( index, element ) {
-            jQuery( element).opSingleHoliday();
-        } );
-
-        return;
-    }
-
-    var removeButton 	= wrap.find( '.remove-holiday' );
-    var inputDateStart	= wrap.find( 'input.date-start' );
-    var inputDateEnd	= wrap.find( 'input.date-end' );
-
-    function remove () {
-        wrap.remove();
-    }
-
-    removeButton.click( function (e) {
-        e.preventDefault();
-
-        remove();
-    } );
-
-    inputDateStart.datepicker({
-        dateFormat:     'yy-mm-dd',
-        onClose:        function ( date ) {
-            inputDateEnd.datepicker("option", "minDate", date);
-        }
+  if (wrap.length > 1) {
+    wrap.each(function (index, element) {
+      jQuery(element).opSingleHoliday();
     });
 
-    inputDateEnd.datepicker({
-        dateFormat:     'yy-mm-dd',
-        onClose:        function ( date ) {
-            inputDateStart.datepicker("option", "maxDate", date);
-        }
-    });
+    return;
+  }
+
+  var removeButton = wrap.find('.remove-holiday');
+  var inputDateStart = wrap.find('input.date-start');
+  var inputDateEnd = wrap.find('input.date-end');
+
+  function remove() {
+    wrap.remove();
+  }
+
+  removeButton.click(function (e) {
+    e.preventDefault();
+
+    remove();
+  });
+
+  inputDateStart.datepicker({
+    dateFormat: 'yy-mm-dd',
+    onClose: function (date) {
+      inputDateEnd.datepicker("option", "minDate", date);
+    }
+  });
+
+  inputDateEnd.datepicker({
+    dateFormat: 'yy-mm-dd',
+    onClose: function (date) {
+      inputDateStart.datepicker("option", "maxDate", date);
+    }
+  });
 
 };
 
 /**
  * Mapping
  */
-jQuery( document ).ready( function () {
+jQuery(document).ready(function () {
 
-    jQuery( '#op-holidays-wrap').opHolidays();
+  jQuery('#op-holidays-wrap').opHolidays();
 
-} );
+});

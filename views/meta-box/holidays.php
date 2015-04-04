@@ -16,40 +16,40 @@ use OpeningHours\Misc\ArrayObject;
 
 <div id="op-holidays-wrap">
 
-    <?php Holidays::nonceField(); ?>
+	<?php Holidays::nonceField(); ?>
 
-    <table class="op-holidays" id="op-holidays-table">
-        <thead>
-            <th>
-                <?php _e( 'Name', I18n::TEXTDOMAIN ); ?>
-            </th>
+	<table class="op-holidays" id="op-holidays-table">
+		<thead>
+		<th>
+			<?php _e( 'Name', I18n::TEXTDOMAIN ); ?>
+		</th>
 
-            <th>
-                <?php _e( 'Date Start', I18n::TEXTDOMAIN ); ?>
-            </th>
+		<th>
+			<?php _e( 'Date Start', I18n::TEXTDOMAIN ); ?>
+		</th>
 
-            <th>
-                <?php _e( 'Date End', I18n::TEXTDOMAIN ); ?>
-            </th>
-        </thead>
+		<th>
+			<?php _e( 'Date End', I18n::TEXTDOMAIN ); ?>
+		</th>
+		</thead>
 
-        <tbody>
-        <?php
+		<tbody>
+		<?php
 
-        foreach ( $holidays as $holiday ) :
+		foreach ( $holidays as $holiday ) :
 
-            echo Holidays::renderTemplate( Holidays::TEMPLATE_PATH_SINGLE, array(
-                'holiday'   => $holiday
-            ), 'always' );
+			echo Holidays::renderTemplate( Holidays::TEMPLATE_PATH_SINGLE, array(
+				'holiday' => $holiday
+			), 'always' );
 
-        endforeach;
+		endforeach;
 
-        ?>
-        </tbody>
-    </table>
+		?>
+		</tbody>
+	</table>
 
-    <button class="button button-primary button-add add-holiday">
-        <?php _e( 'Add New Holiday', I18n::TEXTDOMAIN ); ?>
-    </button>
+	<button class="button button-primary button-add add-holiday">
+		<?php _e( 'Add New Holiday', I18n::TEXTDOMAIN ); ?>
+	</button>
 
 </div>

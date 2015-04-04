@@ -15,229 +15,255 @@ use InvalidArgumentException;
 
 class FieldRenderer extends AbstractModule {
 
-  /**
-   *  Valid Field Types
-   *  sequencial array of strings w/ valid field types
-   *
-   *  @access     protected
-   *  @static
-   *  @type       array
-   */
-  protected static $validFieldTypes = array( 'text', 'date', 'time', 'email', 'url', 'textarea', 'select', 'select-multi', 'checkbox' );
+	/**
+	 *  Valid Field Types
+	 *  sequencial array of strings w/ valid field types
+	 *
+	 * @access     protected
+	 * @static
+	 * @type       array
+	 */
+	protected static $validFieldTypes = array(
+		'text',
+		'date',
+		'time',
+		'email',
+		'url',
+		'textarea',
+		'select',
+		'select-multi',
+		'checkbox'
+	);
 
-  /**
-   *  Options Field Types
-   *  sequencial array of strings w/ field types that support options attribute
-   *
-   *  @access     protected
-   *  @static
-   *  @type       array
-   */
-  protected static $optionsFieldTypes = array( 'select', 'select-multi' );
+	/**
+	 *  Options Field Types
+	 *  sequencial array of strings w/ field types that support options attribute
+	 *
+	 * @access     protected
+	 * @static
+	 * @type       array
+	 */
+	protected static $optionsFieldTypes = array( 'select', 'select-multi' );
 
-  /**
-   * Render Field
-   * renders the widget form field and returns markup as string
-   *
-   * @access      public
-   * @static
-   * @param       WP_Widget   $widget
-   * @param       string      $field_name
-   * @return      void
-   */
-  public static function renderField ( WP_Widget $widget, $field_name ) {
+	/**
+	 * Render Field
+	 * renders the widget form field and returns markup as string
+	 *
+	 * @access      public
+	 * @static
+	 *
+	 * @param       WP_Widget $widget
+	 * @param       string $field_name
+	 *
+	 * @return      void
+	 */
+	public static function renderField( WP_Widget $widget, $field_name ) {
 
-    $field              = $widget->getField( $field_name );
-    $instance           = $widget->getInstance();
+		$field    = $widget->getField( $field_name );
+		$instance = $widget->getInstance();
 
-    $field[ 'value' ]   = $instance[ $field_name ];
+		$field['value'] = $instance[ $field_name ];
 
-    try {
-      $field  = self::validateField( $field, $widget );
+		try {
+			$field = self::validateField( $field, $widget );
 
-    } catch ( InvalidArgumentException $e ) {
-      \add_admin_notice( $e->getMessage(), 'error' );
-      return;
+		} catch ( InvalidArgumentException $e ) {
+			\add_admin_notice( $e->getMessage(), 'error' );
 
-    }
+			return;
 
-    extract( $field );
+		}
 
-    $placeholder = ( isset( $default_placeholder ) and $default_placeholder === true and $widget->getShortcode() instanceof AbstractShortcode )
-      ? 'placeholder="'. $widget->getShortcode()->getDefaultAttribute( $name ) . '"'
-      : null;
+		extract( $field );
 
-    ob_start();
+		$placeholder = ( isset( $default_placeholder ) and $default_placeholder === true and $widget->getShortcode() instanceof AbstractShortcode )
+			? 'placeholder="' . $widget->getShortcode()->getDefaultAttribute( $name ) . '"'
+			: null;
 
-    /** Start of Field Element */
-    echo '<p>';
+		ob_start();
 
-      /** Field Label */
-      if ( isset( $caption ) and !empty( $caption ) and $type != 'checkbox' )
-        echo '<label for="'. $wp_id .'">' . $caption . '</label>';
+		/** Start of Field Element */
+		echo '<p>';
 
-      switch ( $type ) :
+		/** Field Label */
+		if ( isset( $caption ) and ! empty( $caption ) and $type != 'checkbox' ) {
+			echo '<label for="' . $wp_id . '">' . $caption . '</label>';
+		}
 
-        /** Field Types: text, date, time, 'email', 'url' */
-        case 'text' :
-        case 'date' :
-        case 'time' :
-        case 'email' :
-        case 'url' :
-          echo '<input class="widefat" type="'. $type .'" id="'. $wp_id .'" name="'. $wp_name .'" value="'. $value .'" '. $placeholder .' />';
-          break;
+		switch ( $type ) :
 
-        /** Field Type: textarea */
-        case 'textarea' :
-          echo '<textarea class="widefat" id="'. $wp_id .'" name="'. $wp_name .'" '. $placeholder .'>' . $value . '</textarea>';
-          break;
+			/** Field Types: text, date, time, 'email', 'url' */
+			case 'text' :
+			case 'date' :
+			case 'time' :
+			case 'email' :
+			case 'url' :
+				echo '<input class="widefat" type="' . $type . '" id="' . $wp_id . '" name="' . $wp_name . '" value="' . $value . '" ' . $placeholder . ' />';
+				break;
 
-        /** Field Types: select, select-multi */
-        case 'select' :
-        case 'select-multi' :
-          $is_multi   = ( $type == 'select-multi' );
+			/** Field Type: textarea */
+			case 'textarea' :
+				echo '<textarea class="widefat" id="' . $wp_id . '" name="' . $wp_name . '" ' . $placeholder . '>' . $value . '</textarea>';
+				break;
 
-          $multi      = ( $is_multi ) ? 'multiple="multiple"' : null;
-          $size       = ( $is_multi ) ? 5 : 1;
-          $wp_name    = ( $is_multi ) ? $wp_name . '[]' : $wp_name;
-          $style      = ( $is_multi ) ? 'style="height: 50px;"' : null;
+			/** Field Types: select, select-multi */
+			case 'select' :
+			case 'select-multi' :
+				$is_multi = ( $type == 'select-multi' );
 
-          echo '<select class="widefat" id="'. $wp_id .'" name="'. $wp_name .'" size="'. $size .'" '. $style .' '. $multi .'>';
+				$multi   = ( $is_multi ) ? 'multiple="multiple"' : null;
+				$size    = ( $is_multi ) ? 5 : 1;
+				$wp_name = ( $is_multi ) ? $wp_name . '[]' : $wp_name;
+				$style   = ( $is_multi ) ? 'style="height: 50px;"' : null;
 
-          foreach ( $options as $key => $caption ) :
+				echo '<select class="widefat" id="' . $wp_id . '" name="' . $wp_name . '" size="' . $size . '" ' . $style . ' ' . $multi . '>';
 
-            $selected   = 'selected="selected"';
+				foreach ( $options as $key => $caption ) :
 
-            if ( $is_multi ) :
-              $selected   = ( in_array( $key, (array) $value ) ) ? $selected : null;
+					$selected = 'selected="selected"';
 
-            else :
-              $selected   = ( $key == $value ) ? $selected : null;
+					if ( $is_multi ) :
+						$selected = ( in_array( $key, (array) $value ) ) ? $selected : null;
 
-            endif;
+					else :
+						$selected = ( $key == $value ) ? $selected : null;
 
-            echo '<option value="'. $key .'" '. $selected .'>'. $caption .'</option>';
-          endforeach;
+					endif;
 
-          echo '</select>';
-          break;
+					echo '<option value="' . $key . '" ' . $selected . '>' . $caption . '</option>';
+				endforeach;
 
-          /** Field Type: checkbox (single) */
-          case 'checkbox' :
-            $checked  = ( $value !== null ) ? 'checked="checked"' : null;
+				echo '</select>';
+				break;
 
-            echo '<label for="'. $wp_id .'">';
-            echo '<input type="checkbox" name="'. $wp_name .'" id="'. $wp_id .'" '. $checked .' />';
-            echo $caption;
-            echo '</label>';
-            break;
+			/** Field Type: checkbox (single) */
+			case 'checkbox' :
+				$checked = ( $value !== null ) ? 'checked="checked"' : null;
 
-      endswitch;
+				echo '<label for="' . $wp_id . '">';
+				echo '<input type="checkbox" name="' . $wp_name . '" id="' . $wp_id . '" ' . $checked . ' />';
+				echo $caption;
+				echo '</label>';
+				break;
 
-      if ( isset( $description ) and is_string( $description ) )
-        echo '<span class="op-widget-description">'. $description .'</span>';
+		endswitch;
 
-    echo '</p>';
+		if ( isset( $description ) and is_string( $description ) ) {
+			echo '<span class="op-widget-description">' . $description . '</span>';
+		}
 
-    $output = ob_get_contents();
+		echo '</p>';
 
-    ob_clean();
+		$output = ob_get_contents();
 
-    return $output;
+		ob_clean();
 
-  }
+		return $output;
 
-  /**
-   *  Validate Field
-   *  validates and filters widget.
-   *
-   *  @access     public
-   *  @static
-   *  @param      array       $field
-   *  @param      WP_Widget   $widget
-   *  @throws     InvalidArgumentException
-   *  @return     array
-   */
-  public static function validateField ( array $field, WP_Widget $widget ) {
+	}
 
-    /**
-     *  Validation
-     */
-    if ( !count( $field ) )
-      self::terminate( sprintf( __( 'Field configuration has to be array. %s given', self::TEXTDOMAIN ), gettype( $field ) ), $widget );
+	/**
+	 *  Validate Field
+	 *  validates and filters widget.
+	 *
+	 * @access     public
+	 * @static
+	 *
+	 * @param      array $field
+	 * @param      WP_Widget $widget
+	 *
+	 * @throws     InvalidArgumentException
+	 * @return     array
+	 */
+	public static function validateField( array $field, WP_Widget $widget ) {
 
-    if ( empty( $field[ 'name' ] ) or !is_string( $field[ 'name' ] ) )
-      self::terminate( __( 'Field name is empty or not a string.', self::TEXTDOMAIN ), $widget );
+		/**
+		 *  Validation
+		 */
+		if ( ! count( $field ) ) {
+			self::terminate( sprintf( __( 'Field configuration has to be array. %s given', self::TEXTDOMAIN ), gettype( $field ) ), $widget );
+		}
 
-    if ( !isset( $field[ 'type' ] ) )
-      self::terminate( sprintf( __( 'No Type option set for field %s.', self::TEXTDOMAIN ), '<b>' . $field[ 'name' ] . '</b>' ), $widget );
+		if ( empty( $field['name'] ) or ! is_string( $field['name'] ) ) {
+			self::terminate( __( 'Field name is empty or not a string.', self::TEXTDOMAIN ), $widget );
+		}
 
-    if ( !in_array( $field[ 'type' ], self::getValidFieldTypes() ) )
-      self::terminate( sprintf( __( 'Field type %s provided for field %s is not a valid type.', '<b>' . $field[ 'type' ] . '</b>', '<b>' . $field[ 'name' ] . '</b>' ) ), $widget );
+		if ( ! isset( $field['type'] ) ) {
+			self::terminate( sprintf( __( 'No Type option set for field %s.', self::TEXTDOMAIN ), '<b>' . $field['name'] . '</b>' ), $widget );
+		}
 
-    $supports_options   = in_array( $field[ 'type' ], self::getOptionsFieldTypes() );
+		if ( ! in_array( $field['type'], self::getValidFieldTypes() ) ) {
+			self::terminate( sprintf( __( 'Field type %s provided for field %s is not a valid type.', '<b>' . $field['type'] . '</b>', '<b>' . $field['name'] . '</b>' ) ), $widget );
+		}
 
-    if ( $supports_options and ( !isset( $field[ 'options' ] ) or !is_array( $field[ 'options' ] ) ) )
-      self::terminate( sprintf( __( 'Field %s with field type select, required the options array.', self::TEXTDOMAIN ), $field[ 'name' ] ), $widget );
+		$supports_options = in_array( $field['type'], self::getOptionsFieldTypes() );
 
-    /**
-     *  Filter
-     */
-    $instance   = $widget->getInstance();
+		if ( $supports_options and ( ! isset( $field['options'] ) or ! is_array( $field['options'] ) ) ) {
+			self::terminate( sprintf( __( 'Field %s with field type select, required the options array.', self::TEXTDOMAIN ), $field['name'] ), $widget );
+		}
 
-    $field[ 'value' ]   = $instance[ $field[ 'name' ] ];
-    $field[ 'wp_id' ]   = $widget->get_field_id( $field[ 'name' ] );
-    $field[ 'wp_name' ] = $widget->get_field_name( $field[ 'name' ] );
+		/**
+		 *  Filter
+		 */
+		$instance = $widget->getInstance();
 
-    if ( $supports_options and isset( $field[ 'options_strategy' ] ) and $field[ 'options_strategy' ] == 'callback' and is_callable( $field[ 'options' ] ) )
-      $field[ 'options' ]   = call_user_func( $field[ 'options' ] );
+		$field['value']   = $instance[ $field['name'] ];
+		$field['wp_id']   = $widget->get_field_id( $field['name'] );
+		$field['wp_name'] = $widget->get_field_name( $field['name'] );
 
-    $field      = apply_filters( 'op_widget_field', $field );
-    $field      = apply_filters( 'op_widget_' . $widget->getWidgetId() . '_field', $field );
+		if ( $supports_options and isset( $field['options_strategy'] ) and $field['options_strategy'] == 'callback' and is_callable( $field['options'] ) ) {
+			$field['options'] = call_user_func( $field['options'] );
+		}
 
-    return $field;
+		$field = apply_filters( 'op_widget_field', $field );
+		$field = apply_filters( 'op_widget_' . $widget->getWidgetId() . '_field', $field );
 
-  }
+		return $field;
 
-  /**
-   *  Terminate
-   *  adds error admin notice and throws Exception
-   *
-   *  @access     protected
-   *  @static
-   *  @param      string      $message
-   *  @param      WP_Widget   $widget
-   *  @throws     InvalidArgumentException
-   */
-  public static function terminate ( $message, WP_Widget $widget ) {
+	}
 
-    $notice   = '<b>' . $widget->getTitle() . ':</b>' . $message;
+	/**
+	 *  Terminate
+	 *  adds error admin notice and throws Exception
+	 *
+	 * @access     protected
+	 * @static
+	 *
+	 * @param      string $message
+	 * @param      WP_Widget $widget
+	 *
+	 * @throws     InvalidArgumentException
+	 */
+	public static function terminate( $message, WP_Widget $widget ) {
 
-    throw new InvalidArgumentException( $notice );
+		$notice = '<b>' . $widget->getTitle() . ':</b>' . $message;
 
-  }
+		throw new InvalidArgumentException( $notice );
 
-  /**
-   *  Getter: Valid Field Types
-   *
-   *  @access     public
-   *  @static
-   *  @return     array
-   */
-  public static function getValidFieldTypes () {
-    return self::$validFieldTypes;
-  }
+	}
 
-  /**
-   *  Getter: Options Field Types
-   *
-   *  @access     public
-   *  @static
-   *  @return     array
-   */
-  public static function getOptionsFieldTypes () {
-    return self::$optionsFieldTypes;
-  }
+	/**
+	 *  Getter: Valid Field Types
+	 *
+	 * @access     public
+	 * @static
+	 * @return     array
+	 */
+	public static function getValidFieldTypes() {
+		return self::$validFieldTypes;
+	}
+
+	/**
+	 *  Getter: Options Field Types
+	 *
+	 * @access     public
+	 * @static
+	 * @return     array
+	 */
+	public static function getOptionsFieldTypes() {
+		return self::$optionsFieldTypes;
+	}
 
 }
+
 ?>
