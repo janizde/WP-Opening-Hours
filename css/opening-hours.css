@@ -1,3 +1,11 @@
+input[type="text"].input-gray,
+input[type="date"].input-gray,
+input[type="time"].input-gray {
+  background: #efefef;
+  border: 1px solid #cccccc;
+  box-shadow: none;
+  color: #333333;
+}
 .widget .extended-settings .collapse-toggle {
   cursor: pointer;
 }
@@ -189,6 +197,13 @@ table.op-holidays .col-date-end {
 }
 table.op-holidays .col-remove {
   width: 10%;
+}
+table.op-holidays .col-remove .remove-holiday {
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  background: #fbe9e9;
+  box-shadow: none;
+  padding-top: 3px;
 }
 span.op-period-time {
   display: block;

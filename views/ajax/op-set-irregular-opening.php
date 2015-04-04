@@ -25,19 +25,19 @@ echo '<input type="text" name="' . MetaBox::GLOBAL_POST_KEY . '[name][]" class="
 echo '</td>';
 
 echo '<td class="col-date">';
-echo '<input type="text" name="' . MetaBox::GLOBAL_POST_KEY . '[date][]" class="widefat date" value="' . $date . '" />';
+echo '<input type="text" name="' . MetaBox::GLOBAL_POST_KEY . '[date][]" class="widefat date input-gray" value="' . $date . '" />';
 echo '</td>';
 
 echo '<td class="col-time-start">';
-echo '<input type="time" name="' . MetaBox::GLOBAL_POST_KEY . '[timeStart][]" class="widefat time-start input-timepicker" value="' . $timeStart . '" />';
+echo '<input type="time" name="' . MetaBox::GLOBAL_POST_KEY . '[timeStart][]" class="widefat time-start input-timepicker input-gray" value="' . $timeStart . '" />';
 echo '</td>';
 
 echo '<td class="col-time-end">';
-echo '<input type="time" name="' . MetaBox::GLOBAL_POST_KEY . '[timeEnd][]" class="widefat time-end input-timepicker" value="' . $timeEnd . '" />';
+echo '<input type="time" name="' . MetaBox::GLOBAL_POST_KEY . '[timeEnd][]" class="widefat time-end input-timepicker input-gray" value="' . $timeEnd . '" />';
 echo '</td>';
 
 echo '<td class="col-remove">';
-echo '<button class="button button-remove remove-io">x</button>';
+echo '<button class="button button-remove remove-io has-icon"><i class="dashicons dashicons-no-alt"></i></button>';
 echo '</td>';
 
 echo '</tr>';

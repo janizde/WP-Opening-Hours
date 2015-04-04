@@ -24,15 +24,15 @@ echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[name][]" class=
 echo '</td>';
 
 echo '<td class="col-date-start">';
-echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[dateStart][]" class="widefat date-start" value="' . $dateStart . '" />';
+echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[dateStart][]" class="widefat date-start input-gray" value="' . $dateStart . '" />';
 echo '</td>';
 
 echo '<td class="col-date-end">';
-echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[dateEnd][]" class="widefat date-end" value="' . $dateEnd . '" />';
+echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[dateEnd][]" class="widefat date-end input-gray" value="' . $dateEnd . '" />';
 echo '</td>';
 
 echo '<td class="col-remove">';
-echo '<button class="button button-remove remove-holiday">x</button>';
+echo '<button class="button button-remove remove-holiday has-icon"><i class="dashicons dashicons-no-alt"></i></button>';
 echo '</td>';
 
 echo '</tr>';
