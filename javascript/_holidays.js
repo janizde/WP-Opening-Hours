@@ -83,6 +83,14 @@ jQuery.fn.opSingleHoliday = function () {
     }
   });
 
+  inputDateStart.focus( function () {
+    inputDateStart.blur();
+  } );
+
+  inputDateEnd.focus( function () {
+    inputDateEnd.blur();
+  } );
+
 };
 
 /**

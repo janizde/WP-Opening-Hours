@@ -58,10 +58,24 @@ jQuery.fn.opSingleIO = function () {
   var removeButton = wrap.find('.remove-io');
 
   var inputDate = wrap.find('input.date');
+  var inputsTime = wrap.find('input.input-timepicker');
+
+  inputsTime.timepicker({
+    hourText: translations.tp_hour,
+    minuteText: translations.tp_minute
+  });
+
+  inputsTime.focus(function () {
+    inputsTime.blur();
+  });
 
   inputDate.datepicker({
     dateFormat: 'yy-mm-dd'
   });
+
+  inputDate.focus( function() {
+    inputDate.blur();
+  } );
 
   function remove() {
     wrap.remove();
