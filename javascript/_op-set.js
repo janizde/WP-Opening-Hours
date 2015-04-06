@@ -33,6 +33,14 @@
       }
     });
 
+    dateStart.focus( function () {
+      dateStart.blur();
+    } );
+
+    dateEnd.focus( function () {
+      dateEnd.blur();
+    } );
+
   });
 
 } )( jQuery );

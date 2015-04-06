@@ -29,11 +29,11 @@ echo '<input type="text" name="' . MetaBox::GLOBAL_POST_KEY . '[date][]" class="
 echo '</td>';
 
 echo '<td class="col-time-start">';
-echo '<input type="time" name="' . MetaBox::GLOBAL_POST_KEY . '[timeStart][]" class="widefat time-start input-timepicker input-gray" value="' . $timeStart . '" />';
+echo '<input type="text" name="' . MetaBox::GLOBAL_POST_KEY . '[timeStart][]" class="widefat time-start input-timepicker input-gray" value="' . $timeStart . '" />';
 echo '</td>';
 
 echo '<td class="col-time-end">';
-echo '<input type="time" name="' . MetaBox::GLOBAL_POST_KEY . '[timeEnd][]" class="widefat time-end input-timepicker input-gray" value="' . $timeEnd . '" />';
+echo '<input type="text" name="' . MetaBox::GLOBAL_POST_KEY . '[timeEnd][]" class="widefat time-end input-timepicker input-gray" value="' . $timeEnd . '" />';
 echo '</td>';
 
 echo '<td class="col-remove">';

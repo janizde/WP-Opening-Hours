@@ -276,6 +276,14 @@ jQuery(document).ready(function () {
       }
     });
 
+    dateStart.focus( function () {
+      dateStart.blur();
+    } );
+
+    dateEnd.focus( function () {
+      dateEnd.blur();
+    } );
+
   });
 
 } )( jQuery );

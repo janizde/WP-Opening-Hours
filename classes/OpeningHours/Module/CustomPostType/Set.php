@@ -111,14 +111,14 @@ class Set extends AbstractModule {
 
 		/** Field: Date Start */
 		register_detail_field( self::CPT_SLUG, array(
-			'type'    => 'date',
+			'type'    => 'text',
 			'slug'    => 'date-start',
 			'caption' => __( 'Date Start', self::TEXTDOMAIN )
 		) );
 
 		/** Field: Date End */
 		register_detail_field( self::CPT_SLUG, array(
-			'type'    => 'date',
+			'type'    => 'text',
 			'slug'    => 'date-end',
 			'caption' => __( 'Date End', self::TEXTDOMAIN )
 		) );
