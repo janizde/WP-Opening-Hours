@@ -1,3 +1,6 @@
+/**
+ * Colors
+ */
 input[type="text"].input-gray,
 input[type="date"].input-gray,
 input[type="time"].input-gray {
@@ -204,6 +207,31 @@ table.op-holidays .col-remove .remove-holiday {
   background: #fbe9e9;
   box-shadow: none;
   padding-top: 3px;
+}
+.button.add-holiday {
+  margin: 5px 3px;
+}
+table.op-irregular-openings {
+  width: 100%;
+}
+table.op-irregular-openings .op-irregular-opening .col-name,
+table.op-irregular-openings .op-irregular-opening .col-date,
+table.op-irregular-openings .op-irregular-opening .col-time-start,
+table.op-irregular-openings .op-irregular-opening .col-time-end {
+  width: 18%;
+}
+table.op-irregular-openings .op-irregular-opening .col-remove {
+  width: 10%;
+}
+table.op-irregular-openings .op-irregular-opening .col-remove .button-remove {
+  color: #ff0000;
+  border: 1px solid #ff0000;
+  background: #fbe9e9;
+  box-shadow: none;
+  padding-top: 3px;
+}
+.button.add-io {
+  margin: 5px 3px;
 }
 span.op-period-time {
   display: block;
