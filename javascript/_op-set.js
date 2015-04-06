@@ -41,6 +41,8 @@
       dateEnd.blur();
     } );
 
+    $('#op-set-detail-child-set-notice').parents('.field').hide();
+
   });
 
 } )( jQuery );

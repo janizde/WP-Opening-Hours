@@ -179,6 +179,15 @@ table.form-opening-hours tbody td.col-options .add-period {
     padding: 3px 5px;
   }
 }
+.field h4.heading {
+  margin-bottom: 0;
+}
+.field h4.heading + p {
+  margin-top: 5px;
+}
+.field h4.heading + p > small {
+  font-size: 12px;
+}
 #op-paypal-select-amount {
   display: inline-block;
   margin-top: -35px;

@@ -6,6 +6,7 @@
 namespace OpeningHours\Module\CustomPostType;
 
 use OpeningHours\Module\AbstractModule;
+use OpeningHours\Module\I18n;
 
 class Set extends AbstractModule {
 
@@ -106,34 +107,42 @@ class Set extends AbstractModule {
 		register_detail_field( self::CPT_SLUG, array(
 			'type'    => 'textarea',
 			'slug'    => 'description',
-			'caption' => __( 'Description', self::TEXTDOMAIN )
+			'caption' => __( 'Description', I18n::TEXTDOMAIN )
 		) );
 
 		/** Field: Date Start */
 		register_detail_field( self::CPT_SLUG, array(
 			'type'    => 'text',
 			'slug'    => 'date-start',
-			'caption' => __( 'Date Start', self::TEXTDOMAIN )
+			'caption' => __( 'Date Start', I18n::TEXTDOMAIN )
 		) );
 
 		/** Field: Date End */
 		register_detail_field( self::CPT_SLUG, array(
 			'type'    => 'text',
 			'slug'    => 'date-end',
-			'caption' => __( 'Date End', self::TEXTDOMAIN )
+			'caption' => __( 'Date End', I18n::TEXTDOMAIN )
 		) );
 
 		/** Field: Week Scheme */
 		register_detail_field( self::CPT_SLUG, array(
 			'type'        => 'radio',
 			'slug'        => 'week-scheme',
-			'caption'     => __( 'Week Scheme', self::TEXTDOMAIN ),
+			'caption'     => __( 'Week Scheme', I18n::TEXTDOMAIN ),
 			'default-val' => 'all',
 			'options'     => array(
-				'all'  => __( 'Every week', self::TEXTDOMAIN ),
-				'even' => __( 'Even weeks only', self::TEXTDOMAIN ),
-				'odd'  => __( 'Odd weeks only', self::TEXTDOMAIN )
+				'all'  => __( 'Every week', I18n::TEXTDOMAIN ),
+				'even' => __( 'Even weeks only', I18n::TEXTDOMAIN ),
+				'odd'  => __( 'Odd weeks only', I18n::TEXTDOMAIN )
 			)
+		) );
+
+		/** Field: Child Set Notice */
+		register_detail_field( self::CPT_SLUG, array(
+			'type'        => 'heading',
+			'slug'        => 'child-set-notice',
+			'heading'     => __( 'Add a Child-Set', I18n::TEXTDOMAIN ),
+			'description' => __( 'You may add a child set that overwrites the parent Opening Hours in specific time range. Use the post type hierarchy.', I18n::TEXTDOMAIN )
 		) );
 
 	}
@@ -148,20 +157,20 @@ class Set extends AbstractModule {
 	public static function getLabels() {
 
 		return array(
-			'name'               => __( 'Sets', self::TEXTDOMAIN ),
-			'singular_name'      => __( 'Set', self::TEXTDOMAIN ),
-			'menu_name'          => __( 'Opening Hours', self::TEXTDOMAIN ),
-			'name_admin_bar'     => __( 'Set', self::TEXTDOMAIN ),
-			'add_new'            => __( 'Add New', self::TEXTDOMAIN ),
-			'add_new_item'       => __( 'Add New Set', self::TEXTDOMAIN ),
-			'new_item'           => __( 'New Set', self::TEXTDOMAIN ),
-			'edit_item'          => __( 'Edit Set', self::TEXTDOMAIN ),
-			'view_item'          => __( 'View Set', self::TEXTDOMAIN ),
-			'all_items'          => __( 'All Sets', self::TEXTDOMAIN ),
-			'search_items'       => __( 'Search Sets', self::TEXTDOMAIN ),
-			'parent_item_colon'  => __( 'Parent Sets:', self::TEXTDOMAIN ),
-			'not_found'          => __( 'No sets found.', self::TEXTDOMAIN ),
-			'not_found_in_trash' => __( 'No sets found in Trash.', self::TEXTDOMAIN )
+			'name'               => __( 'Sets', I18n::TEXTDOMAIN ),
+			'singular_name'      => __( 'Set', I18n::TEXTDOMAIN ),
+			'menu_name'          => __( 'Opening Hours', I18n::TEXTDOMAIN ),
+			'name_admin_bar'     => __( 'Set', I18n::TEXTDOMAIN ),
+			'add_new'            => __( 'Add New', I18n::TEXTDOMAIN ),
+			'add_new_item'       => __( 'Add New Set', I18n::TEXTDOMAIN ),
+			'new_item'           => __( 'New Set', I18n::TEXTDOMAIN ),
+			'edit_item'          => __( 'Edit Set', I18n::TEXTDOMAIN ),
+			'view_item'          => __( 'View Set', I18n::TEXTDOMAIN ),
+			'all_items'          => __( 'All Sets', I18n::TEXTDOMAIN ),
+			'search_items'       => __( 'Search Sets', I18n::TEXTDOMAIN ),
+			'parent_item_colon'  => __( 'Parent Sets:', I18n::TEXTDOMAIN ),
+			'not_found'          => __( 'No sets found.', I18n::TEXTDOMAIN ),
+			'not_found_in_trash' => __( 'No sets found in Trash.', I18n::TEXTDOMAIN )
 		);
 
 	}
@@ -215,5 +224,3 @@ class Set extends AbstractModule {
 	}
 
 }
-
-?>
