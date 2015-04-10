@@ -89,6 +89,18 @@ class Overview extends AbstractWidget {
 			'caption' => __( 'Use hort day captions', I18n::TEXTDOMAIN )
 		) );
 
+		/** Field: Include Irregular Openings */
+		$this->addField( 'include_io', array(
+			'type'    => 'checkbox',
+			'caption' => __( 'Include Irregular Openings', I18n::TEXTDOMAIN ),
+		) );
+
+		/** Field: Include Holidays */
+		$this->addField( 'include_holidays', array(
+			'type'      => 'checkbox',
+			'caption'   => __( 'Include Holidays', I18n::TEXTDOMAIN )
+		) );
+
 		/**
 		 *  Extended Fields
 		 */

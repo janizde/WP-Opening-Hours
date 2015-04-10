@@ -1,8 +1,11 @@
 <?php
 
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
+use OpeningHours\Module\Shortcode\Overview as Shortcode;
 
 /**
  * @var       $attributes         array (associative) w/ shortcode attributes
@@ -26,6 +29,8 @@ extract( $attributes );
  * @var       $show_description   bool whether to show description or not
  * @var       $compress           bool whether to compress Opening Hours
  * @var       $short              bool whether to use short day captions
+ * @var       $include_io         bool whether to be aware of irregular openings
+ * @var       $include_holidays   bool whether to be aware of holidays
  *
  * @var       $caption_closed     string w/ caption for closed days
  * @var       $table_classes      string w/ classes for table
@@ -66,7 +71,7 @@ $periods = ( $compress )
 	? $set->getPeriodsGroupedByDayCompressed()
 	: $set->getPeriodsGroupedByDay();
 
-foreach ( $periods as $day => $periods ) :
+foreach ( $periods as $day => $d_periods ) :
 
 	$highlighted_day = ( $highlight == 'day' and I18n::isToday( $day ) ) ? $highlighted_day_class : null;
 
@@ -78,11 +83,33 @@ foreach ( $periods as $day => $periods ) :
 
 	echo '<td class="op-cell op-cell-periods ' . $cell_periods_classes . ' ' . $cell_classes . '">';
 
-	if ( ! count( $periods ) ) {
-		echo '<span class="op-closed">' . $caption_closed . '</span>';
-	}
+	if ( $include_io ) :
 
-	foreach ( $periods as $period ) :
+		$io   = $set->getActiveIrregularOpeningOnWeekday( $day );
+
+		if ( $io instanceof IrregularOpening ) :
+			Shortcode::renderIrregularOpening( $io, $attributes );
+			continue;
+		endif;
+
+	endif;
+
+	if ( $include_holidays ) :
+
+		$holiday  = $set->getActiveHolidayOnWeekday( $day );
+
+		if ( $holiday instanceof Holiday ) :
+			Shortcode::renderHoliday( $holiday, $attributes );
+			continue;
+		endif;
+
+	endif;
+
+	if ( ! count( $d_periods ) ) :
+		echo '<span class="op-closed">' . $caption_closed . '</span>';
+	endif;
+
+	foreach ( $d_periods as $period ) :
 
 		/**
 		 * @var     $period     \OpeningHours\Entity\Period

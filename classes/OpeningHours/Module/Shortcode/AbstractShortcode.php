@@ -125,6 +125,9 @@ abstract class AbstractShortcode extends AbstractModule {
 
 		$attributes = shortcode_atts( $this->getDefaultAttributes(), $attributes, $this->getShortcodeTag() );
 
+		if ( !array_key_exists( 'shortcode', $attributes ) )
+			$attributes['shortcode']  = $this;
+
 		ob_start();
 
 		$this->shortcode( $attributes );
@@ -183,7 +186,7 @@ abstract class AbstractShortcode extends AbstractModule {
 		if ( empty( $this->shortcodeTag ) ) :
 			trigger_error( 'Tried to filter shortcode attributes before shortcode tag has been set.' );
 
-			return;
+			return null;
 		endif;
 
 		$validValues = $this->getValidAttributeValues();

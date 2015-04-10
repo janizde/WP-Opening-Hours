@@ -5,6 +5,8 @@
 
 namespace OpeningHours\Module\Shortcode;
 
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
@@ -32,6 +34,8 @@ class Overview extends AbstractShortcode {
 			'highlight'                => 'nothing',
 			'compress'                 => false,
 			'short'                    => false,
+			'include_io'               => false,
+			'include_holidays'         => false,
 			'caption_closed'           => __( 'Closed', I18n::TEXTDOMAIN ),
 			'table_classes'            => null,
 			'row_classes'              => null,
@@ -50,7 +54,9 @@ class Overview extends AbstractShortcode {
 		$valid_attribute_values = array(
 			'highlight'        => array( 'nothing', 'period', 'day' ),
 			'show_closed_day'  => array( false, true ),
-			'show_description' => array( true, false )
+			'show_description' => array( true, false ),
+			'include_io'       => array( false, true ),
+			'include_holidays' => array( false, true )
 		);
 
 		$this->setValidAttributeValues( $valid_attribute_values );
@@ -60,7 +66,7 @@ class Overview extends AbstractShortcode {
 	}
 
 	/**
-	 *  Shortcode
+	 * Shortcode
 	 *
 	 * @access       public
 	 *
@@ -93,6 +99,49 @@ class Overview extends AbstractShortcode {
 
 	}
 
-}
+	/**
+	 * Render Irregular Opening
+	 *
+	 * @access        public
+	 * @static
+	 *
+	 * @param         IrregularOpening  $io
+	 * @param         array             $attributes
+	 */
+	public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
 
-?>
+		$name   = $io->getName();
+		$date   = $io->getTimeStart()->format( I18n::getDateFormat() );
+
+		$heading  = sprintf( '%s (%s)', $name, $date );
+
+		$now = I18n::getTimeNow();
+		$highlighted  = ( $attributes['highlight'] == 'period' and $io->getTimeStart() <= $now and $now <= $io->getTimeEnd() ) ? $attributes['highlighted_period_class'] : null;
+
+		echo '<span class="op-period-time irregular-opening '. $highlighted .'">'. $heading .'</span>';
+
+		$time_start   = $io->getTimeStart()->format( $attributes['time_format'] );
+		$time_end     = $io->getTimeEnd()->format( $attributes['time_format'] );
+
+		$period   = sprintf( '%s – %s', $time_start, $time_end );
+
+		echo '<span class="op-period-time '. $highlighted .' '. $attributes['span_period_classes'] .'">'. $period .'</span>';
+
+	}
+
+	/**
+	 * Render Holiday
+	 *
+	 * @access        public
+	 * @static
+	 *
+	 * @param         Holiday         $holiday
+	 * @param         array           $attributes
+	 */
+	public static function renderHoliday ( Holiday $holiday, array $attributes ) {
+
+		echo '<span class="op-period-time holiday '. $attributes['span_period_classes'] .'">'. $holiday->getName() .'</span>';
+
+	}
+
+}

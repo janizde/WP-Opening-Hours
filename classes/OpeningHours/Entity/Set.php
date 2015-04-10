@@ -378,15 +378,48 @@ class Set {
 	 */
 	public function isHolidayActive( $now = null ) {
 
+		return $this->getActiveHoliday( $now ) instanceof Holiday;
+
+	}
+
+	/**
+	 * Get Active Holiday
+	 * returns the first active holiday or null if none is active
+	 *
+	 * @access      public
+	 *
+	 * @param       DateTime    $now
+	 *
+	 * @return      Holiday
+	 */
+	public function getActiveHoliday ( DateTime $now = null ) {
+
 		foreach ( $this->getHolidays() as $holiday ) :
 
-			if ( $holiday->isActive( $now ) ) {
-				return true;
-			}
+			if ( $holiday->isActive() )
+				return $holiday;
 
 		endforeach;
 
-		return false;
+		return null;
+
+	}
+
+	/**
+	 * Get Active Holiday on Weekday
+	 * returns the first active holiday on the specified weekday
+	 *
+	 * @access      public
+	 *
+	 * @param       int       $weekday (weekday number 0-6)
+	 *
+	 * @return      Holiday
+	 */
+	public function getActiveHolidayOnWeekday ( $weekday ) {
+
+		$date   = I18n::applyWeekContext( new DateTime('now'), $weekday );
+
+		return $this->getActiveHoliday( $date );
 
 	}
 
@@ -666,13 +699,31 @@ class Set {
 
 		foreach ( $this->getIrregularOpenings() as $io ) :
 
-			if ( $io->isActive() ) {
+			if ( $io->isActive( $now ) ) {
 				return $io;
 			}
 
 		endforeach;
 
 		return null;
+
+	}
+
+	/**
+	 * Get Active Irregular Opening On Weekday
+	 * returns first active irregular opening on a specific weekday
+	 *
+	 * @access      public
+	 *
+	 * @param       int     $weekday (weekday number, 0-6)
+	 *
+	 * @return      IrregularOpening
+	 */
+	public function getActiveIrregularOpeningOnWeekday ( $weekday ) {
+
+		$date   = I18n::applyWeekContext( new DateTime('now'), $weekday );
+
+		return $this->getActiveIrregularOpening( $date );
 
 	}
 
