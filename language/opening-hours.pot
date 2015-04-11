@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Opening Hours\n"
-"POT-Creation-Date: 2015-04-06 23:54+0100\n"
-"PO-Revision-Date: 2015-04-06 23:54+0100\n"
+"POT-Creation-Date: 2015-04-12 00:20+0100\n"
+"PO-Revision-Date: 2015-04-12 00:20+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -20,6 +20,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-3: less\n"
 "X-Poedit-SearchPathExcluded-4: README.md\n"
 "X-Poedit-SearchPathExcluded-5: node_modules\n"
+"X-Poedit-SearchPathExcluded-6: includes/wp-detail-fields\n"
 
 #: bootstrap.php:30
 #, php-format
@@ -246,10 +247,10 @@ msgstr ""
 
 #: classes/OpeningHours/Module/Shortcode/IsOpen.php:29
 #, php-format
-msgid "We're open again on %2$s from %3$s to %4$s"
+msgid "We're open again on %2$s (%1$s) from %3$s to %4$s"
 msgstr ""
 
-#: classes/OpeningHours/Module/Shortcode/Overview.php:35
+#: classes/OpeningHours/Module/Shortcode/Overview.php:39
 msgid "Closed"
 msgstr ""
 
@@ -316,7 +317,7 @@ msgstr ""
 #: classes/OpeningHours/Module/Widget/Holidays.php:88
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:89
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:98
-#: classes/OpeningHours/Module/Widget/Overview.php:173
+#: classes/OpeningHours/Module/Widget/Overview.php:185
 msgid "More about PHP date and time formats."
 msgstr ""
 
@@ -341,7 +342,7 @@ msgid "class for highlighted Irregular Opening"
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:96
-#: classes/OpeningHours/Module/Widget/Overview.php:171
+#: classes/OpeningHours/Module/Widget/Overview.php:183
 msgid "PHP Time Format"
 msgstr ""
 
@@ -421,96 +422,48 @@ msgstr ""
 msgid "Use hort day captions"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:99
+#: classes/OpeningHours/Module/Widget/Overview.php:95
+msgid "Include Irregular Openings"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/Overview.php:101
+msgid "Include Holidays"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/Overview.php:111
 msgid "Closed Caption"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:107
+#: classes/OpeningHours/Module/Widget/Overview.php:119
 msgid "Table class"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:115
+#: classes/OpeningHours/Module/Widget/Overview.php:127
 msgid "Table Row class"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:123
+#: classes/OpeningHours/Module/Widget/Overview.php:135
 msgid "Table Cell class"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:131
+#: classes/OpeningHours/Module/Widget/Overview.php:143
 msgid "Table Cell Heading class"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:139
+#: classes/OpeningHours/Module/Widget/Overview.php:151
 msgid "Table Cell Periods class"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:147
+#: classes/OpeningHours/Module/Widget/Overview.php:159
 msgid "Highlighted Period class"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:155
+#: classes/OpeningHours/Module/Widget/Overview.php:167
 msgid "Highlighted Day class"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/Overview.php:163
+#: classes/OpeningHours/Module/Widget/Overview.php:175
 msgid "Table ID Prefix"
-msgstr ""
-
-#: includes/wp-detail-fields/detail-fields.php:154
-msgid "-- None --"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:30
-msgid "My Text Field"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:31
-msgid "Type in the name of your favorite animal"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:38
-msgid "Audience"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:39
-msgid "Choose how wide the event's audience shall be"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:42
-msgid "Public"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:43
-msgid "Strictly Private"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:50
-msgid "Sub Section"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:51
-msgid "This is my Sub Section"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:58
-msgid "Page Theme"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:59
-msgid "Select a color scheme for this page."
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:62
-msgid "White Scheme"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:63
-msgid "Green Scheme"
-msgstr ""
-
-#: includes/wp-detail-fields/sample-functions.php:64
-msgid "Red Scheme"
 msgstr ""
 
 #: views/meta-box/holidays.php:24 views/meta-box/irregular-openings.php:24

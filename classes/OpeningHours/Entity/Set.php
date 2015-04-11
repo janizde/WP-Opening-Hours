@@ -396,7 +396,7 @@ class Set {
 
 		foreach ( $this->getHolidays() as $holiday ) :
 
-			if ( $holiday->isActive() )
+			if ( $holiday->isActive( $now ) )
 				return $holiday;
 
 		endforeach;
@@ -517,33 +517,34 @@ class Set {
 
 		$this->sortPeriods();
 
-		for ( $week_offset = 0; true; $week_offset ++ ) :
+		if ( !count( $this->periods ) )
+			return null;
 
-			if ( $week_offset === 0 ) :
+		foreach ( $this->getPeriods() as $period ) :
 
-				foreach ( $this->getPeriods() as $period ) :
+			if ( $period->willBeOpen( $this->getId() ) ) {
+				return $period;
+			}
 
-					if ( $period->willBeOpen( $this->getId() ) ) {
-						return $period;
-					}
+		endforeach;
 
-				endforeach;
 
-			else:
+		for ( $week_offset = 1; true; $week_offset++ ) :
 
-				$time_difference = new DateInterval( 'P' . 7 * $week_offset . 'D' );
+			if ( $week_offset > 52 )
+				return null;
 
-				foreach ( $this->getPeriods() as $period ) :
+			$time_difference = new DateInterval( 'P' . 7 * $week_offset . 'D' );
 
-					$new_period = $period->getCopy( $time_difference );
+			foreach ( $this->getPeriods() as $period ) :
 
-					if ( $new_period->willBeOpen( $this->getId() ) ) {
-						return $new_period;
-					}
+				$new_period = $period->getCopy( $time_difference );
 
-				endforeach;
+				if ( $new_period->willBeOpen( $this->getId() ) ) {
+					return $new_period;
+				}
 
-			endif;
+			endforeach;
 
 		endfor;
 

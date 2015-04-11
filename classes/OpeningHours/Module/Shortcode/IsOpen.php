@@ -26,7 +26,7 @@ class IsOpen extends AbstractShortcode {
 			'open_text'           => __( 'We\'re currently open.', self::TEXTDOMAIN ),
 			'closed_text'         => __( 'We\'re currently closed.', self::TEXTDOMAIN ),
 			'show_next'           => false,
-			'next_format'         => __( 'We\'re open again on %2$s from %3$s to %4$s', self::TEXTDOMAIN ),
+			'next_format'         => __( 'We\'re open again on %2$s (%1$s) from %3$s to %4$s', self::TEXTDOMAIN ),
 			'before_widget'       => null,
 			'after_widget'        => null,
 			'before_title'        => null,

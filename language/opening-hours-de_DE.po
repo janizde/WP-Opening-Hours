@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Opening Hours Plugin 2.0\n"
-"POT-Creation-Date: 2015-04-11 23:35+0100\n"
-"PO-Revision-Date: 2015-04-11 23:36+0100\n"
+"POT-Creation-Date: 2015-04-12 00:20+0100\n"
+"PO-Revision-Date: 2015-04-12 00:20+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: Jannik Portz <hello@jannikportz.de>\n"
 "Language: de_DE\n"
@@ -253,8 +253,8 @@ msgstr "Wir haben geschlossen."
 
 #: classes/OpeningHours/Module/Shortcode/IsOpen.php:29
 #, php-format
-msgid "We're open again on %2$s from %3$s to %4$s"
-msgstr "Wir haben wieder geöffnet am %2$s von %3$s bis %4$s"
+msgid "We're open again on %2$s (%1$s) from %3$s to %4$s"
+msgstr "Wir haben wieder am %2$s (%1$s) von %3$s bis %4$s geöffnet"
 
 #: classes/OpeningHours/Module/Shortcode/Overview.php:39
 msgid "Closed"
@@ -497,6 +497,12 @@ msgstr "Endzeit"
 msgid "Add New Irregular Opening"
 msgstr "Ausnahme hinzufügen"
 
+#~ msgid "-- None --"
+#~ msgstr "-- Keine --"
+
+#~ msgid "We're open again on %2$s from %3$s to %4$s"
+#~ msgstr "Wir haben wieder geöffnet am %2$s von %3$s bis %4$s"
+
 #~ msgid "Shortcode Opening Hours Overview"
 #~ msgstr "Shortcode Öffnungszeiten Übersicht"
 
@@ -519,6 +525,3 @@ msgstr "Ausnahme hinzufügen"
 
 #~ msgid "Date Format"
 #~ msgstr "Datumsformat"
-
-#~ msgid "-- None --"
-#~ msgstr "-- Keine --"

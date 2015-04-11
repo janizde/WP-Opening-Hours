@@ -176,9 +176,11 @@ class Period {
 
 		$set = ( $set_id === null ) ? OpeningHours::getCurrentSet() : OpeningHours::getSet( $set_id );
 
-		if ( $set instanceof Set and $set->isHolidayActive( $now ) ) {
+		if ( !$set instanceof Set )
+			return $this->isOpenStrict( $now );
+
+		if ( $set->isHolidayActive( $now ) or $set->isIrregularOpeningActive( $now ) )
 			return false;
-		}
 
 		return $this->isOpenStrict( $now );
 
