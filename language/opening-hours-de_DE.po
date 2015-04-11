@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Opening Hours Plugin 2.0\n"
-"POT-Creation-Date: 2015-04-07 16:07+0100\n"
-"PO-Revision-Date: 2015-04-07 16:10+0100\n"
+"POT-Creation-Date: 2015-04-11 23:35+0100\n"
+"PO-Revision-Date: 2015-04-11 23:36+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: Jannik Portz <hello@jannikportz.de>\n"
 "Language: de_DE\n"
@@ -256,7 +256,7 @@ msgstr "Wir haben geschlossen."
 msgid "We're open again on %2$s from %3$s to %4$s"
 msgstr "Wir haben wieder geöffnet am %2$s von %3$s bis %4$s"
 
-#: classes/OpeningHours/Module/Shortcode/Overview.php:35
+#: classes/OpeningHours/Module/Shortcode/Overview.php:39
 msgid "Closed"
 msgstr "Geschlossen"
 
@@ -290,7 +290,7 @@ msgstr "Feld %s mit Feld-Typ select benötigt den options-array."
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:26
 msgid "Opening Hours: Holidays"
-msgstr "Öffnungszeiten: Ferian"
+msgstr "Öffnungszeiten: Ferien"
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:28
 msgid "Lists up all Holidays in the selected Set."
@@ -323,7 +323,7 @@ msgstr "PHP Datumsformat"
 #: classes/OpeningHours/Module/Widget/Holidays.php:88
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:89
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:98
-#: classes/OpeningHours/Module/Widget/Overview.php:173
+#: classes/OpeningHours/Module/Widget/Overview.php:185
 msgid "More about PHP date and time formats."
 msgstr "Mehr über PHP Datums- und Zeitformate."
 
@@ -348,7 +348,7 @@ msgid "class for highlighted Irregular Opening"
 msgstr "Klasse für hervorgehobene Ausnahme"
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:96
-#: classes/OpeningHours/Module/Widget/Overview.php:171
+#: classes/OpeningHours/Module/Widget/Overview.php:183
 msgid "PHP Time Format"
 msgstr "PHP Zeitformat"
 
@@ -429,39 +429,47 @@ msgstr "Öffnungszeiten komprimieren"
 msgid "Use hort day captions"
 msgstr "Abkürzungen für Wochentage benutzen"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:99
+#: classes/OpeningHours/Module/Widget/Overview.php:95
+msgid "Include Irregular Openings"
+msgstr "Ausnahmen beachten"
+
+#: classes/OpeningHours/Module/Widget/Overview.php:101
+msgid "Include Holidays"
+msgstr "Ferien beachten"
+
+#: classes/OpeningHours/Module/Widget/Overview.php:111
 msgid "Closed Caption"
 msgstr "Geschlossen-Beschriftung"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:107
+#: classes/OpeningHours/Module/Widget/Overview.php:119
 msgid "Table class"
 msgstr "Klasse für Tabelle (table)"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:115
+#: classes/OpeningHours/Module/Widget/Overview.php:127
 msgid "Table Row class"
 msgstr "Klasse für Tabellen Zeile (tr)"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:123
+#: classes/OpeningHours/Module/Widget/Overview.php:135
 msgid "Table Cell class"
 msgstr "Klasse für Tabellen Zelle (td, th)"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:131
+#: classes/OpeningHours/Module/Widget/Overview.php:143
 msgid "Table Cell Heading class"
 msgstr "Klasse für Tabellen Überschrift Zelle (th)"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:139
+#: classes/OpeningHours/Module/Widget/Overview.php:151
 msgid "Table Cell Periods class"
 msgstr "Klasse für Zelle mit Perioden (td)"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:147
+#: classes/OpeningHours/Module/Widget/Overview.php:159
 msgid "Highlighted Period class"
 msgstr "Klasse für hervorgehobene Periode"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:155
+#: classes/OpeningHours/Module/Widget/Overview.php:167
 msgid "Highlighted Day class"
 msgstr "Klasse für hervorgehobenen Tag"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:163
+#: classes/OpeningHours/Module/Widget/Overview.php:175
 msgid "Table ID Prefix"
 msgstr "Tabellen ID Prefix"
 
