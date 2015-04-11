@@ -33,7 +33,9 @@ class IsOpen extends AbstractShortcode {
 			'after_title'         => null,
 			'title'               => null,
 			'classes'             => null,
-			'next_period_classes' => null
+			'next_period_classes' => null,
+			'open_class'          => 'op-open',
+			'closed_class'        => 'op-closed'
 		);
 
 		$this->setDefaultAttributes( $default_attributes );
@@ -99,7 +101,7 @@ class IsOpen extends AbstractShortcode {
 		endif;
 
 		$attributes['is_open'] = $is_open;
-		$attributes['classes'] .= ( $is_open ) ? 'op-open' : 'op-closed';
+		$attributes['classes'] .= ( $is_open ) ? $attributes['open_class'] : $attributes['closed_class'];
 		$attributes['text']        = ( $is_open ) ? $attributes['open_text'] : $attributes['closed_text'];
 		$attributes['next_period'] = $set->getNextOpenPeriod();
 

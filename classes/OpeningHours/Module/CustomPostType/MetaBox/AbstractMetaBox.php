@@ -6,6 +6,8 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Module\AbstractModule;
+use OpeningHours\Module\CustomPostType\Set;
+use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 
 use WP_Post;
 
@@ -42,7 +44,7 @@ abstract class AbstractMetaBox extends AbstractModule {
 	 */
 	protected static function registerHookCallbacks() {
 
-		add_action( static::WP_ACTION_ADD_META_BOXES, array( get_called_class(), 'registerMetaBox' ) );
+		add_action( static::WP_ACTION_ADD_META_BOXES, array( get_called_class(), 'registerMetaBox' ), 10, 2 );
 		add_action( static::WP_ACTION_SAVE_POST, array( get_called_class(), 'saveDataWrap' ), 10, 3 );
 
 	}
@@ -106,12 +108,29 @@ abstract class AbstractMetaBox extends AbstractModule {
 	}
 
 	/**
+	 * Current Set Is Parent
+	 * determines current set and checks if it is a parent set
+	 *
+	 * @access      public
+	 * @static
+	 * @return      bool
+	 */
+	public static function currentSetIsParent () {
+
+		global $post;
+
+		return ! (bool) $post->post_parent;
+
+	}
+
+	/**
 	 * Register Meta Box
 	 * registers meta box with add_meta_box
 	 *
 	 * @access          public
 	 * @abstract
 	 * @static
+	 *
 	 * @wp_action       add_meta_boxes
 	 */
 	abstract public static function registerMetaBox();

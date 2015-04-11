@@ -36,6 +36,9 @@ class IrregularOpenings extends AbstractMetaBox {
 	 */
 	public static function registerMetaBox() {
 
+		if ( !static::currentSetIsParent() )
+			return;
+
 		add_meta_box(
 			static::ID,
 			__( 'Irregular Openings', I18n::TEXTDOMAIN ),

@@ -80,12 +80,34 @@ class IsOpen extends AbstractWidget {
 			'default_placeholder' => true
 		) );
 
+		/** Field: Open Class */
+		$this->addField( 'open_class', array(
+			'type'                => 'text',
+			'caption'             => __( 'Class if open (span)', I18n::TEXTDOMAIN ),
+			'extended'            => true,
+			'default_placeholder' => true
+		) );
+
+		/** Field: Closed Class */
+		$this->addField( 'closed_class', array(
+			'type'                => 'text',
+			'caption'             => __( 'Class if closed (span)', I18n::TEXTDOMAIN ),
+			'extended'            => true,
+			'default_placeholder' => true
+		) );
+
 		/** Field: Next Period Format */
 		$this->addField( 'next_format', array(
 			'type'                => 'text',
 			'caption'             => __( 'Next Period String Format', I18n::TEXTDOMAIN ),
 			'extended'            => true,
-			'default_placeholder' => true
+			'default_placeholder' => true,
+			'description'         => sprintf('%s: %s<br />%s: %s<br />%s: %s<br />%s: %s',
+				'%1$s', __( 'Formatted Date', I18n::TEXTDOMAIN ),
+				'%2$s', __( 'Weekday', I18n::TEXTDOMAIN ),
+				'%3$s', __( 'Formatted Start Time', I18n::TEXTDOMAIN ),
+				'%4$s', __( 'Formatted End Time', I18n::TEXTDOMAIN )
+				)
 		) );
 
 		/** Field: Span Classes */

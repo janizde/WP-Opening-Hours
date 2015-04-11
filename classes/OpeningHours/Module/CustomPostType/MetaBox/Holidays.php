@@ -32,9 +32,13 @@ class Holidays extends AbstractMetaBox {
 	 * Register Meta Box
 	 *
 	 * @access          public
+	 *
 	 * @static
 	 */
 	public static function registerMetaBox() {
+
+		if ( !static::currentSetIsParent() )
+			return;
 
 		add_meta_box(
 			static::ID,

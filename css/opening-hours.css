@@ -12,6 +12,12 @@ input[type="time"].input-gray {
 .widget .extended-settings .collapse-toggle {
   cursor: pointer;
 }
+.widget .op-widget-description {
+  display: block;
+  font-size: 11px;
+  line-height: 17px;
+  color: #666;
+}
 .ui-timepicker {
   background: #444444;
   margin-top: 5px;
