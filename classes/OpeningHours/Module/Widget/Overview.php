@@ -186,6 +186,13 @@ class Overview extends AbstractWidget {
 			'default_placeholder' => true
 		) );
 
+		/** Field: Hide Irregular Opening Date */
+		$this->addField( 'hide_io_date', array(
+			'type'                => 'checkbox',
+			'caption'             => __( 'Hide date of Irregular Openings', I18n::TEXTDOMAIN ),
+			'extended'            => true
+		) );
+
 	}
 
 	/**

@@ -46,7 +46,8 @@ class Overview extends AbstractShortcode {
 			'highlighted_period_class' => 'highlighted',
 			'highlighted_day_class'    => 'highlighted',
 			'table_id_prefix'          => 'op-table-set-',
-			'time_format'              => I18n::getTimeFormat()
+			'time_format'              => I18n::getTimeFormat(),
+			'hide_io_date'             => false
 		);
 
 		$this->setDefaultAttributes( $default_attributes );
@@ -56,7 +57,8 @@ class Overview extends AbstractShortcode {
 			'show_closed_day'  => array( false, true ),
 			'show_description' => array( true, false ),
 			'include_io'       => array( false, true ),
-			'include_holidays' => array( false, true )
+			'include_holidays' => array( false, true ),
+			'hide_io_date'     => array( false, true )
 		);
 
 		$this->setValidAttributeValues( $valid_attribute_values );
@@ -113,7 +115,7 @@ class Overview extends AbstractShortcode {
 		$name   = $io->getName();
 		$date   = $io->getTimeStart()->format( I18n::getDateFormat() );
 
-		$heading  = sprintf( '%s (%s)', $name, $date );
+		$heading  = ( $attributes['hide_io_date'] ) ? $name : sprintf( '%s (%s)', $name, $date );
 
 		$now = I18n::getTimeNow();
 		$highlighted  = ( $attributes['highlight'] == 'period' and $io->getTimeStart() <= $now and $now <= $io->getTimeEnd() ) ? $attributes['highlighted_period_class'] : null;
