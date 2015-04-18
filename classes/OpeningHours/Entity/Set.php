@@ -32,7 +32,7 @@ class Set {
 	protected $periods;
 
 	/**
-	 * Holidays0
+	 * Holidays
 	 *
 	 * @access      protected
 	 * @type        ArrayObject
