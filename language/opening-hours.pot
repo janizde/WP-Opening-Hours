@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Opening Hours\n"
-"POT-Creation-Date: 2015-04-12 00:20+0100\n"
-"PO-Revision-Date: 2015-04-12 00:20+0100\n"
+"POT-Creation-Date: 2015-04-18 16:37+0100\n"
+"PO-Revision-Date: 2015-04-18 16:37+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -69,11 +69,11 @@ msgstr ""
 msgid "Please Donate"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/Holidays.php:41
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/Holidays.php:45
 msgid "Holidays"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:41
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:44
 msgid "Irregular Openings"
 msgstr ""
 
@@ -369,10 +369,34 @@ msgid "Caption if closed"
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:86
-msgid "Next Period String Format"
+msgid "Class if open (span)"
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:94
+msgid "Class if closed (span)"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:102
+msgid "Next Period String Format"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:106
+msgid "Formatted Date"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:107
+msgid "Weekday"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:108
+msgid "Formatted Start Time"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:109
+msgid "Formatted End Time"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:116
 msgid "Class for span"
 msgstr ""
 
@@ -464,6 +488,10 @@ msgstr ""
 
 #: classes/OpeningHours/Module/Widget/Overview.php:175
 msgid "Table ID Prefix"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/Overview.php:192
+msgid "Hide date of Irregular Openings"
 msgstr ""
 
 #: views/meta-box/holidays.php:24 views/meta-box/irregular-openings.php:24

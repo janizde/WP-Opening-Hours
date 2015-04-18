@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Opening Hours Plugin 2.0\n"
-"POT-Creation-Date: 2015-04-12 00:20+0100\n"
-"PO-Revision-Date: 2015-04-12 00:20+0100\n"
+"POT-Creation-Date: 2015-04-18 16:37+0100\n"
+"PO-Revision-Date: 2015-04-18 16:38+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: Jannik Portz <hello@jannikportz.de>\n"
 "Language: de_DE\n"
@@ -72,11 +72,11 @@ msgstr "Die alten Daten wurden erfolgreich aus der Datenbank gelöscht"
 msgid "Please Donate"
 msgstr "Bitte Spende"
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/Holidays.php:41
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/Holidays.php:45
 msgid "Holidays"
 msgstr "Ferien"
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:41
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:44
 msgid "Irregular Openings"
 msgstr "Ausnahmen"
 
@@ -376,10 +376,34 @@ msgid "Caption if closed"
 msgstr "Beschriftung, wenn geschlossen"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:86
+msgid "Class if open (span)"
+msgstr "Klasse wenn geöffnet (span)"
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:94
+msgid "Class if closed (span)"
+msgstr "Klasse wenn geschlossen (span)"
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:102
 msgid "Next Period String Format"
 msgstr "Nächste Periode String Format"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:94
+#: classes/OpeningHours/Module/Widget/IsOpen.php:106
+msgid "Formatted Date"
+msgstr "Formatiertes Datum"
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:107
+msgid "Weekday"
+msgstr "Wochentag"
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:108
+msgid "Formatted Start Time"
+msgstr "Formatierte Startzeit"
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:109
+msgid "Formatted End Time"
+msgstr "Formatierte Endzeit"
+
+#: classes/OpeningHours/Module/Widget/IsOpen.php:116
 msgid "Class for span"
 msgstr "Klasse für span"
 
@@ -472,6 +496,10 @@ msgstr "Klasse für hervorgehobenen Tag"
 #: classes/OpeningHours/Module/Widget/Overview.php:175
 msgid "Table ID Prefix"
 msgstr "Tabellen ID Prefix"
+
+#: classes/OpeningHours/Module/Widget/Overview.php:192
+msgid "Hide date of Irregular Openings"
+msgstr "Datum von Ausnahmen verstecken"
 
 #: views/meta-box/holidays.php:24 views/meta-box/irregular-openings.php:24
 msgid "Name"
