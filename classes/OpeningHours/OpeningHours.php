@@ -38,7 +38,6 @@ class OpeningHours extends AbstractModule {
 			'OpeningHours'                => Module\OpeningHours::getInstance(),
 			'I18n'                        => Module\I18n::getInstance(),
 			'Ajax'                        => Module\Ajax::getInstance(),
-			'Converter'                   => Module\Converter::getInstance(),
 			'CustomPostType\Set'          => Module\CustomPostType\Set::getInstance(),
 			'Shortcode\IsOpen'            => Module\Shortcode\IsOpen::getInstance(),
 			'Shortcode\Overview'          => Module\Shortcode\Overview::getInstance(),

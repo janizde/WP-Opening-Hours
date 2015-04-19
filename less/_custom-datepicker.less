@@ -3,6 +3,7 @@
   @color-bg: #444444;
   @color-bg-active: #0074a2;
   @color-bg-hover: darken(@color-bg-active, 10%);
+  @color-bg-today: darken( @color-bg, 10% );
 
   @color-text: #ffffff;
 
@@ -78,6 +79,10 @@
     &.ui-state-active {
       background: @color-bg-active;
     }
+  }
+
+  .ui-datepicker-today a.ui-state-highlight {
+    background:  @color-bg-today;
   }
 
   .ui-datepicker-unselectable span.ui-state-default {
