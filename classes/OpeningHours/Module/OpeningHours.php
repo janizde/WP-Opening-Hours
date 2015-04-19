@@ -165,8 +165,8 @@ class OpeningHours extends AbstractModule {
 	}
 
 	/**
-	 *  Modify Detail Field Context
-	 *  Forces Detail Fields Meta Box to show up in sidebar
+	 * Modify Detail Field Context
+	 * Forces Detail Fields Meta Box to show up in sidebar
 	 *
 	 * @access     public
 	 * @static
@@ -177,7 +177,7 @@ class OpeningHours extends AbstractModule {
 	}
 
 	/**
-	 *  Getter: Sets
+	 * Getter: Sets
 	 *
 	 * @access     public
 	 * @static
@@ -274,5 +274,3 @@ class OpeningHours extends AbstractModule {
 	}
 
 }
-
-?>

@@ -137,7 +137,6 @@ class Set {
 	 */
 	public function setUp() {
 
-		// Check for Child Posts
 		$childPosts = get_posts( array(
 			'post_type'   => SetCpt::CPT_SLUG,
 			'post_parent' => $this->getId()
@@ -198,7 +197,16 @@ class Set {
 		}
 
 		foreach ( $post_meta as $config ) :
-			$this->getPeriods()->addElement( new Period( $config ) );
+
+			try {
+				$p = new Period( $config );
+				$this->getPeriods()->addElement( $p );
+
+			} catch ( InvalidArgumentException $e ) {
+				add_notice( $e->getMessage(), 'error' );
+
+			}
+
 		endforeach;
 
 		$this->sortPeriods();
@@ -219,9 +227,18 @@ class Set {
 			return;
 		}
 
-		foreach ( $post_meta as $config ) {
-			$this->getHolidays()->addElement( new Holiday( $config ) );
-		}
+		foreach ( $post_meta as $config ) :
+
+			try {
+				$h  = new Holiday( $config );
+				$this->getHolidays()->addElement( $h );
+
+			} catch ( InvalidArgumentException $e ) {
+				add_notice( $e->getMessage(), 'error' );
+
+			}
+
+		endforeach;
 
 		$this->sortHolidays();
 
@@ -240,9 +257,18 @@ class Set {
 			return;
 		}
 
-		foreach ( $post_meta as $config ) {
-			$this->getIrregularOpenings()->addElement( new IrregularOpening( $config ) );
-		}
+		foreach ( $post_meta as $config ) :
+
+			try {
+				$io   = new IrregularOpening( $config );
+				$this->getIrregularOpenings()->addElement( $io );
+
+			} catch ( InvalidArgumentException $e ) {
+				add_notice( $e->getMessage(), 'error' );
+
+			}
+
+		endforeach;
 
 		$this->sortIrregularOpenings();
 

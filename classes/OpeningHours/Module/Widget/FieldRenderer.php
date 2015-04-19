@@ -37,7 +37,7 @@ class FieldRenderer extends AbstractModule {
 
 	/**
 	 *  Options Field Types
-	 *  sequencial array of strings w/ field types that support options attribute
+	 *  sequential array of strings w/ field types that support options attribute
 	 *
 	 * @access     protected
 	 * @static
@@ -52,12 +52,12 @@ class FieldRenderer extends AbstractModule {
 	 * @access      public
 	 * @static
 	 *
-	 * @param       WP_Widget $widget
+	 * @param       AbstractWidget $widget
 	 * @param       string $field_name
 	 *
-	 * @return      void
+	 * @return      void|string
 	 */
-	public static function renderField( WP_Widget $widget, $field_name ) {
+	public static function renderField( AbstractWidget $widget, $field_name ) {
 
 		$field    = $widget->getField( $field_name );
 		$instance = $widget->getInstance();
@@ -68,13 +68,25 @@ class FieldRenderer extends AbstractModule {
 			$field = self::validateField( $field, $widget );
 
 		} catch ( InvalidArgumentException $e ) {
-			\add_admin_notice( $e->getMessage(), 'error' );
+			add_notice( $e->getMessage(), 'error' );
 
 			return;
 
 		}
 
 		extract( $field );
+
+		/**
+		 * Variables defined by extract( $field )
+		 *
+		 * @var     $name     string
+		 * @var     $type     string
+		 * @var     $wp_id    string
+		 * @var     $wp_name  string
+		 * @var     $value    mixed
+		 * @var     $options  array
+		 * @var     $caption  string
+		 */
 
 		$placeholder = ( isset( $default_placeholder ) and $default_placeholder === true and $widget->getShortcode() instanceof AbstractShortcode )
 			? 'placeholder="' . $widget->getShortcode()->getDefaultAttribute( $name ) . '"'

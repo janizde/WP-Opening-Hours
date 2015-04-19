@@ -51,11 +51,12 @@ class IrregularOpening {
 	 * @access          public
 	 *
 	 * @param           array $config
+	 *
+	 * @throws          InvalidArgumentException
 	 */
 	public function __construct( array $config ) {
 
 		$config = static::validateConfig( $config );
-
 		$this->setUp( $config );
 
 	}
@@ -393,7 +394,7 @@ class IrregularOpening {
 		}
 
 		if ( ! $date instanceof DateTime ) {
-			throw new InvalidArgumentException( sprintf( "%::% requires Parameter 1 to be DateTime or string in correct date format. %s given", __CLASS__, __METHOD__, gettype( $date ) ) );
+			add_notice( sprintf( "%::% requires Parameter 1 to be DateTime or string in correct date format. %s given", __CLASS__, __METHOD__, gettype( $date ) ), 'error' );
 		}
 
 		if ( $this->getTimeStart() instanceof DateTime ) {

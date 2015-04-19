@@ -54,12 +54,12 @@ class Holiday {
 	 * @access          public
 	 *
 	 * @param           array $config
+	 *
+	 * @throws          InvalidArgumentException
 	 */
 	public function __construct( array $config ) {
 
-		/** validate/filter config and set property */
 		$config = static::validateConfig( $config );
-
 		$this->setUp( $config );
 
 	}
@@ -301,7 +301,7 @@ class Holiday {
 		}
 
 		if ( ! $date instanceof DateTime ) {
-			throw new InvalidArgumentException( sprintf( 'Argument one for %s has to be of type string or DateTime, %s given', __CLASS__ . '::' . __METHOD__, gettype( $date ) ) );
+			add_notice( sprintf( 'Argument one for %s has to be of type string or DateTime, %s given', __CLASS__ . '::' . __METHOD__, gettype( $date ) ) ) ;
 		}
 
 		$date = I18n::applyTimeZone( $date );

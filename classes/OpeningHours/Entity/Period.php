@@ -69,6 +69,8 @@ class Period {
 	 * @param      array $config
 	 *
 	 * @return     Period
+	 *
+	 * @throws      InvalidArgumentException
 	 */
 	public function __construct( $config = array() ) {
 

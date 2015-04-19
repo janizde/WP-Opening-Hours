@@ -102,7 +102,7 @@ abstract class AbstractShortcode extends AbstractModule {
 	public function validate() {
 
 		if ( empty( $this->shortcodeTag ) ) {
-			throw new InvalidArgumentException( __( 'Shortcode has no tagname and could not be registered', self::TEXTDOMAIN ) );
+			throw new InvalidArgumentException( __( 'Shortcode has no tag name and could not be registered', self::TEXTDOMAIN ) );
 		}
 
 	}
