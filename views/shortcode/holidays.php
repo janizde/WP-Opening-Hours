@@ -30,6 +30,9 @@ extract( $attributes );
  * @var         $date_format        string w/ PHP date format
  */
 
+if ( !count( $holidays ) )
+	return;
+
 echo $before_widget;
 
 if ( ! empty( $title ) ) {

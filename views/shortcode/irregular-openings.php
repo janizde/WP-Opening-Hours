@@ -31,6 +31,9 @@ extract( $attributes );
  * @var         $time_format        string w/ PHP time format
  */
 
+if ( !count( $irregular_openings ) )
+	return;
+
 echo $before_widget;
 
 if ( ! empty( $title ) ) {
