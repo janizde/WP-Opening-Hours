@@ -51,6 +51,14 @@ module.exports = function (grunt) {
       }
     },
 
+    wp_readme_to_markdown: {
+      opening_hours: {
+        files: {
+          'README.md': 'readme.txt'
+        }
+      }
+    },
+
     watch: {
       files: ['less/main.less', 'less/_*.less', 'javascript/_*.js'],
       tasks: ['dev']
@@ -62,6 +70,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-wp-readme-to-markdown');
 
   grunt.registerTask(
     'dev',
