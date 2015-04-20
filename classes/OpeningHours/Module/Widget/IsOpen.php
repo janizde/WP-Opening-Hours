@@ -117,6 +117,24 @@ class IsOpen extends AbstractWidget {
 			'extended'            => true,
 			'default_placeholder' => true
 		) );
+
+		/** Field: Date Format */
+		$this->addField( 'date_format', array(
+			'type'                => 'text',
+			'caption'             => __( 'PHP Date Format', I18n::TEXTDOMAIN ),
+			'extended'            => true,
+			'default_placeholder' => true,
+			'description'         => self::getPhpDateFormatInfo()
+		) );
+
+		/** Field: Time Format */
+		$this->addField( 'time_format', array(
+			'type'                => 'text',
+			'caption'             => __( 'PHP Time Format', I18n::TEXTDOMAIN ),
+			'extended'            => true,
+			'default_placeholder' => true,
+			'description'         => self::getPhpDateFormatInfo()
+		) );
 	}
 
 	/**

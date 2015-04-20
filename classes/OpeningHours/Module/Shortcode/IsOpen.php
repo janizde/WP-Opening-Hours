@@ -35,7 +35,9 @@ class IsOpen extends AbstractShortcode {
 			'classes'             => null,
 			'next_period_classes' => null,
 			'open_class'          => 'op-open',
-			'closed_class'        => 'op-closed'
+			'closed_class'        => 'op-closed',
+			'date_format'         => I18n::getDateFormat(),
+			'time_format'         => I18n::getTimeFormat()
 		);
 
 		$this->setDefaultAttributes( $default_attributes );
@@ -51,7 +53,7 @@ class IsOpen extends AbstractShortcode {
 	}
 
 	/**
-	 *  Shortcode
+	 * Shortcode
 	 *
 	 * @access     public
 	 *
@@ -86,16 +88,16 @@ class IsOpen extends AbstractShortcode {
 				$attributes['next_format'],
 
 				// 1$: Formatted Date
-				$next_period->getTimeStart()->format( I18n::getDateFormat() ),
+				$next_period->getTimeStart()->format( $attributes['date_format'] ),
 
 				// 2$: Translated Weekday
 				$weekdays[ $next_period->getWeekday() ],
 
 				// 3%: Formatted Start Time
-				$next_period->getTimeStart()->format( I18n::getTimeFormat() ),
+				$next_period->getTimeStart()->format( $attributes['time_format'] ),
 
 				// 4%: Formatted End Time
-				$next_period->getTimeEnd()->format( I18n::getTimeFormat() )
+				$next_period->getTimeEnd()->format( $attributes['time_format'] )
 			);
 
 		endif;

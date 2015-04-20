@@ -292,6 +292,18 @@ abstract class AbstractWidget extends WP_Widget {
 	abstract protected function widgetContent( array $args, array $instance );
 
 	/**
+	 * Get PHP Date Format Info
+	 *
+	 * @access      public
+	 * @static
+	 *
+	 * @return      string
+	 */
+	public static function getPhpDateFormatInfo () {
+		return sprintf( '<a href="http://bit.ly/16Wsegh" target="blank">%s</a>', __( 'More about PHP date and time formats.', I18n::TEXTDOMAIN ) );
+	}
+
+	/**
 	 *  Getter: Widget Id
 	 *
 	 * @access     public

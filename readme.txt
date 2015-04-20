@@ -34,3 +34,10 @@ There are several features that you can use with this widget / shortcode
 More detailed documentation: http://jannikportz.de/wp-opening-hours/widgets#overview
 
 = Is Open Status Widget / Shortcode =
+
+Shortcode Tag: op-is-open
+
+The Is Open Status widget / shortcode displays a message saying whether your venue belonging to the selected set is currently open or not.
+
+*   Display information about when the venue will be open again
+*   Advanced options like classes, custom messages, etc.
