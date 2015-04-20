@@ -5,6 +5,7 @@
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
+use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
@@ -53,13 +54,17 @@ class OpeningHours extends AbstractMetaBox {
 	 */
 	public static function renderMetaBox( WP_Post $post ) {
 
-		OpeningHoursModule::setCurrentSetId( $post->ID );
+		if ( !OpeningHoursModule::getSets()->offsetExists( $post->ID ) )
+			OpeningHoursModule::getSets()->offsetSet( $post->ID, new SetEntity( $post->ID ) );
 
-		OpeningHoursModule::getCurrentSet()->addDummyPeriods();
+		OpeningHoursModule::setCurrentSetId( $post->ID );
+		$set  = OpeningHoursModule::getCurrentSet();
+
+		$set->addDummyPeriods();
 
 		$variables = array(
 			'post' => $post,
-			'set'  => OpeningHoursModule::getCurrentSet()
+			'set'  => $set
 		);
 
 		echo static::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );

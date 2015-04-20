@@ -102,8 +102,6 @@ class Set {
 	 * @access     public
 	 *
 	 * @param      WP_Post|int $post
-	 *
-	 * @return     Set
 	 */
 	public function __construct( $post ) {
 
@@ -125,8 +123,6 @@ class Set {
 		$this->setParentPost( $post );
 
 		$this->setUp();
-
-		return $this;
 
 	}
 
