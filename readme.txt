@@ -41,3 +41,29 @@ The Is Open Status widget / shortcode displays a message saying whether your ven
 
 *   Display information about when the venue will be open again
 *   Advanced options like classes, custom messages, etc.
+
+More detailed documentation: http://jannikportz.de/wp-opening-hours/widgets#is-open
+
+= Holidays Widget / Shortcode =
+
+Shortcode Tag: op-holidays
+
+The Holidays widget / shortcode lists up all Holidays in the selected Set in a table
+
+*   Highlight currently running Holiday
+*   Custom CSS classes
+*   Custom PHP date format
+
+More detailed documentation: http://jannikportz.de/wp-opening-hours/widgets#holidays
+
+= Irregular Openings Widget / Shortcode =
+
+Shortcode Tag: op-irregular-openings
+
+The Irregular Openings widget / shortcode lists up all Irregular Openings in the selected Set in a table
+
+*   Highlight currently running Irregular Openings
+*   Custom CSS classes
+*   Custom PHP date and time format
+
+More detailed documentation: http://jannikportz.de/wp-opening-hours/widgets#irregular-opening
