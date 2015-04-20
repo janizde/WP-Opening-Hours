@@ -137,6 +137,13 @@ abstract class AbstractShortcode extends AbstractModule {
 
 		$filter_hook = 'op_shortcode_' . $this->getShortcodeTag() . '_markup';
 
+		/**
+		 * Filter: Shortcode Markup
+		 *
+		 * @hook      op_shortcode_{shortcode_tag}_markup
+		 * @param     string              $shortcode_markup     the shortcode output
+		 * @param     AbstractShortcode   $shortcode            the shortcode singleton instance
+		 */
 		apply_filters( $filter_hook, $shortcodeMarkup, static::getInstance() );
 
 		return $shortcodeMarkup;
@@ -193,13 +200,26 @@ abstract class AbstractShortcode extends AbstractModule {
 
 		$filter_hook_attributes = 'op_shortcode_' . $this->getShortcodeTag() . '_attributes';
 
+		/**
+		 * Filter: Shortcode Attributes
+		 *
+		 * @hook      op_shortcode_{shortcode_tag}_attributes
+		 * @param     array               $attributes     the shortcode attributes array after validation
+		 * @param     AbstractShortcode   $shortcode      shortcode singleton instance
+		 */
 		$attributes = apply_filters( $filter_hook_attributes, $attributes, static::getInstance() );
 
 		foreach ( $attributes as $key => &$value ) :
 
-			/** Apply WordPress filters */
 			$filter_hook = 'op_shortcode_' . $this->getShortcodeTag() . '_' . $key;
 
+			/**
+			 * Filter: Shortcode Attribute
+			 *
+			 * @hook      op_shortcode_{shortcode_tag}_{attribute_key}
+			 * @param     mixed               $value        the attribute value
+			 * @param     AbstractShortcode   $shortcode    shortcode singleton instance
+			 */
 			$value = apply_filters( $filter_hook, $value, static::getInstance() );
 
 			/** Check if value is valid */
@@ -242,6 +262,12 @@ abstract class AbstractShortcode extends AbstractModule {
 	 * @return     AbstractShortcode
 	 */
 	public function setShortcodeTag( $shortcodeTag ) {
+		/**
+		 * Filter: Shortcode Tag
+		 *
+		 * @hook      op_shortcode_tag
+		 * @param     string              $shortcode_tag
+		 */
 		$this->shortcodeTag = apply_filters( 'op_shortcode_tag', $shortcodeTag );
 
 		return $this;
@@ -353,5 +379,3 @@ abstract class AbstractShortcode extends AbstractModule {
 	abstract protected function init();
 
 }
-
-?>

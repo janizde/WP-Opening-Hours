@@ -7,7 +7,6 @@ namespace OpeningHours\Module\Widget;
 
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\Shortcode\AbstractShortcode;
-use OpeningHours\Misc\ArrayObject;
 
 use WP_Widget;
 
@@ -87,8 +86,8 @@ abstract class AbstractWidget extends WP_Widget {
 	}
 
 	/**
-	 *  Render Field
-	 *  calls widget field renderer module
+	 * Render Field
+	 * calls widget field renderer module
 	 *
 	 * @access     protected
 	 *
@@ -113,6 +112,17 @@ abstract class AbstractWidget extends WP_Widget {
 	 * @param      array $instance
 	 */
 	public function widget( array $args, array $instance ) {
+
+		$filter_hook  = 'op_widget_' . $this->getWidgetId() . '_instance';
+
+		/**
+		 * Filter: Widget Instance
+		 *
+		 * @hook      op_widget_{widget_id}_instance
+		 * @param     array             $instance   the instance array
+		 * @param     AbstractWidget    $widget     the widget object
+		 */
+		$instance = apply_filters( $filter_hook, $instance, $this );
 
 		$this->setInstance( $instance );
 
@@ -142,6 +152,8 @@ abstract class AbstractWidget extends WP_Widget {
 
 		$extended = array();
 
+		ob_start();
+
 		foreach ( $this->getFields() as $field ) :
 
 			if ( $field['extended'] !== true ) :
@@ -170,6 +182,21 @@ abstract class AbstractWidget extends WP_Widget {
 
 		echo '</div>';
 
+		$markup   = ob_get_contents();
+
+		ob_end_clean();
+
+		$filter_hook    = 'op_widget_' . $this->getWidgetId() . '_form_markup';
+
+		/**
+		 * Filter: Widget Form Markup
+		 *
+		 * @hook      op_widget_{widget_id}_form_markup
+		 * @param     string            $markup   the form markup to be echoed
+		 * @param     AbstractWidget    $widget   the widget object
+		 */
+		echo apply_filters( $filter_hook, $markup, $this );
+
 	}
 
 	/**
@@ -182,82 +209,6 @@ abstract class AbstractWidget extends WP_Widget {
 	public static function registerWidget() {
 
 		register_widget( get_called_class() );
-
-	}
-
-	/**
-	 *  Render Shortcode
-	 *  calls a shortcode with args
-	 *
-	 * @access     public
-	 * @static
-	 *
-	 * @param      string $shortcode_tag
-	 * @param      array $args
-	 * @param      array $instance
-	 * @param      bool $return
-	 *
-	 * @return     string    depends on $return
-	 */
-	public static function renderShortcode( $shortcode_tag, array $args, array $instance, $return = false ) {
-
-		$shortcode_format        = '[%s%s]';
-		$attribute_format        = ' %s=%s';
-		$attribute_string_format = ' %s="%s"';
-
-		$attributes = array_merge( $args, $instance );
-
-		$attribute_string = '';
-
-		foreach ( $attributes as $key => $value ) :
-
-			/**
-			 * If value is a string and not numeric
-			 */
-			if ( is_string( $value ) and ! is_numeric( $value ) ) :
-
-				// Skip if value is empty
-				if ( empty( $value ) ) {
-					continue;
-				}
-
-				$attribute_string .= sprintf( $attribute_string_format, $key, $value );
-
-			/**
-			 * If value is boolean
-			 */
-			elseif ( is_bool( $value ) ) :
-				$attribute_string .= sprintf( $attribute_format, $key, ( $value ) ? 'true' : 'false' );
-
-			/**
-			 * If value is an array
-			 */
-			elseif ( is_array( $value ) ) :
-
-				// Skip if array does not contain any elements
-				if ( ! count( $value ) ) {
-					continue;
-				}
-
-				$attribute_string .= sprintf( $attribute_string_format, $key, implode( ',', $value ) );
-
-			/**
-			 * Other Types (converted to string)
-			 */
-			else :
-				$attribute_string .= sprintf( $attribute_format, $key, (string) $value );
-
-			endif;
-
-		endforeach;
-
-		$shortcode = sprintf( $shortcode_format, $shortcode_tag, $attribute_string );
-
-		if ( $return ) {
-			return do_shortcode( $shortcode );
-		}
-
-		echo do_shortcode( $shortcode );
 
 	}
 
