@@ -88,3 +88,28 @@ If you're not capable of adding a new language set or you just want to let me kn
 = I found a bug and I would like to fix it =
 
 You can find the development repository at https://github.com/janizde/WP-Opening-Hours. Feel free to fork and send pull requests.
+
+== Changelog ==
+
+= 1.0 =
+initial version
+
+= 1.0.1 =
+fixed a bug that displayed saturday instead of friday
+ATTENTION: REINSTALL NECESSARY!
+
+= 1.1 =
+Read this article:
+http://www.jannikportz.de/2013/11/03/opening-hours-update-version-1-2/
+
+= 1.1.1 =
+Read this article:
+http://www.jannikportz.de/2013/12/04/opening-hours-update-1-1-1/
+
+= 1.2 =
+Read this article:
+http://www.jannikportz.de/2014/01/19/update-1-2-for-opening-hours-plugin/
+
+= 2.0 =
+Completely new version of the Opening Hours plugin.
+Note that this version requires at least PHP 5.3 and you will have to set up your data and the widgets / shortcodes as well.
