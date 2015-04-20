@@ -67,3 +67,24 @@ The Irregular Openings widget / shortcode lists up all Irregular Openings in the
 *   Custom PHP date and time format
 
 More detailed documentation: http://jannikportz.de/wp-opening-hours/widgets#irregular-opening
+
+== Installation ==
+
+1. Download the .zip-archive
+1. Unzip the archive
+1. Upload the directory /opening-hours to your wp-content/plugins
+1. In your Admin Panel go to Plugins and active the Opening Hours Plugin
+1. Now you can edit your Opening Hours in the Settings-Section
+1. Place the Widgets in your Sidebars or use the Shortcode in your posts and Pages
+
+== Frequently Asked Questions ==
+
+= My language is not provided in the Plugin =
+
+If your language is not provided in the language files, feel free to support the translation of the Opening Hours plugin.
+Go to translate.jannikportz.de, sign up for an account and start translating the strings. I will then implement the new language with the net update.
+If you're not capable of adding a new language set or you just want to let me know that you have added new translations, please drop me an E-Mail at hello[at]jannikportz.de
+
+= I found a bug and I would like to fix it =
+
+You can find the development repository at https://github.com/janizde/WP-Opening-Hours. Feel free to fork and send pull requests.
