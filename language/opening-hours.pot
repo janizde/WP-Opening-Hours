@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Opening Hours\n"
-"POT-Creation-Date: 2015-04-18 16:37+0100\n"
-"PO-Revision-Date: 2015-04-18 16:37+0100\n"
+"POT-Creation-Date: 2015-04-20 19:31+0100\n"
+"PO-Revision-Date: 2015-04-20 19:31+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -36,35 +36,6 @@ msgid ""
 "Installation of WordPress is running on WordPress %s"
 msgstr ""
 
-#: classes/OpeningHours/Module/Converter.php:72
-msgid "Convert Data"
-msgstr ""
-
-#: classes/OpeningHours/Module/Converter.php:79
-msgid "Delete Data"
-msgstr ""
-
-#: classes/OpeningHours/Module/Converter.php:83
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/OpeningHours.php:37
-#: classes/OpeningHours/Module/CustomPostType/Set.php:162
-msgid "Opening Hours"
-msgstr ""
-
-#: classes/OpeningHours/Module/Converter.php:84
-msgid ""
-"There is data from older versions of the Opening Hours Plugin in your "
-"WordPress installation that is not compatible with the currently installed "
-"version. Would you like to convert this data?"
-msgstr ""
-
-#: classes/OpeningHours/Module/Converter.php:176
-msgid "OpeningHours"
-msgstr ""
-
-#: classes/OpeningHours/Module/Converter.php:383
-msgid "The old data has successfully been deleted"
-msgstr ""
-
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/Donation.php:38
 msgid "Please Donate"
 msgstr ""
@@ -75,6 +46,11 @@ msgstr ""
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:44
 msgid "Irregular Openings"
+msgstr ""
+
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/OpeningHours.php:38
+#: classes/OpeningHours/Module/CustomPostType/Set.php:162
+msgid "Opening Hours"
 msgstr ""
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:110
@@ -234,7 +210,7 @@ msgid "Minute"
 msgstr ""
 
 #: classes/OpeningHours/Module/Shortcode/AbstractShortcode.php:105
-msgid "Shortcode has no tagname and could not be registered"
+msgid "Shortcode has no tag name and could not be registered"
 msgstr ""
 
 #: classes/OpeningHours/Module/Shortcode/IsOpen.php:26
@@ -254,30 +230,34 @@ msgstr ""
 msgid "Closed"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/AbstractWidget.php:161
+#: classes/OpeningHours/Module/Widget/AbstractWidget.php:173
 msgid "More Settings"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:184
-#, php-format
-msgid "Field configuration has to be array. %s given"
-msgstr ""
-
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:188
-msgid "Field name is empty or not a string."
-msgstr ""
-
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:192
-#, php-format
-msgid "No Type option set for field %s."
+#: classes/OpeningHours/Module/Widget/AbstractWidget.php:254
+msgid "More about PHP date and time formats."
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/FieldRenderer.php:196
 #, php-format
+msgid "Field configuration has to be array. %s given"
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/FieldRenderer.php:200
+msgid "Field name is empty or not a string."
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/FieldRenderer.php:204
+#, php-format
+msgid "No Type option set for field %s."
+msgstr ""
+
+#: classes/OpeningHours/Module/Widget/FieldRenderer.php:208
+#, php-format
 msgid "Field type %s provided for field %s is not a valid type."
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:202
+#: classes/OpeningHours/Module/Widget/FieldRenderer.php:214
 #, php-format
 msgid "Field %s with field type select, required the options array."
 msgstr ""
@@ -311,14 +291,8 @@ msgstr ""
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:86
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:87
+#: classes/OpeningHours/Module/Widget/IsOpen.php:124
 msgid "PHP Date Format"
-msgstr ""
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:88
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:89
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:98
-#: classes/OpeningHours/Module/Widget/Overview.php:185
-msgid "More about PHP date and time formats."
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:27
@@ -342,6 +316,7 @@ msgid "class for highlighted Irregular Opening"
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:96
+#: classes/OpeningHours/Module/Widget/IsOpen.php:133
 #: classes/OpeningHours/Module/Widget/Overview.php:183
 msgid "PHP Time Format"
 msgstr ""
