@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Opening Hours\n"
-"POT-Creation-Date: 2015-04-20 19:31+0100\n"
-"PO-Revision-Date: 2015-04-20 19:31+0100\n"
+"POT-Creation-Date: 2015-04-28 11:21+0100\n"
+"PO-Revision-Date: 2015-04-28 11:21+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -418,7 +418,7 @@ msgid "Compress Opening Hours"
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/Overview.php:89
-msgid "Use hort day captions"
+msgid "Use short day captions"
 msgstr ""
 
 #: classes/OpeningHours/Module/Widget/Overview.php:95

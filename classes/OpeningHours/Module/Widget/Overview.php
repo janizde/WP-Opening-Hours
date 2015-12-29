@@ -86,7 +86,7 @@ class Overview extends AbstractWidget {
 		/** Field: Short */
 		$this->addField( 'short', array(
 			'type'    => 'checkbox',
-			'caption' => __( 'Use hort day captions', I18n::TEXTDOMAIN )
+			'caption' => __( 'Use short day captions', I18n::TEXTDOMAIN )
 		) );
 
 		/** Field: Include Irregular Openings */
@@ -146,7 +146,7 @@ class Overview extends AbstractWidget {
 		) );
 
 		/** Field: Cell Periods Classes */
-		$this->addField( 'cell_periods_classe', array(
+		$this->addField( 'cell_periods_classes', array(
 			'type'                => 'text',
 			'caption'             => __( 'Table Cell Periods class', I18n::TEXTDOMAIN ),
 			'extended'            => true,
