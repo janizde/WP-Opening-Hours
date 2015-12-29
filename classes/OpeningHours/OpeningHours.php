@@ -121,7 +121,7 @@ class OpeningHours extends AbstractModule {
 
 		// Frontend Styles and Scripts
 		wp_enqueue_style( self::PREFIX . 'css' );
-		wp_enqueue_script( self::PREFIX . 'js' );
+		if (is_admin()) wp_enqueue_script( self::PREFIX . 'js' ); // gets rid of the JS errror message on the frontend.
 
 		wp_localize_script( self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations() );
 
