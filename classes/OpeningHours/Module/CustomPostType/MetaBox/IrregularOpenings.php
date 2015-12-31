@@ -65,7 +65,7 @@ class IrregularOpenings extends AbstractMetaBox {
 		$set = OpeningHoursModule::getCurrentSet();
 
 		if ( ! count( $set->getIrregularOpenings() ) ) {
-			$set->getIrregularOpenings()->addElement( IrregularOpening::createDummy() );
+			$set->getIrregularOpenings()->append( IrregularOpening::createDummy() );
 		}
 
 		$variables = array(

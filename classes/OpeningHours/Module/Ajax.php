@@ -1,7 +1,4 @@
 <?php
-/**
- *  Opening Hours: Module: Ajax
- */
 
 namespace OpeningHours\Module;
 
@@ -12,75 +9,55 @@ use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings;
 
+/**
+ * Ajax module
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module
+ */
 class Ajax extends AbstractModule {
 
-	/**
-	 *  Constants
-	 */
-	const   WP_ACTION_PREFIX = 'wp_ajax_';
-	const   JS_AJAX_OBJECT = 'ajax_object';
+	/** The action hook prefix for ajax callbacks */
+	const WP_ACTION_PREFIX = 'wp_ajax_';
+
+	/** The name of the ajax variable for scripts */
+	const JS_AJAX_OBJECT = 'ajax_object';
 
 	/**
-	 *  Actions
-	 *
-	 * @access     public
-	 * @static
-	 * @type       array
+	 * Collection of all ajax actions
+	 * @var       array
 	 */
 	protected static $actions = array();
 
-	/**
-	 *  Constructor
-	 *
-	 * @access     public
-	 */
+	/** Module Constructor */
 	public function __construct() {
-
 		self::registerActions();
-
 	}
 
-	/**
-	 *  Register Actions
-	 *
-	 * @access     public
-	 * @static
-	 */
+	/** Registers AJAX actions */
 	public static function registerActions() {
-
 		self::registerAjaxAction( 'op_render_periods_day', 'renderPeriodsDay' );
 		self::registerAjaxAction( 'op_render_single_period', 'renderSinglePeriod' );
 		self::registerAjaxAction( 'op_render_single_dummy_holiday', 'renderSingleDummyHoliday' );
 		self::registerAjaxAction( 'op_render_single_dummy_irregular_opening', 'renderSingleDummyIrregularOpening' );
-
 	}
 
-	/**
-	 *  Action: Render Periods Day
-	 *
-	 * @access     public
-	 * @static
-	 */
+	/** Action: Render Periods Day */
 	public static function renderPeriodsDay() {
-
-		$day   = $_POST['day'];
+		$day = $_POST['day'];
 		$setId = $_POST['set'];
 
-		if ( ! is_int( $day ) ) {
+		if ( !is_int( $day ) )
 			self::terminate( 'Day is not an integer' );
-		}
 
-		if ( ! is_int( $setId ) ) {
+		if ( !is_int( $setId ) )
 			self::terminate( 'SetId is not an integer' );
-		}
 
-		$empty = ( $setId === 0 );
-
+		$empty = $setId === 0;
 		$set = OpeningHours::getInstance()->getSet( $setId );
 
-		if ( ! $empty and ! $set instanceof Set ) {
+		if ( !$empty and !$set instanceof Set )
 			self::terminate( sprintf( 'Set with id %d does not exist', $setId ) );
-		}
 
 		echo self::renderTemplate(
 			'ajax/op-set-periods-day.php',
@@ -93,27 +70,19 @@ class Ajax extends AbstractModule {
 		);
 
 		die();
-
 	}
 
-	/**
-	 *  Action: Render Single Period
-	 *
-	 * @access     public
-	 * @static
-	 */
+	/** Action: Render Single Period */
 	public static function renderSinglePeriod() {
-
-		$weekday   = $_POST['weekday'];
+		$weekday = $_POST['weekday'];
 		$timeStart = $_POST['timeStart'];
-		$timeEnd   = $_POST['timeEnd'];
-
+		$timeEnd = $_POST['timeEnd'];
 		$config = array(
 			'weekday' => $weekday
 		);
 
 		$config['timeStart'] = ( I18n::isValidTime( $timeStart ) ) ? $timeStart : '00:00';
-		$config['timeEnd']   = ( I18n::isValidTime( $timeEnd ) ) ? $timeEnd : '00:00';
+		$config['timeEnd'] = ( I18n::isValidTime( $timeEnd ) ) ? $timeEnd : '00:00';
 
 		$period = new Period( $config );
 
@@ -126,17 +95,10 @@ class Ajax extends AbstractModule {
 		);
 
 		die();
-
 	}
 
-	/**
-	 * Action: Render Single Dummy Holiday
-	 *
-	 * @access      public
-	 * @static
-	 */
+	/** Action: Render Single Dummy Holiday */
 	public static function renderSingleDummyHoliday() {
-
 		echo self::renderTemplate(
 			Holidays::TEMPLATE_PATH_SINGLE,
 			array(
@@ -146,17 +108,10 @@ class Ajax extends AbstractModule {
 		);
 
 		die();
-
 	}
 
-	/**
-	 * Action: Render Single Dummy Irregular Opening
-	 *
-	 * @access      public
-	 * @static
-	 */
+	/** Action: Render Single Dummy Irregular Opening */
 	public static function renderSingleDummyIrregularOpening() {
-
 		echo self::renderTemplate(
 			IrregularOpenings::TEMPLATE_PATH_SINGLE,
 			array(
@@ -166,62 +121,36 @@ class Ajax extends AbstractModule {
 		);
 
 		die();
-
 	}
 
 	/**
-	 *  Register Ajax Action
+	 * Registers an AJAX action
 	 *
-	 * @access     public
-	 * @static
-	 *
-	 * @param      string $hook
-	 * @param      string $method
+	 * @param     string    $hook     The name for the ajax hook without the WordPress specific prefix
+	 * @param     string    $method   The name of the method
 	 */
 	public static function registerAjaxAction( $hook, $method ) {
-
-		// Trigger error and die if Ajax method doesn't exist
-		if ( ! method_exists( __CLASS__, $method ) ) {
+		if ( !method_exists( __CLASS__, $method ) )
 			self::terminate( sprintf( 'Ajax method %s does not exist', $method ) );
-		}
 
 		$callback = array( __CLASS__, $method );
-
 		add_action( self::WP_ACTION_PREFIX . $hook, $callback );
-
 		self::addAction( $hook, $callback );
-
 	}
 
 	/**
-	 *  Inject Ajax Url
-	 *  Makes Ajax Url accessible in JS script
-	 *
-	 * @access     public
-	 * @static
-	 *
-	 * @param      string $handle
+	 * Registers the ajax object for JS
+	 * @param     string    $handle   The script handle
 	 */
 	public static function injectAjaxUrl( $handle ) {
-
-		wp_localize_script(
-			$handle,
-			self::JS_AJAX_OBJECT,
-			array(
+		wp_localize_script( $handle, self::JS_AJAX_OBJECT, array(
 				'ajax_url' => admin_url( 'admin-ajax.php' )
-			)
-		);
-
+			) );
 	}
 
 	/**
-	 *  Terminate
-	 *  Triggers error and dies
-	 *
-	 * @access     protected
-	 * @static
-	 *
-	 * @param      string $message
+	 * Triggers an error and dies
+	 * @param     string    $message  The message to log to the console
 	 */
 	protected static function terminate( $message ) {
 		error_log( $message );
@@ -229,35 +158,13 @@ class Ajax extends AbstractModule {
 	}
 
 	/**
-	 *  Setter: Actions
+	 * Adds an action to the collection
 	 *
-	 * @access     protected
-	 * @static
-	 *
-	 * @param      array $actions
-	 *
-	 * @return     Ajax
+	 * @param     string    $hook     The ajax callback hook without the WordPress specific prefix
+	 * @param     callable  $callback The ajax callback to run
 	 */
-	public static function setActions( array $actions ) {
-		self::$actions = $actions;
-	}
-
-	/**
-	 *  Add Action
-	 *
-	 * @access     protected
-	 * @static
-	 *
-	 * @param      string $hook
-	 * @param      callable $callback
-	 *
-	 * @return     Ajax
-	 */
-	protected static function addAction( $hook, $callback ) {
+	protected static function addAction( $hook, callable $callback ) {
 		self::$actions[ $hook ] = $callback;
 	}
 
-
 }
-
-?>

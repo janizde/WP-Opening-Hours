@@ -1,80 +1,46 @@
 <?php
-/**
- *  Opening Hours: Misc: Collection
- */
 
 namespace OpeningHours\Misc;
 
-use ArrayObject as PHPArrayObject;
+use ArrayObject as NativeArrayObject;
 
-class ArrayObject extends PHPArrayObject {
-
-	/**
-	 *  Add Element
-	 *
-	 * @access     public
-	 *
-	 * @param      mixed $element
-	 *
-	 * @return     ArrayObject
-	 */
-	public function addElement( $element ) {
-		$this->append( $element );
-	}
+/**
+ * Custom ArrayObject
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Misc
+ */
+class ArrayObject extends NativeArrayObject {
 
 	/**
-	 *  Remove Element
+	 * Removes an element from the collection.
+	 * Compares by identity (===).
 	 *
-	 * @access     public
-	 *
-	 * @param      mixed $element
-	 *
-	 * @return     ArrayObject
+	 * @param     mixed     $element  The element to remove
 	 */
-	public function removeElement( $element ) {
-		foreach ( $this as $id => $walkerElement ) :
-			if ( $element === $walkerElement ) :
+	public function removeElement ( $element ) {
+		foreach ( $this as $id => $current )
+			if ( $element === $current )
 				$this->offsetUnset( $id );
-			endif;
-		endforeach;
 	}
 
 	/**
-	 *  Remove Element By Id
+	 * Exchanges old element with new element.
 	 *
-	 * @access     public
+	 * @param     mixed     $oldElement The old element to be replaced
+	 * @param     mixed     $newElement The element that the old element should be replaced with
 	 *
-	 * @param      string|int $id
-	 *
-	 * @return     ArrayObject
-	 */
-	public function removeElementById( $id ) {
-		if ( $this->offsetExists( $id ) ) {
-			$this->offsetUnset( $id );
-		}
-
-		return $this;
-	}
-
-	/**
-	 *  Exchange Element
-	 *
-	 * @access     public
-	 *
-	 * @param      mixed $oldElement
-	 * @param      mixed $newElement
-	 *
-	 * @return     ArrayObject
+	 * @return    bool      Whether old element has been found or not
 	 */
 	public function exchangeElement( $oldElement, $newElement ) {
-		foreach ( $this as $id => $walkerElement ) :
-			if ( $walkerElement === $oldElement ) :
+		foreach ( $this as $id => $current ) {
+			if ( $current === $oldElement ) {
 				$this->offsetUnset( $id );
 				$this->offsetSet( $id, $newElement );
-			endif;
-		endforeach;
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
-
-?>

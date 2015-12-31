@@ -66,7 +66,7 @@ class Holidays extends AbstractMetaBox {
 		$set = OpeningHoursModule::getCurrentSet();
 
 		if ( ! count( $set->getHolidays() ) ) {
-			$set->getHolidays()->addElement( Holiday::createDummyPeriod() );
+			$set->getHolidays()->append( Holiday::createDummyPeriod() );
 		}
 
 		$variables = array(

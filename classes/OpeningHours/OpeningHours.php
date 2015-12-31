@@ -1,37 +1,39 @@
 <?php
-/**
- *  Opening Hours
- */
 
 namespace OpeningHours;
 
 use OpeningHours\Module\AbstractModule;
 use OpeningHours\Module as Module;
+use OpeningHours\Module\Widget\AbstractWidget;
 
+/**
+ * Core Module for the Opening Hours Plugin
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours
+ */
 class OpeningHours extends AbstractModule {
 
 	/**
-	 *  Modules
-	 *
-	 * @access    protected
-	 * @type      array
+	 * Collection of all plugin modules
+	 * @var       AbstractModule[]
 	 */
-	protected $modules = array();
+	protected $modules;
 
 	/**
-	 *  Constants
+	 * Collection of all plugin widgets
+	 * @var       AbstractWidget[]
 	 */
+	protected $widgets;
+
+	/** The plugin version */
 	const VERSION = '2.0';
+
+	/** The plugin prefix */
 	const PREFIX = 'op_';
-	const DEBUG_MODE = false;
 
-	/**
-	 *  Constructor
-	 *
-	 * @access    protected
-	 */
+	/** Constructor for OpeningHours module */
 	protected function __construct() {
-
 		$this->registerHookCallbacks();
 
 		$this->modules = array(
@@ -51,48 +53,27 @@ class OpeningHours extends AbstractModule {
 			'OpeningHours\Module\Widget\Holidays',
 			'OpeningHours\Module\Widget\IrregularOpenings'
 		);
-
 	}
 
-	/**
-	 *  Register callbacks for actions and filters
-	 *
-	 * @access    public
-	 */
+	/** Registers callbacks for actions and filters */
 	public function registerHookCallbacks() {
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'loadResources' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'loadResources' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'loadResources' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'loadResources' ) );
 
 		add_action( 'widgets_init', array( $this, 'registerWidgets' ) );
 	}
 
-	/**
-	 *  Register Widgets
-	 * @access      public
-	 * @wp_action    widgets_init
-	 */
+	/** Registers all plugin widgets */
 	public function registerWidgets() {
-
-		if ( ! is_array( $this->widgets ) ) {
-			return;
-		}
-
-		foreach ( $this->widgets as $widgetClass ) {
+		foreach ( $this->widgets as $widgetClass )
 			$widgetClass::registerWidget();
-		}
-
 	}
 
-
 	/**
-	 *  Enqueues CSS, JavaScript, etc
-	 *
-	 * @access      public
-	 * @static
-	 * @wp_action    wp_enqueue_scripts, admin_enqueue_scripts
+	 * Enqueues resources
+	 * @todo      separate callbacks for admin and frontend
 	 */
-	public static function loadResources() {
-
+	public function loadResources() {
 		wp_register_script(
 			self::PREFIX . 'js',
 			plugins_url( 'javascript/opening-hours.js', op_bootstrap_file() ),
@@ -121,10 +102,11 @@ class OpeningHours extends AbstractModule {
 
 		// Frontend Styles and Scripts
 		wp_enqueue_style( self::PREFIX . 'css' );
-		if (is_admin()) wp_enqueue_script( self::PREFIX . 'js' ); // gets rid of the JS errror message on the frontend.
+
+		if ( is_admin() )
+			wp_enqueue_script( self::PREFIX . 'js' );
 
 		wp_localize_script( self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations() );
-
 	}
 
 }

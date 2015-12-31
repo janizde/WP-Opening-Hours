@@ -1,7 +1,4 @@
 <?php
-/**
- *  Opening Hours: Entity: Period
- */
 
 namespace OpeningHours\Entity;
 
@@ -13,32 +10,29 @@ use DateInterval;
 use DateTimeZone;
 use InvalidArgumentException;
 
+/**
+ * Represents a regular opening period
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Entity
+ */
 class Period {
 
 	/**
-	 * Weekday
 	 * weekdays represented by integer. Monday: 0 - Sunday: 7
-	 *
-	 * @access     protected
-	 * @type       int
+	 * @type      int
 	 */
 	protected $weekday;
 
 	/**
-	 * Time Start
 	 * DateTime object representing the period's start time in the current week
-	 *
-	 * @access     protected
-	 * @type       DateTime
+	 * @type      DateTime
 	 */
 	protected $timeStart;
 
 	/**
-	 * Time End
 	 * DateTime object representing the period's end time in the current week
-	 *
-	 * @access     protected
-	 * @type       DateTime
+	 * @type      DateTime
 	 */
 	protected $timeEnd;
 
@@ -47,136 +41,90 @@ class Period {
 	 * DateInterval representing the difference between timeStart and timeEnd
 	 * Automatically updated in setters for timeStart and timeEnd
 	 *
-	 * @access     protected
-	 * @type       DateInterval
+	 * @type      DateInterval
 	 */
 	protected $timeDifference;
 
 	/**
-	 * Is Dummy
-	 * Flags Period as dummy
-	 *
-	 * @access     protected
-	 * @type       bool
+	 * Whether this Period is a dummy
+	 * @type      bool
 	 */
-	protected $isDummy;
+	protected $dummy;
 
 	/**
-	 * Constructor
+	 * Constructs a new Period with a config array
 	 *
-	 * @access     public
-	 *
-	 * @param      array $config
-	 *
-	 * @return     Period
-	 *
-	 * @throws      InvalidArgumentException
+	 * @param     array     $config   The config array for the new Period
+	 * @throws    InvalidArgumentException  On validation error
 	 */
-	public function __construct( $config = array() ) {
-
-		if ( $config === null or ! count( $config ) ) :
+	public function __construct ( $config = array() ) {
+		if ( $config === null or count( $config ) < 1 ) {
 			$config = array(
 				'weekday'   => null,
 				'timeStart' => null,
 				'timeEnd'   => null,
 				'dummy'     => true
 			);
-		endif;
+		}
 
 		$this->setUp( $config );
 
 		add_action( I18n::WP_ACTION_TIMEZONE_LOADED, array(
-			$this,
-			'updateDateTimezone'
+			$this, 'updateDateTimezone'
 		) );
 
 		add_action( I18n::WP_ACTION_TIMEZONE_LOADED, array(
-			$this,
-			'updateWeekContext'
+			$this, 'updateWeekContext'
 		) );
-
 	}
 
 	/**
-	 * Set Up
+	 * Sets up the object properties with the provided config
 	 *
-	 * @access      public
-	 *
-	 * @param       array $config
-	 *
-	 * @throws      InvalidArgumentException
+	 * @param     array     $config   The config array whose data to use
+	 * @throws    InvalidArgumentException  On validation error
 	 */
-	public function setUp( array $config ) {
-
-		if ( ! is_array( $config ) ) {
+	public function setUp ( array $config ) {
+		if ( !is_array( $config ) )
 			throw new InvalidArgumentException( '$config is not an array in Period' );
-		}
 
-		$defaultConfig = array(
+		$config = wp_parse_args( $config, array(
 			'weekday'   => null,
 			'timeStart' => null,
 			'timeEnd'   => null,
 			'dummy'     => false
-		);
+		) );
 
-		$config = wp_parse_args( $config, $defaultConfig );
-
-		extract( $config );
-
-		/**
-		 * Variables defined by extract
-		 *
-		 * @var     $weekday      int representing weekday (1-7)
-		 * @var     $timeStart    string|DateTime w/ time that the period starts
-		 * @var     $timeEnd      string|DateTime w/ time that the period ends
-		 * @var     $dummy        bool whether period is a dummy or not
-		 */
-
-		$this->setWeekday( $weekday );
-		$this->setTimeStart( $timeStart );
-		$this->setTimeEnd( $timeEnd );
-		$this->setIsDummy( $dummy );
-
+		$this->setWeekday( $config['weekday'] );
+		$this->setTimeStart( $config['timeStart'] );
+		$this->setTimeEnd( $config['timeEnd'] );
+		$this->setDummy( $config['dummy'] );
 		$this->updateDateTimezone();
-
 	}
 
 	/**
-	 * Is Open Strict
-	 * checks if Period is currently open regardless of Holidays and SpecialOpenings
+	 * Checks whether Period is currently open regardless of Holidays and SpecialOpenings
 	 *
-	 * @access      public
-	 *
-	 * @param       DateTime $now
-	 *
-	 * @return      bool
+	 * @param     DateTime  $now
+	 * @return    bool      Whether Period is currently open regardless of Holidays and SpecialOpenings
 	 */
-	public function isOpenStrict( $now = null ) {
-
-		if ( ! $now instanceof DateTime or $now === null ) {
+	public function isOpenStrict ( $now = null ) {
+		if ( !$now instanceof DateTime or $now === null )
 			$now = I18n::getTimeNow();
-		}
 
-		$is_open = ( $this->getTimeStart() <= $now and $now <= $this->getTimeEnd() );
-
-		return $is_open;
-
+		return $this->timeStart <= $now and $now <= $this->timeEnd;
 	}
 
 	/**
-	 * Is Open
-	 * checks if Period is currently open also regarding Holidays and SpecialOpenings
+	 * Checks if Period is currently open also regarding Holidays and SpecialOpenings
 	 *
-	 * @access      public
+	 * @param     DateTime  $now
+	 * @param     int       $setId
 	 *
-	 * @param       DateTime $now
-	 * @param       int $set_id
-	 *
-	 * @return      bool
+	 * @return    bool
 	 */
-	public function isOpen( $now = null, $set_id = null ) {
-
-		$set = ( $set_id === null ) ? OpeningHours::getCurrentSet() : OpeningHours::getSet( $set_id );
+	public function isOpen ( $now = null, $setId = null ) {
+		$set = $setId === null ? OpeningHours::getCurrentSet() : OpeningHours::getSet( $setId );
 
 		if ( !$set instanceof Set )
 			return $this->isOpenStrict( $now );
@@ -185,214 +133,131 @@ class Period {
 			return false;
 
 		return $this->isOpenStrict( $now );
-
 	}
 
 	/**
-	 * Will Be Open
-	 * checks whether Period will be regularly open and not overridden due to Holidays or Special Openings
+	 * Checks whether this Period will be regularly open and not overridden due to Holidays or Special Openings
 	 *
-	 * @access      public
-	 *
-	 * @param       int $set_id
-	 *
+	 * @param       int     $setId
 	 * @return      bool
 	 */
-	public function willBeOpen( $set_id = null ) {
-
-		return $this->isOpen( $this->getTimeStart(), $set_id );
-
+	public function willBeOpen ( $setId = null ) {
+		return $this->isOpen( $this->timeStart, $setId );
 	}
 
-	/**
-	 *  Update Time Difference
-	 *
-	 * @access     public
-	 */
-	public function updateTimeDifference() {
-
-		if ( ! $this->getTimeStart() instanceof DateTime or ! $this->getTimeEnd() instanceof DateTime ) {
+	/** Updates the timeDifference based on timeStart and timeEnd */
+	public function updateTimeDifference () {
+		if ( !$this->timeStart instanceof DateTime or !$this->timeEnd instanceof DateTime )
 			return;
-		}
 
-		$timeDifference = $this->getTimeEnd()->diff( $this->getTimeStart() );
-
-		$this->timeDifference = $timeDifference;
-
+		$this->timeDifference = $this->timeEnd->diff( $this->timeStart );
 	}
 
 	/**
 	 * Update Week Context
 	 * applies week context on start and end time
 	 * handles periods that exceed midnight
-	 *
-	 * @access      public
 	 */
-	public function updateWeekContext() {
-
-		if ( ! $this->getTimeStart() instanceof DateTime or ! $this->getTimeEnd() instanceof DateTime ) {
+	public function updateWeekContext () {
+		if ( !$this->timeStart instanceof DateTime or !$this->timeEnd instanceof DateTime )
 			return;
-		}
 
-		I18n::applyWeekContext( $this->getTimeStart(), $this->getWeekday() );
-		I18n::applyWeekContext( $this->getTimeEnd(), $this->getWeekday() );
+		I18n::applyWeekContext( $this->timeStart, $this->weekday );
+		I18n::applyWeekContext( $this->timeEnd, $this->weekday );
 
-		if ( $this->getTimeStart()->getTimestamp() >= $this->getTimeEnd()->getTimestamp() ) :
-
-			// Add one day
-			$this->getTimeEnd()->add( new DateInterval( 'P1D' ) );
-		endif;
-
+		if ( $this->timeStart->getTimestamp() >= $this->timeEnd->getTimestamp() )
+			$this->timeEnd->add( new DateInterval( 'P1D' ) );
 	}
 
 	/**
 	 * Update DateTimeZone
 	 * updates the DateTimeZone on timeStart and timeEnd
-	 *
-	 * @access      public
 	 */
-	public function updateDateTimezone() {
-
+	public function updateDateTimezone () {
 		$timezone = I18n::getDateTimeZone();
-
-		if ( ! $timezone instanceof DateTimeZone ) {
+		if ( !$timezone instanceof DateTimeZone )
 			return;
-		}
 
 		/**
 		 * Instantiate new DateTime objects to keep time
 		 * otherwise time would be converted
 		 */
-
-		$timeStart = new DateTime(
-			$this->getTimeStart()->format( I18n::STD_DATE_TIME_FORMAT ),
+		$this->setTimeStart( new DateTime(
+			$this->timeStart->format( I18n::STD_DATE_TIME_FORMAT ),
 			$timezone
-		);
+		) );
 
-		$this->setTimeStart( $timeStart );
-
-		$timeEnd = new DateTime(
-			$this->getTimeEnd()->format( I18n::STD_DATE_TIME_FORMAT ),
+		$this->setTimeEnd( new DateTime(
+			$this->timeEnd->format( I18n::STD_DATE_TIME_FORMAT ),
 			$timezone
-		);
-
-		$this->setTimeEnd( $timeEnd );
-
+		) );
 	}
 
 	/**
-	 * Sort Strategy
-	 * sorts period by day and time
+	 * Sorts period by day and time
 	 *
-	 * @access        public
-	 * @static
+	 * @param     Period    $period1
+	 * @param     Period    $period2
 	 *
-	 * @param         Period $period_1
-	 * @param         Period $period_2
-	 *
-	 * @return        int
+	 * @return    int
 	 */
-	public static function sortStrategy( Period $period_1, Period $period_2 ) {
-
-		if ( $period_1->getTimeStart() < $period_2->getTimeStart() ) :
+	public static function sortStrategy ( Period $period1, Period $period2 ) {
+		if ( $period1->timeStart < $period2->timeStart ) {
 			return - 1;
-
-		elseif ( $period_1->getTimeStart() > $period_2->getTimeStart() ) :
+		} elseif ( $period1->timeStart > $period2->timeStart ) {
 			return 1;
+		}
 
-		else :
-			return 0;
-
-		endif;
-
+		return 0;
 	}
 
 	/**
-	 * To String
-	 * returns json string from Period config
-	 *
-	 * @access      public
-	 * @return      string
+	 * Returns JSON string from Period config
+	 * @return    string
 	 */
-	public function __toString() {
+	public function __toString () {
 		return json_encode( $this->getConfig() );
 	}
 
 	/**
-	 * Equals
-	 * compares this Period to another Period
+	 * Compares this Period to another Period
 	 *
-	 * @access      public
+	 * @param     Period    $other
+	 * @param     bool      $ignoreDay
 	 *
-	 * @param       Period $other
-	 * @param       bool $ignore_day
-	 *
-	 * @return      bool
+	 * @return    bool
 	 */
-	public function equals( Period $other, $ignore_day = false ) {
+	public function equals ( Period $other, $ignoreDay = false ) {
+		$timeFormat = 'Hi';
 
-		$time_format = 'Hi';
-
-		if ( ! $ignore_day and $this->getWeekday() != $other->getWeekday() ) {
+		if ( !$ignoreDay and $this->weekday != $other->weekday )
 			return false;
-		}
 
-		if ( $this->getTimeStart()->format( $time_format ) != $other->getTimeStart()->format( $time_format ) ) {
+		if ( $this->timeStart->format( $timeFormat ) != $other->timeStart->format( $timeFormat ) )
 			return false;
-		}
 
-		if ( $this->getTimeEnd()->format( $time_format ) != $other->getTimeEnd()->format( $time_format ) ) {
+		if ( $this->timeEnd->format( $timeFormat ) != $other->timeEnd->format( $timeFormat ) )
 			return false;
-		}
 
 		return true;
-
 	}
 
 	/**
-	 * Compare Two ( static equals() )
+	 * Returns a copy of the current Period and adds up a DateInterval
 	 *
-	 * @access      public
-	 * @static
-	 *
-	 * @param       Period $period_1
-	 * @param       Period $period_2
-	 * @param       bool $ignore_day
-	 *
-	 * @return      bool
+	 * @param     DateInterval  $offset The offset to add to the copy
+	 * @return    Period
 	 */
-	public static function compareTwo( Period $period_1, Period $period_2, $ignore_day = false ) {
-
-		return $period_1->equals( $period_2, $ignore_day );
-
-	}
-
-	/**
-	 * Get Copy
-	 * returns a copy of the current Period and adds up a DateInterval
-	 *
-	 * @access      public
-	 *
-	 * @param       DateInterval $offset
-	 *
-	 * @return      Period
-	 */
-	public function getCopy( DateInterval $offset ) {
-
-		$period = &$this;
-		$period->getTimeStart()->add( $offset );
-		$period->getTimeEnd()->add( $offset );
-
+	public function getCopy ( DateInterval $offset ) {
+		$period = clone $this;
+		$period->timeStart->add( $offset );
+		$period->timeEnd->add( $offset );
 		return $period;
-
 	}
 
 	/**
-	 * Factory: Dummy Period
-	 *
-	 * @access      public
-	 * @static
-	 * @return      Period
+	 * Factory for dummy Period
+	 * @return    Period
 	 */
 	public static function getDummyPeriod() {
 		return new Period( array(
@@ -401,168 +266,111 @@ class Period {
 	}
 
 	/**
-	 * Getter: Config
-	 * generates config array
-	 *
-	 * @access      public
-	 * @return      array
+	 * Generates config array representing this Period instance
+	 * @return    array
 	 */
 	public function getConfig() {
-
-		$config = array(
-			'weekday'   => $this->getWeekday(),
-			'timeStart' => $this->getTimeStart()->format( I18n::STD_DATE_TIME_FORMAT ),
-			'timeEnd'   => $this->getTimeEnd()->format( I18n::STD_DATE_TIME_FORMAT ),
-			'dummy'     => $this->isDummy()
+		return array(
+			'weekday'   => $this->weekday,
+			'timeStart' => $this->timeStart->format( I18n::STD_DATE_TIME_FORMAT ),
+			'timeEnd'   => $this->timeEnd->format( I18n::STD_DATE_TIME_FORMAT ),
+			'dummy'     => $this->dummy
 		);
-
-		return $config;
-
 	}
 
 	/**
-	 * Get Formatted Time Range
-	 * returns the formatted string with start and end time for this Period
+	 * Returns the formatted string with start and end time for this Period
 	 *
-	 * @access      public
-	 *
-	 * @param       string $time_format
-	 *
-	 * @return      string
+	 * @param     string    $timeFormat   Custom time format
+	 * @return    string
 	 */
-	public function getFormattedTimeRange( $time_format = null ) {
-
-		return $this->getTimeStart( true, $time_format ) . ' – ' . $this->getTimeEnd( true, $time_format );
-
+	public function getFormattedTimeRange( $timeFormat = null ) {
+		return $this->getTimeStart( true, $timeFormat ) . ' – ' . $this->getTimeEnd( true, $timeFormat );
 	}
 
 	/**
-	 *  Getter: Weekday
-	 *
-	 * @access     public
-	 * @return     int
+	 * Getter: Weekday
+	 * @return    int
 	 */
 	public function getWeekday() {
 		return $this->weekday;
 	}
 
 	/**
-	 *  Setter: Weekday
-	 *
-	 * @access     public
-	 *
-	 * @param      int $weekday
-	 *
-	 * @return     Period
+	 * Setter: Weekday
+	 * @param     int       $weekday
 	 */
 	public function setWeekday( $weekday ) {
 		$this->weekday = $weekday;
-
-		return $this;
 	}
 
 	/**
 	 * Getter: Time Start
 	 *
-	 * @access      public
-	 *
-	 * @param       bool $formatted
-	 * @param       string $time_format
-	 *
-	 * @return      DateTime|string
+	 * @param     bool      $formatted    Whether to format to time
+	 * @param     string    $timeFormat   Custom time format. Only works when $formatted is true
+	 * @return    DateTime|string
 	 */
-	public function getTimeStart( $formatted = false, $time_format = null ) {
+	public function getTimeStart( $formatted = false, $timeFormat = null ) {
 		return ( $formatted and $this->timeStart instanceof DateTime )
-			? $this->timeStart->format( ( $time_format != null ) ? $time_format : I18n::getTimeFormat() )
+			? $this->timeStart->format( ( $timeFormat != null ) ? $timeFormat : I18n::getTimeFormat() )
 			: $this->timeStart;
 	}
 
 	/**
-	 *  Setter: Time Start
+	 * Setter: Time Start
 	 *
-	 * @access     public
-	 *
-	 * @param      DateTime|string $timeStart
-	 *
-	 * @return     Set
+	 * @param     DateTime|string  $timeStart
 	 */
 	public function setTimeStart( $timeStart ) {
-		if ( is_string( $timeStart ) ) :
-			$date_time = new DateTime( $timeStart, I18n::getDateTimeZone() );
-		elseif ( $timeStart instanceof DateTime ) :
-			$date_time = I18n::applyTimeZone( $timeStart );
-		endif;
-
-		$this->timeStart = $date_time;
+		$this->timeStart = is_string( $timeStart )
+			? new DateTime( $timeStart, I18n::getDateTimeZone() )
+			: I18n::applyTimeZone( $timeStart );
 
 		$this->updateTimeDifference();
 		$this->updateWeekContext();
-
-		return $this;
 	}
 
 	/**
 	 * Getter: Time End
 	 *
-	 * @access      public
+	 * @param     bool    $formatted
+	 * @param     string  $time_format
 	 *
-	 * @param       bool $formatted
-	 * @param       string $time_format
-	 *
-	 * @return      DateTime|string
+	 * @return    DateTime|string
 	 */
-	public function getTimeEnd( $formatted = false, $time_format = null ) {
+	public function getTimeEnd ( $formatted = false, $time_format = null ) {
 		return ( $formatted and $this->timeEnd instanceof DateTime )
 			? $this->timeEnd->format( ( $time_format != null ) ? $time_format : I18n::getTimeFormat() )
 			: $this->timeEnd;
 	}
 
 	/**
-	 *  Setter: Time End
-	 *
-	 * @access     public
-	 *
-	 * @param      DateTime|string $timeEnd
-	 *
-	 * @return     Set
+	 * Setter: Time End
+	 * @param     DateTime|string $timeEnd
 	 */
-	public function setTimeEnd( $timeEnd ) {
-
-		if ( is_string( $timeEnd ) ) :
-			$date_time = new DateTime( $timeEnd, I18n::getDateTimeZone() );
-		elseif ( $timeEnd instanceof DateTime ) :
-			$date_time = I18n::applyTimeZone( $timeEnd );
-		endif;
-
-		$this->timeEnd = $date_time;
+	public function setTimeEnd ( $timeEnd ) {
+		$this->timeEnd = is_string( $timeEnd )
+			? new DateTime( $timeEnd, I18n::getDateTimeZone() )
+			: I18n::applyTimeZone( $timeEnd );
 
 		$this->updateTimeDifference();
 		$this->updateWeekContext();
-
-		return $this;
 	}
 
 	/**
-	 *  Getter: Is Dummy
-	 *
-	 * @access     public
+	 * Getter: Is Dummy
 	 * @return     bool
 	 */
 	public function isDummy() {
-		return $this->isDummy;
+		return $this->dummy;
 	}
 
 	/**
-	 *  Setter: Is Dummy
-	 *
-	 * @access     public
-	 *
-	 * @param      bool $isDummy
-	 *
-	 * @return     Period
+	 * Setter: Is Dummy
+	 * @param     bool      $dummy
 	 */
-	public function setIsDummy( $isDummy ) {
-		$this->isDummy = $isDummy;
+	public function setDummy( $dummy ) {
+		$this->dummy = $dummy;
 	}
-
 }

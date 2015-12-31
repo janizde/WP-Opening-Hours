@@ -1,88 +1,72 @@
 <?php
-/**
- *  Opening Hours: Module: Abstract Module
- */
 
 namespace OpeningHours\Module;
 
+/**
+ * Abstraction for plugin module
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module
+ */
 abstract class AbstractModule {
 
 	/**
-	 *  Constants
+	 * The gettext text domain used for plugin translations
 	 */
-	const  TEXTDOMAIN = 'opening-hours';
+	const TEXTDOMAIN = 'opening-hours';
 
 	/**
-	 *  Instances
-	 *
-	 * @access      private
-	 * @type        array
+	 * Collection of all singleton instances
+	 * @var       AbstractModule[]
 	 */
 	private static $instances = array();
 
-
 	/**
 	 * Provides access to a single instance of a module using the singleton pattern
-	 *
-	 * @access        public
-	 * @static
-	 * @return        AbstractModule
+	 * @return        static
 	 */
 	public static function getInstance() {
-		$module = get_called_class();
+		$class = get_called_class();
 
-		if ( ! isset( self::$instances[ $module ] ) ) {
-			self::$instances[ $module ] = new $module();
-		}
+		if ( !isset( self::$instances[ $class ] ) )
+			self::$instances[ $class ] = new $class();
 
-		return self::$instances[ $module ];
+		return self::$instances[ $class ];
 	}
 
 	/**
-	 * Render a template
+	 * Renders a template
 	 *
-	 * Allows parent/child themes to override the markup by placing the a file named basename( $default_template_path ) in their root folder,
-	 * and also allows plugins or themes to override the markup by a filter. Themes might prefer that method if they place their templates
-	 * in sub-directories to avoid cluttering the root folder. In both cases, the theme/plugin will have access to the variables so they can
-	 * fully customize the output.
+	 * @todo      make non-static
 	 *
-	 * @access        public
-	 * @static
+	 * @param     string    $templatePath Path to the template file relative to plugin directory
+	 * @param     array     $variables    Associative array of variables to expose to template file
+	 * @param     string    $require      'once' or 'always'. Whether to require the template only once per runtime
 	 *
-	 * @param          string|bool $default_template_path
-	 * @param          array $variables
-	 * @param          string $require
-	 *
-	 * @return        string
+	 * @return    string    The template markup
 	 */
-	public static function renderTemplate( $default_template_path = false, $variables = array(), $require = 'once' ) {
-		do_action( 'op_render_template_pre', $default_template_path, $variables );
+	public static function renderTemplate ( $templatePath, $variables = array(), $require = 'once' ) {
+		do_action( 'op_render_template_pre', $templatePath, $variables );
 
-		$template_path = locate_template( basename( $default_template_path ) );
+		$templatePath = op_plugin_path() . 'views/' . $templatePath;
+		$templatePath = apply_filters( 'op_template_path', $templatePath, $variables );
 
-		if ( ! $template_path ) {
-			$template_path = op_plugin_path() . 'views/' . $default_template_path;
-		}
-
-		$template_path = apply_filters( 'op_template_path', $template_path );
-
-		if ( is_file( $template_path ) ) {
+		if ( is_file( $templatePath ) ) {
 			extract( $variables );
 			ob_start();
 
-			if ( 'always' == $require ) {
-				require( $template_path );
+			if ( $require === 'always' ) {
+				require( $templatePath );
 			} else {
-				require_once( $template_path );
+				require_once( $templatePath );
 			}
 
-			$template_content = apply_filters( 'op_template_content', ob_get_clean(), $default_template_path, $template_path, $variables );
+			$template_content = apply_filters( 'op_template_content', ob_get_clean(), $templatePath, $templatePath, $variables );
 		} else {
 			$template_content = '';
 		}
 
-		do_action( 'op_render_template_post', $default_template_path, $variables, $template_path, $template_content );
-
+		do_action( 'op_render_template_post', $templatePath, $variables, $templatePath, $template_content );
 		return $template_content;
 	}
 

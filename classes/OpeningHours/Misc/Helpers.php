@@ -12,25 +12,16 @@ class Helpers {
 	 * unsets all array elements that have an empty array as value
 	 * useful if you don't want an empty string to overwrite a default value
 	 *
-	 * @access      public
-	 * @static
+	 * @param     array     $array    The array whose empty values to unset
 	 *
-	 * @param       array $array
-	 *
-	 * @return      array
+	 * @return    array               The array without any empty values
 	 */
 	public static function unsetEmptyValues( array $array ) {
-
-		foreach ( $array as $key => $value ) :
-
-			if ( is_string( $value ) and empty( $value ) ) {
+		foreach ( $array as $key => $value )
+			if ( is_string( $value ) and empty( $value ) )
 				unset( $array[ $key ] );
-			}
-
-		endforeach;
 
 		return $array;
-
 	}
 
 }
