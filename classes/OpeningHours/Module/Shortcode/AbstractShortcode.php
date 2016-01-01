@@ -60,7 +60,7 @@ abstract class AbstractShortcode extends AbstractModule {
 
 		try {
 			$this->validate();
-			add_shortcode( $this->shortcodeTag, array( $this, 'shortcodeCallback' ) );
+			add_shortcode( $this->shortcodeTag, array( $this, 'renderShortcode' ) );
 		} catch ( InvalidArgumentException $e ) {
 			add_notice( $e->getMessage(), 'error' );
 		}
@@ -83,7 +83,7 @@ abstract class AbstractShortcode extends AbstractModule {
 	 *
 	 * @return    string    The shortcode markup
 	 */
-	public function shortcodeCallback ( array $attributes ) {
+	public function renderShortcode ( array $attributes ) {
 		$attributes = Helpers::unsetEmptyValues( $attributes );
 		$attributes = shortcode_atts( $this->defaultAttributes, $attributes, $this->shortcodeTag );
 
