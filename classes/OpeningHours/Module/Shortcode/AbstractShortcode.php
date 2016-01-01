@@ -1,7 +1,4 @@
 <?php
-/**
- *  Opening Hours: Module: Shortcode: AbstractShortcode
- */
 
 namespace OpeningHours\Module\Shortcode;
 
@@ -10,353 +7,174 @@ use OpeningHours\Misc\Helpers;
 
 use InvalidArgumentException;
 
+/**
+ * Abstraction for a Shortcode
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\Shortcode
+ */
 abstract class AbstractShortcode extends AbstractModule {
 
 	/**
-	 *  Shortcode Tag
-	 *  The tag used for the shortcode
-	 *
-	 * @access     protected
-	 * @type       string
+	 * The tag used for the shortcode
+	 * @var       string
 	 */
 	protected $shortcodeTag;
 
 	/**
-	 *  Default Attributes
-	 *  Associative array with:
-	 *    key:    attribute name
-	 *    value:  default value
+	 * Associative array with:
+	 *  key:    attribute name
+	 *  value:  default value
 	 *
-	 * @access     protected
-	 * @type       array
+	 * @var       array
 	 */
 	protected $defaultAttributes = array();
 
 	/**
-	 *  Valid Attribute Values
-	 *  Associative array with:
-	 *    key:    attribute name
-	 *    value:  sequential array with accepted values. First array element is default/fallback value.
+	 * Associative array with:
+	 *  key:    attribute name
+	 *  Value:  sequential array with accepted values. First array element is default/fallback value.
 	 *
-	 * @access     protected
-	 * @type       array
+	 * @var       array
 	 */
 	protected $validAttributeValues = array();
 
 	/**
-	 *  Template Path
-	 *  Path to template file to render shortcode in. Default directory is /views/
-	 *
-	 * @access     protected
-	 * @type       string
+	 * Path to shortcode template file. Default directory is /views/
+	 * @var       string
 	 */
 	protected $templatePath;
 
-	/**
-	 *  Constructor
-	 *
-	 * @access     public
-	 */
 	public function __construct() {
-
 		$this->registerHookCallbacks();
-
 	}
 
-	/**
-	 *  Register Hook Callbacks
-	 *
-	 * @access     protected
-	 */
+	/** Registers Hook Callbacks */
 	protected function registerHookCallbacks() {
-
 		add_action( 'init', array( $this, 'registerShortCode' ) );
-
 	}
 
-	/**
-	 *  Register Shortcode
-	 *
-	 * @access     public
-	 * @wp_acton   int
-	 */
+	/** Registers Shortcode */
 	public function registerShortcode() {
-
 		$this->init();
 
 		try {
 			$this->validate();
-			add_shortcode( $this->getShortcodeTag(), array( $this, 'renderShortcode' ) );
+			add_shortcode( $this->shortcodeTag, array( $this, 'shortcodeCallback' ) );
 		} catch ( InvalidArgumentException $e ) {
 			add_notice( $e->getMessage(), 'error' );
 		}
-
 	}
 
 	/**
-	 *  Validate Shortcode
+	 * Validates the current Shortcode state
 	 *
-	 * @access     protected
-	 * @throws     InvalidArgumentException
+	 * @throws    InvalidArgumentException    On validation error
 	 */
 	public function validate() {
-
-		if ( empty( $this->shortcodeTag ) ) {
+		if ( empty( $this->shortcodeTag ) )
 			throw new InvalidArgumentException( __( 'Shortcode has no tag name and could not be registered', self::TEXTDOMAIN ) );
-		}
-
 	}
 
 	/**
-	 *  Render Shortcode
+	 * Shortcode Callback
 	 *
-	 * @access     public
+	 * @param     array     $attributes The attributes for the shortcode
 	 *
-	 * @param      array $attributes
-	 *
-	 * @return     string
+	 * @return    string    The shortcode markup
 	 */
-	public function renderShortcode( array $attributes ) {
-
-		/**
-		 * Unset empty values to prevent them from overwriting defaults
-		 */
+	public function shortcodeCallback ( array $attributes ) {
 		$attributes = Helpers::unsetEmptyValues( $attributes );
-
-		$attributes = shortcode_atts( $this->getDefaultAttributes(), $attributes, $this->getShortcodeTag() );
+		$attributes = shortcode_atts( $this->defaultAttributes, $attributes, $this->shortcodeTag );
 
 		if ( !array_key_exists( 'shortcode', $attributes ) )
 			$attributes['shortcode']  = $this;
 
 		ob_start();
-
 		$this->shortcode( $attributes );
-
 		$shortcodeMarkup = ob_get_contents();
 		ob_end_clean();
 
-		$filter_hook = 'op_shortcode_' . $this->getShortcodeTag() . '_markup';
-
-		/**
-		 * Filter: Shortcode Markup
-		 *
-		 * @hook      op_shortcode_{shortcode_tag}_markup
-		 * @param     string              $shortcode_markup     the shortcode output
-		 * @param     AbstractShortcode   $shortcode            the shortcode singleton instance
-		 */
-		apply_filters( $filter_hook, $shortcodeMarkup, static::getInstance() );
+		$filterHook = 'op_shortcode_' . $this->shortcodeTag . '_markup';
+		apply_filters( $filterHook, $shortcodeMarkup, static::getInstance() );
 
 		return $shortcodeMarkup;
-
 	}
 
 	/**
-	 * Render Shortcode Template
+	 * Renders the Shortcode Template
 	 *
-	 * @access      protected
+	 * @param     array     $attributes The shortcode attributes
+	 * @param     array     $variables  The variables for the template
+	 * @param     string    $require    Whether to require the template file once or always
 	 *
-	 * @param       array $attributes
-	 * @param       array $variables
-	 * @param       string $require
-	 *
-	 * @return      string
+	 * @return    string    The shortcode markup
 	 */
-	public function renderShortcodeTemplate( array $attributes, $variables = array(), $require = 'always' ) {
+	public function renderShortcodeTemplate ( array $attributes, $variables = array(), $require = 'always' ) {
+		if ( empty( $this->templatePath ) )
+			return '';
 
-		if ( empty( $this->templatePath ) ) {
-			return;
+		$variables['attributes'] = $attributes;
+
+		return self::renderTemplate( $this->templatePath, $variables, $require );
+	}
+
+	/**
+	 * Applies filters on each attribute
+	 *
+	 * @param     array     $attributes The attributes to filter
+	 *
+	 * @return    array     The filtered attributes
+	 */
+	protected function filterAttributes ( array $attributes ) {
+		$validValues = $this->validAttributeValues;
+		$filterHookAttributes = 'op_shortcode_' . $this->shortcodeTag . '_attributes';
+
+		$attributes = apply_filters( $filterHookAttributes, $attributes, static::getInstance() );
+
+		foreach ( $attributes as $key => &$value ) {
+			$filterHook = 'op_shortcode_' . $this->shortcodeTag . '_' . $key;
+			$value      = apply_filters( $filterHook, $value, static::getInstance() );
+
+			if ( !array_key_exists( $key, $validValues ) or !is_array( $validValues[ $key ] ) or
+			     count( $validValues[ $key ] ) < 1 or in_array( $value, $validValues[ $key ] ) or
+			     !isset( $validValues[ $key ][0] ) )
+				continue;
+
+			$value = $validValues[ $key ][0];
 		}
-
-		$variables['attributes'] = (array) $attributes;
-
-		return self::renderTemplate(
-			$this->getTemplatePath(),
-			$variables,
-			$require
-		);
-
-	}
-
-	/**
-	 *  Filter Attributes
-	 *  applies filters on each attribute
-	 *
-	 * @access     protected
-	 * @static
-	 *
-	 * @param      array $attributes
-	 *
-	 * @return     array
-	 */
-	protected function filterAttributes( array $attributes ) {
-
-		if ( empty( $this->shortcodeTag ) ) :
-			trigger_error( 'Tried to filter shortcode attributes before shortcode tag has been set.' );
-
-			return null;
-		endif;
-
-		$validValues = $this->getValidAttributeValues();
-
-		$filter_hook_attributes = 'op_shortcode_' . $this->getShortcodeTag() . '_attributes';
-
-		/**
-		 * Filter: Shortcode Attributes
-		 *
-		 * @hook      op_shortcode_{shortcode_tag}_attributes
-		 * @param     array               $attributes     the shortcode attributes array after validation
-		 * @param     AbstractShortcode   $shortcode      shortcode singleton instance
-		 */
-		$attributes = apply_filters( $filter_hook_attributes, $attributes, static::getInstance() );
-
-		foreach ( $attributes as $key => &$value ) :
-
-			$filter_hook = 'op_shortcode_' . $this->getShortcodeTag() . '_' . $key;
-
-			/**
-			 * Filter: Shortcode Attribute
-			 *
-			 * @hook      op_shortcode_{shortcode_tag}_{attribute_key}
-			 * @param     mixed               $value        the attribute value
-			 * @param     AbstractShortcode   $shortcode    shortcode singleton instance
-			 */
-			$value = apply_filters( $filter_hook, $value, static::getInstance() );
-
-			/** Check if value is valid */
-			if ( isset( $validValues[ $key ] )
-			     and is_array( $validValues[ $key ] )
-			         and count( $validValues[ $key ] )
-			             and ! in_array( $value, $validValues[ $key ] )
-			                 and isset( $validValues[ $key ][0] )
-			) :
-
-				$value = $validValues[ $key ][0];
-
-			endif;
-
-		endforeach;
-
 		unset( $key, $value );
-
 		return $attributes;
-
 	}
 
 	/**
-	 *  Getter: Shortcode Tag
-	 *
-	 * @access     public
-	 * @return     string
+	 * Getter: Shortcode Tag
+	 * @return    string
 	 */
-	public function getShortcodeTag() {
+	public function getShortcodeTag () {
 		return $this->shortcodeTag;
 	}
 
 	/**
-	 *  Setter: Shortcode Tag
-	 *
-	 * @access     public
-	 *
-	 * @param      string $shortcodeTag
-	 *
-	 * @return     AbstractShortcode
+	 * Setter: Shortcode Tag
+	 * @param     string    $shortcodeTag
 	 */
 	public function setShortcodeTag( $shortcodeTag ) {
-		/**
-		 * Filter: Shortcode Tag
-		 *
-		 * @hook      op_shortcode_tag
-		 * @param     string              $shortcode_tag
-		 */
 		$this->shortcodeTag = apply_filters( 'op_shortcode_tag', $shortcodeTag );
-
-		return $this;
 	}
 
-	/**
-	 *  Getter: Default Attributes
-	 *
-	 * @access     public
-	 * @return     array
-	 */
-	public function getDefaultAttributes() {
-		return $this->defaultAttributes;
-	}
 
 	/**
-	 *  Getter: Default Attribute (single)
+	 * Getter: Default Attribute (single)
 	 *
-	 * @access     public
+	 * @param     string    $attributeName
 	 *
-	 * @param      string $attribute_name
-	 *
-	 * @return     mixed
+	 * @return    mixed
 	 */
-	public function getDefaultAttribute( $attribute_name ) {
-		return ( isset( $this->defaultAttributes[ $attribute_name ] ) )
-			? $this->defaultAttributes[ $attribute_name ]
+	public function getDefaultAttribute( $attributeName ) {
+		return ( isset( $this->defaultAttributes[ $attributeName ] ) )
+			? $this->defaultAttributes[ $attributeName ]
 			: null;
-	}
-
-	/**
-	 *  Setter: Default Attributes
-	 *
-	 * @access     protected
-	 *
-	 * @param      array $defaultAttributes
-	 *
-	 * @return     AbstractShortcode
-	 */
-	protected function setDefaultAttributes( array $defaultAttributes ) {
-		$this->defaultAttributes = $defaultAttributes;
-
-		return $this;
-	}
-
-	/**
-	 *  Getter: Valid Attribute Values
-	 *
-	 * @access     public
-	 * @return     array
-	 */
-	public function getValidAttributeValues() {
-		return $this->validAttributeValues;
-	}
-
-	/**
-	 *  Setter: Valid Attribute Values
-	 *
-	 * @access     protected
-	 *
-	 * @param      array $validAttributeValues
-	 *
-	 * @return     AbstractShortcode
-	 */
-	protected function setValidAttributeValues( array $validAttributeValues ) {
-		$this->validAttributeValues = $validAttributeValues;
-	}
-
-	/**
-	 *  Getter: Template Path
-	 *
-	 * @access     public
-	 * @return     string
-	 */
-	public function getTemplatePath() {
-		return $this->templatePath;
-	}
-
-	/**
-	 *  Setter: Template Path
-	 *
-	 * @access     protected
-	 *
-	 * @param      string $templatePath
-	 *
-	 * @return     AbstractShortcode
-	 */
-	protected function setTemplatePath( $templatePath ) {
-		$this->templatePath = $templatePath;
 	}
 
 	/**
@@ -367,7 +185,7 @@ abstract class AbstractShortcode extends AbstractModule {
 	 *
 	 * @param      array $attributes
 	 */
-	abstract public function shortcode( array $attributes );
+	abstract public function shortcode ( array $attributes );
 
 	/**
 	 *  Init

@@ -1,7 +1,4 @@
 <?php
-/**
- * Opening Hours: Module: Shortcode: Holidays
- */
 
 namespace OpeningHours\Module\Shortcode;
 
@@ -9,18 +6,19 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 
+/**
+ * Shortcode implementation for a list of Holidays
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\Shortcode
+ */
 class Holidays extends AbstractShortcode {
 
-	/**
-	 * Init
-	 *
-	 * @access          protected
-	 */
+	/** @inheritdoc */
 	protected function init() {
-
 		$this->setShortcodeTag( 'op-holidays' );
 
-		$default_attributes = array(
+		$this->defaultAttributes = array(
 			'title'             => null,
 			'set_id'            => null,
 			'highlight'         => false,
@@ -33,38 +31,24 @@ class Holidays extends AbstractShortcode {
 			'date_format'       => I18n::getDateFormat()
 		);
 
-		$this->setDefaultAttributes( $default_attributes );
-
-		$this->setTemplatePath( 'shortcode/holidays.php' );
-
+		$this->templatePath = 'shortcode/holidays.php';
 	}
 
-	/**
-	 * Shortcode
-	 *
-	 * @access          public
-	 *
-	 * @param           array $attributes
-	 */
+	/** @inheritdoc */
 	public function shortcode( array $attributes ) {
+		$setId = $attributes['set_id'];
 
-		$set_id = $attributes['set_id'];
-
-		if ( ! is_numeric( $set_id ) ) {
+		if ( !is_numeric( $setId ) )
 			return;
-		}
 
-		$set = OpeningHours::getSet( $set_id );
+		$set = OpeningHours::getSet( $setId );
 
-		if ( ! $set instanceof Set ) {
+		if ( !$set instanceof Set )
 			return;
-		}
 
-		$attributes['set']      = $set;
+		$attributes['set'] = $set;
 		$attributes['holidays'] = $set->getHolidays();
-
 		echo $this->renderShortcodeTemplate( $attributes );
-
 	}
 
 }

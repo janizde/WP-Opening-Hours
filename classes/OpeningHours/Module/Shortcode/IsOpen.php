@@ -1,7 +1,4 @@
 <?php
-/**
- *  Opening Hours: Module: Shortcode: IsOpen
- */
 
 namespace OpeningHours\Module\Shortcode;
 
@@ -10,18 +7,20 @@ use OpeningHours\Module\I18n;
 use OpeningHours\Entity\Set;
 use OpeningHours\Entity\Period;
 
+/**
+ * Shortcode indicating whether the venue is currently open or not
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\Shortcode
+ */
 class IsOpen extends AbstractShortcode {
 
-	/**
-	 *  Init
-	 *
-	 * @access     protected
-	 */
+	/** @inheritdoc */
 	protected function init() {
 
 		$this->setShortcodeTag( 'op-is-open' );
 
-		$default_attributes = array(
+		$this->defaultAttributes = array(
 			'set_id'              => null,
 			'open_text'           => __( 'We\'re currently open.', self::TEXTDOMAIN ),
 			'closed_text'         => __( 'We\'re currently closed.', self::TEXTDOMAIN ),
@@ -40,75 +39,57 @@ class IsOpen extends AbstractShortcode {
 			'time_format'         => I18n::getTimeFormat()
 		);
 
-		$this->setDefaultAttributes( $default_attributes );
-
-		$valid_attribute_values = array(
+		$this->validAttributeValues = array(
 			'show_next' => array( false, true )
 		);
 
-		$this->setValidAttributeValues( $valid_attribute_values );
-
-		$this->setTemplatePath( 'shortcode/is-open.php' );
-
+		$this->templatePath = 'shortcode/is-open.php';
 	}
 
-	/**
-	 * Shortcode
-	 *
-	 * @access     public
-	 *
-	 * @param      array $attributes
-	 */
+	/** @inheritdoc */
 	public function shortcode( array $attributes ) {
+		$setId = $attributes['set_id'];
 
-		$set_id = $attributes['set_id'];
-
-		if ( $set_id === null or ! is_numeric( $set_id ) or $set_id <= 0 ) {
+		if ( $setId === null or !is_numeric( $setId ) or $setId <= 0 )
 			return;
-		}
 
-		$set = OpeningHours::getSet( $set_id );
+		$set = OpeningHours::getSet( $setId );
 
-		if ( ! $set instanceof Set ) {
+		if ( !$set instanceof Set )
 			return;
-		}
 
-		$is_open = $set->isOpen();
+		$isOpen = $set->isOpen();
+		$nextPeriod = $set->getNextOpenPeriod();
 
-		$next_period = $set->getNextOpenPeriod();
+		if ( $attributes['show_next'] and $nextPeriod instanceof Period ) {
 
-		if ( $attributes['show_next'] and $next_period instanceof Period ) :
-
-			$attributes['next_period'] = $next_period;
+			$attributes['next_period'] = $nextPeriod;
 
 			$weekdays = I18n::getWeekdaysNumeric();
 
 			$attributes['next_string'] = sprintf(
-			// Format String
+				// Format String
 				$attributes['next_format'],
 
 				// 1$: Formatted Date
-				$next_period->getTimeStart()->format( $attributes['date_format'] ),
+				$nextPeriod->getTimeStart()->format( $attributes['date_format'] ),
 
 				// 2$: Translated Weekday
-				$weekdays[ $next_period->getWeekday() ],
+				$weekdays[ $nextPeriod->getWeekday() ],
 
 				// 3%: Formatted Start Time
-				$next_period->getTimeStart()->format( $attributes['time_format'] ),
+				$nextPeriod->getTimeStart()->format( $attributes['time_format'] ),
 
 				// 4%: Formatted End Time
-				$next_period->getTimeEnd()->format( $attributes['time_format'] )
+				$nextPeriod->getTimeEnd()->format( $attributes['time_format'] )
 			);
+		}
 
-		endif;
-
-		$attributes['is_open'] = $is_open;
-		$attributes['classes'] .= ( $is_open ) ? $attributes['open_class'] : $attributes['closed_class'];
-		$attributes['text']        = ( $is_open ) ? $attributes['open_text'] : $attributes['closed_text'];
+		$attributes['is_open'] = $isOpen;
+		$attributes['classes'] .= ( $isOpen ) ? $attributes['open_class'] : $attributes['closed_class'];
+		$attributes['text'] = ( $isOpen ) ? $attributes['open_text'] : $attributes['closed_text'];
 		$attributes['next_period'] = $set->getNextOpenPeriod();
 
 		echo $this->renderShortcodeTemplate( $attributes );
-
 	}
-
 }

@@ -1,7 +1,4 @@
 <?php
-/**
- * Opening Hours: Module: Shortcode: Irregular Openings
- */
 
 namespace OpeningHours\Module\Shortcode;
 
@@ -9,18 +6,20 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 
+/**
+ * Shortcode implementation for a list of Irregular Openings
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\Shortcode
+ */
 class IrregularOpenings extends AbstractShortcode {
 
-	/**
-	 * Init
-	 *
-	 * @access          protected
-	 */
-	protected function init() {
+	/** @inheritdoc */
+	protected function init () {
 
 		$this->setShortcodeTag( 'op-irregular-openings' );
 
-		$default_attributes = array(
+		$this->defaultAttributes = array(
 			'title'             => null,
 			'set_id'            => null,
 			'highlight'         => false,
@@ -34,39 +33,25 @@ class IrregularOpenings extends AbstractShortcode {
 			'time_format'       => I18n::getTimeFormat()
 		);
 
-		$this->setDefaultAttributes( $default_attributes );
-
-		$this->setTemplatePath( 'shortcode/irregular-openings.php' );
+		$this->templatePath = 'shortcode/irregular-openings.php';
 
 	}
 
-	/**
-	 * Shortcode
-	 *
-	 * @access          public
-	 *
-	 * @param           array $attributes
-	 */
-	public function shortcode( array $attributes ) {
+	/** @inheritdoc */
+	public function shortcode ( array $attributes ) {
+		$setId = $attributes['set_id'];
 
-		$set_id = $attributes['set_id'];
-
-		if ( ! is_numeric( $set_id ) ) {
+		if ( !is_numeric( $setId ) )
 			return;
-		}
 
-		$set = OpeningHours::getSet( $set_id );
+		$set = OpeningHours::getSet( $setId );
 
-		if ( ! $set instanceof Set ) {
+		if ( !$set instanceof Set )
 			return;
-		}
 
-		$attributes['set']                = $set;
+		$attributes['set'] = $set;
 		$attributes['irregular_openings'] = $set->getIrregularOpenings();
 
 		echo $this->renderShortcodeTemplate( $attributes );
-
 	}
-
-
 }
