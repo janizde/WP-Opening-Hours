@@ -67,7 +67,7 @@ abstract class AbstractMetaBox extends AbstractModule {
 	 * Determines current set and checks if it is a parent set
 	 * @return    bool
 	 */
-	public static function currentSetIsParent () {
+	public function currentSetIsParent () {
 		global $post;
 		return !(bool) $post->post_parent;
 	}

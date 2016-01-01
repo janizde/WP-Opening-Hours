@@ -1,7 +1,4 @@
 <?php
-/**
- * Opening Hours: Module: Custom Post Type: Meta Box: Holidays
- */
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
@@ -12,6 +9,12 @@ use OpeningHours\Module\CustomPostType\Set;
 
 use WP_Post;
 
+/**
+ * Meta Box implementation for Holidays meta box
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\CustomPostType\MetaBox
+ */
 class Holidays extends AbstractMetaBox {
 
 	const ID = 'op_meta_box_holidays';
@@ -25,17 +28,10 @@ class Holidays extends AbstractMetaBox {
 	const WP_NONCE_ACTION = 'save_data';
 
 	const HOLIDAYS_META_KEY = '_op_set_holidays';
-
 	const GLOBAL_POST_KEY = 'opening-hours-holidays';
 
-	/**
-	 * Register Meta Box
-	 *
-	 * @access          public
-	 *
-	 * @static
-	 */
-	public static function registerMetaBox() {
+	/** @inheritdoc */
+	public function registerMetaBox () {
 
 		if ( !static::currentSetIsParent() )
 			return;
@@ -51,96 +47,60 @@ class Holidays extends AbstractMetaBox {
 
 	}
 
-	/**
-	 * Render Meta Box
-	 *
-	 * @access          public
-	 * @static
-	 *
-	 * @param           WP_Post $post
-	 */
-	public static function renderMetaBox( WP_Post $post ) {
-
+	/** @inheritdoc */
+	public function renderMetaBox ( WP_Post $post ) {
 		OpeningHoursModule::setCurrentSetId( $post->ID );
-
 		$set = OpeningHoursModule::getCurrentSet();
 
-		if ( ! count( $set->getHolidays() ) ) {
+		if ( count( $set->getHolidays() ) < 1 )
 			$set->getHolidays()->append( Holiday::createDummyPeriod() );
-		}
 
 		$variables = array(
 			'holidays' => $set->getHolidays()
 		);
 
-		echo static::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );
-
+		echo $this->renderTemplate( self::TEMPLATE_PATH, $variables, 'once' );
 	}
 
-	/**
-	 * Save Data
-	 *
-	 * @access          protected
-	 * @static
-	 *
-	 * @param           int $post_id
-	 * @param           WP_Post $post
-	 * @param           bool $update
-	 */
-	protected static function saveData( $post_id, WP_Post $post, $update ) {
-
+	/** @inheritdoc */
+	protected function saveData ( $post_id, WP_Post $post, $update ) {
 		$config = $_POST[ static::GLOBAL_POST_KEY ];
+		$config = $this->filterPostConfig( $config );
 
-		$config = static::filterPostConfig( $config );
+		if ( !is_array( $config ) or count( $config ) < 1 )
+			return;
 
 		global $post;
-
-		if ( is_array( $config ) and count( $config ) ) {
-			update_post_meta( $post->ID, static::HOLIDAYS_META_KEY, $config );
-		}
-
+		update_post_meta( $post->ID, static::HOLIDAYS_META_KEY, $config );
 	}
 
 	/**
-	 * Filter Post Config
-	 * filters config array passed via $_POST
+	 * Filters the Config for Holidays
 	 *
-	 * @access          public
-	 * @static
+	 * @param     array     $config   The config to filter
 	 *
-	 * @param           array $config
-	 *
-	 * @return          array
+	 * @return    array               The filtered config
 	 */
-	public static function filterPostConfig( array $config ) {
-
-		$new_config = array();
-
-		for ( $i = 0; $i < count( $config['name'] ); $i ++ ) :
-
-			if (
-				! isset( $config['name'][ $i ] )
-				or empty( $config['name'][ $i ] )
-
-				or ! isset( $config['dateStart'][ $i ] )
-				or ! preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateStart'][ $i ] )
-
-				or ! isset( $config['dateEnd'][ $i ] )
-				or ! preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateEnd'][ $i ] )
-			) :
+	public function filterPostConfig ( array $config ) {
+		$newConfig = array();
+		for ( $i = 0; $i < count( $config['name'] ); $i ++ ) {
+			if ( !isset( $config['name'][$i] ) or empty( $config['name'][$i] ) )
 				continue;
-			endif;
 
-			$new_config[] = array(
+			if ( !isset( $config['dateStart'][$i] ) or !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateStart'][$i] ) )
+				continue;
+
+			if ( !isset( $config['dateEnd'][$i] ) or !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateEnd'][$i] ) )
+				continue;
+
+			$newConfig[] = array(
 				'name'      => $config['name'][ $i ],
 				'dateStart' => $config['dateStart'][ $i ],
 				'dateEnd'   => $config['dateEnd'][ $i ]
 			);
+		}
 
-		endfor;
-
-		return $new_config;
-
+		return $newConfig;
 	}
 
 }

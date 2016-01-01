@@ -1,7 +1,4 @@
 <?php
-/**
- * Opening Hours: Module: Custom Post Type: Meta Box: Irregular Openings
- */
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
@@ -12,6 +9,12 @@ use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 
 use WP_Post;
 
+/**
+ * Meta Box implementation for Holidays meta box
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\CustomPostType\MetaBox
+ */
 class IrregularOpenings extends AbstractMetaBox {
 
 	const ID = 'op_meta_box_irregular_openings';
@@ -28,15 +31,9 @@ class IrregularOpenings extends AbstractMetaBox {
 
 	const GLOBAL_POST_KEY = 'opening-hours-irregular-openings';
 
-	/**
-	 * Register Meta Box
-	 *
-	 * @access          public
-	 * @static
-	 */
-	public static function registerMetaBox() {
-
-		if ( !static::currentSetIsParent() )
+	/** @inheritdoc */
+	public function registerMetaBox () {
+		if ( !$this->currentSetIsParent() )
 			return;
 
 		add_meta_box(
@@ -47,106 +44,61 @@ class IrregularOpenings extends AbstractMetaBox {
 			static::CONTEXT,
 			static::PRIORITY
 		);
-
 	}
 
-	/**
-	 * Render Meta Box
-	 *
-	 * @access          public
-	 * @static
-	 *
-	 * @param           WP_Post $post
-	 */
-	public static function renderMetaBox( WP_Post $post ) {
-
+	/** @inheritdoc */
+	public function renderMetaBox ( WP_Post $post ) {
 		OpeningHoursModule::setCurrentSetId( $post->ID );
-
 		$set = OpeningHoursModule::getCurrentSet();
 
-		if ( ! count( $set->getIrregularOpenings() ) ) {
+		if ( count( $set->getIrregularOpenings() ) < 1 )
 			$set->getIrregularOpenings()->append( IrregularOpening::createDummy() );
-		}
 
 		$variables = array(
 			'irregular_openings' => $set->getIrregularOpenings()
 		);
 
-		echo static::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );
-
+		echo self::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );
 	}
 
-	/**
-	 * Save Data
-	 *
-	 * @access          protected
-	 * @static
-	 *
-	 * @param           int $post_id
-	 * @param           WP_Post $post
-	 * @param           bool $update
-	 */
-	protected static function saveData( $post_id, WP_Post $post, $update ) {
-
+	/** @inheritdoc */
+	protected function saveData ( $post_id, WP_Post $post, $update ) {
 		$config = $_POST[ static::GLOBAL_POST_KEY ];
-
 		$config = static::filterPostConfig( $config );
+
+		if ( !is_array( $config ) or count( $config ) < 1 )
+			return;
 
 		global $post;
 
-		if ( is_array( $config ) and count( $config ) ) {
-			update_post_meta( $post->ID, static::IRREGULAR_OPENINGS_META_KEY, $config );
-		}
-
+		update_post_meta( $post->ID, static::IRREGULAR_OPENINGS_META_KEY, $config );
 	}
 
-	/**
-	 * Filter Post Config
-	 * filters config array passed via $_POST
-	 *
-	 * @access          public
-	 * @static
-	 *
-	 * @param           array $config
-	 *
-	 * @return          array
-	 */
-	public static function filterPostConfig( array $config ) {
-
-		$new_config = array();
-
-		for ( $i = 0; $i < count( $config['name'] ); $i ++ ) :
-
-			if (
-				! isset( $config['name'][ $i ] )
-				or empty( $config['name'][ $i ] )
-
-				or ! isset( $config['date'][ $i ] )
-				or ! preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['date'][ $i ] )
-
-				or ! isset( $config['timeStart'][ $i ] )
-				or ! preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeStart'][ $i ] )
-
-				or ! isset( $config['timeEnd'][ $i ] )
-				or ! preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeEnd'][ $i ] )
-
-			) :
+	/** @inheritdoc */
+	public function filterPostConfig ( array $config ) {
+		$newConfig = array();
+		for ( $i = 0; $i < count( $config['name'] ); $i ++ ) {
+			if ( !isset( $config['name'][$i] ) or empty( $config['name'][$i] ) )
 				continue;
-			endif;
 
-			$new_config[] = array(
+			if ( !isset( $config['date'][$i] ) or preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['date'][$i] ) === false )
+				continue;
+
+			if ( !isset( $config['timeStart'][$i] ) or preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeStart'][$i] ) === false )
+				continue;
+
+			if ( !isset( $config['timeEnd'][$i] ) or preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeEnd'][$i] ) === false )
+				continue;
+
+			$newConfig[] = array(
 				'name'      => $config['name'][ $i ],
 				'date'      => $config['date'][ $i ],
 				'timeStart' => $config['timeStart'][ $i ],
 				'timeEnd'   => $config['timeEnd'][ $i ],
 				'dummy'     => false
 			);
+		}
 
-		endfor;
-
-		return $new_config;
-
+		return $newConfig;
 	}
-
-
 }

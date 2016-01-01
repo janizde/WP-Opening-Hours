@@ -1,7 +1,4 @@
 <?php
-/**
- * Opening Hours: Module: Custom Post Type: Meta Box: Donation
- */
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
@@ -10,11 +7,14 @@ use OpeningHours\Module\I18n;
 
 use WP_Post;
 
+/**
+ * Meta Box implementation for donate meta box
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\CustomPostType\MetaBox
+ */
 class Donation extends AbstractMetaBox {
 
-	/**
-	 * Constants
-	 */
 	const ID = 'op_meta_box_donation';
 	const CONTEXT = 'side';
 	const PRIORITY = 'high';
@@ -25,14 +25,8 @@ class Donation extends AbstractMetaBox {
 	const WP_NONCE_NAME = 'op_meta_box_donation';
 	const WP_NONCE_ACTION = 'donate';
 
-	/**
-	 * Register Meta Box
-	 *
-	 * @access          public
-	 * @static
-	 */
-	public static function registerMetaBox() {
-
+	/** @inheritdoc */
+	public function registerMetaBox() {
 		add_meta_box(
 			static::ID,
 			__( 'Please Donate', I18n::TEXTDOMAIN ),
@@ -41,38 +35,15 @@ class Donation extends AbstractMetaBox {
 			static::CONTEXT,
 			static::PRIORITY
 		);
-
 	}
 
-	/**
-	 * Render Meta Box
-	 *
-	 * @access          public
-	 *
-	 * @param           WP_Post $post
-	 *
-	 * @static
-	 */
-	public static function renderMetaBox( WP_Post $post ) {
-
+	/** @inheritdoc */
+	public function renderMetaBox ( WP_Post $post ) {
 		echo static::renderTemplate( static::TEMPLATE_PATH );
-
 	}
 
-	/**
-	 * Save Data
-	 *
-	 * @access          protected
-	 * @static
-	 *
-	 * @param           int $post_id
-	 * @param           WP_Post $post
-	 * @param           bool $update
-	 */
-	protected static function saveData( $post_id, WP_Post $post, $update ) {
-
+	/** @inheritdoc */
+	protected function saveData ( $post_id, WP_Post $post, $update ) {
 		// Silence is golden
-
 	}
-
 }
