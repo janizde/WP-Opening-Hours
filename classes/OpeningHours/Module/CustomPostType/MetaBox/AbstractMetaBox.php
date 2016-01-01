@@ -1,7 +1,4 @@
 <?php
-/**
- * OpeningHours: Module: CustomPostType: MetaBox: AbstractMetaBox
- */
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
@@ -11,11 +8,14 @@ use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 
 use WP_Post;
 
+/**
+ * Abstraction for a Meta Box
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\CustomPostType\MetaBox
+ */
 abstract class AbstractMetaBox extends AbstractModule {
 
-	/**
-	 * Constants
-	 */
 	const POST_TYPE = 'post';
 	const TEMPLATE_PATH = null;
 	const WP_ACTION_ADD_META_BOXES = 'add_meta_boxes';
@@ -24,141 +24,70 @@ abstract class AbstractMetaBox extends AbstractModule {
 	const WP_NONCE_NAME = 'op_custom_meta_box_name';
 	const WP_NONCE_ACTION = 'op_custom_meta_box_action';
 
-	/**
-	 * Constructor
-	 *
-	 * @access          public
-	 */
+	/** Constructor */
 	public function __construct() {
+		$this->registerHookCallbacks();
+	}
 
-		static::registerHookCallbacks();
-
+	/** Registers Hook Callbacks */
+	protected function registerHookCallbacks() {
+		add_action( static::WP_ACTION_ADD_META_BOXES, array( $this, 'registerMetaBox' ), 10, 2 );
+		add_action( static::WP_ACTION_SAVE_POST, array( $this, 'saveDataCallback' ), 10, 3 );
 	}
 
 	/**
-	 * Register Hook Callbacks
-	 * registers wp action hooks
+	 * Callback for saving the meta box data.
 	 *
-	 * @access          protected
-	 * @static
+	 * @param     int       $post_id  The current post's id
+	 * @param     WP_Post   $post     The current post
+	 * @param     bool      $update   Whether an existing post is updated (false if new post is created)
 	 */
-	protected static function registerHookCallbacks() {
-
-		add_action( static::WP_ACTION_ADD_META_BOXES, array( get_called_class(), 'registerMetaBox' ), 10, 2 );
-		add_action( static::WP_ACTION_SAVE_POST, array( get_called_class(), 'saveDataWrap' ), 10, 3 );
-
-	}
-
-	/**
-	 * Save Data Wrap
-	 * verifies WordPress nonce and calls child saveData method
-	 *
-	 * @access          public
-	 * @static
-	 *
-	 * @param           int $post_id
-	 * @param           WP_Post $post
-	 * @param           bool $update
-	 *
-	 * @wp_hook         save_post
-	 */
-	public static function saveDataWrap( $post_id, WP_Post $post, $update ) {
-
-		if ( static::verifyNonce() === false ) {
+	public function saveDataCallback ( $post_id, WP_Post $post, $update ) {
+		if ( $this->verifyNonce() === false )
 			return;
-		}
 
-		static::saveData( $post_id, $post, $update );
-
+		$this->saveData( $post_id, $post, $update );
 	}
 
 	/**
-	 * Verify Nonce
-	 * verifies WordPress nonce
-	 *
-	 * @access          protected
-	 * @static
-	 * @return          bool
+	 * Verifies WordPress nonce
+	 * @return    bool      Whether the nonce is valid
 	 */
-	protected static function verifyNonce() {
-
-		global $_POST;
-
-		return wp_verify_nonce(
-			$_POST[ static::WP_NONCE_NAME ],
-			static::WP_NONCE_ACTION
-		);
-
+	protected function verifyNonce () {
+		$nonceValue = $_POST[ static::WP_NONCE_NAME ];
+		return wp_verify_nonce( $nonceValue, static::WP_NONCE_ACTION );
 	}
 
-	/**
-	 * Nonce Field
-	 * echoes the nonce form input
-	 *
-	 * @access          public
-	 * @static
-	 */
+	/** Prints the nonce field for the meta box */
 	public static function nonceField() {
-
-		wp_nonce_field(
-			static::WP_NONCE_ACTION,
-			static::WP_NONCE_NAME
-		);
-
+		wp_nonce_field( static::WP_NONCE_ACTION, static::WP_NONCE_NAME );
 	}
 
 	/**
-	 * Current Set Is Parent
-	 * determines current set and checks if it is a parent set
-	 *
-	 * @access      public
-	 * @static
-	 * @return      bool
+	 * Determines current set and checks if it is a parent set
+	 * @return    bool
 	 */
 	public static function currentSetIsParent () {
-
 		global $post;
-
-		return ! (bool) $post->post_parent;
-
+		return !(bool) $post->post_parent;
 	}
 
-	/**
-	 * Register Meta Box
-	 * registers meta box with add_meta_box
-	 *
-	 * @access          public
-	 * @abstract
-	 * @static
-	 *
-	 * @wp_action       add_meta_boxes
-	 */
-	abstract public static function registerMetaBox();
+	/** Registers meta box with add_meta_box */
+	abstract public function registerMetaBox ();
 
 	/**
-	 * Render Meta Box
-	 * renders the meta box template/content
-	 *
-	 * @access          public
-	 * @abstract
-	 * @static
-	 *
-	 * @param           WP_Post $post
+	 * Renders the meta box content
+	 * @param     WP_Post   $post     The current post
 	 */
-	abstract public static function renderMetaBox( WP_Post $post );
+	abstract public function renderMetaBox ( WP_Post $post );
 
 	/**
-	 * Save Data
-	 * processes data when post ist updated or saved
+	 * Processes data when post ist updated or saved
 	 *
-	 * @access          protected
-	 * @abstract
-	 * @static
-	 *
-	 * @param           int $post_id
-	 * @param           WP_Post $post
-	 * @param           bool $update
+	 * @param     int       $post_id  The current post's id
+	 * @param     WP_Post   $post     The current post
+	 * @param     bool      $update   Whether an existing post is updated (false if new post is created)
 	 */
-	abstract protected static function saveData( $post_id, WP_Post $post, $update );
+	abstract protected function saveData ( $post_id, WP_Post $post, $update );
 
 }
