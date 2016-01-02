@@ -1,52 +1,33 @@
 <?php
-/**
- * Opening Hours: Module: Widget: Overview
- */
 
 namespace OpeningHours\Module\Widget;
 
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\Shortcode\Holidays as HolidaysShortcode;
 
+/**
+ * Widget for Holiday Shortcode
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\Widget
+ */
 class Holidays extends AbstractWidget {
 
-	const SHORTCODE = 'op-holidays';
-
-	/**
-	 * Initializer
-	 *
-	 * @access          protected
-	 */
-	protected function init() {
-
-		$this->setShortcode( HolidaysShortcode::getInstance() );
-
-		$this->setWidgetId( 'widget_op_holidays' );
-
-		$this->setTitle( __( 'Opening Hours: Holidays', I18n::TEXTDOMAIN ) );
-
-		$this->setDescription( __( 'Lists up all Holidays in the selected Set.', I18n::TEXTDOMAIN ) );
-
+	public function __construct () {
+		$title = __( 'Opening Hours: Holidays', I18n::TEXTDOMAIN );
+		$description = __( 'Lists up all Holidays in the selected Set.', I18n::TEXTDOMAIN );
+		parent::__construct( 'widget_op_holidays', $title, $description, HolidaysShortcode::getInstance() );
 	}
 
-	/**
-	 * Register Fields
-	 *
-	 * @access          protected
-	 */
+	/** @inheritdoc */
 	protected function registerFields() {
 
-		/**
-		 * Standard Fields
-		 */
-
-		/** Field: Title */
+		// Standard Fields
 		$this->addField( 'title', array(
 			'type'    => 'text',
 			'caption' => __( 'Title', I18n::TEXTDOMAIN )
 		) );
 
-		/** Field: Set Id */
 		$this->addField( 'set_id', array(
 			'type'             => 'select',
 			'caption'          => __( 'Set', I18n::TEXTDOMAIN ),
@@ -54,17 +35,12 @@ class Holidays extends AbstractWidget {
 			'options_strategy' => 'callback'
 		) );
 
-		/** Field: Highlight */
 		$this->addField( 'highlight', array(
 			'type'    => 'checkbox',
 			'caption' => __( 'Highlight active Holiday', I18n::TEXTDOMAIN )
 		) );
 
-		/**
-		 * Extended Fields
-		 */
-
-		/** Field: Class Holiday */
+		// Extended Fields
 		$this->addField( 'class_holiday', array(
 			'type'                => 'text',
 			'caption'             => __( 'Holiday <tr> class', I18n::TEXTDOMAIN ),
@@ -72,7 +48,6 @@ class Holidays extends AbstractWidget {
 			'default_placeholder' => true
 		) );
 
-		/** Field: Class Highlighted */
 		$this->addField( 'class_highlighted', array(
 			'type'                => 'text',
 			'caption'             => __( 'class for highlighted Holiday', I18n::TEXTDOMAIN ),
@@ -80,7 +55,6 @@ class Holidays extends AbstractWidget {
 			'default_placeholder' => true
 		) );
 
-		/** Field: Date Format */
 		$this->addField( 'date_format', array(
 			'type'                => 'text',
 			'caption'             => __( 'PHP Date Format', I18n::TEXTDOMAIN ),
@@ -88,21 +62,5 @@ class Holidays extends AbstractWidget {
 			'description'         => self::getPhpDateFormatInfo(),
 			'default_placeholder' => true
 		) );
-
 	}
-
-	/**
-	 * Widget Content
-	 *
-	 * @access          protected
-	 *
-	 * @param           array $args
-	 * @param           array $instance
-	 */
-	protected function widgetContent( array $args, array $instance ) {
-
-		echo $this->getShortcode()->renderShortcode( array_merge( $args, $instance ) );
-
-	}
-
 }
