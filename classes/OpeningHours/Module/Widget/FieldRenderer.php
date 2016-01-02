@@ -56,10 +56,9 @@ class FieldRenderer extends AbstractModule {
 		$field['value'] = $instance[ $fieldName ];
 
 		try {
-			$field = self::validateField( $field, $widget );
+			$field = self::validateField( $field, $widget, $instance );
 		} catch ( InvalidArgumentException $e ) {
 			add_notice( $e->getMessage(), 'error' );
-
 			return '';
 		}
 
@@ -170,7 +169,7 @@ class FieldRenderer extends AbstractModule {
 	 *
 	 * @throws    InvalidArgumentException  On validation error
 	 */
-	public static function validateField( array $field, AbstractWidget $widget, array $instance ) {
+	public static function validateField ( array $field, AbstractWidget $widget, array $instance ) {
 		if ( count( $field ) < 1 ) {
 			self::terminate( sprintf( __( 'Field configuration has to be array. %s given', self::TEXTDOMAIN ), gettype( $field ) ), $widget );
 		}
