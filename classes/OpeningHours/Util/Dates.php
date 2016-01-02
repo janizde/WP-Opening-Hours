@@ -72,6 +72,9 @@ class Dates extends AbstractModule {
 			$timezoneString = timezone_name_from_abbr( null, $offset, 0 );
 		}
 
+		if ( empty( $timezoneString ) )
+			$timezoneString = date_default_timezone_get();
+
 		$this->timezone = new DateTimeZone( $timezoneString );
 		date_default_timezone_set( $timezoneString );
 	}

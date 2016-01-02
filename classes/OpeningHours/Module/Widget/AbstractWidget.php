@@ -86,7 +86,7 @@ abstract class AbstractWidget extends WP_Widget {
 	 * @param     array     $args     The widget args including the sidebar args
 	 * @param     array     $instance The current widget instance
 	 */
-	public function widget ( array $args, array $instance ) {
+	public function widget ( $args, $instance ) {
 		$filterHook  = 'op_widget_' . $this->widgetId . '_instance';
 		$instance = apply_filters( $filterHook, $instance, $this );
 		$this->widgetContent( $args, $instance );
@@ -99,7 +99,7 @@ abstract class AbstractWidget extends WP_Widget {
 	 * @param     array     $instance The current widget instance to populate the fields with
 	 * @return    void
 	 */
-	public function form( array $instance ) {
+	public function form ( $instance ) {
 		$extended = array();
 
 		ob_start();

@@ -184,7 +184,7 @@ class Set {
 	public function loadIrregularOpenings() {
 		$post_meta = get_post_meta( $this->id, IrregularOpeningsMetaBox::IRREGULAR_OPENINGS_META_KEY, true );
 
-		if ( is_array( $post_meta ) or count( $post_meta ) < 1 )
+		if ( !is_array( $post_meta ) or count( $post_meta ) < 1 )
 			return;
 
 		foreach ( $post_meta as $config ) {
