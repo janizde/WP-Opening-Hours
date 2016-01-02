@@ -25,10 +25,10 @@ class Dates extends AbstractModule {
 	const STD_DATE_TIME_FORMAT = 'Y-m-d H:i';
 
 	/** Regular expression recognizing time in standard time format */
-	const STD_TIME_FORMAT_REGEX = '([0-9]{1,2}:[0-9]{2})';
+	const STD_TIME_FORMAT_REGEX = '/^([0-9]{1,2}:[0-9]{2})$/';
 
 	/** Regular expression recognizing date in standard date format */
-	const STD_DATE_FORMAT_REGEX = '([0-9]{4}(-[0-9]{2}){2})';
+	const STD_DATE_FORMAT_REGEX = '/^([0-9]{4}(-[0-9]{2}){2})$/';
 
 	/**
 	 * Custom date format
@@ -85,6 +85,7 @@ class Dates extends AbstractModule {
 	 * @param     string    $time     The time string to be checked
 	 *
 	 * @return    bool                Whether $time is in standard time format or not
+	 * @todo                          Check for Hour and Minute values
 	 */
 	public static function isValidTime ( $time ) {
 		return preg_match( self::STD_TIME_FORMAT_REGEX, $time ) === 1;
@@ -157,7 +158,7 @@ class Dates extends AbstractModule {
 			return false;
 
 		$dateTime = self::getNow();
-		return $dateTime->format( 'N' ) == $day ;
+		return (int) $dateTime->format( 'N' ) - 1 == $day;
 	}
 
 	/**
