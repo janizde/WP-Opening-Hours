@@ -1,9 +1,4 @@
 <?php
-/**
- *  Opening Hours: Module: Widget: FieldRenderer
- *
- *  Module class with methods to render widget form fields.
- */
 
 namespace OpeningHours\Module\Widget;
 
@@ -13,15 +8,19 @@ use OpeningHours\Module\Shortcode\AbstractShortcode;
 use WP_Widget;
 use InvalidArgumentException;
 
+/**
+ * Class responsible for field markup in Widgets
+ *
+ * @author      Jannik Portz
+ * @package     OpeningHours\Module\Widget
+ */
 class FieldRenderer extends AbstractModule {
 
 	/**
-	 *  Valid Field Types
-	 *  sequencial array of strings w/ valid field types
+	 * Valid Field Types
+	 * sequential array of strings w/ valid field types
 	 *
-	 * @access     protected
-	 * @static
-	 * @type       array
+	 * @var       array
 	 */
 	protected static $validFieldTypes = array(
 		'text',
@@ -36,42 +35,32 @@ class FieldRenderer extends AbstractModule {
 	);
 
 	/**
-	 *  Options Field Types
-	 *  sequential array of strings w/ field types that support options attribute
+	 * Options Field Types
+	 * sequential array of strings w/ field types that support options attribute
 	 *
-	 * @access     protected
-	 * @static
-	 * @type       array
+	 * @var       array
 	 */
 	protected static $optionsFieldTypes = array( 'select', 'select-multi' );
 
 	/**
-	 * Render Field
-	 * renders the widget form field and returns markup as string
+	 * Renders the widget form field and returns markup as string
 	 *
-	 * @access      public
-	 * @static
+	 * @param     AbstractWidget $widget The widget to render the field for
+	 * @param     array $instance The current widget instance
+	 * @param     string $fieldName The name of the field to render
 	 *
-	 * @param       AbstractWidget $widget
-	 * @param       string $field_name
-	 *
-	 * @return      void|string
+	 * @return    string                      The field markup
 	 */
-	public static function renderField( AbstractWidget $widget, $field_name ) {
-
-		$field    = $widget->getField( $field_name );
-		$instance = $widget->getInstance();
-
-		$field['value'] = $instance[ $field_name ];
+	public static function renderField( AbstractWidget $widget, array $instance, $fieldName ) {
+		$field          = $widget->getField( $fieldName );
+		$field['value'] = $instance[ $fieldName ];
 
 		try {
 			$field = self::validateField( $field, $widget );
-
 		} catch ( InvalidArgumentException $e ) {
 			add_notice( $e->getMessage(), 'error' );
 
-			return;
-
+			return '';
 		}
 
 		extract( $field );
@@ -87,7 +76,6 @@ class FieldRenderer extends AbstractModule {
 		 * @var     $options  array
 		 * @var     $caption  string
 		 */
-
 		$placeholder = ( isset( $default_placeholder ) and $default_placeholder === true and $widget->getShortcode() instanceof AbstractShortcode )
 			? 'placeholder="' . $widget->getShortcode()->getDefaultAttribute( $name ) . '"'
 			: null;
@@ -102,7 +90,7 @@ class FieldRenderer extends AbstractModule {
 			echo '<label for="' . $wp_id . '">' . $caption . '</label>';
 		}
 
-		switch ( $type ) :
+		switch ( $type ) {
 
 			/** Field Types: text, date, time, 'email', 'url' */
 			case 'text' :
@@ -157,8 +145,7 @@ class FieldRenderer extends AbstractModule {
 				echo $caption;
 				echo '</label>';
 				break;
-
-		endswitch;
+		}
 
 		if ( isset( $description ) and is_string( $description ) ) {
 			echo '<span class="op-widget-description">' . $description . '</span>';
@@ -167,32 +154,24 @@ class FieldRenderer extends AbstractModule {
 		echo '</p>';
 
 		$output = ob_get_contents();
-
 		ob_clean();
 
 		return $output;
-
 	}
 
 	/**
-	 *  Validate Field
-	 *  validates and filters widget.
+	 * Validates the field and filters widget
 	 *
-	 * @access     public
-	 * @static
+	 * @param     array $field The field options
+	 * @param     AbstractWidget $widget The widget object
+	 * @param     array $instance The current widget instance
 	 *
-	 * @param      array $field
-	 * @param      WP_Widget $widget
+	 * @return    array                     The filtered field options
 	 *
-	 * @throws     InvalidArgumentException
-	 * @return     array
+	 * @throws    InvalidArgumentException  On validation error
 	 */
-	public static function validateField( array $field, WP_Widget $widget ) {
-
-		/**
-		 *  Validation
-		 */
-		if ( ! count( $field ) ) {
+	public static function validateField( array $field, AbstractWidget $widget, array $instance ) {
+		if ( count( $field ) < 1 ) {
 			self::terminate( sprintf( __( 'Field configuration has to be array. %s given', self::TEXTDOMAIN ), gettype( $field ) ), $widget );
 		}
 
@@ -204,20 +183,15 @@ class FieldRenderer extends AbstractModule {
 			self::terminate( sprintf( __( 'No Type option set for field %s.', self::TEXTDOMAIN ), '<b>' . $field['name'] . '</b>' ), $widget );
 		}
 
-		if ( ! in_array( $field['type'], self::getValidFieldTypes() ) ) {
+		if ( ! in_array( $field['type'], self::$validFieldTypes ) ) {
 			self::terminate( sprintf( __( 'Field type %s provided for field %s is not a valid type.', '<b>' . $field['type'] . '</b>', '<b>' . $field['name'] . '</b>' ) ), $widget );
 		}
 
-		$supports_options = in_array( $field['type'], self::getOptionsFieldTypes() );
+		$supports_options = in_array( $field['type'], self::$optionsFieldTypes );
 
 		if ( $supports_options and ( ! isset( $field['options'] ) or ! is_array( $field['options'] ) ) ) {
 			self::terminate( sprintf( __( 'Field %s with field type select, required the options array.', self::TEXTDOMAIN ), $field['name'] ), $widget );
 		}
-
-		/**
-		 *  Filter
-		 */
-		$instance = $widget->getInstance();
 
 		$field['value']   = $instance[ $field['name'] ];
 		$field['wp_id']   = $widget->get_field_id( $field['name'] );
@@ -231,51 +205,18 @@ class FieldRenderer extends AbstractModule {
 		$field = apply_filters( 'op_widget_' . $widget->getWidgetId() . '_field', $field );
 
 		return $field;
-
 	}
 
 	/**
-	 *  Terminate
-	 *  adds error admin notice and throws Exception
+	 * Adds error notice and throws exception
 	 *
-	 * @access     protected
-	 * @static
+	 * @param     string $message The message to display
+	 * @param     AbstractWidget $widget The widget object
 	 *
-	 * @param      string $message
-	 * @param      WP_Widget $widget
-	 *
-	 * @throws     InvalidArgumentException
+	 * @throws    InvalidArgumentException
 	 */
-	public static function terminate( $message, WP_Widget $widget ) {
-
+	public static function terminate( $message, AbstractWidget $widget ) {
 		$notice = '<b>' . $widget->getTitle() . ':</b>' . $message;
-
 		throw new InvalidArgumentException( $notice );
-
 	}
-
-	/**
-	 *  Getter: Valid Field Types
-	 *
-	 * @access     public
-	 * @static
-	 * @return     array
-	 */
-	public static function getValidFieldTypes() {
-		return self::$validFieldTypes;
-	}
-
-	/**
-	 *  Getter: Options Field Types
-	 *
-	 * @access     public
-	 * @static
-	 * @return     array
-	 */
-	public static function getOptionsFieldTypes() {
-		return self::$optionsFieldTypes;
-	}
-
 }
-
-?>

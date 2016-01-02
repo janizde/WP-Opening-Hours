@@ -70,11 +70,12 @@ abstract class AbstractWidget extends WP_Widget {
 	 * Renders a single field from the collection
 	 *
 	 * @param     string    $fieldName  The field to render
+	 * @param     array     $instance   The current widget instance
 	 *
 	 * @return    string                The field markup
 	 */
-	public function renderField( $fieldName ) {
-		return FieldRenderer::renderField( $this, $fieldName );
+	public function renderField( $fieldName, array $instance ) {
+		return FieldRenderer::renderField( $this, $instance, $fieldName );
 	}
 
 	/**
@@ -105,7 +106,7 @@ abstract class AbstractWidget extends WP_Widget {
 
 		foreach ( $this->fields as $field ) {
 			if ( $field['extended'] !== true ) {
-				echo $this->renderField( $field['name'] );
+				echo $this->renderField( $field['name'], $instance );
 			} else {
 				$extended[] = $field;
 			}
@@ -119,7 +120,7 @@ abstract class AbstractWidget extends WP_Widget {
 		echo '<div class="settings-container hidden">';
 
 		foreach ( $extended as $field )
-			echo $this->renderField( $field['name'] );
+			echo $this->renderField( $field['name'], $instance );
 
 		echo '</div>';
 		echo '</div>';
@@ -155,6 +156,22 @@ abstract class AbstractWidget extends WP_Widget {
 	 */
 	public static function getPhpDateFormatInfo () {
 		return sprintf( '<a href="http://bit.ly/16Wsegh" target="blank">%s</a>', __( 'More about PHP date and time formats.', I18n::TEXTDOMAIN ) );
+	}
+
+	/**
+	 * Getter: Widget Id
+	 * @return    string
+	 */
+	public function getWidgetId () {
+		return $this->widgetId;
+	}
+
+	/**
+	 * Getter: Title
+	 * @return    string
+	 */
+	public function getTitle () {
+		return $this->title;
 	}
 
 	/**
