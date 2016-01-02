@@ -10,5 +10,10 @@
   ],
   "require-dev": {
     "phpunit/phpunit": "4.8.*"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "OpeningHours\\Test\\": "tests/OpeningHours"
+    }
   }
 }
