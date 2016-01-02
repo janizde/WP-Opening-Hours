@@ -69,10 +69,13 @@ gulp.task( 'export', ['build'], function () {
     '!node_modules',
     '!./assets/**/*',
     '!assets',
+    '!./vendor/**/*',
+    '!vendor',
     '!**/.git/**/*',
     '!.gitignore',
     '!gulpfile.js',
-    '!package.json'
+    '!package.json',
+    '!composer.lock'
   ];
 
   return gulp.src( files )

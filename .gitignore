@@ -3,3 +3,5 @@ node_modules
 npm-debug.log
 dist
 opening-hours.zip
+/vendor/
+composer.lock

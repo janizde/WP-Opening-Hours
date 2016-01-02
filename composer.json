@@ -1,0 +1,14 @@
+{
+  "name": "janizde/wp-opening-hours",
+  "description": "WordPress Plugin for Opening Hours management",
+  "type": "plugin",
+  "authors": [
+    {
+      "name": "Jannik Portz",
+      "email": "hello@jannikportz.de"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*"
+  }
+}
