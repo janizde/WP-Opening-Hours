@@ -19,8 +19,7 @@ class DatesTest extends \WP_UnitTestCase {
 		$this->assertEquals( 'd.m.Y', Dates::getDateFormat() );
 		$this->assertEquals( 'Europe/Berlin', Dates::getTimezone()->getName() );
 		$now = new DateTime( 'now' );
-		$format = 'Y-m-d H:i';
-		$this->assertEquals( $now->format( $format ), Dates::getNow()->format( $format ) );
+		$this->assertEquals( $now, Dates::getNow(), '', 10 );
 	}
 
 	public function testIsValidTime () {

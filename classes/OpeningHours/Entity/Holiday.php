@@ -90,7 +90,7 @@ class Holiday {
 	 * @throws    InvalidArgumentException  On validation error
 	 */
 	public static function validateConfig ( array $config ) {
-		if ( isset( $config['dummy'] ) and $config['dummy'] === true ) {
+		if ( array_key_exists('dummy', $config) and $config['dummy'] === true ) {
 			$config = array(
 				'name'      => '',
 				'dateStart' => 'now',
@@ -104,19 +104,19 @@ class Holiday {
 		if ( !isset( $config['dateStart'] ) )
 			throw new InvalidArgumentException( 'dateStart not set in Holiday config.' );
 
-		if ( !$config['dateStart'] instanceof DateTime and ! preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateStart'] ) )
+		if ( !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateStart'] ) )
 			throw new InvalidArgumentException( sprintf( 'dateStart in config does not correspond with standard date regex %s. %s given.', Dates::STD_DATE_FORMAT, $config['dateStart'] ) );
 
 		if ( !isset( $config['dateEnd'] ) )
 			throw new InvalidArgumentException( 'dateEnd not set in Holiday config.' );
 
-		if ( !$config['dateEnd'] instanceof DateTime and ! preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateEnd'] ) )
+		if ( !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateEnd'] ) )
 			throw new InvalidArgumentException( sprintf( 'dateEnd in config does not correspond with standard date regex %s. %s given.', Dates::STD_DATE_FORMAT, $config['dateEnd'] ) );
 
-		if ( !isset( $config['dummy'] ) or ! is_bool( $config['dummy'] ) )
+		if ( !isset( $config['dummy'] ) or !is_bool( $config['dummy'] ) )
 			$config['dummy'] = false;
 
-		if ( !$config['dummy'] and ( ! isset( $config['name'] ) or empty( $config['name'] ) ) )
+		if ( !$config['dummy'] and ( !isset( $config['name'] ) or empty( $config['name'] ) ) )
 			throw new InvalidArgumentException( 'name not set in Holiday config.' );
 
 		return $config;
