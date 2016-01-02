@@ -12,7 +12,6 @@ use DateInterval;
  * @author      Jannik Portz
  * @package     OpeningHours\Module
  * @todo        static attributes to singleton attributes
- * @todo        move weekday stuff to separate class
  */
 class I18n extends AbstractModule {
 
@@ -185,51 +184,6 @@ class I18n extends AbstractModule {
 	}
 
 	/**
-	 * Returns the string representation of the provided days
-	 *
-	 * @param     string|int|array $days  The days whose string representation to return.
-	 *                                    Either one day as numeric representation, a comma separated list of weekdays or an array of weekday numbers
-	 * @param     bool            $short  Whether to use short string representations
-	 *
-	 * @return    string                  The string representation for the provided days
-	 */
-	public static function getDayCaption( $days, $short = false ) {
-		$weekdays = ( $short )
-			? static::getWeekdaysShortNumeric()
-			: static::getWeekdaysNumeric();
-
-		if ( is_numeric( $days ) )
-			return $weekdays[ $days ];
-
-		if ( is_string( $days ) and strpos( $days, ',' ) )
-			$days = explode( ',', $days );
-
-		if ( !is_array( $days ) )
-			return '';
-
-		if ( count( $days ) === 1 )
-			return static::getDayCaption( $days );
-
-		sort( $days );
-		$days = array_values( $days );
-
-		$first_el = $days[0];
-		$last_el  = $days[ count( $days ) - 1 ];
-
-		if ( $days == range( $first_el, $last_el ) ) {
-			$result_format = "%s – %s";
-			return sprintf( $result_format, $weekdays[ $first_el ], $weekdays[ $last_el ] );
-		}
-
-		$strings = array();
-
-		foreach ( $days as $day )
-			$strings[] = $weekdays[ $day ];
-
-		return implode( ', ', $strings );
-	}
-
-	/**
 	 * Getter: Date Format
 	 * @return    string
 	 */
@@ -275,70 +229,6 @@ class I18n extends AbstractModule {
 	 */
 	public static function getTimeNow () {
 		return self::$timeNow;
-	}
-
-	/**
-	 * Get Weekdays Array
-	 * @return    array
-	 */
-	public static function getWeekdays () {
-		return array(
-			'monday'    => __( 'Monday', self::TEXTDOMAIN ),
-			'tuesday'   => __( 'Tuesday', self::TEXTDOMAIN ),
-			'wednesday' => __( 'Wednesday', self::TEXTDOMAIN ),
-			'thursday'  => __( 'Thursday', self::TEXTDOMAIN ),
-			'friday'    => __( 'Friday', self::TEXTDOMAIN ),
-			'saturday'  => __( 'Saturday', self::TEXTDOMAIN ),
-			'sunday'    => __( 'Sunday', self::TEXTDOMAIN )
-		);
-	}
-
-	/**
-	 * Get Weekdays untranslated
-	 * @return    string[]
-	 */
-	public static function getWeekdaysUntranslated() {
-		return array(
-			'Monday',
-			'Tuesday',
-			'Wednesday',
-			'Thursday',
-			'Friday',
-			'Saturday',
-			'Sunday'
-		);
-	}
-
-	/**
-	 * Get Weekdays Numeric
-	 * @return     string[]
-	 */
-	public static function getWeekdaysNumeric() {
-		return array_values( self::getWeekdays() );
-	}
-
-	/**
-	 * Get Weekdays Short
-	 * @return    array
-	 */
-	public static function getWeekdaysShort() {
-		return array(
-			'monday'    => __( 'Mon.', static::TEXTDOMAIN ),
-			'tuesday'   => __( 'Tue.', static::TEXTDOMAIN ),
-			'wednesday' => __( 'Wed.', static::TEXTDOMAIN ),
-			'thursday'  => __( 'Thu.', static::TEXTDOMAIN ),
-			'friday'    => __( 'Fri.', static::TEXTDOMAIN ),
-			'saturday'  => __( 'Sat.', static::TEXTDOMAIN ),
-			'sunday'    => __( 'Sun.', static::TEXTDOMAIN ),
-		);
-	}
-
-	/**
-	 * Get Weekdays Short Numeric
-	 * @return    string[]
-	 */
-	public static function getWeekdaysShortNumeric() {
-		return array_values( static::getWeekdaysShort() );
 	}
 
 	/**

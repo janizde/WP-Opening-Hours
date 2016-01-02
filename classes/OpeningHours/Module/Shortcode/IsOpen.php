@@ -6,6 +6,7 @@ use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\I18n;
 use OpeningHours\Entity\Set;
 use OpeningHours\Entity\Period;
+use OpeningHours\Util\Weekdays;
 
 /**
  * Shortcode indicating whether the venue is currently open or not
@@ -65,8 +66,6 @@ class IsOpen extends AbstractShortcode {
 
 			$attributes['next_period'] = $nextPeriod;
 
-			$weekdays = I18n::getWeekdaysNumeric();
-
 			$attributes['next_string'] = sprintf(
 				// Format String
 				$attributes['next_format'],
@@ -75,7 +74,7 @@ class IsOpen extends AbstractShortcode {
 				$nextPeriod->getTimeStart()->format( $attributes['date_format'] ),
 
 				// 2$: Translated Weekday
-				$weekdays[ $nextPeriod->getWeekday() ],
+				Weekdays::getWeekday( $nextPeriod->getWeekday() )->getName(),
 
 				// 3%: Formatted Start Time
 				$nextPeriod->getTimeStart()->format( $attributes['time_format'] ),

@@ -3,9 +3,9 @@
  *  Opening Hours: Template: Part: MetaBox OP Set
  */
 
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as MetaBox;
+use OpeningHours\Util\Weekdays;
 
 MetaBox::nonceField();
 ?>
@@ -14,21 +14,21 @@ MetaBox::nonceField();
 
 	<table class="form-table form-opening-hours">
 		<tbody>
-		<?php foreach ( I18n::getWeekdaysNumeric() as $id => $name ) : ?>
+		<?php foreach ( Weekdays::getWeekdays() as $index => $weekday ) : ?>
 			<tr class="periods-day">
 				<td class="col-name" valign="top">
-					<?php echo $name; ?>
+					<?php echo $weekday->getName(); ?>
 				</td>
 
 				<td class="col-times" colspan="2" valign="top">
-					<div class="period-container" data-day="<?php echo $id; ?>"
+					<div class="period-container" data-day="<?php echo $index; ?>"
 					     data-set="<?php echo OpeningHours::getCurrentSet()->getId(); ?>">
 
 						<table class="period-table">
 							<tbody>
 
 							<?php
-							foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $id ) as $period ) :
+							foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $index ) as $period ) :
 								echo OpeningHours::renderTemplate(
 									'ajax/op-set-period.php',
 									array(

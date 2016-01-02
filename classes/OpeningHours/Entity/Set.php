@@ -8,6 +8,7 @@ use OpeningHours\Module\CustomPostType\Set as SetCpt;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as IrregularOpeningsMetaBox;
 
+use OpeningHours\Util\Weekdays;
 use WP_Post;
 use DateTime;
 use DateInterval;
@@ -243,10 +244,10 @@ class Set {
 
 	/** Adds dummy periods to the set */
 	public function addDummyPeriods() {
-		foreach ( I18n::getWeekdaysNumeric() as $id => $name ) {
-			if ( count( $this->getPeriodsByDay( $id ) ) < 1 ) {
+		for ( $i = 0; $i < 7; $i++ ) {
+			if ( count( $this->getPeriodsByDay( $i ) ) < 1 ) {
 				$newPeriod = new Period( array(
-					'weekday'   => $id,
+					'weekday'   => $i,
 					'timeStart' => new DateTime( '00:00' ),
 					'timeEnd'   => new DateTime( '00:00' ),
 					'dummy'     => true
@@ -432,8 +433,8 @@ class Set {
 	 */
 	public function getPeriodsGroupedByDay() {
 		$periods = array();
-		foreach ( I18n::getWeekdaysNumeric() as $id => $caption )
-			$periods[ $id ] = $this->getPeriodsByDay( $id );
+		for ( $i = 0; $i < 7; $i++ )
+			$periods[ $i ] = $this->getPeriodsByDay( $i );
 
 		return $periods;
 	}

@@ -6,6 +6,7 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\Shortcode\Overview as Shortcode;
+use OpeningHours\Util\Weekdays;
 
 /**
  * @var       $attributes         array (associative) w/ shortcode attributes
@@ -24,7 +25,6 @@ extract( $attributes );
  * @var       $title              string w/ widget title
  * @var       $set                Set object to show opening hours of
  * @var       $highlight          string w/ identifier of what section to highlight
- * @var       $weekdays           array (associative) w/ key: number representing day; value: translated day string/caption
  * @var       $show_closed        bool whether to show closed days or not
  * @var       $show_description   bool whether to show description or not
  * @var       $compress           bool whether to compress Opening Hours
@@ -78,7 +78,7 @@ foreach ( $periods as $day => $d_periods ) :
 	echo '<tr class="op-row op-row-day ' . $row_classes . ' ' . $highlighted_day . '">';
 
 	echo '<th scope="row" class="op-cell op-cell-heading ' . $cell_heading_classes . ' ' . $cell_classes . '">';
-	echo I18n::getDayCaption( $day, $short );
+	echo Weekdays::getDaysCaption( $day, $short );
 	echo '</th>';
 
 	echo '<td class="op-cell op-cell-periods ' . $cell_periods_classes . ' ' . $cell_classes . '">';

@@ -76,8 +76,6 @@ class Overview extends AbstractShortcode {
 		}
 
 		$attributes['set'] = $set;
-		$attributes['weekdays'] = I18n::getWeekdaysNumeric();
-
 		echo $this->renderShortcodeTemplate( $attributes );
 	}
 
