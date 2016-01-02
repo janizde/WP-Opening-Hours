@@ -76,7 +76,7 @@ class OpeningHours extends AbstractModule {
 	public function loadResources() {
 		wp_register_script(
 			self::PREFIX . 'js',
-			plugins_url( 'javascript/opening-hours.js', op_bootstrap_file() ),
+			plugins_url( 'dist/scripts/main.js', op_bootstrap_file() ),
 			array( 'jquery', 'jquery-ui' ),
 			self::VERSION,
 			true
@@ -84,7 +84,7 @@ class OpeningHours extends AbstractModule {
 
 		wp_register_style(
 			self::PREFIX . 'css',
-			plugins_url( 'css/opening-hours.css', op_bootstrap_file() )
+			plugins_url( 'dist/styles/main.css', op_bootstrap_file() )
 		);
 
 		// Backend Styles and Scripts
