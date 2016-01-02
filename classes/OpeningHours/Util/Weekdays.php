@@ -51,8 +51,12 @@ class Weekdays extends AbstractModule {
 	 * @return    Weekday             The weekday instance
 	 */
 	public static function getWeekday ( $index ) {
-		$i = self::getInstance();
-		return $i->weekdays[$index];
+		$days = self::getInstance()->getWeekdays();
+
+		if ( $index < 0 or $index >= count( $days ) )
+			return null;
+
+		return $days[$index];
 	}
 
 	/**
@@ -96,14 +100,19 @@ class Weekdays extends AbstractModule {
 	 *
 	 * @return    string                  The string representation for the provided days
 	 */
-	public static function getDaysCaption( $days, $short = false ) {
+	public static function getDaysCaption ( $days, $short = false ) {
 		$captions = self::getCaptions( $short );
 
 		if ( is_numeric( $days ) )
 			return $captions[ $days ];
 
-		if ( is_string( $days ) and strpos( $days, ',' ) )
+		if ( is_string( $days ) and strpos( $days, ',' ) ) {
 			$days = explode( ',', $days );
+			foreach ( $days as &$day ) {
+				$day = (int) trim( $day );
+			}
+			unset( $day );
+		}
 
 		if ( !is_array( $days ) )
 			return '';
@@ -118,7 +127,7 @@ class Weekdays extends AbstractModule {
 		$last_el  = $days[ count( $days ) - 1 ];
 
 		if ( $days == range( $first_el, $last_el ) ) {
-			$result_format = "%s – %s";
+			$result_format = "%s - %s";
 			return sprintf( $result_format, $captions[ $first_el ], $captions[ $last_el ] );
 		}
 
