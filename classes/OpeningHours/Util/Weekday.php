@@ -7,6 +7,7 @@ namespace OpeningHours\Util;
  *
  * @author      Jannik Portz
  * @package     OpeningHours\Util
+ * @todo        make more popular
  */
 class Weekday {
 
