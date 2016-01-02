@@ -6,6 +6,7 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\Shortcode\Overview as Shortcode;
+use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
 
 /**
@@ -73,7 +74,7 @@ $periods = ( $compress )
 
 foreach ( $periods as $day => $d_periods ) :
 
-	$highlighted_day = ( $highlight == 'day' and I18n::isToday( $day ) ) ? $highlighted_day_class : null;
+	$highlighted_day = ( $highlight == 'day' and Dates::isToday( $day ) ) ? $highlighted_day_class : null;
 
 	echo '<tr class="op-row op-row-day ' . $row_classes . ' ' . $highlighted_day . '">';
 

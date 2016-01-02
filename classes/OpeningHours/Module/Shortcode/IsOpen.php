@@ -6,6 +6,7 @@ use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\I18n;
 use OpeningHours\Entity\Set;
 use OpeningHours\Entity\Period;
+use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
 
 /**
@@ -36,8 +37,8 @@ class IsOpen extends AbstractShortcode {
 			'next_period_classes' => null,
 			'open_class'          => 'op-open',
 			'closed_class'        => 'op-closed',
-			'date_format'         => I18n::getDateFormat(),
-			'time_format'         => I18n::getTimeFormat()
+			'date_format'         => Dates::getDateFormat(),
+			'time_format'         => Dates::getTimeFormat()
 		);
 
 		$this->validAttributeValues = array(

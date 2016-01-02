@@ -7,6 +7,7 @@ use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
+use OpeningHours\Util\Dates;
 
 /**
  * Shortcode implementation for a list or regular Opening Periods
@@ -44,7 +45,7 @@ class Overview extends AbstractShortcode {
 			'highlighted_period_class' => 'highlighted',
 			'highlighted_day_class'    => 'highlighted',
 			'table_id_prefix'          => 'op-table-set-',
-			'time_format'              => I18n::getTimeFormat(),
+			'time_format'              => Dates::getTimeFormat(),
 			'hide_io_date'             => false
 		);
 
@@ -87,11 +88,11 @@ class Overview extends AbstractShortcode {
 	 */
 	public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
 		$name = $io->getName();
-		$date = $io->getTimeStart()->format( I18n::getDateFormat() );
+		$date = $io->getTimeStart()->format( Dates::getDateFormat() );
 
 		$heading = ( $attributes['hide_io_date'] ) ? $name : sprintf( '%s (%s)', $name, $date );
 
-		$now = I18n::getTimeNow();
+		$now = Dates::getNow();
 		$highlighted = ( $attributes['highlight'] == 'period' and $io->getTimeStart() <= $now and $now <= $io->getTimeEnd() ) ? $attributes['highlighted_period_class'] : null;
 
 		echo '<span class="op-period-time irregular-opening '. $highlighted .'">'. $heading .'</span>';

@@ -7,6 +7,7 @@ use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Module\CustomPostType\Set;
 
+use OpeningHours\Util\Dates;
 use WP_Post;
 
 /**
@@ -87,10 +88,10 @@ class Holidays extends AbstractMetaBox {
 			if ( !isset( $config['name'][$i] ) or empty( $config['name'][$i] ) )
 				continue;
 
-			if ( !isset( $config['dateStart'][$i] ) or !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateStart'][$i] ) )
+			if ( !isset( $config['dateStart'][$i] ) or !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateStart'][$i] ) )
 				continue;
 
-			if ( !isset( $config['dateEnd'][$i] ) or !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateEnd'][$i] ) )
+			if ( !isset( $config['dateEnd'][$i] ) or !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateEnd'][$i] ) )
 				continue;
 
 			$newConfig[] = array(

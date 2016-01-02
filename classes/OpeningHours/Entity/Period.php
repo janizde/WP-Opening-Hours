@@ -9,6 +9,7 @@ use DateTime;
 use DateInterval;
 use DateTimeZone;
 use InvalidArgumentException;
+use OpeningHours\Util\Dates;
 
 /**
  * Represents a regular opening period
@@ -110,7 +111,7 @@ class Period {
 	 */
 	public function isOpenStrict ( $now = null ) {
 		if ( !$now instanceof DateTime or $now === null )
-			$now = I18n::getTimeNow();
+			$now = Dates::getNow();
 
 		return $this->timeStart <= $now and $now <= $this->timeEnd;
 	}
@@ -162,8 +163,8 @@ class Period {
 		if ( !$this->timeStart instanceof DateTime or !$this->timeEnd instanceof DateTime )
 			return;
 
-		I18n::applyWeekContext( $this->timeStart, $this->weekday );
-		I18n::applyWeekContext( $this->timeEnd, $this->weekday );
+		Dates::applyWeekContext( $this->timeStart, $this->weekday );
+		Dates::applyWeekContext( $this->timeEnd, $this->weekday );
 
 		if ( $this->timeStart->getTimestamp() >= $this->timeEnd->getTimestamp() )
 			$this->timeEnd->add( new DateInterval( 'P1D' ) );
@@ -174,7 +175,7 @@ class Period {
 	 * updates the DateTimeZone on timeStart and timeEnd
 	 */
 	public function updateDateTimezone () {
-		$timezone = I18n::getDateTimeZone();
+		$timezone = Dates::getTimezone();
 		if ( !$timezone instanceof DateTimeZone )
 			return;
 
@@ -182,15 +183,9 @@ class Period {
 		 * Instantiate new DateTime objects to keep time
 		 * otherwise time would be converted
 		 */
-		$this->setTimeStart( new DateTime(
-			$this->timeStart->format( I18n::STD_DATE_TIME_FORMAT ),
-			$timezone
-		) );
+		$this->setTimeStart( new DateTime( $this->timeStart->format( Dates::STD_DATE_TIME_FORMAT ), $timezone ) );
 
-		$this->setTimeEnd( new DateTime(
-			$this->timeEnd->format( I18n::STD_DATE_TIME_FORMAT ),
-			$timezone
-		) );
+		$this->setTimeEnd( new DateTime( $this->timeEnd->format( Dates::STD_DATE_TIME_FORMAT ), $timezone ) );
 	}
 
 	/**
@@ -272,8 +267,8 @@ class Period {
 	public function getConfig() {
 		return array(
 			'weekday'   => $this->weekday,
-			'timeStart' => $this->timeStart->format( I18n::STD_DATE_TIME_FORMAT ),
-			'timeEnd'   => $this->timeEnd->format( I18n::STD_DATE_TIME_FORMAT ),
+			'timeStart' => $this->timeStart->format( Dates::STD_DATE_TIME_FORMAT ),
+			'timeEnd'   => $this->timeEnd->format( Dates::STD_DATE_TIME_FORMAT ),
 			'dummy'     => $this->dummy
 		);
 	}
@@ -313,7 +308,7 @@ class Period {
 	 */
 	public function getTimeStart( $formatted = false, $timeFormat = null ) {
 		return ( $formatted and $this->timeStart instanceof DateTime )
-			? $this->timeStart->format( ( $timeFormat != null ) ? $timeFormat : I18n::getTimeFormat() )
+			? $this->timeStart->format( ( $timeFormat != null ) ? $timeFormat : Dates::getTimeFormat() )
 			: $this->timeStart;
 	}
 
@@ -324,8 +319,8 @@ class Period {
 	 */
 	public function setTimeStart( $timeStart ) {
 		$this->timeStart = is_string( $timeStart )
-			? new DateTime( $timeStart, I18n::getDateTimeZone() )
-			: I18n::applyTimeZone( $timeStart );
+			? new DateTime( $timeStart, Dates::getTimezone() )
+			: Dates::applyTimeZone( $timeStart );
 
 		$this->updateTimeDifference();
 		$this->updateWeekContext();
@@ -341,7 +336,7 @@ class Period {
 	 */
 	public function getTimeEnd ( $formatted = false, $time_format = null ) {
 		return ( $formatted and $this->timeEnd instanceof DateTime )
-			? $this->timeEnd->format( ( $time_format != null ) ? $time_format : I18n::getTimeFormat() )
+			? $this->timeEnd->format( ( $time_format != null ) ? $time_format : Dates::getTimeFormat() )
 			: $this->timeEnd;
 	}
 
@@ -351,8 +346,8 @@ class Period {
 	 */
 	public function setTimeEnd ( $timeEnd ) {
 		$this->timeEnd = is_string( $timeEnd )
-			? new DateTime( $timeEnd, I18n::getDateTimeZone() )
-			: I18n::applyTimeZone( $timeEnd );
+			? new DateTime( $timeEnd, Dates::getTimezone() )
+			: Dates::applyTimeZone( $timeEnd );
 
 		$this->updateTimeDifference();
 		$this->updateWeekContext();

@@ -7,6 +7,7 @@ use OpeningHours\Module\I18n;
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
+use OpeningHours\Util\Dates;
 
 /**
  * Represents an irregular opening
@@ -71,20 +72,20 @@ class IrregularOpening {
 			return $config;
 		}
 
-		if ( !preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeStart'] ) )
+		if ( !preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeStart'] ) )
 			throw new InvalidArgumentException( "timeStart in config is not in valid time format" );
 
-		if ( !preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeEnd'] ) )
+		if ( !preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeEnd'] ) )
 			throw new InvalidArgumentException( "timeEnd in config is not in valid time format" );
 
-		if ( !preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['date'] ) )
+		if ( !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['date'] ) )
 			throw new InvalidArgumentException( "date in config is not in valid date format" );
 
 		if ( !isset( $config['name'] ) or empty( $config['name'] ) )
 			throw new InvalidArgumentException( "name in config is not set or empty" );
 
-		$config['timeStart'] = I18n::mergeDateIntoTime( new DateTime( $config['date'] ), new DateTime( $config['timeStart'] ) );
-		$config['timeEnd']   = I18n::mergeDateIntoTime( new DateTime( $config['date'] ), new DateTime( $config['timeEnd'] ) );
+		$config['timeStart'] = Dates::mergeDateIntoTime( new DateTime( $config['date'] ), new DateTime( $config['timeStart'] ) );
+		$config['timeEnd']   = Dates::mergeDateIntoTime( new DateTime( $config['date'] ), new DateTime( $config['timeEnd'] ) );
 
 		return $config;
 	}
@@ -106,7 +107,7 @@ class IrregularOpening {
 			return;
 
 		if (
-			$this->timeStart->format( I18n::STD_DATE_FORMAT ) === $this->timeEnd->format( I18n::STD_DATE_FORMAT )
+			$this->timeStart->format( Dates::STD_DATE_FORMAT ) === $this->timeEnd->format( Dates::STD_DATE_FORMAT )
 			and $this->timeStart >= $this->timeEnd
 		) {
 			$this->timeEnd->add( new DateInterval( 'P1D' ) );
@@ -121,9 +122,9 @@ class IrregularOpening {
 	 */
 	public function isActive( DateTime $now = null ) {
 		if ( $now == null )
-			$now = I18n::getTimeNow();
+			$now = Dates::getNow();
 
-		return ( $this->getDate()->format( I18n::STD_DATE_FORMAT ) == $now->format( I18n::STD_DATE_FORMAT ) );
+		return ( $this->getDate()->format( Dates::STD_DATE_FORMAT ) == $now->format( Dates::STD_DATE_FORMAT ) );
 	}
 
 	/**
@@ -134,7 +135,7 @@ class IrregularOpening {
 	 */
 	public function isOpen ( DateTime $now = null ) {
 		if ( $now == null )
-			$now = I18n::getTimeNow();
+			$now = Dates::getNow();
 
 		if ( !$this->isActive( $now ) )
 			return false;
@@ -152,7 +153,7 @@ class IrregularOpening {
 	 */
 	public function getFormattedTimeRange( $timeFormat = null, $outputFormat = "%s – %s" ) {
 		if ( $timeFormat == null )
-			$timeFormat = I18n::getTimeFormat();
+			$timeFormat = Dates::getTimeFormat();
 
 		if ( !$this->timeStart instanceof DateTime or !$this->timeEnd instanceof DateTime )
 			return "";
@@ -167,8 +168,8 @@ class IrregularOpening {
 	public function getConfig() {
 		return array(
 			'name'      => $this->name,
-			'timeStart' => $this->timeStart->format( I18n::STD_TIME_FORMAT ),
-			'timeEnd'   => $this->timeEnd->format( I18n::STD_TIME_FORMAT ),
+			'timeStart' => $this->timeStart->format( Dates::STD_TIME_FORMAT ),
+			'timeEnd'   => $this->timeEnd->format( Dates::STD_TIME_FORMAT ),
 			'date'      => $this->getDate()
 		);
 	}
@@ -280,7 +281,7 @@ class IrregularOpening {
 	 * @return    DateTime
 	 */
 	public function getDate() {
-		return new DateTime( $this->getTimeStart()->format( I18n::STD_DATE_FORMAT ), I18n::getDateTimeZone() );
+		return new DateTime( $this->getTimeStart()->format( Dates::STD_DATE_FORMAT ), Dates::getTimezone() );
 	}
 
 	/**
@@ -288,8 +289,8 @@ class IrregularOpening {
 	 * @param     DateTime|string   $date
 	 */
 	protected function setDate( $date ) {
-		if ( is_string( $date ) and preg_match( $date, I18n::STD_DATE_FORMAT_REGEX ) )
-			$date = new DateTime( $date, I18n::getDateTimeZone() );
+		if ( is_string( $date ) and preg_match( $date, Dates::STD_DATE_FORMAT_REGEX ) )
+			$date = new DateTime( $date, Dates::getTimezone() );
 
 		if ( !$date instanceof DateTime )
 			add_notice( sprintf( "%::% requires Parameter 1 to be DateTime or string in correct date format. %s given", __CLASS__, __METHOD__, gettype( $date ) ), 'error' );

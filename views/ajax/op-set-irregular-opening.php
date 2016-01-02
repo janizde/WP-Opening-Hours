@@ -6,6 +6,7 @@
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as MetaBox;
 use OpeningHours\Module\I18n;
+use OpeningHours\Util\Dates;
 
 /**
  * pre-defined variables
@@ -14,9 +15,9 @@ use OpeningHours\Module\I18n;
  */
 
 $name      = $io->getName();
-$date      = ( $io->isDummy() ) ? null : $io->getDate()->format( I18n::STD_DATE_FORMAT );
-$timeStart = ( $io->isDummy() ) ? null : $io->getTimeStart()->format( I18n::STD_TIME_FORMAT );
-$timeEnd   = ( $io->isDummy() ) ? null : $io->getTimeEnd()->format( I18n::STD_TIME_FORMAT );
+$date      = ( $io->isDummy() ) ? null : $io->getDate()->format( Dates::STD_DATE_FORMAT );
+$timeStart = ( $io->isDummy() ) ? null : $io->getTimeStart()->format( Dates::STD_TIME_FORMAT );
+$timeEnd   = ( $io->isDummy() ) ? null : $io->getTimeEnd()->format( Dates::STD_TIME_FORMAT );
 
 echo '<tr class="op-irregular-opening">';
 

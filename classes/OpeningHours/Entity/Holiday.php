@@ -6,6 +6,7 @@ use OpeningHours\Module\I18n;
 
 use DateTime;
 use InvalidArgumentException;
+use OpeningHours\Util\Dates;
 
 /**
  * Represents a single holiday
@@ -75,7 +76,7 @@ class Holiday {
 	 */
 	public function isActive ( DateTime $now = null ) {
 		if ( $now === null )
-			$now = I18n::getTimeNow();
+			$now = Dates::getNow();
 
 		return ( $this->dateStart <= $now and $this->dateEnd >= $now );
 	}
@@ -103,14 +104,14 @@ class Holiday {
 		if ( !isset( $config['dateStart'] ) )
 			throw new InvalidArgumentException( 'dateStart not set in Holiday config.' );
 
-		if ( !$config['dateStart'] instanceof DateTime and ! preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateStart'] ) )
-			throw new InvalidArgumentException( sprintf( 'dateStart in config does not correspond with standard date regex %s. %s given.', I18n::STD_DATE_FORMAT, $config['dateStart'] ) );
+		if ( !$config['dateStart'] instanceof DateTime and ! preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateStart'] ) )
+			throw new InvalidArgumentException( sprintf( 'dateStart in config does not correspond with standard date regex %s. %s given.', Dates::STD_DATE_FORMAT, $config['dateStart'] ) );
 
 		if ( !isset( $config['dateEnd'] ) )
 			throw new InvalidArgumentException( 'dateEnd not set in Holiday config.' );
 
-		if ( !$config['dateEnd'] instanceof DateTime and ! preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['dateEnd'] ) )
-			throw new InvalidArgumentException( sprintf( 'dateEnd in config does not correspond with standard date regex %s. %s given.', I18n::STD_DATE_FORMAT, $config['dateEnd'] ) );
+		if ( !$config['dateEnd'] instanceof DateTime and ! preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateEnd'] ) )
+			throw new InvalidArgumentException( sprintf( 'dateEnd in config does not correspond with standard date regex %s. %s given.', Dates::STD_DATE_FORMAT, $config['dateEnd'] ) );
 
 		if ( !isset( $config['dummy'] ) or ! is_bool( $config['dummy'] ) )
 			$config['dummy'] = false;
@@ -164,8 +165,8 @@ class Holiday {
 	public function getConfig () {
 		$config = array(
 			'name'      => $this->name,
-			'dateStart' => $this->dateStart->format( I18n::STD_DATE_FORMAT ),
-			'dateEnd'   => $this->dateEnd->format( I18n::STD_DATE_FORMAT ),
+			'dateStart' => $this->dateStart->format( Dates::STD_DATE_FORMAT ),
+			'dateEnd'   => $this->dateEnd->format( Dates::STD_DATE_FORMAT ),
 			'dummy'     => $this->dummy
 		);
 
@@ -228,18 +229,18 @@ class Holiday {
 	 * @param     bool            $end_of_day   Whether the time should be shifted to the end of the day
 	 */
 	protected function setDateUniversal ( $date, $property, $end_of_day = false ) {
-		if ( is_string( $date ) and ( preg_match( I18n::STD_DATE_FORMAT_REGEX, $date ) or preg_match( I18n::STD_DATE_FORMAT_REGEX . ' ' . I18n::STD_TIME_FORMAT_REGEX, $date ) ) )
+		if ( is_string( $date ) and ( preg_match( Dates::STD_DATE_FORMAT_REGEX, $date ) or preg_match( Dates::STD_DATE_FORMAT_REGEX . ' ' . Dates::STD_TIME_FORMAT_REGEX, $date ) ) )
 			$date = new DateTime( $date );
 
 		if ( !$date instanceof DateTime )
 			add_notice( sprintf( 'Argument one for %s has to be of type string or DateTime, %s given', __CLASS__ . '::' . __METHOD__, gettype( $date ) ) ) ;
 
-		$date = I18n::applyTimeZone( $date );
+		$date = Dates::applyTimeZone( $date );
 
 		if ( $end_of_day === true )
 			$date->setTime( 23, 59, 59 );
 
-		$this->$property = I18n::applyTimeZone( $date );
+		$this->$property = Dates::applyTimeZone( $date );
 	}
 
 	/**

@@ -5,7 +5,7 @@
 
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
-use OpeningHours\Module\I18n;
+use OpeningHours\Util\Dates;
 
 /**
  * pre-defined variables
@@ -14,8 +14,8 @@ use OpeningHours\Module\I18n;
  */
 
 $name      = $holiday->getName();
-$dateStart = ( $holiday->isDummy() ) ? null : $holiday->getDateStart()->format( I18n::STD_DATE_FORMAT );
-$dateEnd   = ( $holiday->isDummy() ) ? null : $holiday->getDateEnd()->format( I18n::STD_DATE_FORMAT );
+$dateStart = ( $holiday->isDummy() ) ? null : $holiday->getDateStart()->format( Dates::STD_DATE_FORMAT );
+$dateEnd   = ( $holiday->isDummy() ) ? null : $holiday->getDateEnd()->format( Dates::STD_DATE_FORMAT );
 
 echo '<tr class="op-holiday">';
 

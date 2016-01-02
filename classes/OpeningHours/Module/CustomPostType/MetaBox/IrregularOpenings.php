@@ -7,6 +7,7 @@ use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 
+use OpeningHours\Util\Dates;
 use WP_Post;
 
 /**
@@ -81,13 +82,13 @@ class IrregularOpenings extends AbstractMetaBox {
 			if ( !isset( $config['name'][$i] ) or empty( $config['name'][$i] ) )
 				continue;
 
-			if ( !isset( $config['date'][$i] ) or preg_match( I18n::STD_DATE_FORMAT_REGEX, $config['date'][$i] ) === false )
+			if ( !isset( $config['date'][$i] ) or preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['date'][$i] ) === false )
 				continue;
 
-			if ( !isset( $config['timeStart'][$i] ) or preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeStart'][$i] ) === false )
+			if ( !isset( $config['timeStart'][$i] ) or preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeStart'][$i] ) === false )
 				continue;
 
-			if ( !isset( $config['timeEnd'][$i] ) or preg_match( I18n::STD_TIME_FORMAT_REGEX, $config['timeEnd'][$i] ) === false )
+			if ( !isset( $config['timeEnd'][$i] ) or preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeEnd'][$i] ) === false )
 				continue;
 
 			$newConfig[] = array(

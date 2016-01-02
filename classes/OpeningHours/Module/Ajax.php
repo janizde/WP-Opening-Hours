@@ -8,6 +8,7 @@ use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings;
+use OpeningHours\Util\Dates;
 
 /**
  * Ajax module
@@ -81,8 +82,8 @@ class Ajax extends AbstractModule {
 			'weekday' => $weekday
 		);
 
-		$config['timeStart'] = ( I18n::isValidTime( $timeStart ) ) ? $timeStart : '00:00';
-		$config['timeEnd'] = ( I18n::isValidTime( $timeEnd ) ) ? $timeEnd : '00:00';
+		$config['timeStart'] = ( Dates::isValidTime( $timeStart ) ) ? $timeStart : '00:00';
+		$config['timeEnd'] = ( Dates::isValidTime( $timeEnd ) ) ? $timeEnd : '00:00';
 
 		$period = new Period( $config );
 

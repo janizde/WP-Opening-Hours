@@ -5,6 +5,7 @@ namespace OpeningHours\Module\Shortcode;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
+use OpeningHours\Util\Dates;
 
 /**
  * Shortcode implementation for a list of Irregular Openings
@@ -29,8 +30,8 @@ class IrregularOpenings extends AbstractShortcode {
 			'after_title'       => null,
 			'class_io'          => 'op-irregular-opening',
 			'class_highlighted' => 'highlighted',
-			'date_format'       => I18n::getDateFormat(),
-			'time_format'       => I18n::getTimeFormat()
+			'date_format'       => Dates::getDateFormat(),
+			'time_format'       => Dates::getTimeFormat()
 		);
 
 		$this->templatePath = 'shortcode/irregular-openings.php';

@@ -8,6 +8,7 @@ use OpeningHours\Module\CustomPostType\Set as SetCpt;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as IrregularOpeningsMetaBox;
 
+use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
 use WP_Post;
 use DateTime;
@@ -209,13 +210,13 @@ class Set {
 		$detail_date_end    = get_post_detail( 'date-end', $post->ID );
 		$detail_week_scheme = get_post_detail( 'week-scheme', $post->ID );
 
-		$detail_date_start = ( !empty( $detail_date_start ) ) ? new DateTime( $detail_date_start, I18n::getDateTimeZone() ) : null;
-		$detail_date_end   = ( !empty( $detail_date_end ) ) ? new DateTime( $detail_date_end, I18n::getDateTimeZone() ) : null;
+		$detail_date_start = ( !empty( $detail_date_start ) ) ? new DateTime( $detail_date_start, Dates::getTimezone() ) : null;
+		$detail_date_end   = ( !empty( $detail_date_end ) ) ? new DateTime( $detail_date_end, Dates::getTimezone() ) : null;
 
 		if ( $detail_date_start == null and $detail_date_end == null and ( $detail_week_scheme == 'all' or empty( $detail_week_scheme ) ) )
 			return false;
 
-		$date_time_now = I18n::getTimeNow();
+		$date_time_now = Dates::getNow();
 
 		if ( $detail_date_start != null and $date_time_now < $detail_date_start )
 			return false;
@@ -300,7 +301,7 @@ class Set {
 	 * @return    Holiday             The first active holiday on the specified weekday
 	 */
 	public function getActiveHolidayOnWeekday ( $weekday ) {
-		$date = I18n::applyWeekContext( new DateTime('now'), $weekday );
+		$date = Dates::applyWeekContext( new DateTime('now'), $weekday );
 		return $this->getActiveHoliday( $date );
 	}
 
@@ -497,7 +498,7 @@ class Set {
 	 * @return    IrregularOpening    The first active irregular opening fpr the current weekday
 	 */
 	public function getActiveIrregularOpeningOnWeekday ( $weekday ) {
-		$date = I18n::applyWeekContext( new DateTime('now'), $weekday );
+		$date = Dates::applyWeekContext( new DateTime('now'), $weekday );
 		return $this->getActiveIrregularOpening( $date );
 	}
 

@@ -5,6 +5,7 @@ namespace OpeningHours\Module\Shortcode;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
+use OpeningHours\Util\Dates;
 
 /**
  * Shortcode implementation for a list of Holidays
@@ -28,7 +29,7 @@ class Holidays extends AbstractShortcode {
 			'after_title'       => null,
 			'class_holiday'     => 'op-holiday',
 			'class_highlighted' => 'highlighted',
-			'date_format'       => I18n::getDateFormat()
+			'date_format'       => Dates::getDateFormat()
 		);
 
 		$this->templatePath = 'shortcode/holidays.php';
