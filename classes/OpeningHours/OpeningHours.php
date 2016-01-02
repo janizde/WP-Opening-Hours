@@ -109,4 +109,11 @@ class OpeningHours extends AbstractModule {
 		wp_localize_script( self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations() );
 	}
 
+	public function activate () {
+		// Silence is golden
+	}
+
+	public function deactivate () {
+		// Silence is golden
+	}
 }
