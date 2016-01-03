@@ -84,8 +84,7 @@ class Ajax extends AbstractModule {
 
 		$config['timeStart'] = ( Dates::isValidTime( $timeStart ) ) ? $timeStart : '00:00';
 		$config['timeEnd'] = ( Dates::isValidTime( $timeEnd ) ) ? $timeEnd : '00:00';
-
-		$period = new Period( $config );
+		$period = new Period( $config['weekday'], $config['timeStart'], $config['timeEnd'] );
 
 		echo self::renderTemplate(
 			'ajax/op-set-period.php',

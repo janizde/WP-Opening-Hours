@@ -32,12 +32,14 @@ class HolidayTest extends \WP_UnitTestCase {
 		$h3 = new Holiday('Test3', new DateTime('2016-03-02'), new DateTime('2016-03-02'));
 		$h1 = new Holiday('Test1', new DateTime('2016-01-02'), new DateTime('2016-01-02'));
 		$h2 = new Holiday('Test2', new DateTime('2016-02-02'), new DateTime('2016-02-02'));
+		$h4 = new Holiday('Test4', new DateTime('2016-03-02'), new DateTime('2016-04-02'));
 
 		$holidays = array( $h3, $h1, $h2 );
 		usort( $holidays, array( get_class( $h1 ), 'sortStrategy' ) );
 		$this->assertEquals( $h1, $holidays[0] );
 		$this->assertEquals( $h2, $holidays[1] );
 		$this->assertEquals( $h3, $holidays[2] );
+		$this->assertEquals( 0, Holiday::sortStrategy( $h3, $h4 ) );
 	}
 
 	public function testCreateDummyPeriod () {

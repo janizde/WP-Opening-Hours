@@ -137,14 +137,6 @@ class IrregularOpening {
 	}
 
 	/**
-	 * Returns the config as JSON string
-	 * @return    string
-	 */
-	public function __toString() {
-		return json_encode( $this->toArray() );
-	}
-
-	/**
 	 * Sorts Irregular Openings by start-time (ASC)
 	 *
 	 * @param     IrregularOpening    $io1

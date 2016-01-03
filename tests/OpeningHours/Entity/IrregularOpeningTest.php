@@ -4,7 +4,6 @@ namespace OpeningHours\Test\Entity;
 
 use DateTime;
 use OpeningHours\Entity\IrregularOpening;
-use OpeningHours\Util\Dates;
 
 class IrregularOpeningTest extends \WP_UnitTestCase {
 
@@ -42,6 +41,7 @@ class IrregularOpeningTest extends \WP_UnitTestCase {
 		$this->assertEquals( new DateTime( '2016-02-03 00:00:00' ), $io->getDate() );
 		$this->assertEquals( new DateTime( '2016-02-03 12:15' ), $io->getTimeStart() );
 		$this->assertEquals( new DateTime( '2016-02-03 23:20' ), $io->getTimeEnd() );
+		$this->assertFalse( $io->isDummy() );
 	}
 
 	public function testTimeEndNextDay () {
@@ -105,15 +105,17 @@ class IrregularOpeningTest extends \WP_UnitTestCase {
 		$this->assertEquals( $expected, $io->toArray() );
 	}
 
-	public function testSortStratety () {
+	public function testSortStrategy () {
 		$io1 = new IrregularOpening( 'Test', '2016-02-03', '13:00', '01:00' );
 		$io2 = new IrregularOpening( 'Test', '2016-01-03', '14:00', '01:00' );
 		$io3 = new IrregularOpening( 'Test', '2016-04-03', '01:00', '01:00' );
+		$io4 = new IrregularOpening( 'Test', '2016-04-03', '01:00', '03:00' );
 
 		$ios = array( $io1, $io2, $io3 );
 		usort( $ios, array( get_class( $io1 ), 'sortStrategy' ) );
 
 		$this->assertEquals( array( $io2, $io1, $io3 ), $ios );
+		$this->assertEquals( 0, IrregularOpening::sortStrategy( $io3, $io4 ) );
 	}
 
 	public function testCreateDummy () {
@@ -126,6 +128,7 @@ class IrregularOpeningTest extends \WP_UnitTestCase {
 		$this->assertEquals( $expectedDate, $io->getDate() );
 		$this->assertEquals( $expectedDate, $io->getTimeStart() );
 		$this->assertEquals( $expectedDate, $io->getTimeStart() );
+		$this->assertTrue( $io->isDummy() );
 	}
 
 }

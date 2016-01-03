@@ -151,7 +151,7 @@ class Set {
 
 		foreach ( $post_meta as $config ) {
 			try {
-				$p = new Period( $config );
+				$p = new Period( (int) $config['weekday'], $config['timeStart'], $config['timeEnd'] );
 				$this->periods->append( $p );
 			} catch ( InvalidArgumentException $e ) {
 				add_notice( $e->getMessage(), 'error' );
@@ -243,12 +243,7 @@ class Set {
 	public function addDummyPeriods() {
 		for ( $i = 0; $i < 7; $i++ ) {
 			if ( count( $this->getPeriodsByDay( $i ) ) < 1 ) {
-				$newPeriod = new Period( array(
-					'weekday'   => $i,
-					'timeStart' => new DateTime( '00:00' ),
-					'timeEnd'   => new DateTime( '00:00' ),
-					'dummy'     => true
-				) );
+				$newPeriod = Period::createDummy();
 				$this->periods->append( $newPeriod );
 			}
 		}

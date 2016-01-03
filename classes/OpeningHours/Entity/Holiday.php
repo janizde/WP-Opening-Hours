@@ -91,14 +91,6 @@ class Holiday {
 	}
 
 	/**
-	 * Converts config array to json
-	 * @return    string
-	 */
-	public function __toString () {
-		return json_encode( $this->toArray() );
-	}
-
-	/**
 	 * Factory for dummy Holiday
 	 * @return    Holiday
 	 */
@@ -107,32 +99,11 @@ class Holiday {
 	}
 
 	/**
-	 * Generates config array for Holiday object
-	 * @return    array     Array representation of this Holiday
-	 */
-	public function toArray () {
-		return array(
-			'name'      => $this->name,
-			'dateStart' => $this->dateStart->format( Dates::STD_DATE_FORMAT ),
-			'dateEnd'   => $this->dateEnd->format( Dates::STD_DATE_FORMAT ),
-			'dummy'     => $this->dummy
-		);
-	}
-
-	/**
 	 * Getter: Name
 	 * @return          string
 	 */
 	public function getName () {
 		return $this->name;
-	}
-
-	/**
-	 * Setter: Name
-	 * @param           string $name
-	 */
-	protected function setName ( $name ) {
-		$this->name = $name;
 	}
 
 	/**
@@ -195,14 +166,6 @@ class Holiday {
 	 */
 	public function isDummy () {
 		return $this->dummy;
-	}
-
-	/**
-	 * Setter: Dummy
-	 * @param     bool      $dummy
-	 */
-	protected function setDummy ( $dummy ) {
-		$this->dummy = (bool) $dummy;
 	}
 
 }
