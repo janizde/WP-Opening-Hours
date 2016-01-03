@@ -43,25 +43,16 @@ class Holiday {
 	/**
 	 * Constructs a new Holiday
 	 *
-	 * @param     array     $config   Configuration array for Holiday
-	 *
-	 * @throws    InvalidArgumentException  If config is invalid
+	 * @param     string    $name       The holiday's name
+	 * @param     DateTime  $dateStart  DateTime object representing the start of the holiday
+	 * @param     DateTime  $dateEnd    DateTime object representing the end of the holiday
+	 * @param     bool      $dummy      Whether holiday is a dummy or not
 	 */
-	public function __construct ( array $config ) {
-		$config = static::validateConfig( $config );
-		$this->setUp( $config );
-	}
-
-	/**
-	 * Sets up holiday object
-	 *
-	 * @param     array     $config   The config array containing the data for the holiday
-	 */
-	protected function setUp ( array $config ) {
-		$this->setName( $config['name'] );
-		$this->setDateStart( new DateTime( $config['dateStart'] ) );
-		$this->setDateEnd( new DateTime( $config['dateEnd'] ) );
-		$this->setDummy( $config['dummy'] );
+	public function __construct ( $name, DateTime $dateStart, DateTime $dateEnd, $dummy = false ) {
+		$this->name = $name;
+		$this->setDateStart( $dateStart );
+		$this->setDateEnd( $dateEnd );
+		$this->dummy = $dummy;
 	}
 
 	/**
@@ -79,47 +70,6 @@ class Holiday {
 			$now = Dates::getNow();
 
 		return ( $this->dateStart <= $now and $this->dateEnd >= $now );
-	}
-
-	/**
-	 * Validate Config
-	 *
-	 * @param     array     $config   The configuration array to validate
-	 *
-	 * @return    array     The filtered config
-	 * @throws    InvalidArgumentException  On validation error
-	 */
-	public static function validateConfig ( array $config ) {
-		if ( array_key_exists('dummy', $config) and $config['dummy'] === true ) {
-			$config = array(
-				'name'      => '',
-				'dateStart' => 'now',
-				'dateEnd'   => 'now',
-				'dummy'     => true
-			);
-
-			return $config;
-		}
-
-		if ( !isset( $config['dateStart'] ) )
-			throw new InvalidArgumentException( 'dateStart not set in Holiday config.' );
-
-		if ( !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateStart'] ) )
-			throw new InvalidArgumentException( sprintf( 'dateStart in config does not correspond with standard date regex %s. %s given.', Dates::STD_DATE_FORMAT, $config['dateStart'] ) );
-
-		if ( !isset( $config['dateEnd'] ) )
-			throw new InvalidArgumentException( 'dateEnd not set in Holiday config.' );
-
-		if ( !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateEnd'] ) )
-			throw new InvalidArgumentException( sprintf( 'dateEnd in config does not correspond with standard date regex %s. %s given.', Dates::STD_DATE_FORMAT, $config['dateEnd'] ) );
-
-		if ( !isset( $config['dummy'] ) or !is_bool( $config['dummy'] ) )
-			$config['dummy'] = false;
-
-		if ( !$config['dummy'] and ( !isset( $config['name'] ) or empty( $config['name'] ) ) )
-			throw new InvalidArgumentException( 'name not set in Holiday config.' );
-
-		return $config;
 	}
 
 	/**
@@ -145,7 +95,7 @@ class Holiday {
 	 * @return    string
 	 */
 	public function __toString () {
-		return json_encode( $this->getConfig() );
+		return json_encode( $this->toArray() );
 	}
 
 	/**
@@ -153,24 +103,20 @@ class Holiday {
 	 * @return    Holiday
 	 */
 	public static function createDummyPeriod () {
-		return new Holiday( array(
-			'dummy' => true
-		) );
+		return new Holiday( '', new DateTime('now'), new DateTime('now'), true );
 	}
 
 	/**
 	 * Generates config array for Holiday object
-	 * @return    array     Associative array of Holiday config that can be used to configure other instances
+	 * @return    array     Array representation of this Holiday
 	 */
-	public function getConfig () {
-		$config = array(
+	public function toArray () {
+		return array(
 			'name'      => $this->name,
 			'dateStart' => $this->dateStart->format( Dates::STD_DATE_FORMAT ),
 			'dateEnd'   => $this->dateEnd->format( Dates::STD_DATE_FORMAT ),
 			'dummy'     => $this->dummy
 		);
-
-		return $config;
 	}
 
 	/**

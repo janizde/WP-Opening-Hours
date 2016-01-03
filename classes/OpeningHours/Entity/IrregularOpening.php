@@ -2,8 +2,6 @@
 
 namespace OpeningHours\Entity;
 
-use OpeningHours\Module\I18n;
-
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
@@ -18,7 +16,7 @@ use OpeningHours\Util\Dates;
 class IrregularOpening {
 
 	/**
-	 * Name
+	 * The name of the IO
 	 * @type      string
 	 */
 	protected $name;
@@ -44,87 +42,54 @@ class IrregularOpening {
 	/**
 	 * Constructs a new IO with a config array
 	 *
-	 * @param     array     $config   The config array for the new IO
+	 * @param     string    $name       The name of the IO
+	 * @param     string    $date       The date of the IO in standard date format
+	 * @param     string    $timeStart  The start time of the IO in standard time format
+	 * @param     string    $timeEnd    The end time of the IO in standard time format
+	 * @param     bool      $dummy      Whether the IO is a dummy. default: false
 	 *
 	 * @throws    InvalidArgumentException  On validation error
 	 */
-	public function __construct ( array $config ) {
-		$config = static::validateConfig( $config );
-		$this->setUp( $config );
-	}
+	public function __construct ( $name, $date, $timeStart, $timeEnd, $dummy = false ) {
+		if ( !preg_match( Dates::STD_TIME_FORMAT_REGEX, $timeStart ) )
+			throw new InvalidArgumentException( "\$timeStart is not in valid time format" );
 
-	/**
-	 * Validates and filters configuration array for the IO
-	 *
-	 * @param     array     $config   The config array to validate
-	 *
-	 * @return    array               The filtered config array
-	 */
-	protected static function validateConfig ( array $config ) {
-		if ( isset( $config['dummy'] ) or ( $config['dummy'] !== true and $config['dummy'] !== false ) )
-			$config['dummy'] = false;
+		if ( !preg_match( Dates::STD_TIME_FORMAT_REGEX, $timeEnd ) )
+			throw new InvalidArgumentException( "\$timeEnd is not in valid time format" );
 
-		if ( $config['dummy'] ) {
-			$config['timeStart'] = new DateTime( 'now' );
-			$config['timeEnd']   = new DateTime( 'now' );
-			$config['name']      = null;
+		if ( !preg_match( Dates::STD_DATE_FORMAT_REGEX, $date ) )
+			throw new InvalidArgumentException( "\$date is not in valid date format" );
 
-			return $config;
-		}
+		if ( !$dummy and empty( $name ) )
+			throw new InvalidArgumentException( "\$name must not be empty when Irregular Opening is not a dummy" );
 
-		if ( !preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeStart'] ) )
-			throw new InvalidArgumentException( "timeStart in config is not in valid time format" );
+		$date = new DateTime( $date );
+		$this->name = $name;
+		$this->timeStart = Dates::mergeDateIntoTime( $date, new DateTime( $timeStart ) );
+		$this->timeEnd = Dates::mergeDateIntoTime( $date, new DateTime( $timeEnd ) );
+		$this->dummy = $dummy;
 
-		if ( !preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeEnd'] ) )
-			throw new InvalidArgumentException( "timeEnd in config is not in valid time format" );
-
-		if ( !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['date'] ) )
-			throw new InvalidArgumentException( "date in config is not in valid date format" );
-
-		if ( !isset( $config['name'] ) or empty( $config['name'] ) )
-			throw new InvalidArgumentException( "name in config is not set or empty" );
-
-		$config['timeStart'] = Dates::mergeDateIntoTime( new DateTime( $config['date'] ), new DateTime( $config['timeStart'] ) );
-		$config['timeEnd']   = Dates::mergeDateIntoTime( new DateTime( $config['date'] ), new DateTime( $config['timeEnd'] ) );
-
-		return $config;
-	}
-
-	/**
-	 * Sets up the object properties
-	 * @param     array     $config   The config array to use
-	 */
-	public function setUp( array $config ) {
-		$this->setName( $config['name'] );
-		$this->setTimeStart( $config['timeStart'] );
-		$this->setTimeEnd( $config['timeEnd'] );
-		$this->setDummy( $config['dummy'] );
-	}
-
-	/** Updates the start and end time */
-	public function updateTime() {
-		if ( $this->timeStart instanceof DateTime or $this->timeEnd instanceof DateTime )
-			return;
-
-		if (
-			$this->timeStart->format( Dates::STD_DATE_FORMAT ) === $this->timeEnd->format( Dates::STD_DATE_FORMAT )
-			and $this->timeStart >= $this->timeEnd
-		) {
+		if ( Dates::compareTime( $this->timeStart, $this->timeEnd ) >= 0 )
 			$this->timeEnd->add( new DateInterval( 'P1D' ) );
-		}
 	}
 
 	/**
 	 * Checks whether this IrregularOpening is active on the given date.
 	 *
-	 * @param     DateTime  $now      The DateTime to compare against. Default is the current time.
-	 * @return    bool                Whether this IO is active on the given date
+	 * @param     DateTime  $now          The DateTime to compare against. Default is the current time.
+	 * @param     bool      $excludeNext  Whether to exclude the next day if timeEnd is less or equal that timeStart
+	 *
+	 * @return    bool                    Whether this IO is active on the given date
 	 */
-	public function isActive( DateTime $now = null ) {
+	public function isActiveOnDay ( DateTime $now = null, $excludeNext = false ) {
 		if ( $now == null )
 			$now = Dates::getNow();
 
-		return ( $this->getDate()->format( Dates::STD_DATE_FORMAT ) == $now->format( Dates::STD_DATE_FORMAT ) );
+		if ( $excludeNext ) {
+			return $this->getDate()->format( Dates::STD_DATE_FORMAT ) == $now->format( Dates::STD_DATE_FORMAT );
+		} else {
+			return Dates::compareDate( $this->timeStart, $now ) <= 0 and Dates::compareDate( $this->timeEnd, $now ) >= 0;
+		}
 	}
 
 	/**
@@ -137,26 +102,23 @@ class IrregularOpening {
 		if ( $now == null )
 			$now = Dates::getNow();
 
-		if ( !$this->isActive( $now ) )
+		if ( !$this->isActiveOnDay( $now ) )
 			return false;
 
 		return ( $this->timeStart <= $now and $this->timeEnd >= $now );
 	}
 
 	/**
-	 * Get Formatted Time Range
+	 * Returns a string representing the Irregular Opening time range
 	 *
 	 * @param     string    $timeFormat     Custom time format
 	 * @param     string    $outputFormat   Custom output format. First variable: start time, second variable: end time
 	 *
 	 * @return    string                    The time range as string
 	 */
-	public function getFormattedTimeRange( $timeFormat = null, $outputFormat = "%s – %s" ) {
+	public function getFormattedTimeRange ( $timeFormat = null, $outputFormat = "%s - %s" ) {
 		if ( $timeFormat == null )
 			$timeFormat = Dates::getTimeFormat();
-
-		if ( !$this->timeStart instanceof DateTime or !$this->timeEnd instanceof DateTime )
-			return "";
 
 		return sprintf( $outputFormat, $this->timeStart->format( $timeFormat ), $this->timeEnd->format( $timeFormat ) );
 	}
@@ -165,12 +127,12 @@ class IrregularOpening {
 	 * Generates a config array representing this IO
 	 * @return    array   Associative config array representing this IO
 	 */
-	public function getConfig() {
+	public function toArray () {
 		return array(
 			'name'      => $this->name,
 			'timeStart' => $this->timeStart->format( Dates::STD_TIME_FORMAT ),
 			'timeEnd'   => $this->timeEnd->format( Dates::STD_TIME_FORMAT ),
-			'date'      => $this->getDate()
+			'date'      => $this->getDate()->format( Dates::STD_DATE_FORMAT )
 		);
 	}
 
@@ -179,7 +141,7 @@ class IrregularOpening {
 	 * @return    string
 	 */
 	public function __toString() {
-		return json_encode( $this->getConfig() );
+		return json_encode( $this->toArray() );
 	}
 
 	/**
@@ -205,102 +167,47 @@ class IrregularOpening {
 	 * @return    IrregularOpening  An IO dummy
 	 */
 	public static function createDummy() {
-		return new IrregularOpening( array(
-			'dummy' => true
-		) );
+		$now = Dates::getNow();
+		return new IrregularOpening( '', $now->format(Dates::STD_DATE_FORMAT), '00:00', '00:00', true );
 	}
 
 	/**
 	 * Getter: Name
 	 * @return    string
 	 */
-	public function getName() {
+	public function getName () {
 		return $this->name;
-	}
-
-	/**
-	 * Setter: Name
-	 * @param    string     $name
-	 */
-	protected function setName( $name ) {
-		$this->name = $name;
 	}
 
 	/**
 	 * Getter: Time Start
 	 * @return    DateTime
 	 */
-	public function getTimeStart() {
+	public function getTimeStart () {
 		return $this->timeStart;
-	}
-
-	/**
-	 * Setter: Time Start
-	 * @param     DateTime  $timeStart
-	 */
-	public function setTimeStart( DateTime $timeStart ) {
-		$this->timeStart = $timeStart;
-		$this->updateTime();
 	}
 
 	/**
 	 * Getter: Time End
 	 * @return    DateTime
 	 */
-	public function getTimeEnd() {
+	public function getTimeEnd () {
 		return $this->timeEnd;
-	}
-
-	/**
-	 * Setter: Time End
-	 * @param     DateTime  $timeEnd
-	 */
-	protected function setTimeEnd( DateTime $timeEnd ) {
-		$this->timeEnd = $timeEnd;
-		$this->updateTime();
 	}
 
 	/**
 	 * Getter: Dummy
 	 * @return    bool
 	 */
-	public function isDummy() {
+	public function isDummy () {
 		return $this->dummy;
-	}
-
-	/**
-	 * Setter: Dummy
-	 * @param     bool      $dummy
-	 */
-	protected function setDummy( $dummy ) {
-		$this->dummy = $dummy;
 	}
 
 	/**
 	 * Getter: Date
 	 * @return    DateTime
 	 */
-	public function getDate() {
+	public function getDate () {
 		return new DateTime( $this->getTimeStart()->format( Dates::STD_DATE_FORMAT ), Dates::getTimezone() );
-	}
-
-	/**
-	 * Setter: Date
-	 * @param     DateTime|string   $date
-	 */
-	protected function setDate( $date ) {
-		if ( is_string( $date ) and preg_match( $date, Dates::STD_DATE_FORMAT_REGEX ) )
-			$date = new DateTime( $date, Dates::getTimezone() );
-
-		if ( !$date instanceof DateTime )
-			add_notice( sprintf( "%::% requires Parameter 1 to be DateTime or string in correct date format. %s given", __CLASS__, __METHOD__, gettype( $date ) ), 'error' );
-
-		if ( $this->getTimeStart() instanceof DateTime )
-			$this->getTimeStart()->setDate( (int) $date->format( 'Y' ), (int) $date->format( 'm' ), (int) $date->format( 'd' ) );
-
-		if ( $this->getTimeEnd() instanceof DateTime )
-			$this->getTimeEnd()->setDate( (int) $date->format( 'Y' ), (int) $date->format( 'm' ), (int) $date->format( 'd' ) );
-
-		$this->updateTime();
 	}
 }

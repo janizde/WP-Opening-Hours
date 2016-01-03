@@ -73,4 +73,23 @@ class DatesTest extends \WP_UnitTestCase {
 		$this->assertFalse( Dates::isToday( $today + 1 ) );
 	}
 
+	public function testCompareTime () {
+		$d1 = new DateTime('2016-02-03 12:30');
+		$d2 = new DateTime('2016-12-23 01:45');
+
+		$this->assertEquals( -1, Dates::compareTime( $d2, $d1 ) );
+		$this->assertEquals( 0, Dates::compareTime( $d1, $d1 ) );
+		$this->assertEquals( 1, Dates::compareTime( $d1, $d2 ) );
+	}
+
+	public function testCompareDate () {
+		$d1 = new DateTime('2016-02-03 12:30');
+		$d2 = new DateTime('2016-04-02 11:30');
+		$d3 = new DateTime('2016-02-03 13:30');
+
+		$this->assertEquals( -1, Dates::compareDate( $d1, $d2 ) );
+		$this->assertEquals( 0, Dates::compareDate( $d1, $d3 ) );
+		$this->assertEquals( 1, Dates::compareDate( $d2, $d1 ) );
+	}
+
 }

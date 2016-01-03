@@ -169,12 +169,8 @@ class Set {
 			return;
 
 		foreach ( $post_meta as $config ) {
-			try {
-				$h = new Holiday( $config );
-				$this->holidays->append( $h );
-			} catch ( InvalidArgumentException $e ) {
-				add_notice( $e->getMessage(), 'error' );
-			}
+			$h = new Holiday( $config['name'], new DateTime( $config['dateStart'] ), new DateTime( $config['dateEnd'] ) );
+			$this->holidays->append( $h );
 		}
 
 		$this->sortHolidays();
@@ -189,7 +185,7 @@ class Set {
 
 		foreach ( $post_meta as $config ) {
 			try {
-				$io = new IrregularOpening( $config );
+				$io = new IrregularOpening( $config['name'], $config['date'], $config['timeStart'], $config['timeEnd'] );
 				$this->irregularOpenings->append( $io );
 			} catch ( InvalidArgumentException $e ) {
 				add_notice( $e->getMessage(), 'error' );

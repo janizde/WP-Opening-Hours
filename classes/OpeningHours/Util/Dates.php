@@ -162,6 +162,52 @@ class Dates extends AbstractModule {
 	}
 
 	/**
+	 * Compares only the time in hours and minutes of two DateTime objects
+	 *
+	 * @param     DateTime  $time1    The first DateTime object
+	 * @param     DateTime  $time2    The second DateTime object
+	 *
+	 * @return    int                 -1 if $time1 is less than $time2
+	 *                                0 if $time1 is equal to $time2
+	 *                                1 if $time1 is greater than $time2
+	 */
+	public static function compareTime ( DateTime $time1, DateTime $time2 ) {
+		$time1 = (int) $time1->format( 'Hi' );
+		$time2 = (int) $time2->format( 'Hi' );
+
+		if ( $time1 < $time2 ) {
+			return -1;
+		} elseif ( $time1 == $time2 ) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
+	 * Compares only the date in year, month and day of two DateTime objects
+	 *
+	 * @param     DateTime  $date1    The first DateTime object
+	 * @param     DateTime  $date2    The second DateTime object
+	 *
+	 * @return    int                 -1 if $date1 is less than $date2
+	 *                                0 if $date1 is equal to $date2
+	 *                                1 if $date1 is greater than $date2
+	 */
+	public static function compareDate ( DateTime $date1, DateTime $date2 ) {
+		$date1 = (int) $date1->format( 'Ymd' );
+		$date2 = (int) $date2->format( 'Ymd' );
+
+		if ( $date1 < $date2 ) {
+			return -1;
+		} elseif ( $date1 == $date2 ) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
 	 * Getter: Date Format
 	 * @return    string
 	 */

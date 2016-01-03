@@ -50,7 +50,7 @@ foreach ( $irregular_openings as $io ) :
 	 * @var         $io         IrregularOpening object
 	 */
 
-	$highlighted = ( $highlight and $io->isActive() ) ? $class_highlighted : null;
+	$highlighted = ( $highlight and $io->isActiveOnDay() ) ? $class_highlighted : null;
 
 	echo '<tr class="' . $class_io . ' ' . $highlighted . '">';
 
