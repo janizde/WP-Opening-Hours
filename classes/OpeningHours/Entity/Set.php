@@ -469,7 +469,7 @@ class Set {
 	 */
 	public function getActiveIrregularOpening( DateTime $now = null ) {
 		foreach ( $this->irregularOpenings as $io )
-			if ( $io->isActive( $now ) )
+			if ( $io->isActiveOnDay( $now ) )
 				return $io;
 
 		return null;
