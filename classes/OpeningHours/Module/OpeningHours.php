@@ -76,9 +76,9 @@ class OpeningHours extends AbstractModule {
 
 		// Redo Child Set mechanism
 		add_action( SetEntity::WP_ACTION_BEFORE_SETUP, function ( SetEntity $set ) {
-			$parent_post = $set->getParentPost();
-			$set->setId( $parent_post->ID );
-			$set->setPost( $parent_post );
+			$parentPost = $set->getParentPost();
+			$set->setId( $parentPost->ID );
+			$set->setPost( $parentPost );
 		} );
 
 		self::$sets = new ArrayObject;

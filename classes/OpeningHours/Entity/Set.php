@@ -81,12 +81,6 @@ class Set {
 	protected $description;
 
 	/**
-	 * Whether the set has a parent set
-	 * @type      bool
-	 */
-	protected $hasParent;
-
-	/**
 	 * Constructs a new Set with a WP_Post
 	 *
 	 * @param     WP_Post|int   $post
@@ -143,7 +137,7 @@ class Set {
 	}
 
 	/** Get config from post meta and add period objects */
-	public function loadPeriods() {
+	public function loadPeriods () {
 		$post_meta = get_post_meta( $this->id, SetCpt::PERIODS_META_KEY, true );
 
 		if ( !is_array( $post_meta ) or count( $post_meta ) < 1 )
@@ -162,7 +156,7 @@ class Set {
 	}
 
 	/** Get config from post meta and add holiday objects */
-	public function loadHolidays() {
+	public function loadHolidays () {
 		$post_meta = get_post_meta( $this->id, HolidaysMetaBox::HOLIDAYS_META_KEY, true );
 
 		if ( !is_array( $post_meta ) or count( $post_meta ) < 1 )
@@ -177,7 +171,7 @@ class Set {
 	}
 
 	/** Loads all Irregular Openings for this Set */
-	public function loadIrregularOpenings() {
+	public function loadIrregularOpenings () {
 		$post_meta = get_post_meta( $this->id, IrregularOpeningsMetaBox::IRREGULAR_OPENINGS_META_KEY, true );
 
 		if ( !is_array( $post_meta ) or count( $post_meta ) < 1 )
@@ -201,7 +195,7 @@ class Set {
 	 * @param     WP_Post   $post   The child post
 	 * @return    bool              Whether the child post matches the criteria
 	 */
-	public static function childMatchesCriteria( WP_Post $post ) {
+	public static function childMatchesCriteria ( WP_Post $post ) {
 		$detail_date_start  = get_post_detail( 'date-start', $post->ID );
 		$detail_date_end    = get_post_detail( 'date-end', $post->ID );
 		$detail_week_scheme = get_post_detail( 'week-scheme', $post->ID );
@@ -254,7 +248,7 @@ class Set {
 	 * @param     DateTime  $now    Custom time
 	 * @return    bool              Whether venue is open due to regular Opening Hours
 	 */
-	public function isOpenOpeningHours( $now = null ) {
+	public function isOpenOpeningHours ( $now = null ) {
 		foreach ( $this->periods as $period )
 			if ( $period->isOpen( $now ) )
 				return true;
@@ -267,7 +261,7 @@ class Set {
 	 * @param     DateTime  $now      Custom time
 	 * @return    bool                Whether any holiday in the set is currently active
 	 */
-	public function isHolidayActive( $now = null ) {
+	public function isHolidayActive ( $now = null ) {
 		return $this->getActiveHoliday( $now ) instanceof Holiday;
 	}
 
@@ -527,27 +521,11 @@ class Set {
 	}
 
 	/**
-	 * Setter: Periods
-	 * @param     ArrayObject $periods
-	 */
-	public function setPeriods( ArrayObject $periods ) {
-		$this->periods = $periods;
-	}
-
-	/**
 	 * Getter: Holidays
 	 * @return    ArrayObject
 	 */
-	public function getHolidays() {
+	public function getHolidays () {
 		return $this->holidays;
-	}
-
-	/**
-	 * Setter: Holidays
-	 * @param     ArrayObject $holidays
-	 */
-	public function setHolidays( ArrayObject $holidays ) {
-		$this->holidays = $holidays;
 	}
 
 	/**
@@ -556,14 +534,6 @@ class Set {
 	 */
 	public function getIrregularOpenings() {
 		return $this->irregularOpenings;
-	}
-
-	/**
-	 * Setter: Irregular Openings
-	 * @param     ArrayObject $irregularOpenings
-	 */
-	protected function setIrregularOpenings( ArrayObject $irregularOpenings ) {
-		$this->irregularOpenings = $irregularOpenings;
 	}
 
 	/**
@@ -592,16 +562,10 @@ class Set {
 
 	/**
 	 * Setter: Post
-	 * @param     WP_Post|int $post
+	 * @param     WP_Post   $post
 	 */
-	public function setPost( $post ) {
-		if ( $post instanceof WP_Post ) {
-			$this->post = $post;
-		} elseif ( is_int( $post ) ) {
-			$this->post = get_post( $post );
-		} else {
-			$this->post = null;
-		}
+	public function setPost( WP_Post $post ) {
+		$this->post = $post;
 	}
 
 	/**
@@ -610,14 +574,6 @@ class Set {
 	 */
 	public function getParentId() {
 		return $this->parentId;
-	}
-
-	/**
-	 * Setter: Parent Id
-	 * @param     int       $parentId
-	 */
-	public function setParentId( $parentId ) {
-		$this->parentId = $parentId;
 	}
 
 	/**
@@ -631,20 +587,6 @@ class Set {
 	}
 
 	/**
-	 * Setter: Parent Post
-	 * @param     WP_Post|int $parentPost
-	 */
-	public function setParentPost( $parentPost ) {
-		if ( $parentPost instanceof WP_Post ) {
-			$this->parentPost = $parentPost;
-		} elseif ( is_int( $parentPost ) ) {
-			$this->parentPost = get_post( $parentPost );
-		} else {
-			$this->parentPost = null;
-		}
-	}
-
-	/**
 	 * Getter: Description
 	 * @return    bool
 	 */
@@ -653,26 +595,10 @@ class Set {
 	}
 
 	/**
-	 * Setter: Description
-	 * @param     string    $description
-	 */
-	protected function setDescription( $description ) {
-		$this->description = $description;
-	}
-
-	/**
 	 * Getter: Has Parent
 	 * @return    bool
 	 */
 	public function hasParent() {
-		return $this->hasParent;
-	}
-
-	/**
-	 * Setter: Has Parent
-	 * @param     bool      $hasParent
-	 */
-	public function setHasParent( $hasParent ) {
-		$this->hasParent = $hasParent;
+		return $this->id !== $this->parentId;
 	}
 }

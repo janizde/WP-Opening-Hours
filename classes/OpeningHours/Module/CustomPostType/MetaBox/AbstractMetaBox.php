@@ -54,6 +54,9 @@ abstract class AbstractMetaBox extends AbstractModule {
 	 * @return    bool      Whether the nonce is valid
 	 */
 	protected function verifyNonce () {
+		if ( !array_key_exists( self::WP_NONCE_NAME, $_POST ) )
+			return false;
+
 		$nonceValue = $_POST[ static::WP_NONCE_NAME ];
 		return wp_verify_nonce( $nonceValue, static::WP_NONCE_ACTION );
 	}
