@@ -8,6 +8,7 @@ use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Persistence;
 use WP_Post;
 
 /**
@@ -65,41 +66,28 @@ class IrregularOpenings extends AbstractMetaBox {
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
 		$config = $_POST[ static::GLOBAL_POST_KEY ];
-		$config = static::filterPostConfig( $config );
-
-		if ( !is_array( $config ) or count( $config ) < 1 )
-			return;
-
-		global $post;
-
-		update_post_meta( $post->ID, static::IRREGULAR_OPENINGS_META_KEY, $config );
+		$ios = $this->getIrregularOpeningsFromPostData( $config );
+		$persistence = new Persistence( $post );
+		$persistence->saveIrregularOpenings( $ios );
 	}
 
-	/** @inheritdoc */
-	public function filterPostConfig ( array $config ) {
-		$newConfig = array();
-		for ( $i = 0; $i < count( $config['name'] ); $i ++ ) {
-			if ( !isset( $config['name'][$i] ) or empty( $config['name'][$i] ) )
-				continue;
-
-			if ( !isset( $config['date'][$i] ) or preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['date'][$i] ) === false )
-				continue;
-
-			if ( !isset( $config['timeStart'][$i] ) or preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeStart'][$i] ) === false )
-				continue;
-
-			if ( !isset( $config['timeEnd'][$i] ) or preg_match( Dates::STD_TIME_FORMAT_REGEX, $config['timeEnd'][$i] ) === false )
-				continue;
-
-			$newConfig[] = array(
-				'name'      => $config['name'][ $i ],
-				'date'      => $config['date'][ $i ],
-				'timeStart' => $config['timeStart'][ $i ],
-				'timeEnd'   => $config['timeEnd'][ $i ],
-				'dummy'     => false
-			);
+	/**
+	 * Creates an array of Irregular Openings from the POST data
+	 *
+	 * @param     array     $data   The post data for irregular openings
+	 *
+	 * @return    IrregularOpening[]
+	 */
+	public function getIrregularOpeningsFromPostData ( array $data ) {
+		$ios = array();
+		for ( $i = 0; $i < count( $data['name'] ); $i++ ) {
+			try {
+				$io = new IrregularOpening( $data['name'][$i], $data['date'][$i], $data['timeStart'][$i], $data['timeEnd'][$i] );
+				$ios[] = $io;
+			} catch ( \InvalidArgumentException $e ) {
+				trigger_error( sprintf( 'Irregular Opening could not be saved due to: %s', $e->getMessage() ) );
+			}
 		}
-
-		return $newConfig;
+		return $ios;
 	}
 }

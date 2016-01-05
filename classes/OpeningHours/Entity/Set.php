@@ -9,6 +9,7 @@ use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as IrregularOpeningsMetaBox;
 
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Persistence;
 use OpeningHours\Util\Weekdays;
 use WP_Post;
 use DateTime;
@@ -122,9 +123,10 @@ class Set {
 		/** Action: op_set_before_setup */
 		do_action( self::WP_ACTION_BEFORE_SETUP, $this );
 
-		$this->loadPeriods();
-		$this->loadHolidays();
-		$this->loadIrregularOpenings();
+		$persistence = new Persistence( $this->post );
+		$this->periods = ArrayObject::createFromArray( $persistence->loadPeriods() );
+		$this->holidays = ArrayObject::createFromArray( $persistence->loadHolidays() );
+		$this->irregularOpenings = ArrayObject::createFromArray( $persistence->loadIrregularOpenings() );
 
 		$post_detail_description        = get_post_detail( 'description', $this->id );
 		$post_parent_detail_description = get_post_detail( 'description', $this->parentId );
@@ -134,59 +136,6 @@ class Set {
 		} elseif ( !empty( $post_parent_detail_description ) ) {
 			$this->description = $post_parent_detail_description;
 		}
-	}
-
-	/** Get config from post meta and add period objects */
-	public function loadPeriods () {
-		$post_meta = get_post_meta( $this->id, SetCpt::PERIODS_META_KEY, true );
-
-		if ( !is_array( $post_meta ) or count( $post_meta ) < 1 )
-			return;
-
-		foreach ( $post_meta as $config ) {
-			try {
-				$p = new Period( (int) $config['weekday'], $config['timeStart'], $config['timeEnd'] );
-				$this->periods->append( $p );
-			} catch ( InvalidArgumentException $e ) {
-				add_notice( $e->getMessage(), 'error' );
-			}
-		}
-
-		$this->sortPeriods();
-	}
-
-	/** Get config from post meta and add holiday objects */
-	public function loadHolidays () {
-		$post_meta = get_post_meta( $this->id, HolidaysMetaBox::HOLIDAYS_META_KEY, true );
-
-		if ( !is_array( $post_meta ) or count( $post_meta ) < 1 )
-			return;
-
-		foreach ( $post_meta as $config ) {
-			$h = new Holiday( $config['name'], new DateTime( $config['dateStart'] ), new DateTime( $config['dateEnd'] ) );
-			$this->holidays->append( $h );
-		}
-
-		$this->sortHolidays();
-	}
-
-	/** Loads all Irregular Openings for this Set */
-	public function loadIrregularOpenings () {
-		$post_meta = get_post_meta( $this->id, IrregularOpeningsMetaBox::IRREGULAR_OPENINGS_META_KEY, true );
-
-		if ( !is_array( $post_meta ) or count( $post_meta ) < 1 )
-			return;
-
-		foreach ( $post_meta as $config ) {
-			try {
-				$io = new IrregularOpening( $config['name'], $config['date'], $config['timeStart'], $config['timeEnd'] );
-				$this->irregularOpenings->append( $io );
-			} catch ( InvalidArgumentException $e ) {
-				add_notice( $e->getMessage(), 'error' );
-			}
-		}
-
-		$this->sortIrregularOpenings();
 	}
 
 	/**
@@ -337,7 +286,7 @@ class Set {
 
 	/**
 	 * Returns the next open period
-	 * @return    Period    The next open period
+	 * @return    Period    The next open period or null if no period has been found
 	 */
 	public function getNextOpenPeriod() {
 		$this->sortPeriods();
@@ -366,6 +315,8 @@ class Set {
 				}
 			}
 		}
+
+		return null;
 	}
 
 	/**

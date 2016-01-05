@@ -2,11 +2,13 @@
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
+use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 
+use OpeningHours\Util\Persistence;
 use WP_Post;
 
 /**
@@ -60,9 +62,15 @@ class OpeningHours extends AbstractMetaBox {
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
 		$config = $_POST['opening-hours'];
-		$newConfig = array();
+		$periods = $this->getPeriodsFromPostData( $config );
+		$persistence = new Persistence( $post );
+		$persistence->savePeriods( $periods );
+	}
 
-		foreach ( $config as $weekday => $dayConfig ) {
+	public function getPeriodsFromPostData ( array $data ) {
+		$periods = array();
+
+		foreach ( $data as $weekday => $dayConfig ) {
 			for ( $i = 0; $i <= count( $dayConfig['start'] ); $i ++ ) {
 				if ( empty( $dayConfig['start'][$i] ) or empty( $dayConfig['end'][$i] ) )
 					continue;
@@ -70,17 +78,16 @@ class OpeningHours extends AbstractMetaBox {
 				if ( $dayConfig['start'][$i] === '00:00' and $dayConfig['end'][$i] === '00:00' )
 					continue;
 
-				$newConfig[] = array(
-					'weekday'   => $weekday,
-					'timeStart' => $dayConfig['start'][ $i ],
-					'timeEnd'   => $dayConfig['end'][ $i ],
-					'dummy'     => false
-				);
+				try {
+					$period = new Period( $weekday, $dayConfig['start'][$i], $dayConfig['end'][$i] );
+					$periods[] = $period;
+				} catch ( \InvalidArgumentException $e ) {
+					trigger_error( sprintf( 'Period could not be saved due to: %s', $e->getMessage() ) );
+				}
 			}
 		}
 
-		global $post;
-		update_post_meta( $post->ID, static::PERIODS_META_KEY, $newConfig );
+		return $periods;
 	}
 
 }

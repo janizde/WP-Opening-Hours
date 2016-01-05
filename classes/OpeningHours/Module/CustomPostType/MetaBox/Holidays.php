@@ -2,12 +2,13 @@
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
+use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Module\CustomPostType\Set;
 
-use OpeningHours\Util\Dates;
+use OpeningHours\Util\Persistence;
 use WP_Post;
 
 /**
@@ -66,42 +67,28 @@ class Holidays extends AbstractMetaBox {
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
 		$config = $_POST[ static::GLOBAL_POST_KEY ];
-		$config = $this->filterPostConfig( $config );
-
-		if ( !is_array( $config ) or count( $config ) < 1 )
-			return;
-
-		global $post;
-		update_post_meta( $post->ID, static::HOLIDAYS_META_KEY, $config );
+		$holidays = $this->getHolidaysFromPostData( $config );
+		$persistence = new Persistence( $post );
+		$persistence->saveHolidays( $holidays );
 	}
 
 	/**
-	 * Filters the Config for Holidays
+	 * Converts the post data to a Holiday array
 	 *
-	 * @param     array     $config   The config to filter
+	 * @param     array     $data     The POST data from the edit screen
 	 *
-	 * @return    array               The filtered config
+	 * @return    Holiday[]           The Holiday array
 	 */
-	public function filterPostConfig ( array $config ) {
-		$newConfig = array();
-		for ( $i = 0; $i < count( $config['name'] ); $i ++ ) {
-			if ( !isset( $config['name'][$i] ) or empty( $config['name'][$i] ) )
-				continue;
-
-			if ( !isset( $config['dateStart'][$i] ) or !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateStart'][$i] ) )
-				continue;
-
-			if ( !isset( $config['dateEnd'][$i] ) or !preg_match( Dates::STD_DATE_FORMAT_REGEX, $config['dateEnd'][$i] ) )
-				continue;
-
-			$newConfig[] = array(
-				'name'      => $config['name'][ $i ],
-				'dateStart' => $config['dateStart'][ $i ],
-				'dateEnd'   => $config['dateEnd'][ $i ]
-			);
+	public function getHolidaysFromPostData ( array $data ) {
+		$holidays = array();
+		for ( $i = 0; $i < count( $data['name'] ); $i++ ) {
+			try {
+				$holiday = new Holiday( $data['name'][$i], new DateTime($data['dateStart'][$i]), new DateTime($data['dateEnd'][$i]) );
+				$holidays[] = $holiday;
+			} catch ( \InvalidArgumentException $e ) {
+				trigger_error( sprintf( 'Holiday could not be saved due to: %s', $e->getMessage() ) );
+			}
 		}
-
-		return $newConfig;
+		return $holidays;
 	}
-
 }
