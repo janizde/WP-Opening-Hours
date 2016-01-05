@@ -3,7 +3,7 @@
 namespace OpeningHours\Module;
 
 use OpeningHours\Entity\Set;
-use OpeningHours\Misc\ArrayObject;
+use OpeningHours\Util\ArrayObject;
 use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 

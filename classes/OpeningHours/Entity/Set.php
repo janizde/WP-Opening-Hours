@@ -2,7 +2,7 @@
 
 namespace OpeningHours\Entity;
 
-use OpeningHours\Misc\ArrayObject;
+use OpeningHours\Util\ArrayObject;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;

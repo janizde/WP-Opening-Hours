@@ -1,9 +1,9 @@
 <?php
 /**
- * Opening Hours: Misc: Helpers
+ * Opening Hours: Util: Helpers
  */
 
-namespace OpeningHours\Misc;
+namespace OpeningHours\Util;
 
 class Helpers {
 

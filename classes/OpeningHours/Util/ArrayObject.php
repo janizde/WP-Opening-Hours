@@ -1,6 +1,6 @@
 <?php
 
-namespace OpeningHours\Misc;
+namespace OpeningHours\Util;
 
 use ArrayObject as NativeArrayObject;
 
@@ -8,7 +8,7 @@ use ArrayObject as NativeArrayObject;
  * Custom ArrayObject
  *
  * @author      Jannik Portz
- * @package     OpeningHours\Misc
+ * @package     OpeningHours\Util
  */
 class ArrayObject extends NativeArrayObject {
 

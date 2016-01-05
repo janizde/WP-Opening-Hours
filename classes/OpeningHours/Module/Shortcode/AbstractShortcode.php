@@ -3,7 +3,7 @@
 namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Module\AbstractModule;
-use OpeningHours\Misc\Helpers;
+use OpeningHours\Util\Helpers;
 
 use InvalidArgumentException;
 

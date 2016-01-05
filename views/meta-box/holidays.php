@@ -5,7 +5,7 @@
 
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
-use OpeningHours\Misc\ArrayObject;
+use OpeningHours\Util\ArrayObject;
 
 /**
  * Pre-defined variables
