@@ -43,4 +43,19 @@ class ArrayObject extends NativeArrayObject {
 		return false;
 	}
 
+	/**
+	 * Creates a new ArrayObjects and fills is with the provided data
+	 *
+	 * @param     array     $data     The data to fill the ArrayObject with
+	 *
+	 * @return    ArrayObject         The ArrayObject filled with the data
+	 */
+	public static function createFromArray ( array $data ) {
+		$ao = new ArrayObject();
+		foreach ( $data as $item ) {
+			$ao->append( $item );
+		}
+		return $ao;
+	}
+
 }
