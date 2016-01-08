@@ -113,7 +113,7 @@ class Set {
 		) );
 
 		foreach ( $childPosts as $post ) {
-			if ( self::childMatchesCriteria( $post ) ) {
+			if ( self::postMatchesCriteria( $post ) ) {
 				$this->id   = $post->ID;
 				$this->post = $post;
 				break;
@@ -139,36 +139,38 @@ class Set {
 	}
 
 	/**
-	 * Checks if child posts match the Set criteria
+	 * Checks if the specified post representing a set matches the criteria
 	 *
 	 * @param     WP_Post   $post   The child post
 	 * @return    bool              Whether the child post matches the criteria
 	 */
-	public static function childMatchesCriteria ( WP_Post $post ) {
-		$detail_date_start  = get_post_detail( 'date-start', $post->ID );
-		$detail_date_end    = get_post_detail( 'date-end', $post->ID );
-		$detail_week_scheme = get_post_detail( 'week-scheme', $post->ID );
+	public static function postMatchesCriteria ( WP_Post $post ) {
+		$detailDateStart = get_post_detail( 'date-start', $post->ID );
+		$detailDateEnd = get_post_detail( 'date-end', $post->ID );
+		$detailWeekScheme = get_post_detail( 'week-scheme', $post->ID );
 
-		$detail_date_start = ( !empty( $detail_date_start ) ) ? new DateTime( $detail_date_start, Dates::getTimezone() ) : null;
-		$detail_date_end   = ( !empty( $detail_date_end ) ) ? new DateTime( $detail_date_end, Dates::getTimezone() ) : null;
+		$detailDateStart = ( !empty( $detailDateStart ) ) ? new DateTime( $detailDateStart, Dates::getTimezone() ) : null;
+		$detailDateEnd   = ( !empty( $detailDateEnd ) ) ? new DateTime( $detailDateEnd, Dates::getTimezone() ) : null;
+		if ( $detailDateEnd !== null )
+			$detailDateEnd->setTime( 23, 59, 59 );
 
-		if ( $detail_date_start == null and $detail_date_end == null and ( $detail_week_scheme == 'all' or empty( $detail_week_scheme ) ) )
+		if ( $detailDateStart == null and $detailDateEnd == null and ( $detailWeekScheme == 'all' or empty( $detailWeekScheme ) ) )
 			return false;
 
-		$date_time_now = Dates::getNow();
+		$now = Dates::getNow();
 
-		if ( $detail_date_start != null and $date_time_now < $detail_date_start )
+		if ( $detailDateStart != null and $now < $detailDateStart )
 			return false;
 
-		if ( $detail_date_end != null and $date_time_now > $detail_date_end )
+		if ( $detailDateEnd != null and $now > $detailDateEnd )
 			return false;
 
-		$week_number_modulo = (int) $date_time_now->format( 'W' ) % 2;
+		$week_number_modulo = (int) $now->format( 'W' ) % 2;
 
-		if ( $detail_week_scheme == 'even' and $week_number_modulo === 1 )
+		if ( $detailWeekScheme == 'even' and $week_number_modulo === 1 )
 			return false;
 
-		if ( $detail_week_scheme == 'odd' and $week_number_modulo === 0 )
+		if ( $detailWeekScheme == 'odd' and $week_number_modulo === 0 )
 			return false;
 
 		return true;
