@@ -89,12 +89,13 @@ class Period {
 	 * Checks if Period is currently open also regarding Holidays and SpecialOpenings
 	 *
 	 * @param     DateTime  $now
-	 * @param     int       $setId
+	 * @param     Set       $set      The set in whose context to determine the opening status of this Period
 	 *
 	 * @return    bool
 	 */
-	public function isOpen ( $now = null, $setId = null ) {
-		$set = $setId === null ? OpeningHours::getCurrentSet() : OpeningHours::getSet( $setId );
+	public function isOpen ( $now = null, Set $set = null ) {
+		if ( $set == null )
+			$set = OpeningHours::getCurrentSet();
 
 		if ( !$set instanceof Set )
 			return $this->isOpenStrict( $now );
@@ -108,11 +109,11 @@ class Period {
 	/**
 	 * Checks whether this Period will be regularly open and not overridden due to Holidays or Special Openings
 	 *
-	 * @param       int     $setId
+	 * @param       Set     $set
 	 * @return      bool
 	 */
-	public function willBeOpen ( $setId = null ) {
-		return $this->isOpen( $this->timeStart, $setId );
+	public function willBeOpen ( Set $set = null ) {
+		return $this->isOpen( $this->timeStart, $set );
 	}
 
 	/**
@@ -158,10 +159,11 @@ class Period {
 
 	/**
 	 * Factory for dummy Period
+	 * @param     int       $weekday  The weekday to use for the dummy period
 	 * @return    Period
 	 */
-	public static function createDummy () {
-		return new Period( 0, '00:00', '00:00', true );
+	public static function createDummy ( $weekday = 0 ) {
+		return new Period( $weekday, '00:00', '00:00', true );
 	}
 
 	/**

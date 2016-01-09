@@ -188,7 +188,7 @@ class Set {
 	public function addDummyPeriods() {
 		for ( $i = 0; $i < 7; $i++ ) {
 			if ( count( $this->getPeriodsByDay( $i ) ) < 1 ) {
-				$newPeriod = Period::createDummy();
+				$newPeriod = Period::createDummy( $i );
 				$this->periods->append( $newPeriod );
 			}
 		}
@@ -201,7 +201,7 @@ class Set {
 	 */
 	public function isOpenOpeningHours ( $now = null ) {
 		foreach ( $this->periods as $period )
-			if ( $period->isOpen( $now ) )
+			if ( $period->isOpen( $now, $this ) )
 				return true;
 
 		return false;
@@ -312,7 +312,7 @@ class Set {
 				/** @var Period $newPeriod */
 				$newPeriod = $period->getCopy( $timeDifference );
 
-				if ( $newPeriod->willBeOpen( $this->id ) ) {
+				if ( $newPeriod->willBeOpen( $this ) ) {
 					return $newPeriod;
 				}
 			}
