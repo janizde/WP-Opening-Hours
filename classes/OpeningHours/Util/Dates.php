@@ -122,19 +122,23 @@ class Dates extends AbstractModule {
 
 	/**
 	 * Sets the date of a DateTime object to a specific weekday in the current week
+	 * It will only increase but never decrease the date
 	 *
 	 * @param     DateTime  $dateTime The DateTime whose date to update
 	 * @param     int       $weekday  The numeric representation of the weekday
+	 * @param     DateTime  $now      Custom current DateTime
 	 *
 	 * @return    DateTime            $dateTime with updated date attributes
 	 */
-	public static function applyWeekContext( DateTime $dateTime, $weekday ) {
+	public static function applyWeekContext( DateTime $dateTime, $weekday, DateTime $now = null ) {
 		if ( $weekday < 0 or $weekday > 6 )
 			return $dateTime;
 
-		$now = self::getNow();
-		$today = (int) $now->format( 'N' );
-		$offset = ( $weekday + 8 - $today ) % 7;
+		if ( $now == null )
+			$now = self::getNow();
+
+		$today = (int) $now->format( 'N' ) - 1;
+		$offset = ( $weekday + 7 - $today ) % 7;
 		$interval = new DateInterval( 'P' . $offset . 'D' );
 
 		$dateTime->setDate(

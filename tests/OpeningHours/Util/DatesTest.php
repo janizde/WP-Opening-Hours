@@ -42,26 +42,17 @@ class DatesTest extends \WP_UnitTestCase {
 		$this->assertEquals( Dates::getTimezone(), $date->getTimezone() );
 	}
 
-	/**
-	 * @todo      make work in weeks 52, 53 and 1
-	 */
 	public function testApplyWeekContext () {
-		$now = new DateTime('now');
+		$now = new DateTime('2016-01-13'); // Wed
+		$date = new DateTime('2016-03-12');
 
-		if ( in_array( (int) $now->format('W'), array( 52, 53, 1 ) ) )
-			return;
-
-		for ( $i = 0; $i < 7; $i++ ) {
-			$date = new DateTime('now');
-			Dates::applyWeekContext( $date, $i );
-			$this->assertEquals( $i + 1, (int) $date->format('N') );
-			$week = (int) $now->format('W');
-
-			if ( $i < (int) $now->format('N') )
-				$week++;
-
-			$this->assertEquals( $week, (int) $date->format('W') );
-		}
+		$this->assertEquals( new DateTime('2016-01-18'), Dates::applyWeekContext( clone $date, 0, $now ) );
+		$this->assertEquals( new DateTime('2016-01-19'), Dates::applyWeekContext( clone $date, 1, $now ) );
+		$this->assertEquals( new DateTime('2016-01-13'), Dates::applyWeekContext( clone $date, 2, $now ) );
+		$this->assertEquals( new DateTime('2016-01-14'), Dates::applyWeekContext( clone $date, 3, $now ) );
+		$this->assertEquals( new DateTime('2016-01-15'), Dates::applyWeekContext( clone $date, 4, $now ) );
+		$this->assertEquals( new DateTime('2016-01-16'), Dates::applyWeekContext( clone $date, 5, $now ) );
+		$this->assertEquals( new DateTime('2016-01-17'), Dates::applyWeekContext( clone $date, 6, $now ) );
 	}
 
 	public function testIsToday () {

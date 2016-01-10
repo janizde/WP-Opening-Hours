@@ -4,7 +4,11 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
+use OpeningHours\Entity\Set;
+use OpeningHours\Test\TestScenario;
 use OpeningHours\Util\Dates;
 
 class PeriodTest extends \WP_UnitTestCase {
@@ -81,6 +85,32 @@ class PeriodTest extends \WP_UnitTestCase {
 		$this->assertTrue( $p->isOpenStrict( $mid ) );
 		$this->assertTrue( $p->isOpenStrict( $last ) );
 		$this->assertFalse( $p->isOpenStrict( $after ) );
+	}
+
+	public function testIsOpen () {
+		$ts = new TestScenario( $this->factory );
+		$holidays = array(
+			new Holiday( 'Holiday1', new DateTime('2016-01-16'), new DateTime('2016-01-17') ) // Sat - Sun
+		);
+		$ios = array(
+			new IrregularOpening( 'IO1', '2016-01-19', '13:00', '17:00' ) // Tue
+		);
+
+		$p1 = new Period( 1, '12:00', '18:00' );
+		$p2 = new Period( 5, '12:00', '18:00' );
+
+		$post = $ts->setUpSetWithData( array(), array(), $holidays, $ios );
+		$set = new Set( $post );
+
+		$this->assertFalse( $p1->isOpen( new DateTime('2016-01-18 13:00'), $set ) );
+		$this->assertTrue( $p1->isOpen( new DateTime('2016-01-12 13:00'), $set ) );
+		$this->assertFalse( $p1->isOpen( new DateTime('2016-01-20 13:00'), $set ) );
+		$this->assertFalse( $p1->isOpen( new DateTime('2016-01-19 13:00'), $set ) );
+
+		$this->assertTrue( $p2->isOpen( new DateTime('2016-01-09 12:30'), $set ) );
+		$this->assertFalse( $p2->isOpen( new DateTime('2016-01-09 11:30'), $set ) );
+		$this->assertFalse( $p2->isOpen( new DateTime('2016-01-16 12:30'), $set ) );
+		$this->assertFalse( $p2->isOpen( new DateTime('2016-01-16 11:30'), $set ) );
 	}
 
 	/**

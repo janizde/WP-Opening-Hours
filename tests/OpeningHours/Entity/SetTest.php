@@ -4,6 +4,8 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\Set as SetPostType;
@@ -197,6 +199,58 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertEquals( 3, count( $days12 ) );
 	}
 
+	public function testGetPeriodsGroupedByDay () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(
+			new Period( 0, '13:00', '17:00' ),
+			new Period( 2, '13:00', '17:00' ),
+			new Period( 2, '20:00', '22:00' ),
+			new Period( 3, '13:00', '17:00' ),
+			new Period( 5, '13:00', '17:00' ),
+			new Period( 4, '13:00', '17:00' ),
+		) );
+
+		$set = new Set( $post );
+		$periods = $set->getPeriodsGroupedByDay();
+
+		for ( $i = 0; $i < 7; $i++ ) {
+			$this->assertArrayHasKey( $i, $periods );
+		}
+
+		$this->assertEquals( 1, count( $periods[0] ) );
+		$this->assertEquals( 0, count( $periods[1] ) );
+		$this->assertEquals( 2, count( $periods[2] ) );
+		$this->assertEquals( 1, count( $periods[3] ) );
+		$this->assertEquals( 1, count( $periods[4] ) );
+		$this->assertEquals( 1, count( $periods[5] ) );
+		$this->assertEquals( 0, count( $periods[6] ) );
+	}
+
+	public function testGetPeriodsGroupedByDayCompressed () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(
+			new Period( 0, '08:00', '12:00' ),
+			new Period( 1, '09:00', '10:00' ),
+			new Period( 1, '13:00', '14:00' ),
+			new Period( 4, '13:00', '14:00' ),
+			new Period( 6, '13:00', '14:00' )
+		) );
+
+		$set = new Set( $post );
+		$periods = $set->getPeriodsGroupedByDayCompressed();
+
+		$this->assertEquals( 4, count( $periods ) );
+		$this->assertArrayHasKey( '0', $periods );
+		$this->assertArrayHasKey( '1', $periods );
+		$this->assertArrayHasKey( '4,6', $periods );
+		$this->assertArrayHasKey( '2,3,5', $periods );
+
+		$this->assertEquals( 1, count( $periods['0'] ) );
+		$this->assertEquals( 2, count( $periods['1'] ) );
+		$this->assertEquals( 1, count( $periods['4,6'] ) );
+		$this->assertEquals( 0, count( $periods['2,3,5'] ) );
+	}
+
 	public function testIsOpenOpeningHours () {
 		$ts = new TestScenario( $this->factory );
 		$post = $ts->setUpSetWithData( array(), array(
@@ -217,6 +271,129 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertTrue( $set->isOpenOpeningHours( new DateTime('2016-01-12 22:00') ) );
 		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 22:01') ) );
 	}
+
+	public function testGetActiveHoliday () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(), array(
+			new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14') )
+		) );
+
+		$set = new Set( $post );
+		$this->assertNull( $set->getActiveHoliday( new DateTime('2016-01-11 23:59') ) );
+		$this->assertEquals( 'Holiday 1', $set->getActiveHoliday( new DateTime('2016-01-12') )->getName() );
+		$this->assertEquals( 'Holiday 1', $set->getActiveHoliday( new DateTime('2016-01-13') )->getName() );
+		$this->assertEquals( 'Holiday 1', $set->getActiveHoliday( new DateTime('2016-01-14 23:59') )->getName() );
+		$this->assertNull( $set->getActiveHoliday( new DateTime('2016-01-15 00:01') ) );
+	}
+
+	public function testIsHolidayActive () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(), array(
+			new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14') )
+		) );
+
+		$set = new Set( $post );
+		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-11 23:59') ) );
+		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-12') ) );
+		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-13') ) );
+		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-14 23:59') ) );
+		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-15 00:01') ) );
+	}
+
+	public function testGetActiveHolidayOnWeekday () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(), array(
+			new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14') ), // Tue - Thu
+			new Holiday('Holiday 2', new DateTime('2016-01-16'), new DateTime('2016-01-17') ) // Sat - Sun
+		) );
+
+		$set = new Set( $post );
+		$date = new DateTime('2016-01-11');
+
+		$this->assertNull( $set->getActiveHolidayOnWeekday( 0, $date ) );
+		$this->assertEquals( 'Holiday 1', $set->getActiveHolidayOnWeekday( 1, $date )->getName() );
+		$this->assertEquals( 'Holiday 1', $set->getActiveHolidayOnWeekday( 2, $date )->getName() );
+		$this->assertEquals( 'Holiday 1', $set->getActiveHolidayOnWeekday( 3, $date )->getName() );
+		$this->assertNull( $set->getActiveHolidayOnWeekday( 4, $date ) );
+		$this->assertEquals( 'Holiday 2', $set->getActiveHolidayOnWeekday( 5, $date )->getName() );
+		$this->assertEquals( 'Holiday 2', $set->getActiveHolidayOnWeekday( 6, $date )->getName() );
+	}
+
+	public function testDaysEqual () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(
+			new Period( 1, '13:00', '19:00' ),
+			new Period( 1, '20:00', '22:00' ),
+			new Period( 4, '13:00', '19:00' ),
+			new Period( 4, '20:00', '22:00' ),
+			new Period( 5, '13:00', '19:00' ),
+			new Period( 6, '20:00', '22:00' )
+		) );
+
+		$set = new Set( $post );
+		$this->assertTrue( $set->daysEqual( 1, 4 ) );
+		$this->assertTrue( $set->daysEqual( 4, 1 ) );
+		$this->assertFalse( $set->daysEqual( 1, 5 ) );
+		$this->assertFalse( $set->daysEqual( 5, 1 ) );
+		$this->assertFalse( $set->daysEqual( 1, 6 ) );
+		$this->assertFalse( $set->daysEqual( 6, 1 ) );
+		$this->assertTrue( $set->daysEqual( 6, 6 ) );
+	}
+
+	public function testGetActiveIrregularOpening () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(), array(), array(
+			new IrregularOpening( 'Irregular Opening', '2016-01-13', '13:00', '17:00' )
+		) );
+
+		$set = new Set( $post );
+		$this->assertNull( $set->getActiveIrregularOpening( new DateTime('2016-01-12') ) );
+		$this->assertNotNull( $set->getActiveIrregularOpening( new DateTime('2016-01-13') ) );
+		$this->assertNull( $set->getActiveIrregularOpening( new DateTime('2016-01-14') ) );
+	}
+
+	public function testIsIrregularOpeningActive () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(), array(), array(
+			new IrregularOpening( 'Irregular Opening', '2016-01-13', '13:00', '17:00' )
+		) );
+
+		$set = new Set( $post );
+		$this->assertFalse( $set->isIrregularOpeningActive( new DateTime('2016-01-12') ) );
+		$this->assertTrue( $set->isIrregularOpeningActive( new DateTime('2016-01-13') ) );
+		$this->assertFalse( $set->isIrregularOpeningActive( new DateTime('2016-01-14') ) );
+	}
+
+	public function testGetActiveIrregularOpeningOnWeekday () {
+		$ts = new TestScenario( $this->factory );
+		$post = $ts->setUpSetWithData( array(), array(), array(), array(
+			new IrregularOpening( 'Irregular Opening 1', '2016-01-13', '13:00', '17:00' ),
+			new IrregularOpening( 'Irregular Opening 2', '2016-01-18', '13:00', '17:00' )
+		) );
+
+		$set = new Set( $post );
+		$now = new DateTime( '2016-01-12' );
+
+		$io0 = $set->getActiveIrregularOpeningOnWeekday( 0, $now );
+		$this->assertNotNull( $io0 );
+		$this->assertEquals( 'Irregular Opening 2', $io0->getName() );
+		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 1, $now ) );
+		$io2 = $set->getActiveIrregularOpeningOnWeekday( 2, $now );
+		$this->assertNotNull( $io2 );
+		$this->assertEquals( 'Irregular Opening 1', $io2->getName() );
+		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 3, $now ) );
+		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 4, $now ) );
+		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 5, $now ) );
+		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 6, $now ) );
+	}
+
+	/**
+	 * TODO: add test for isOpen
+	 * TODO: add test for sortPeriods
+	 * TODO: add test for sortHolidays
+	 * TODO: add test for sortIrregularOpenings
+	 * TODO: add test for getNextOpenPeriod
+	 */
 
 	/**
 	 * Sets up test set with criteria to test postMatchesCriteria

@@ -21,25 +21,31 @@ class Period {
 
 	/**
 	 * weekdays represented by integer. Monday: 0 - Sunday: 7
-	 * @type      int
+	 * @var       int
 	 */
 	protected $weekday;
 
 	/**
 	 * DateTime object representing the period's start time in the current week
-	 * @type      DateTime
+	 * @var       DateTime
 	 */
 	protected $timeStart;
 
 	/**
 	 * DateTime object representing the period's end time in the current week
-	 * @type      DateTime
+	 * @var       DateTime
 	 */
 	protected $timeEnd;
 
 	/**
+	 * Whether the Period spans two days, so the endTime ist after midnight while the startTime is before midnight
+	 * @var       bool
+	 */
+	protected $spansTwoDays;
+
+	/**
 	 * Whether this Period is a dummy
-	 * @type      bool
+	 * @var       bool
 	 */
 	protected $dummy;
 
@@ -68,21 +74,39 @@ class Period {
 		$this->timeEnd = Dates::applyWeekContext( new DateTime( $timeEnd, Dates::getTimezone() ), $weekday );
 		$this->dummy = $dummy;
 
-		if ( Dates::compareTime( $this->timeStart, $this->timeEnd ) >= 0 )
+		$this->spansTwoDays = Dates::compareTime( $this->timeStart, $this->timeEnd ) >= 0;
+		if ( $this->spansTwoDays )
 			$this->timeEnd->add( new DateInterval('P1D') );
 	}
 
 	/**
-	 * Checks whether Period is currently open regardless of Holidays and SpecialOpenings
+	 * Checks whether Period is currently open regardless of Holidays and IrregularOpenings
 	 *
 	 * @param     DateTime  $now
 	 * @return    bool      Whether Period is currently open regardless of Holidays and SpecialOpenings
 	 */
-	public function isOpenStrict ( $now = null ) {
+	public function isOpenStrict ( DateTime $now = null ) {
 		if ( !$now instanceof DateTime )
 			$now = Dates::getNow();
 
-		return $this->timeStart <= $now and $now <= $this->timeEnd;
+		$today = (int) $now->format('N') - 1;
+		$startDay = $this->weekday;
+		$endDay = (int) $this->timeEnd->format('N') - 1;
+
+		if ( $today !== $startDay and $today !== $endDay )
+			return false;
+
+		$timeStart = (int) $this->timeStart->format('Hi');
+		$timeEnd = (int) $this->timeEnd->format('Hi');
+		$timeNow = (int) $now->format('Hi');
+
+		if ( $startDay === $endDay )
+			return $timeStart <= $timeNow and $timeNow <= $timeEnd;
+
+		if ( $today == $startDay )
+			return $timeStart <= $timeNow;
+
+		return $timeNow <= $timeEnd;
 	}
 
 	/**
@@ -96,9 +120,6 @@ class Period {
 	public function isOpen ( $now = null, Set $set = null ) {
 		if ( $set == null )
 			$set = OpeningHours::getCurrentSet();
-
-		if ( !$set instanceof Set )
-			return $this->isOpenStrict( $now );
 
 		if ( $set->isHolidayActive( $now ) or $set->isIrregularOpeningActive( $now ) )
 			return false;

@@ -231,13 +231,16 @@ class Set {
 
 	/**
 	 * Returns the first active holiday on the specified weekday
-	 *
 	 * @param     int       $weekday  weekday number 0-6
-	 *
+	 * @param     DateTime  $now      custom DateTime. The next day of the specified weekday with be used
 	 * @return    Holiday             The first active holiday on the specified weekday
 	 */
-	public function getActiveHolidayOnWeekday ( $weekday ) {
-		$date = Dates::applyWeekContext( new DateTime('now'), $weekday );
+	public function getActiveHolidayOnWeekday ( $weekday, DateTime $now = null ) {
+		if ( $now == null )
+			$now = Dates::getNow();
+
+		$now = clone $now;
+		$date = Dates::applyWeekContext( $now, $weekday, $now );
 		return $this->getActiveHoliday( $date );
 	}
 
@@ -309,8 +312,9 @@ class Set {
 			$timeDifference = new DateInterval( 'P' . 7 * $weekOffset . 'D' );
 
 			foreach ( $this->periods as $period ) {
-				/** @var Period $newPeriod */
-				$newPeriod = $period->getCopy( $timeDifference );
+				$newPeriod = clone $period;
+				$newPeriod->getTimeStart()->add( $timeDifference );
+				$newPeriod->getTimeEnd()->add( $timeDifference );
 
 				if ( $newPeriod->willBeOpen( $this ) ) {
 					return $newPeriod;
@@ -319,22 +323,6 @@ class Set {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get Sets from Posts
-	 * @param    array      $posts    Array of posts
-	 *
-	 * @return   array                Sets from the posts
-	 */
-	public static function getSetsFromPosts( array $posts ) {
-		$sets = array();
-
-		foreach ( $posts as $post )
-			if ( $post instanceof WP_Post or is_numeric( $post ) )
-				$sets[] = new Set( $post );
-
-		return $sets;
 	}
 
 	/**
@@ -390,23 +378,23 @@ class Set {
 		$compressed = array();
 		$days = range( 0, 6 );
 
-		foreach ( $days as $day_1 ) {
-			if ( in_array( $day_1, $compressed ) )
+		foreach ( $days as $day1 ) {
+			if ( in_array( $day1, $compressed ) )
 				continue;
 
-			$keys = array( $day_1 );
-			foreach ( $days as $day_2 ) {
-				if ( $day_1 == $day_2 )
+			$keys = array( $day1 );
+			foreach ( $days as $day2 ) {
+				if ( $day1 == $day2 )
 					continue;
 
-				if ( in_array( $day_2, $compressed ) )
+				if ( in_array( $day2, $compressed ) )
 					continue;
 
-				if ( $this->daysEqual( $day_1, $day_2 ) )
-					$keys[] = $day_2;
+				if ( $this->daysEqual( $day1, $day2 ) )
+					$keys[] = $day2;
 			}
 
-			$newPeriodsArray[ implode( ',', $keys ) ] = $periodsArray[ $day_1 ];
+			$newPeriodsArray[ implode( ',', $keys ) ] = $periodsArray[ $day1 ];
 			$compressed = array_merge( $compressed, $keys );
 		}
 
@@ -414,7 +402,8 @@ class Set {
 	}
 
 	/**
-	 * Returns first active irregular opening
+	 * Returns first active irregular opening on that day
+	 * Only evaluates the date of $now and not the time
 	 *
 	 * @param     DateTime  $now      Custom time
 	 *
@@ -432,11 +421,12 @@ class Set {
 	 * Returns first active irregular opening on a specific weekday
 	 *
 	 * @param     int       $weekday  weekday number, 0-6
+	 * @param     DateTime  $now      custom time
 	 *
 	 * @return    IrregularOpening    The first active irregular opening fpr the current weekday
 	 */
-	public function getActiveIrregularOpeningOnWeekday ( $weekday ) {
-		$date = Dates::applyWeekContext( new DateTime('now'), $weekday );
+	public function getActiveIrregularOpeningOnWeekday ( $weekday, DateTime $now = null ) {
+		$date = Dates::applyWeekContext( new DateTime('now'), $weekday, $now );
 		return $this->getActiveIrregularOpening( $date );
 	}
 
@@ -449,7 +439,7 @@ class Set {
 	 *
 	 * @return    bool
 	 */
-	public function daysEqual( $day1, $day2, $periodsByDay = null ) {
+	public function daysEqual( $day1, $day2, array $periodsByDay = null ) {
 		if ( $day1 === $day2 )
 			return true;
 
