@@ -113,10 +113,22 @@ class PeriodTest extends \WP_UnitTestCase {
 		$this->assertFalse( $p2->isOpen( new DateTime('2016-01-16 11:30'), $set ) );
 	}
 
-	/**
-	 * TODO: add test for isOpen
-	 * TODO: add test for willBeOpen
-	 */
+	public function testWillBeOpen () {
+		$ts = new TestScenario( $this->factory );
+		$hStart = Dates::applyWeekContext( new DateTime('00:00:00'), 2 );
+		$hEnd = clone $hStart;
+		$hEnd->add( new DateInterval('P1D') );
+
+		$post = $ts->setUpSetWithData( array(), array(), array(
+			new Holiday( 'Holiday', $hStart, $hEnd )
+		) );
+		$set = new Set( $post );
+		$p1 = new Period( 2, '13:00', '18:00' );
+		$p2 = new Period( 4, '13:00', '18:00' );
+
+		$this->assertFalse( $p1->willBeOpen( $set ) );
+		$this->assertTrue( $p2->willBeOpen( $set ) );
+	}
 
 	public function testSortStrategy () {
 		$p1 = new Period( 3, '09:00', '13:00' );
