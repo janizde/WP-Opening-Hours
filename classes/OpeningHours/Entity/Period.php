@@ -100,7 +100,7 @@ class Period {
 		$timeEnd = (int) $this->timeEnd->format('Hi');
 		$timeNow = (int) $now->format('Hi');
 
-		if ( $startDay === $endDay )
+		if ( !$this->spansTwoDays )
 			return $timeStart <= $timeNow and $timeNow <= $timeEnd;
 
 		if ( $today == $startDay )
@@ -198,6 +198,25 @@ class Period {
 			$timeFormat = Dates::getTimeFormat();
 
 		return $this->timeStart->format( $timeFormat ) . ' - ' . $this->timeEnd->format( $timeFormat );
+	}
+
+	/**
+	 * Returns a copy of this Period in another time context meaning the dates of the start and end time may be
+	 * in another week depending on $date
+	 *
+	 * @param     DateTime  $date     The date context for the new Period
+	 *
+	 * @return    Period              The new Period in another date context
+	 */
+	public function getCopyInDateContext ( DateTime $date ) {
+		$period = clone $this;
+		$period->timeStart = Dates::applyWeekContext( clone $this->timeStart, $this->weekday, $date );
+		$period->timeEnd = Dates::applyWeekContext( clone $this->timeEnd, $this->weekday, $date );
+
+		if ( $period->spansTwoDays )
+			$period->timeEnd->add( new DateInterval('P1D') );
+
+		return $period;
 	}
 
 	/**
