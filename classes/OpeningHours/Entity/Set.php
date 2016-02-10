@@ -31,31 +31,31 @@ class Set {
 
 	/**
 	 * Collection of all Periods in the Set
-	 * @type      ArrayObject
+	 * @var       ArrayObject
 	 */
 	protected $periods;
 
 	/**
 	 * Collection of all Holidays in the Set
-	 * @type      ArrayObject
+	 * @var       ArrayObject
 	 */
 	protected $holidays;
 
 	/**
 	 * Collection of all Irregular Openings in the Set
-	 * @type      ArrayObject
+	 * @var       ArrayObject
 	 */
 	protected $irregularOpenings;
 
 	/**
 	 * The Id of the set
-	 * @type      int
+	 * @var       int
 	 */
 	protected $id;
 
 	/**
 	 * The WP_Post instance representing the set
-	 * @type      WP_Post
+	 * @var       WP_Post
 	 */
 	protected $post;
 
@@ -63,7 +63,7 @@ class Set {
 	 * The id of the parent set.
 	 * Id of this set if the set does not have a parent
 	 *
-	 * @type      int
+	 * @var       int
 	 */
 	protected $parentId;
 
@@ -71,13 +71,13 @@ class Set {
 	 * The WP_Post instance representing the parent set
 	 * This Set's post if the set does not have a parent
 	 *
-	 * @type      WP_Post
+	 * @var       WP_Post
 	 */
 	protected $parentPost;
 
 	/**
 	 * The set description
-	 * @type      string
+	 * @var       string
 	 */
 	protected $description;
 
@@ -290,11 +290,22 @@ class Set {
 	}
 
 	/**
-	 * Returns the next open period
+	 * Returns the first open Period after $now
+	 *
+	 * @param     DateTime  $now      The date context for the Periods. default: current datetime
 	 * @return    Period    The next open period or null if no period has been found
 	 */
-	public function getNextOpenPeriod() {
-		$this->sortPeriods();
+	public function getNextOpenPeriod ( DateTime $now = null ) {
+		$periods = $this->periods;
+
+		if ( $now != null ) {
+			$periods = new ArrayObject();
+			foreach ( $this->periods as $period ) {
+				$periods->append( $period->getCopyInDateContext( $now ) );
+			}
+		}
+
+		$periods->uksort( array( '\OpeningHours\Entity\Period', 'sortStrategy' ) );
 
 		if ( count( $this->periods ) < 1 )
 			return null;
