@@ -137,11 +137,24 @@ class PeriodTest extends \WP_UnitTestCase {
 		$p4 = new Period( 2, '12:00', '13:00' );
 		$p5 = new Period( 2, '12:00', '12:00' );
 
+		/** @var Period[] $periods */
 		$periods = array( $p1, $p2, $p3, $p4 );
 		usort( $periods, array( get_class($p1), 'sortStrategy' ) );
 
-		$this->assertEquals( array( $p3, $p2, $p4, $p1 ), $periods );
+		for ( $i = 1; $i < count( $periods ); ++$i ) {
+			$this->assertGreaterThanOrEqual( $periods[ $i - 1 ]->getTimeStart(), $periods[ $i ]->getTimeStart() );
+		}
+
 		$this->assertEquals( 0, Period::sortStrategy( $p4, $p5 ) );
+	}
+
+	public function testGetCopyInDateContext () {
+		$period = new Period( 1, '13:00', '01:00' );
+		$copy = $period->getCopyInDateContext( new DateTime('2016-01-25') );
+
+		$this->assertEquals( 1, $copy->getWeekday() );
+		$this->assertEquals( new DateTime('2016-01-26 13:00'), $copy->getTimeStart() );
+		$this->assertEquals( new DateTime('2016-01-27 01:00'), $copy->getTimeEnd() );
 	}
 
 	public function testEquals () {
