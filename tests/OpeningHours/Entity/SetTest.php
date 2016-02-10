@@ -387,6 +387,22 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 6, $now ) );
 	}
 
+	public function getNextOpenPeriodOnlyPeriods () {
+		$ts = new TestScenario( $this->factory );
+		$periods = array(
+			new Period(1, '13:00', '18:00'),
+			new Period(1, '19:00', '21:00'),
+			new Period(1, '20:00', '22:00'),
+			new Period(3, '13:00', '18:00'),
+			new Period(6, '13:00', '03:00')
+		);
+
+		$post = $ts->setUpSetWithData( array(), $periods );
+		$set = new Set( $post );
+
+		$this->assertEquals( $periods[4], $set->getNextOpenPeriod( new DateTime('2016-01-25 07:00') ) );
+	}
+
 	/**
 	 * TODO: add test for isOpen
 	 * TODO: add test for sortPeriods
