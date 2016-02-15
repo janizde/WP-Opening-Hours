@@ -128,6 +128,26 @@ class Period {
 	}
 
 	/**
+	 * Returns -1 if the Period was in the past, 0 if the period is currently running or 1 if the Period will be in the future.
+	 * (All relative to the specified DateTime)
+	 *
+	 * @param     DateTime  $now      Custom DateTime to compare to (default: current time)
+	 * @return    int
+	 */
+	public function compareToDateTime ( DateTime $now = null ) {
+		if ( $now == null )
+			$now = Dates::getNow();
+
+		if ( $this->timeStart < $now && $this->timeEnd < $now ) {
+			return -1;
+		} elseif ( $this->timeStart <= $now && $this->timeEnd >= $now ) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
+	/**
 	 * Checks whether this Period will be regularly open and not overridden due to Holidays or Special Openings
 	 *
 	 * @param       Set     $set
