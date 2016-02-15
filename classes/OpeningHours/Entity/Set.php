@@ -305,15 +305,18 @@ class Set {
 			}
 		}
 
-		$periods->uksort( array( '\OpeningHours\Entity\Period', 'sortStrategy' ) );
+		$periods->uasort( array( '\OpeningHours\Entity\Period', 'sortStrategy' ) );
 
-		if ( count( $this->periods ) < 1 )
+		if ( count( $periods ) < 1 )
 			return null;
 
-		foreach ( $this->periods as $period )
-			if ( $period->willBeOpen( $this->getId() ) )
-				return $period;
+		foreach ( $periods as $period ) {
+			if ( $period->compareToDateTime( $now ) <= 0 )
+				continue;
 
+			if ( $period->willBeOpen( $this ) )
+				return $period;
+		}
 
 		for ( $weekOffset = 1; true; $weekOffset++ ) {
 			if ( $weekOffset > 52 ) {
