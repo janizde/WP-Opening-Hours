@@ -387,8 +387,9 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 6, $now ) );
 	}
 
-	public function getNextOpenPeriodOnlyPeriods () {
+	public function testGetNextOpenPeriodOnlyPeriods () {
 		$ts = new TestScenario( $this->factory );
+		/** @var Period[] $periods */
 		$periods = array(
 			new Period(1, '13:00', '18:00'),
 			new Period(1, '19:00', '21:00'),
@@ -400,7 +401,16 @@ class SetTest extends \WP_UnitTestCase {
 		$post = $ts->setUpSetWithData( array(), $periods );
 		$set = new Set( $post );
 
-		$this->assertEquals( $periods[4], $set->getNextOpenPeriod( new DateTime('2016-01-25 07:00') ) );
+		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-25 07:00') ) );
+		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 12:00') ) );
+		$this->assertEquals( $periods[1]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 18:30') ) );
+		$this->assertEquals( $periods[2]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 19:30') ) );
+		$this->assertEquals( $periods[3]->getCopyInDateContext( new DateTime('2016-01-28') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 22:01') ) );
+		$this->assertEquals( $periods[3]->getCopyInDateContext( new DateTime('2016-01-28') ), $set->getNextOpenPeriod( new DateTime('2016-01-28 12:59') ) );
+		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-28 13:00') ) );
+		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-28 18:00') ) );
+		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-31 12:59') ) );
+		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-02-01') ), $set->getNextOpenPeriod( new DateTime('2016-01-31 13:00') ) );
 	}
 
 	/**
