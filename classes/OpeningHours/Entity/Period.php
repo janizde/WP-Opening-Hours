@@ -16,12 +16,14 @@ use OpeningHours\Util\Dates;
  *
  * @author      Jannik Portz
  * @package     OpeningHours\Entity
+ * @todo        add interface to combine Period and IrregularOpening
  */
 class Period {
 
 	/**
 	 * weekdays represented by integer. Monday: 0 - Sunday: 7
 	 * @var       int
+	 * @todo      use class Weekday
 	 */
 	protected $weekday;
 

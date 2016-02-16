@@ -12,6 +12,7 @@ use OpeningHours\Util\Dates;
  *
  * @author      Jannik Portz
  * @package     OpeningHours\Entity
+ * @todo        add interface to combine Period and IrregularOpening
  */
 class IrregularOpening {
 
