@@ -483,10 +483,10 @@ class SetTest extends \WP_UnitTestCase {
 	public function testSortHolidays () {
 		$ts = new TestScenario( $this->factory );
 		$holidays = new ArrayObject();
-		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-25'), new DateTime('2016-01-27')) );
-		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-23'), new DateTime('2016-01-27')) );
-		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-24'), new DateTime('2016-01-25')) );
-		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-21'), new DateTime('2016-01-22')) );
+		$holidays->append( new Holiday('Holiday4', new DateTime('2016-01-25'), new DateTime('2016-01-27')) );
+		$holidays->append( new Holiday('Holiday2', new DateTime('2016-01-23'), new DateTime('2016-01-27')) );
+		$holidays->append( new Holiday('Holiday3', new DateTime('2016-01-24'), new DateTime('2016-01-25')) );
+		$holidays->append( new Holiday('Holiday1', new DateTime('2016-01-21'), new DateTime('2016-01-22')) );
 
 		$post = $ts->setUpSetWithData( array(), array(), $holidays->getArrayCopy() );
 		$set = new Set( $post );
@@ -496,9 +496,24 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertEquals( $holidays, $set->getHolidays() );
 	}
 
+	public function testSortIrregularOpenings () {
+		$ts = new TestScenario( $this->factory );
+		$ios = new ArrayObject();
+		$ios->append( new IrregularOpening('IO', '2016-01-25', '13:00', '17:00') );
+		$ios->append( new IrregularOpening('IO', '2016-01-23', '13:00', '17:00') );
+		$ios->append( new IrregularOpening('IO', '2016-01-24', '13:00', '17:00') );
+		$ios->append( new IrregularOpening('IO', '2016-01-21', '13:00', '17:00') );
+
+		$post = $ts->setUpSetWithData( array(), array(), array(), $ios->getArrayCopy() );
+		$set = new Set( $post );
+
+		$ios->uasort( array('\OpeningHours\Entity\IrregularOpening', 'sortStrategy') );
+
+		$this->assertEquals( $ios, $set->getIrregularOpenings() );
+	}
+
 	/**
 	 * TODO: add test for isOpen
-	 * TODO: add test for sortIrregularOpenings
 	 */
 
 	/**
