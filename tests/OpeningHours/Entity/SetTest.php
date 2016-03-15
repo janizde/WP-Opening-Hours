@@ -480,9 +480,24 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertEquals( $periods, $set->getPeriods() );
 	}
 
+	public function testSortHolidays () {
+		$ts = new TestScenario( $this->factory );
+		$holidays = new ArrayObject();
+		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-25'), new DateTime('2016-01-27')) );
+		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-23'), new DateTime('2016-01-27')) );
+		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-24'), new DateTime('2016-01-25')) );
+		$holidays->append( new Holiday('Holiday', new DateTime('2016-01-21'), new DateTime('2016-01-22')) );
+
+		$post = $ts->setUpSetWithData( array(), array(), $holidays->getArrayCopy() );
+		$set = new Set( $post );
+
+		$holidays->uasort( array('\OpeningHours\Entity\Holiday', 'sortStrategy') );
+
+		$this->assertEquals( $holidays, $set->getHolidays() );
+	}
+
 	/**
 	 * TODO: add test for isOpen
-	 * TODO: add test for sortHolidays
 	 * TODO: add test for sortIrregularOpenings
 	 */
 
