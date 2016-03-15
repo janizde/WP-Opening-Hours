@@ -417,24 +417,50 @@ class SetTest extends \WP_UnitTestCase {
 		$ts = new TestScenario( $this->factory );
 		/** @var Period[] $periods */
 		$periods = array(
+			new Period( 1, '13:00', '18:00' ),
+			new Period( 1, '19:00', '21:00' ),
+			new Period( 2, '20:00', '22:00' ),
+			new Period( 3, '13:00', '18:00' ),
+			new Period( 6, '13:00', '03:00' )
+		);
+
+		$holidays = array(
+			new Holiday( 'Test holiday', new DateTime( '2016-01-27' ), new DateTime( '2016-01-28' ) )
+		);
+
+		$post = $ts->setUpSetWithData( array(), $periods, $holidays );
+		$set  = new Set( $post );
+
+		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-25 07:00' ) ) );
+		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 12:00' ) ) );
+		$this->assertEquals( $periods[1]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 18:30' ) ) );
+		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime( '2016-01-31' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 21:01' ) ) );
+	}
+
+	public function testGetNextOpenPeriodIrregularOpenings () {
+		$ts = new TestScenario( $this->factory );
+		/** @var Period[] $periods */
+		$periods = array(
 			new Period(1, '13:00', '18:00'),
 			new Period(1, '19:00', '21:00'),
-			new Period(2, '20:00', '22:00'),
+			new Period(1, '20:00', '22:00'),
 			new Period(3, '13:00', '18:00'),
 			new Period(6, '13:00', '03:00')
 		);
 
-		$holidays = array(
-			new Holiday( 'Test holiday', new DateTime('2016-01-27'), new DateTime('2016-01-28') )
+		$ios = array(
+			new IrregularOpening( 'IO 1', '2016-01-26', '14:00', '19:30' )
 		);
 
-		$post = $ts->setUpSetWithData( array(), $periods, $holidays );
+		$post = $ts->setUpSetWithData( array(), $periods, array(), $ios );
 		$set = new Set( $post );
 
-		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-25 07:00') ) );
-		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 12:00') ) );
-		$this->assertEquals( $periods[1]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 18:30') ) );
-		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 21:01') ) );
+		$expected = $periods[3]->getCopyInDateContext( new DateTime('2016-01-27') );
+		$times = array('12:59', '13:00', '18:00', '18:01', '18:59', '19:00', '21:00', '21:01', '19:59', '20:00', '22:00', '22:01');
+		foreach ( $times as $time ) {
+			$this->assertEquals( $expected, $set->getNextOpenPeriod( new DateTime('2016-01-26 ' . $time) ) );
+		}
+		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-30 15:00') ) );
 	}
 
 	/**
@@ -442,7 +468,6 @@ class SetTest extends \WP_UnitTestCase {
 	 * TODO: add test for sortPeriods
 	 * TODO: add test for sortHolidays
 	 * TODO: add test for sortIrregularOpenings
-	 * TODO: add test for getNextOpenPeriod
 	 */
 
 	/**
