@@ -274,21 +274,6 @@ class Set {
 		return $this->isOpenOpeningHours( $now );
 	}
 
-	/** Sorts periods with Period::sortStrategy */
-	public function sortPeriods() {
-		$this->periods->uasort( array( 'OpeningHours\Entity\Period', 'sortStrategy' ) );
-	}
-
-	/** Sorts holidays with Holiday::sortStrategy */
-	public function sortHolidays() {
-		$this->holidays->uasort( array( 'OpeningHours\Entity\Holiday', 'sortStrategy' ) );
-	}
-
-	/** Sorts Irregular Openings */
-	public function sortIrregularOpenings() {
-		$this->irregularOpenings->uasort( array( 'OpeningHours\Entity\IrregularOpening', 'sortStrategy' ) );
-	}
-
 	/**
 	 * Returns the first open Period after $now
 	 *

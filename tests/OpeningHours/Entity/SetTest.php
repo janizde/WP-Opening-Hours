@@ -464,54 +464,6 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-30 15:00') ) );
 	}
 
-	public function testSortPeriods () {
-		$ts = new TestScenario( $this->factory );
-		$periods = new ArrayObject();
-		$periods->append( new Period( 5, '13:00', '17:00' ) );
-		$periods->append( new Period( 5, '12:00', '15:00' ) );
-		$periods->append( new Period( 6, '08:00', '10:00' ) );
-		$periods->append( new Period( 2, '12:00', '13:00' ) );
-
-		$post = $ts->setUpSetWithData( array(), $periods->getArrayCopy() );
-		$set = new Set( $post );
-
-		$periods->uasort( array('\OpeningHours\Entity\Period', 'sortStrategy') );
-
-		$this->assertEquals( $periods, $set->getPeriods() );
-	}
-
-	public function testSortHolidays () {
-		$ts = new TestScenario( $this->factory );
-		$holidays = new ArrayObject();
-		$holidays->append( new Holiday('Holiday4', new DateTime('2016-01-25'), new DateTime('2016-01-27')) );
-		$holidays->append( new Holiday('Holiday2', new DateTime('2016-01-23'), new DateTime('2016-01-27')) );
-		$holidays->append( new Holiday('Holiday3', new DateTime('2016-01-24'), new DateTime('2016-01-25')) );
-		$holidays->append( new Holiday('Holiday1', new DateTime('2016-01-21'), new DateTime('2016-01-22')) );
-
-		$post = $ts->setUpSetWithData( array(), array(), $holidays->getArrayCopy() );
-		$set = new Set( $post );
-
-		$holidays->uasort( array('\OpeningHours\Entity\Holiday', 'sortStrategy') );
-
-		$this->assertEquals( $holidays, $set->getHolidays() );
-	}
-
-	public function testSortIrregularOpenings () {
-		$ts = new TestScenario( $this->factory );
-		$ios = new ArrayObject();
-		$ios->append( new IrregularOpening('IO', '2016-01-25', '13:00', '17:00') );
-		$ios->append( new IrregularOpening('IO', '2016-01-23', '13:00', '17:00') );
-		$ios->append( new IrregularOpening('IO', '2016-01-24', '13:00', '17:00') );
-		$ios->append( new IrregularOpening('IO', '2016-01-21', '13:00', '17:00') );
-
-		$post = $ts->setUpSetWithData( array(), array(), array(), $ios->getArrayCopy() );
-		$set = new Set( $post );
-
-		$ios->uasort( array('\OpeningHours\Entity\IrregularOpening', 'sortStrategy') );
-
-		$this->assertEquals( $ios, $set->getIrregularOpenings() );
-	}
-
 	/**
 	 * TODO: add test for isOpen
 	 */
