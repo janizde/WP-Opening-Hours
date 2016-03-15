@@ -10,7 +10,6 @@ use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\Set as SetPostType;
 use OpeningHours\Test\TestScenario;
-use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 use WP_Post;
@@ -464,9 +463,45 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-30 15:00') ) );
 	}
 
-	/**
-	 * TODO: add test for isOpen
-	 */
+	public function testIsOpen () {
+		$ts = new TestScenario( $this->factory );
+
+		$periods = array(
+			new Period(1, '13:00', '18:00'),
+			new Period(1, '19:00', '21:00'),
+			new Period(1, '20:00', '22:00'),
+			new Period(3, '13:00', '18:00'),
+			new Period(6, '13:00', '03:00')
+		);
+
+		$holidays = array(
+			new Holiday('Holiday', new DateTime('2016-01-25'), new DateTime('2016-01-26'))
+		);
+
+		$ios = array(
+			new IrregularOpening( 'IO', '2016-01-28', '15:00', '17:00' )
+		);
+
+		$post = $ts->setUpSetWithData( array(), $periods, $holidays, $ios );
+		$set = new Set( $post );
+
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-25 13:00') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-26 12:59') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-26 13:00') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-27 13:00') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-28 12:59') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-28 13:00') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-28 14:59') ) );
+		$this->assertTrue( $set->isOpen( new DateTime('2016-01-28 15:00') ) );
+		$this->assertTrue( $set->isOpen( new DateTime('2016-01-28 17:00') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-28 17:01') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-28 18:0') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-28 18:01') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-01-31 12:59') ) );
+		$this->assertTrue( $set->isOpen( new DateTime('2016-01-31 13:00') ) );
+		$this->assertTrue( $set->isOpen( new DateTime('2016-02-01 03:00') ) );
+		$this->assertFalse( $set->isOpen( new DateTime('2016-02-01 03:01') ) );
+	}
 
 	/**
 	 * Sets up test set with criteria to test postMatchesCriteria
