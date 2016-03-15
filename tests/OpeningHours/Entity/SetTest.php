@@ -10,6 +10,7 @@ use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\Set as SetPostType;
 use OpeningHours\Test\TestScenario;
+use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 use WP_Post;
@@ -463,9 +464,24 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-30 15:00') ) );
 	}
 
+	public function testSortPeriods () {
+		$ts = new TestScenario( $this->factory );
+		$periods = new ArrayObject();
+		$periods->append( new Period( 5, '13:00', '17:00' ) );
+		$periods->append( new Period( 5, '12:00', '15:00' ) );
+		$periods->append( new Period( 6, '08:00', '10:00' ) );
+		$periods->append( new Period( 2, '12:00', '13:00' ) );
+
+		$post = $ts->setUpSetWithData( array(), $periods->getArrayCopy() );
+		$set = new Set( $post );
+
+		$periods->uasort( array('\OpeningHours\Entity\Period', 'sortStrategy') );
+
+		$this->assertEquals( $periods, $set->getPeriods() );
+	}
+
 	/**
 	 * TODO: add test for isOpen
-	 * TODO: add test for sortPeriods
 	 * TODO: add test for sortHolidays
 	 * TODO: add test for sortIrregularOpenings
 	 */
