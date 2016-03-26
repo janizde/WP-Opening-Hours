@@ -28,6 +28,14 @@ class WidgetFieldRenderer extends FieldRenderer {
 	protected function filterField( array $field ) {
 		$field = parent::filterField( $field );
 
+		if ( array_key_exists('default_placeholder', $field) && $field['default_placeholder'] === true ) {
+			$sc = $this->widget->getShortcode();
+			$default = $sc->getDefaultAttribute( $field['name'] );
+
+			if ( !empty( $default ) && ( is_string( $default ) || is_numeric( $default ) ) )
+				$field['attributes']['placeholder'] = $default;
+		}
+
 		$field['id'] = $this->widget->get_field_id( $field['name'] );
 		$field['name'] = $this->widget->get_field_name( $field['name'] );
 

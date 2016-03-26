@@ -41,7 +41,6 @@ class FieldRenderer {
 		$type = $field['type'];
 		$id = $field['id'];
 		$name = $field['name'];
-		$placeholder = array_key_exists('placeholder', $field) ? $field['placeholder'] : '';
 		$options = array_key_exists('options', $field) ? $field['options'] : array();
 
 		$attributes = array_key_exists('attributes', $field) && is_array( $field['attributes'] )
@@ -67,7 +66,7 @@ class FieldRenderer {
 
 			case FieldTypes::TEXTAREA:
 				$attrString = $this->generateAttributesString( $attributes );
-				printf('<textarea id="%s" name="%s" %s>%s</textarea>', $id, $name, $placeholder, $attrString, $value);
+				printf('<textarea id="%s" name="%s" %s>%s</textarea>', $id, $name, $attrString, $value);
 				break;
 
 			case FieldTypes::SELECT:
