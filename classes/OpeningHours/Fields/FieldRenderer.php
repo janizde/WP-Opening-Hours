@@ -17,7 +17,7 @@ class FieldRenderer {
 	 * @return    array               filtered config-array for the field
 	 */
 	protected function filterField ( array $field ) {
-		$field = $this->moveToAttributes( $field, array('required') );
+		$field = $this->moveToAttributes( $field, array('required', 'placeholder') );
 		if ( array_key_exists('class', $field['attributes']) ) {
 			if ( !is_array( $field['attributes']['class'] ) )
 				$field['attributes']['class'] = preg_split('/\s+/', $field['attributes']['class']);
@@ -62,12 +62,12 @@ class FieldRenderer {
 			case FieldTypes::EMAIL:
 			case FieldTypes::URL:
 				$attrString = $this->generateAttributesString( $attributes );
-				printf('<input type="%s" id="%s" name="%s" value="%s" placeholder="%s" %s />', $type, $id, $name, $value, $attrString);
+				printf('<input type="%s" id="%s" name="%s" value="%s" %s />', $type, $id, $name, $value, $attrString);
 				break;
 
 			case FieldTypes::TEXTAREA:
 				$attrString = $this->generateAttributesString( $attributes );
-				printf('<textarea id="%s" name="%s" placeholder="%s" %s>%s</textarea>', $id, $name, $placeholder, $attrString, $value);
+				printf('<textarea id="%s" name="%s" %s>%s</textarea>', $id, $name, $placeholder, $attrString, $value);
 				break;
 
 			case FieldTypes::SELECT:
