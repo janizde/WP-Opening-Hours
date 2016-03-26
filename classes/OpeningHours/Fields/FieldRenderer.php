@@ -8,7 +8,7 @@ namespace OpeningHours\Fields;
  * @author      Jannik Portz
  * @package     OpeningHours\Fields
  */
-abstract class FieldRenderer {
+class FieldRenderer {
 
 	/**
 	 * Filter the field configuration
