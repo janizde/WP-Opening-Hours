@@ -37,13 +37,12 @@ abstract class AbstractModule {
 	/**
 	 * Renders a template
 	 *
-	 * @todo      make non-static
-	 *
 	 * @param     string    $templatePath Path to the template file relative to plugin directory
 	 * @param     array     $variables    Associative array of variables to expose to template file
 	 * @param     string    $require      'once' or 'always'. Whether to require the template only once per runtime
 	 *
 	 * @return    string    The template markup
+	 * @deprecated          Use a ViewRenderer instead
 	 */
 	public static function renderTemplate ( $templatePath, $variables = array(), $require = 'once' ) {
 		do_action( 'op_render_template_pre', $templatePath, $variables );
