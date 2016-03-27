@@ -3,8 +3,6 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Module\AbstractModule;
-use OpeningHours\Module\CustomPostType\Set;
-use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 
 use WP_Post;
 

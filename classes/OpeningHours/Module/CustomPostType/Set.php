@@ -40,7 +40,8 @@ class Set extends AbstractModule {
 			'OpeningHours'      => MetaBox\OpeningHours::getInstance(),
 			'Holidays'          => MetaBox\Holidays::getInstance(),
 			'IrregularOpenings' => MetaBox\IrregularOpenings::getInstance(),
-			'Donation'          => MetaBox\Donation::getInstance()
+			'Donation'          => MetaBox\Donation::getInstance(),
+			'SetDetails'        => MetaBox\SetDetails::getInstance()
 		);
 	}
 

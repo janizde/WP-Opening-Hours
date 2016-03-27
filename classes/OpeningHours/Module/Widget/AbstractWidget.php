@@ -2,6 +2,8 @@
 
 namespace OpeningHours\Module\Widget;
 
+use OpeningHours\Fields\FieldRenderer;
+use OpeningHours\Fields\WidgetFieldRenderer;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\Shortcode\AbstractShortcode as Shortcode;
 
@@ -49,6 +51,12 @@ abstract class AbstractWidget extends WP_Widget {
 	protected $fields;
 
 	/**
+	 * The FieldRenderer used to render the form fields
+	 * @var       FieldRenderer
+	 */
+	protected $fieldRenderer;
+
+	/**
 	 * AbstractWidget constructor.
 	 *
 	 * @param     string    $id           The widget id
@@ -62,6 +70,8 @@ abstract class AbstractWidget extends WP_Widget {
 		$this->description = $description;
 		$this->shortcode = $shortcode;
 		$this->fields = array();
+		$this->fieldRenderer = new WidgetFieldRenderer( $this );
+		$this->registerFields();
 
 		parent::__construct( $id, $title, $description );
 	}
@@ -69,13 +79,14 @@ abstract class AbstractWidget extends WP_Widget {
 	/**
 	 * Renders a single field from the collection
 	 *
-	 * @param     string    $fieldName  The field to render
+	 * @param     array     $field      The field config array
 	 * @param     array     $instance   The current widget instance
 	 *
 	 * @return    string                The field markup
 	 */
-	public function renderField( $fieldName, array $instance ) {
-		return FieldRenderer::renderField( $this, $instance, $fieldName );
+	public function renderField( array $field, array $instance ) {
+		$value = array_key_exists( $field['name'], $instance ) ? $instance[ $field['name'] ] : null;
+		return $this->fieldRenderer->getFieldMarkup( $field, $value );
 	}
 
 	/**
@@ -106,7 +117,7 @@ abstract class AbstractWidget extends WP_Widget {
 
 		foreach ( $this->fields as $field ) {
 			if ( $field['extended'] !== true ) {
-				echo $this->renderField( $field['name'], $instance );
+				echo $this->renderField( $field, $instance );
 			} else {
 				$extended[] = $field;
 			}
@@ -120,12 +131,12 @@ abstract class AbstractWidget extends WP_Widget {
 		echo '<div class="settings-container hidden">';
 
 		foreach ( $extended as $field )
-			echo $this->renderField( $field['name'], $instance );
+			echo $this->renderField( $field, $instance );
 
 		echo '</div>';
 		echo '</div>';
 
-		$markup   = ob_get_contents();
+		$markup = ob_get_contents();
 		ob_end_clean();
 
 		$filter_hook = 'op_widget_' . $this->widgetId . '_form_markup';
