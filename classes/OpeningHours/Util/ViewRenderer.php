@@ -11,7 +11,7 @@ namespace OpeningHours\Util;
 class ViewRenderer {
 
 	/**
-	 * Path to the template which shall be rendered
+	 * Path to the template which shall be rendered relative to the views directory
 	 * @var       string
 	 */
 	protected $template;
@@ -22,8 +22,14 @@ class ViewRenderer {
 	 */
 	protected $data;
 
+	/**
+	 * ViewRenderer constructor.
+	 *
+	 * @param     string    $template Path to the template which shall be rendered relative to the views directory
+	 * @param     array     $data     Associative data array
+	 */
 	public function __construct ( $template, array $data ) {
-		$this->template = $template;
+		$this->template = op_plugin_path() . 'views/' . $template;
 		$this->data = $data;
 	}
 
