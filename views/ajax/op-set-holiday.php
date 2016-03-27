@@ -20,15 +20,15 @@ $dateEnd   = ( $holiday->isDummy() ) ? null : $holiday->getDateEnd()->format( Da
 echo '<tr class="op-holiday">';
 
 echo '<td class="col-name">';
-echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[name][]" class="widefat" value="' . $name . '" />';
+echo '<input type="text" name="' . Holidays::POST_KEY . '[name][]" class="widefat" value="' . $name . '" />';
 echo '</td>';
 
 echo '<td class="col-date-start">';
-echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[dateStart][]" class="widefat date-start input-gray" value="' . $dateStart . '" />';
+echo '<input type="text" name="' . Holidays::POST_KEY . '[dateStart][]" class="widefat date-start input-gray" value="' . $dateStart . '" />';
 echo '</td>';
 
 echo '<td class="col-date-end">';
-echo '<input type="text" name="' . Holidays::GLOBAL_POST_KEY . '[dateEnd][]" class="widefat date-end input-gray" value="' . $dateEnd . '" />';
+echo '<input type="text" name="' . Holidays::POST_KEY . '[dateEnd][]" class="widefat date-end input-gray" value="' . $dateEnd . '" />';
 echo '</td>';
 
 echo '<td class="col-remove">';

@@ -7,7 +7,7 @@ use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as MetaBox;
 use OpeningHours\Util\Weekdays;
 
-MetaBox::nonceField();
+MetaBox::getInstance()->nonceField();
 ?>
 
 <div class="opening-hours">

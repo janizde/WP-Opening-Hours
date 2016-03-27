@@ -2,6 +2,7 @@
 
 namespace OpeningHours\Entity;
 
+use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 use OpeningHours\Util\ArrayObject;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
@@ -9,8 +10,8 @@ use OpeningHours\Module\CustomPostType\MetaBox\Holidays as HolidaysMetaBox;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as IrregularOpeningsMetaBox;
 
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\MetaBoxPersistence;
 use OpeningHours\Util\Persistence;
-use OpeningHours\Util\Weekdays;
 use WP_Post;
 use DateTime;
 use DateInterval;
@@ -82,6 +83,12 @@ class Set {
 	protected $description;
 
 	/**
+	 * Persistence object for set details
+	 * @var       MetaBoxPersistence
+	 */
+	protected $setDetails;
+
+	/**
 	 * Constructs a new Set with a WP_Post
 	 *
 	 * @param     WP_Post|int   $post
@@ -91,6 +98,7 @@ class Set {
 		$this->periods = new ArrayObject();
 		$this->holidays = new ArrayObject();
 		$this->irregularOpenings = new ArrayObject();
+		$this->setDetails = SetDetails::getInstance()->getPersistence();
 
 		if ( !is_int( $post ) and !$post instanceof WP_Post )
 			throw new InvalidArgumentException( sprintf( 'Argument one for __construct has to be of type WP_Post or int. %s given', gettype( $post ) ) );
@@ -113,7 +121,7 @@ class Set {
 		) );
 
 		foreach ( $childPosts as $post ) {
-			if ( self::postMatchesCriteria( $post ) ) {
+			if ( $this->postMatchesCriteria( $post ) ) {
 				$this->id   = $post->ID;
 				$this->post = $post;
 				break;
@@ -128,13 +136,13 @@ class Set {
 		$this->holidays = ArrayObject::createFromArray( $persistence->loadHolidays() );
 		$this->irregularOpenings = ArrayObject::createFromArray( $persistence->loadIrregularOpenings() );
 
-		$post_detail_description        = get_post_detail( 'description', $this->id );
-		$post_parent_detail_description = get_post_detail( 'description', $this->parentId );
+		$setDescription = $this->setDetails->getValue('description', $this->id);
+		$parentSetDescription = $this->setDetails->getValue('description', $this->parentId);
 
-		if ( !empty( $post_detail_description ) ) {
-			$this->description = $post_detail_description;
-		} elseif ( !empty( $post_parent_detail_description ) ) {
-			$this->description = $post_parent_detail_description;
+		if ( !empty( $setDescription ) ) {
+			$this->description = $setDescription;
+		} elseif ( !empty( $parentSetDescription ) ) {
+			$this->description = $parentSetDescription;
 		}
 	}
 
@@ -144,10 +152,10 @@ class Set {
 	 * @param     WP_Post   $post   The child post
 	 * @return    bool              Whether the child post matches the criteria
 	 */
-	public static function postMatchesCriteria ( WP_Post $post ) {
-		$detailDateStart = get_post_detail( 'date-start', $post->ID );
-		$detailDateEnd = get_post_detail( 'date-end', $post->ID );
-		$detailWeekScheme = get_post_detail( 'week-scheme', $post->ID );
+	public function postMatchesCriteria ( WP_Post $post ) {
+		$detailDateStart = $this->setDetails->getValue('dateStart', $post->ID);
+		$detailDateEnd = $this->setDetails->getValue('dateEnd', $post->ID);
+		$detailWeekScheme = $this->setDetails->getValue('weekScheme', $post->ID);
 
 		$detailDateStart = ( !empty( $detailDateStart ) ) ? new DateTime( $detailDateStart, Dates::getTimezone() ) : null;
 		$detailDateEnd   = ( !empty( $detailDateEnd ) ) ? new DateTime( $detailDateEnd, Dates::getTimezone() ) : null;

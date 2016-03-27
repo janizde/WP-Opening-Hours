@@ -8,6 +8,7 @@ use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
+use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 use OpeningHours\Module\CustomPostType\Set as SetPostType;
 use OpeningHours\Test\TestScenario;
 use OpeningHours\Util\Dates;
@@ -35,7 +36,8 @@ class SetTest extends \WP_UnitTestCase {
 	public function testConstructWithDescription () {
 		$ts = new TestScenario( $this->factory );
 		$post = $ts->setUpBasicSet();
-		add_post_meta( $post->ID, get_meta_key( 'description', SetPostType::CPT_SLUG ), 'Test Description' );
+		$setDetails = SetDetails::getInstance()->getPersistence();
+		add_post_meta( $post->ID, $setDetails->generateMetaKey('description'), 'Test Description' );
 		$set = new Set( $post );
 
 		$this->assertEquals( 'Test Description', $set->getDescription() );
@@ -75,51 +77,61 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testPostMatchesCriteriaNotingSet () {
+		$set = new Set( $this->setUpSetWithCriteria() );
+		
 		$post = $this->setUpSetWithCriteria();
-		$this->assertFalse( Set::postMatchesCriteria( $post ) );
+		$this->assertFalse( $set->postMatchesCriteria( $post ) );
 	}
 
 	public function testPostMatchesCriteriaDateStart () {
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1 ) ) );
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 0 ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1 ) ) );
+		$set = new Set( $this->setUpSetWithCriteria() );
+		
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1 ) ) );
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 0 ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1 ) ) );
 	}
 
 	public function testPostMatchesCriteriaDateEnd () {
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, 1 ) ) );
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, 0 ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, -1 ) ) );
+		$set = new Set( $this->setUpSetWithCriteria() );
+		
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 1 ) ) );
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 0 ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, -1 ) ) );
 	}
 
 	public function testPostMatchesCriteriaWeekScheme () {
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, null, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, null, false ) ) );
+		$set = new Set( $this->setUpSetWithCriteria() );
+		
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, null, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, null, false ) ) );
 	}
 
 	public function testPostMatchesCriteriaCombined () {
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1 ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1 ) ) );
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1 ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1 ) ) );
+		$set = new Set( $this->setUpSetWithCriteria() );
+		
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1 ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1 ) ) );
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1 ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1 ) ) );
 
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, null, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, null, false ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1, null, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1, null, false ) ) );
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, null, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, null, false ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, null, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, null, false ) ) );
 
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, 1, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, -1, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, 1, false ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( null, -1, false ) ) );
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 1, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, -1, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 1, false ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, -1, false ) ) );
 
-		$this->assertTrue( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1, -1, true ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1, false ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1, false ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1, false ) ) );
-		$this->assertFalse( Set::postMatchesCriteria( $this->setUpSetWithCriteria( 1, -1, false ) ) );
+		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, -1, true ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1, false ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1, false ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1, false ) ) );
+		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, -1, false ) ) );
 	}
 
 	public function testIsParent () {
@@ -516,6 +528,7 @@ class SetTest extends \WP_UnitTestCase {
 	protected function setUpSetWithCriteria ( $startOffset = null, $endOffset = null, $weekScheme = null, $postArgs = array() ) {
 		$ts = new TestScenario( $this->factory );
 		$post = $ts->setUpBasicSet( $postArgs );
+		$setDetails = SetDetails::getInstance()->getPersistence();
 
 		if ( $startOffset !== null ) {
 			$date     = new DateTime( '00:00' );
@@ -523,7 +536,7 @@ class SetTest extends \WP_UnitTestCase {
 			if ( $startOffset < 0 )
 				$interval->invert = 1;
 			$date->add( $interval );
-			update_post_meta( $post->ID, get_meta_key( 'date-start', SetPostType::CPT_SLUG ), $date->format( Dates::STD_DATE_FORMAT ) );
+			update_post_meta( $post->ID, $setDetails->generateMetaKey('dateStart'), $date->format( Dates::STD_DATE_FORMAT ) );
 		}
 
 		if ( $endOffset !== null ) {
@@ -532,7 +545,7 @@ class SetTest extends \WP_UnitTestCase {
 			if ( $endOffset < 0 )
 				$interval->invert = 1;
 			$date->add( $interval );
-			update_post_meta( $post->ID, get_meta_key( 'date-end', SetPostType::CPT_SLUG ), $date->format( Dates::STD_DATE_FORMAT ) );
+			update_post_meta( $post->ID, $setDetails->generateMetaKey('dateEnd'), $date->format( Dates::STD_DATE_FORMAT ) );
 		}
 
 		if ( $weekScheme === null ) {
@@ -547,7 +560,7 @@ class SetTest extends \WP_UnitTestCase {
 			$wsm = $nowEven ? 'even' : 'odd';
 		}
 
-		update_post_meta( $post->ID, get_meta_key( 'week-scheme', SetPostType::CPT_SLUG ), $wsm );
+		update_post_meta( $post->ID, $setDetails->generateMetaKey('weekScheme'), $wsm );
 
 		return $post;
 	}

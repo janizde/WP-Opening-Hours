@@ -3,7 +3,7 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Module\AbstractModule;
-
+use OpeningHours\Module\CustomPostType\Set;
 use WP_Post;
 
 /**
@@ -14,16 +14,49 @@ use WP_Post;
  */
 abstract class AbstractMetaBox extends AbstractModule {
 
-	const POST_TYPE = 'post';
-	const TEMPLATE_PATH = null;
 	const WP_ACTION_ADD_META_BOXES = 'add_meta_boxes';
 	const WP_ACTION_SAVE_POST = 'save_post';
 
-	const WP_NONCE_NAME = 'op_custom_meta_box_name';
-	const WP_NONCE_ACTION = 'op_custom_meta_box_action';
+	const POST_TYPE = Set::CPT_SLUG;
 
-	/** Constructor */
-	public function __construct() {
+	const PRIORITY_DEFAULT = 'default';
+	const PRIORITY_HIGH = 'high';
+	const PRIORITY_LOW = 'low';
+
+	const CONTEXT_NORMAL = 'normal';
+	const CONTEXT_SIDE = 'side';
+	const CONTEXT_ADVANCED = 'advanced';
+
+	/**
+	 * The meta box id
+	 * @var       string
+	 */
+	protected $id;
+
+	/**
+	 * The meta box name / title
+	 * @var       string
+	 */
+	protected $name;
+
+	/**
+	 * The meta box context
+	 * @var       string
+	 */
+	protected $context;
+
+	/**
+	 * The meta box priority
+	 * @var       string
+	 */
+	protected $priority;
+
+	public function __construct ( $id, $name, $context = self::CONTEXT_NORMAL, $priority = self::PRIORITY_DEFAULT ) {
+		$this->id = $id;
+		$this->name = $name;
+		$this->context = $context;
+		$this->priority = $priority;
+
 		$this->registerHookCallbacks();
 	}
 
@@ -52,21 +85,31 @@ abstract class AbstractMetaBox extends AbstractModule {
 	 * @return    bool      Whether the nonce is valid
 	 */
 	protected function verifyNonce () {
-		if ( !array_key_exists( self::WP_NONCE_NAME, $_POST ) )
+		$values = $this->generateNonceValues();
+		if ( !array_key_exists( $values['name'], $_POST ) )
 			return false;
 
-		$nonceValue = $_POST[ static::WP_NONCE_NAME ];
-		return wp_verify_nonce( $nonceValue, static::WP_NONCE_ACTION );
+		$nonceValue = $_POST[ $values['name'] ];
+		return wp_verify_nonce( $nonceValue, $values['action'] );
 	}
 
 	/** Prints the nonce field for the meta box */
-	public static function nonceField() {
-		wp_nonce_field( static::WP_NONCE_ACTION, static::WP_NONCE_NAME );
+	public function nonceField () {
+		$values = $this->generateNonceValues();
+		wp_nonce_field( $values['action'], $values['name'] );
+	}
+
+	public function generateNonceValues () {
+		return array(
+			'name' => $this->id . '_nonce',
+			'action' => $this->id . '_edit'
+		);
 	}
 
 	/**
 	 * Determines current set and checks if it is a parent set
 	 * @return    bool
+	 * @todo      move somewhere else
 	 */
 	public function currentSetIsParent () {
 		global $post;
@@ -74,7 +117,16 @@ abstract class AbstractMetaBox extends AbstractModule {
 	}
 
 	/** Registers meta box with add_meta_box */
-	abstract public function registerMetaBox ();
+	public function registerMetaBox () {
+		add_meta_box(
+			$this->id,
+			$this->name,
+			array( $this, 'renderMetaBox' ),
+			self::POST_TYPE,
+			$this->context,
+			$this->priority
+		);
+	}
 
 	/**
 	 * Renders the meta box content
