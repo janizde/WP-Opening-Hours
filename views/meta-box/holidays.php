@@ -16,7 +16,7 @@ use OpeningHours\Util\ArrayObject;
 
 <div id="op-holidays-wrap">
 
-	<?php Holidays::nonceField(); ?>
+	<?php Holidays::getInstance()->nonceField(); ?>
 
 	<table class="op-holidays" id="op-holidays-table">
 		<thead>

@@ -19,9 +19,6 @@ class IrregularOpenings extends AbstractMetaBox {
 	const TEMPLATE_PATH = 'meta-box/irregular-openings.php';
 	const TEMPLATE_PATH_SINGLE = 'ajax/op-set-irregular-opening.php';
 
-	const WP_NONCE_NAME = 'op-set-irregular-opening-nonce';
-	const WP_NONCE_ACTION = 'save_data';
-
 	const POST_KEY = 'opening-hours-irregular-openings';
 
 	public function __construct () {

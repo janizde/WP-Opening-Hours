@@ -20,9 +20,6 @@ class Holidays extends AbstractMetaBox {
 	const TEMPLATE_PATH = 'meta-box/holidays.php';
 	const TEMPLATE_PATH_SINGLE = 'ajax/op-set-holiday.php';
 
-	const WP_NONCE_NAME = 'op-set-holidays-nonce';
-	const WP_NONCE_ACTION = 'save_data';
-
 	const POST_KEY = 'opening-hours-holidays';
 
 	public function __construct () {

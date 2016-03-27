@@ -19,9 +19,6 @@ class OpeningHours extends AbstractMetaBox {
 
 	const TEMPLATE_PATH = 'op-set-meta-box.php';
 
-	const WP_NONCE_NAME = 'op-set-opening-hours';
-	const WP_NONCE_ACTION = 'save_data';
-
 	public function __construct () {
 		parent::__construct( 'op_meta_box_opening_hours', __('Opening Hours', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH );
 	}

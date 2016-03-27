@@ -16,7 +16,7 @@ use OpeningHours\Util\ArrayObject;
 
 <div id="op-irregular-openings-wrap">
 
-	<?php MetaBox::nonceField(); ?>
+	<?php MetaBox::getInstance()->nonceField(); ?>
 
 	<table class="op-irregular-openings" id="op-io-table">
 		<thead>

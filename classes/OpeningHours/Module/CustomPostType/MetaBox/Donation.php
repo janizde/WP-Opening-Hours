@@ -15,9 +15,6 @@ class Donation extends AbstractMetaBox {
 
 	const TEMPLATE_PATH = 'meta-box/donation.php';
 
-	const WP_NONCE_NAME = 'op_meta_box_donation';
-	const WP_NONCE_ACTION = 'donate';
-
 	public function __construct () {
 		parent::__construct( 'op_meta_box_donation', __('Please Donate', I18n::TEXTDOMAIN), self::CONTEXT_SIDE, self::PRIORITY_HIGH );
 	}

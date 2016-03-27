@@ -17,9 +17,6 @@ abstract class AbstractMetaBox extends AbstractModule {
 	const WP_ACTION_ADD_META_BOXES = 'add_meta_boxes';
 	const WP_ACTION_SAVE_POST = 'save_post';
 
-	const WP_NONCE_NAME = 'op_custom_meta_box_name';
-	const WP_NONCE_ACTION = 'op_custom_meta_box_action';
-
 	const POST_TYPE = Set::CPT_SLUG;
 
 	const PRIORITY_DEFAULT = 'default';
@@ -88,16 +85,25 @@ abstract class AbstractMetaBox extends AbstractModule {
 	 * @return    bool      Whether the nonce is valid
 	 */
 	protected function verifyNonce () {
-		if ( !array_key_exists( self::WP_NONCE_NAME, $_POST ) )
+		$values = $this->generateNonceValues();
+		if ( !array_key_exists( $values['name'], $_POST ) )
 			return false;
 
-		$nonceValue = $_POST[ static::WP_NONCE_NAME ];
-		return wp_verify_nonce( $nonceValue, static::WP_NONCE_ACTION );
+		$nonceValue = $_POST[ $values['name'] ];
+		return wp_verify_nonce( $nonceValue, $values['action'] );
 	}
 
 	/** Prints the nonce field for the meta box */
-	public static function nonceField() {
-		wp_nonce_field( static::WP_NONCE_ACTION, static::WP_NONCE_NAME );
+	public function nonceField () {
+		$values = $this->generateNonceValues();
+		wp_nonce_field( $values['action'], $values['name'] );
+	}
+
+	public function generateNonceValues () {
+		return array(
+			'name' => $this->id . '_nonce',
+			'action' => $this->id . '_edit'
+		);
 	}
 
 	/**
