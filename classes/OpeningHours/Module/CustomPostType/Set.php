@@ -49,7 +49,6 @@ class Set extends AbstractModule {
 	public function registerHookCallbacks() {
 		add_action( 'init', array( $this, 'registerPostType' ) );
 		add_action( 'admin_menu', array( $this, 'cleanUpMenu' ) );
-		add_action( 'add_detail_fields', array( $this, 'registerDetailFields' ) );
 	}
 
 	/** Registers Post Type */
@@ -63,46 +62,6 @@ class Set extends AbstractModule {
 
 		/** Top Level: Registered via post_type op-set: Remove "Add New" Item */
 		unset( $submenu['edit.php?post_type=op-set'][10] );
-	}
-
-	/** Registers Detail Fields */
-	public function registerDetailFields () {
-		register_detail_field( self::CPT_SLUG, array(
-			'type'    => 'textarea',
-			'slug'    => 'description',
-			'caption' => __( 'Description', I18n::TEXTDOMAIN )
-		) );
-
-		register_detail_field( self::CPT_SLUG, array(
-			'type'    => 'text',
-			'slug'    => 'date-start',
-			'caption' => __( 'Date Start', I18n::TEXTDOMAIN )
-		) );
-
-		register_detail_field( self::CPT_SLUG, array(
-			'type'    => 'text',
-			'slug'    => 'date-end',
-			'caption' => __( 'Date End', I18n::TEXTDOMAIN )
-		) );
-
-		register_detail_field( self::CPT_SLUG, array(
-			'type'        => 'radio',
-			'slug'        => 'week-scheme',
-			'caption'     => __( 'Week Scheme', I18n::TEXTDOMAIN ),
-			'default-val' => 'all',
-			'options'     => array(
-				'all'  => __( 'Every week', I18n::TEXTDOMAIN ),
-				'even' => __( 'Even weeks only', I18n::TEXTDOMAIN ),
-				'odd'  => __( 'Odd weeks only', I18n::TEXTDOMAIN )
-			)
-		) );
-
-		register_detail_field( self::CPT_SLUG, array(
-			'type'        => 'heading',
-			'slug'        => 'child-set-notice',
-			'heading'     => __( 'Add a Child-Set', I18n::TEXTDOMAIN ),
-			'description' => __( 'You may add a child set that overwrites the parent Opening Hours in specific time range. Use the post type hierarchy.', I18n::TEXTDOMAIN )
-		) );
 	}
 
 	/**
