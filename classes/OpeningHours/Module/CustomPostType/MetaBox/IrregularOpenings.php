@@ -3,11 +3,8 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Entity\IrregularOpening;
-use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
-
-use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 use WP_Post;
 
@@ -19,33 +16,24 @@ use WP_Post;
  */
 class IrregularOpenings extends AbstractMetaBox {
 
-	const ID = 'op_meta_box_irregular_openings';
-	const POST_TYPE = Set::CPT_SLUG;
 	const TEMPLATE_PATH = 'meta-box/irregular-openings.php';
 	const TEMPLATE_PATH_SINGLE = 'ajax/op-set-irregular-opening.php';
-	const CONTEXT = 'advanced';
-	const PRIORITY = 'core';
 
 	const WP_NONCE_NAME = 'op-set-irregular-opening-nonce';
 	const WP_NONCE_ACTION = 'save_data';
 
-	const IRREGULAR_OPENINGS_META_KEY = '_op_set_irregular_openings';
+	const POST_KEY = 'opening-hours-irregular-openings';
 
-	const GLOBAL_POST_KEY = 'opening-hours-irregular-openings';
+	public function __construct () {
+		parent::__construct( 'op_meta_box_irregular_openings', __('Irregular Openings', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT );
+	}
 
 	/** @inheritdoc */
 	public function registerMetaBox () {
 		if ( !$this->currentSetIsParent() )
 			return;
 
-		add_meta_box(
-			static::ID,
-			__( 'Irregular Openings', I18n::TEXTDOMAIN ),
-			array( get_called_class(), 'renderMetaBox' ),
-			static::POST_TYPE,
-			static::CONTEXT,
-			static::PRIORITY
-		);
+		parent::registerMetaBox();
 	}
 
 	/** @inheritdoc */
@@ -65,7 +53,7 @@ class IrregularOpenings extends AbstractMetaBox {
 
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
-		$config = $_POST[ static::GLOBAL_POST_KEY ];
+		$config = $_POST[ static::POST_KEY ];
 		$ios = $this->getIrregularOpeningsFromPostData( $config );
 		$persistence = new Persistence( $post );
 		$persistence->saveIrregularOpenings( $ios );

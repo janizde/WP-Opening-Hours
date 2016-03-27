@@ -3,7 +3,6 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Fields\MetaBoxFieldRenderer;
-use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Util\MetaBoxPersistence;
 use WP_Post;
@@ -15,10 +14,6 @@ use WP_Post;
  * @package     OpeningHours\Module\CustomPostType\MetaBox
  */
 class SetDetails extends AbstractMetaBox {
-
-	const ID = 'set_details';
-	const CONTEXT = 'side';
-	const PRIORITY = 'high';
 
 	/**
 	 * Array of field configuration arrays
@@ -39,9 +34,9 @@ class SetDetails extends AbstractMetaBox {
 	protected $fieldRenderer;
 
 	public function __construct () {
-		parent::__construct();
-		$this->fieldRenderer = new MetaBoxFieldRenderer( self::ID );
-		$this->persistence = new MetaBoxPersistence( self::ID );
+		parent::__construct( 'op_meta_box_set_details', __('Set Details', I18n::TEXTDOMAIN), self::CONTEXT_SIDE, self::PRIORITY_HIGH );
+		$this->fieldRenderer = new MetaBoxFieldRenderer( $this->id );
+		$this->persistence = new MetaBoxPersistence( $this->id );
 
 		$this->fields = array(
 			array(
@@ -79,18 +74,6 @@ class SetDetails extends AbstractMetaBox {
 	}
 
 	/** @inheritdoc */
-	public function registerMetaBox () {
-		add_meta_box(
-			static::ID,
-			__( 'Set Details', I18n::TEXTDOMAIN ),
-			array( $this, 'renderMetaBox' ),
-			Set::CPT_SLUG,
-			self::CONTEXT,
-			self::PRIORITY
-		);
-	}
-
-	/** @inheritdoc */
 	public function renderMetaBox ( WP_Post $post ) {
 		$this->nonceField();
 
@@ -102,7 +85,7 @@ class SetDetails extends AbstractMetaBox {
 
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
-		$data = $_POST[ self::ID ];
+		$data = $_POST[ $this->id ];
 		foreach ( $this->fields as $field ) {
 			$value = array_key_exists( $field['name'], $data ) ? $data[ $field['name'] ] : null;
 			$this->persistence->putValue( $field['name'], $value, $post_id );

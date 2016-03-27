@@ -6,8 +6,6 @@ use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
-use OpeningHours\Module\CustomPostType\Set;
-
 use OpeningHours\Util\Persistence;
 use WP_Post;
 
@@ -19,34 +17,24 @@ use WP_Post;
  */
 class Holidays extends AbstractMetaBox {
 
-	const ID = 'op_meta_box_holidays';
-	const POST_TYPE = Set::CPT_SLUG;
 	const TEMPLATE_PATH = 'meta-box/holidays.php';
 	const TEMPLATE_PATH_SINGLE = 'ajax/op-set-holiday.php';
-	const CONTEXT = 'advanced';
-	const PRIORITY = 'core';
 
 	const WP_NONCE_NAME = 'op-set-holidays-nonce';
 	const WP_NONCE_ACTION = 'save_data';
 
-	const HOLIDAYS_META_KEY = '_op_set_holidays';
-	const GLOBAL_POST_KEY = 'opening-hours-holidays';
+	const POST_KEY = 'opening-hours-holidays';
+
+	public function __construct () {
+		parent::__construct( 'op_meta_box_holidays', __('Holidays', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH );
+	}
 
 	/** @inheritdoc */
 	public function registerMetaBox () {
-
-		if ( !static::currentSetIsParent() )
+		if ( !self::currentSetIsParent() )
 			return;
 
-		add_meta_box(
-			static::ID,
-			__( 'Holidays', I18n::TEXTDOMAIN ),
-			array( get_called_class(), 'renderMetaBox' ),
-			static::POST_TYPE,
-			static::CONTEXT,
-			static::PRIORITY
-		);
-
+		parent::registerMetaBox();
 	}
 
 	/** @inheritdoc */
@@ -66,7 +54,7 @@ class Holidays extends AbstractMetaBox {
 
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
-		$config = $_POST[ static::GLOBAL_POST_KEY ];
+		$config = $_POST[ self::POST_KEY ];
 		$holidays = $this->getHolidaysFromPostData( $config );
 		$persistence = new Persistence( $post );
 		$persistence->saveHolidays( $holidays );

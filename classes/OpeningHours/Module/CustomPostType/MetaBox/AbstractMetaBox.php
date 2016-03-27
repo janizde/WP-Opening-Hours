@@ -3,7 +3,7 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Module\AbstractModule;
-
+use OpeningHours\Module\CustomPostType\Set;
 use WP_Post;
 
 /**
@@ -14,16 +14,52 @@ use WP_Post;
  */
 abstract class AbstractMetaBox extends AbstractModule {
 
-	const POST_TYPE = 'post';
-	const TEMPLATE_PATH = null;
 	const WP_ACTION_ADD_META_BOXES = 'add_meta_boxes';
 	const WP_ACTION_SAVE_POST = 'save_post';
 
 	const WP_NONCE_NAME = 'op_custom_meta_box_name';
 	const WP_NONCE_ACTION = 'op_custom_meta_box_action';
 
-	/** Constructor */
-	public function __construct() {
+	const POST_TYPE = Set::CPT_SLUG;
+
+	const PRIORITY_DEFAULT = 'default';
+	const PRIORITY_HIGH = 'high';
+	const PRIORITY_LOW = 'low';
+
+	const CONTEXT_NORMAL = 'normal';
+	const CONTEXT_SIDE = 'side';
+	const CONTEXT_ADVANCED = 'advanced';
+
+	/**
+	 * The meta box id
+	 * @var       string
+	 */
+	protected $id;
+
+	/**
+	 * The meta box name / title
+	 * @var       string
+	 */
+	protected $name;
+
+	/**
+	 * The meta box context
+	 * @var       string
+	 */
+	protected $context;
+
+	/**
+	 * The meta box priority
+	 * @var       string
+	 */
+	protected $priority;
+
+	public function __construct ( $id, $name, $context = self::CONTEXT_NORMAL, $priority = self::PRIORITY_DEFAULT ) {
+		$this->id = $id;
+		$this->name = $name;
+		$this->context = $context;
+		$this->priority = $priority;
+
 		$this->registerHookCallbacks();
 	}
 
@@ -67,6 +103,7 @@ abstract class AbstractMetaBox extends AbstractModule {
 	/**
 	 * Determines current set and checks if it is a parent set
 	 * @return    bool
+	 * @todo      move somewhere else
 	 */
 	public function currentSetIsParent () {
 		global $post;
@@ -74,7 +111,16 @@ abstract class AbstractMetaBox extends AbstractModule {
 	}
 
 	/** Registers meta box with add_meta_box */
-	abstract public function registerMetaBox ();
+	public function registerMetaBox () {
+		add_meta_box(
+			$this->id,
+			$this->name,
+			array( $this, 'renderMetaBox' ),
+			self::POST_TYPE,
+			$this->context,
+			$this->priority
+		);
+	}
 
 	/**
 	 * Renders the meta box content

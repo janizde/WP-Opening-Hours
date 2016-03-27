@@ -2,9 +2,7 @@
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
-use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Module\I18n;
-
 use WP_Post;
 
 /**
@@ -15,31 +13,18 @@ use WP_Post;
  */
 class Donation extends AbstractMetaBox {
 
-	const ID = 'op_meta_box_donation';
-	const CONTEXT = 'side';
-	const PRIORITY = 'high';
-	const POST_TYPE = Set::CPT_SLUG;
-
 	const TEMPLATE_PATH = 'meta-box/donation.php';
 
 	const WP_NONCE_NAME = 'op_meta_box_donation';
 	const WP_NONCE_ACTION = 'donate';
 
-	/** @inheritdoc */
-	public function registerMetaBox() {
-		add_meta_box(
-			static::ID,
-			__( 'Please Donate', I18n::TEXTDOMAIN ),
-			array( get_called_class(), 'renderMetaBox' ),
-			static::POST_TYPE,
-			static::CONTEXT,
-			static::PRIORITY
-		);
+	public function __construct () {
+		parent::__construct( 'op_meta_box_donation', __('Please Donate', I18n::TEXTDOMAIN), self::CONTEXT_SIDE, self::PRIORITY_HIGH );
 	}
 
 	/** @inheritdoc */
 	public function renderMetaBox ( WP_Post $post ) {
-		echo static::renderTemplate( static::TEMPLATE_PATH );
+		echo self::renderTemplate( self::TEMPLATE_PATH );
 	}
 
 	/** @inheritdoc */
