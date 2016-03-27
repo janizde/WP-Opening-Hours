@@ -62,6 +62,10 @@ class OpeningHours extends AbstractMetaBox {
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
 		$config = $_POST['opening-hours'];
+
+		if ( !is_array( $config ) )
+			$config = array();
+
 		$periods = $this->getPeriodsFromPostData( $config );
 		$persistence = new Persistence( $post );
 		$persistence->savePeriods( $periods );
