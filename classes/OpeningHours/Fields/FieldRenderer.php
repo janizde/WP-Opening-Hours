@@ -51,7 +51,7 @@ class FieldRenderer {
 		echo '<p>';
 
 		/** Field Label */
-		if ( !empty( $caption ) and $type != 'checkbox' )
+		if ( !empty( $caption ) and !in_array( $type, array( FieldTypes::CHECKBOX, FieldTypes::HEADING ) ) )
 			printf('<label for="%s">%s</label>', $id, $caption);
 
 		switch ( $type ) {
@@ -104,6 +104,13 @@ class FieldRenderer {
 
 				$attrString = $this->generateAttributesString( $attributes );
 				printf('<label for="%s"><input type="checkbox" name="%s" id="%s" %s /> %s</label>', $id, $name, $id, $attrString, $caption);
+				break;
+
+			case FieldTypes::HEADING:
+				if ( !array_key_exists('heading', $field) )
+					break;
+
+				printf('<h3>%s</h3>', trim( $field['heading'] ));
 				break;
 		}
 

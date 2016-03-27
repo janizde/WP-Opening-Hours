@@ -19,5 +19,6 @@ class FieldTypes {
 	const SELECT = 'select';
 	const SELECT_MULTI = 'select-multi';
 	const CHECKBOX = 'checkbox';
+	const HEADING = 'heading';
 
 }
