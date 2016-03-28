@@ -50,6 +50,11 @@ class OpeningHours extends AbstractMetaBox {
 		$persistence->savePeriods( $periods );
 	}
 
+	/**
+	 * Converts raw post data to an array of Periods
+	 * @param     array     $data     associative array of raw post data
+	 * @return    Period[]            array of Periods derived from post data
+	 */
 	public function getPeriodsFromPostData ( array $data ) {
 		$periods = array();
 
@@ -72,5 +77,4 @@ class OpeningHours extends AbstractMetaBox {
 
 		return $periods;
 	}
-
 }
