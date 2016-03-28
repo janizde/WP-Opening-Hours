@@ -5,7 +5,6 @@
 
       var periodContainer = wrap.find('.period-container');
       var tbody = periodContainer.find('tbody');
-
       var btnAddPeriod = wrap.find('a.add-period');
 
       function addPeriod() {
@@ -28,7 +27,6 @@
     });
   };
 
-  /** Set Meta Box Period */
   $.fn.opSinglePeriod = function () {
     return this.each(function (index, element) {
       var wrap = $(element);
@@ -36,12 +34,8 @@
       var btnDeletePeriod = wrap.find('.delete-period');
       var inputs_tp = wrap.find('.input-timepicker');
 
-      function deletePeriod() {
-        wrap.remove();
-      }
-
       btnDeletePeriod.click(function () {
-        deletePeriod();
+        wrap.remove();
       });
 
       inputs_tp.timepicker({
@@ -56,7 +50,8 @@
   };
 
   $(document).ready(function () {
-    $('tr.periods-day').opPeriodsDay();
-    $('tr.period').opSinglePeriod();
+    var form = $('.form-opening-hours');
+    form.find('tr.periods-day').opPeriodsDay();
+    form.find('tr.period').opSinglePeriod();
   });
 })(jQuery);
