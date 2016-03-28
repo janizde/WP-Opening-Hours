@@ -1,8 +1,10 @@
 <?php
 /** @var Period $period */
 use OpeningHours\Entity\Period;
+use OpeningHours\Util\Dates;
 
 $period = $this->data['period'];
+$timeFormat = Dates::getTimeFormat();
 ?>
 
 <tr class="period">
@@ -12,15 +14,15 @@ $period = $this->data['period'];
 			name="opening-hours[<?php echo $period->getWeekday(); ?>][start][]"
 			type="text"
 			class="input-timepicker input-time-end"
-			value="<?php echo $period->getTimeStart( true ); ?>"/>
+			value="<?php echo $period->getTimeStart()->format( $timeFormat ); ?>"/>
 	</td>
 
 	<td class="col-time-end">
 		<input
-			name="opening-hours[<?php echo $this->data['period']->getWeekday(); ?>][end][]"
+			name="opening-hours[<?php echo $period->getWeekday(); ?>][end][]"
 			type="text"
 			class="input-timepicker input-time-end"
-			value="<?php echo $period->getTimeEnd( true ); ?>"/>
+			value="<?php echo $period->getTimeEnd()->format( $timeFormat ); ?>"/>
 	</td>
 
 	<td class="col-delete-period">

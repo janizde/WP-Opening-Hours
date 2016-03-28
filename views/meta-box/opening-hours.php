@@ -10,7 +10,6 @@ $singlePeriodTpl = op_plugin_path() . 'views/ajax/op-set-period.php';
 ?>
 
 <div class="opening-hours">
-
 	<table class="form-table form-opening-hours">
 		<tbody>
 		<?php foreach ( Weekdays::getWeekdays() as $index => $weekday ) : ?>
@@ -46,31 +45,4 @@ $singlePeriodTpl = op_plugin_path() . 'views/ajax/op-set-period.php';
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-
 </div>
-
-<input type="hidden" name="op-controller-action" value="saveOpSet"/>
-
-<script type="text/html" id="opTemplatePeriodRow">
-	<tr class="period">
-
-		<td class="col-time-start">
-			<input
-				type="text"
-				class="input-timepicker input-start-time"/>
-		</td>
-
-		<td class="col-time-end">
-			<input
-				type="text"
-				class="input-timepicker input-end-time"/>
-		</td>
-
-		<td class="col-delete-period">
-			<a class="button delete-period has-icon red">
-				<i class="dashicons dashicons-no-alt"></i>
-			</a>
-		</td>
-
-	</tr>
-</script>

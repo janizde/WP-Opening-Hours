@@ -96,7 +96,6 @@ class OpeningHours extends AbstractModule {
 			wp_enqueue_script( 'jquery-ui' );
 		endif;
 
-
 		Module\Ajax::injectAjaxUrl( self::PREFIX . 'js' );
 
 
