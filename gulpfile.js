@@ -8,15 +8,18 @@ var watch = require('gulp-watch');
 var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var gulpZip = require('gulp-zip');
+var gulpIf = require('gulp-if');
 var runSequence = require('run-sequence');
 
 var paths = {
   src: {
     scripts: [
+      './includes/jquery-ui-timepicker/jquery.ui.timepicker.js',
       './assets/scripts/**/*.js'
     ],
     styles: [
-      './assets/styles/main.less'
+      './assets/styles/main.less',
+      './includes/jquery-ui-timepicker/jquery.ui.timepicker.css'
     ]
   },
   dest: {
@@ -38,7 +41,8 @@ gulp.task( 'scripts', [], function () {
 gulp.task( 'styles', [], function () {
   return gulp.src( paths.src.styles )
     .pipe( sourcemaps.init() )
-    .pipe( less() )
+    .pipe( gulpIf('*.less', less()) )
+    .pipe( concat('main.css') )
     .pipe( autoprefixer() )
     .pipe( cssmin() )
     .pipe( sourcemaps.write('.') )
