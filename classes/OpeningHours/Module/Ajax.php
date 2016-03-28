@@ -9,6 +9,7 @@ use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\ViewRenderer;
 
 /**
  * Ajax module
@@ -75,7 +76,7 @@ class Ajax extends AbstractModule {
 
 	/** Action: Render Single Period */
 	public static function renderSinglePeriod() {
-		$weekday = $_POST['weekday'];
+		$weekday = (int) $_POST['weekday'];
 		$timeStart = $_POST['timeStart'];
 		$timeEnd = $_POST['timeEnd'];
 		$config = array(
@@ -86,13 +87,11 @@ class Ajax extends AbstractModule {
 		$config['timeEnd'] = ( Dates::isValidTime( $timeEnd ) ) ? $timeEnd : '00:00';
 		$period = new Period( $config['weekday'], $config['timeStart'], $config['timeEnd'] );
 
-		echo self::renderTemplate(
-			'ajax/op-set-period.php',
-			array(
-				'period' => $period
-			),
-			'always'
-		);
+		$vr = new ViewRenderer( op_plugin_path() . 'views/ajax/op-set-period.php', array(
+			'period' => $period
+		) );
+
+		$vr->render();
 
 		die();
 	}
