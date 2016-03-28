@@ -1,13 +1,12 @@
 <?php
-/**
- *  Opening Hours: Template: Part: MetaBox OP Set
- */
 
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as MetaBox;
+use OpeningHours\Util\ViewRenderer;
 use OpeningHours\Util\Weekdays;
 
 MetaBox::getInstance()->nonceField();
+$singlePeriodTpl = op_plugin_path() . 'views/ajax/op-set-period.php';
 ?>
 
 <div class="opening-hours">
@@ -26,20 +25,12 @@ MetaBox::getInstance()->nonceField();
 
 						<table class="period-table">
 							<tbody>
-
-							<?php
-							foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $index ) as $period ) :
-								echo OpeningHours::renderTemplate(
-									'ajax/op-set-period.php',
-									array(
-										'period' => $period
-									),
-									'always'
-								);
-							endforeach;
-
-							?>
-
+							<?php foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $index ) as $period ) {
+								$vr = new ViewRenderer( $singlePeriodTpl, array(
+									'period' => $period
+								) );
+								$vr->render();
+							} ?>
 							</tbody>
 						</table>
 

@@ -1,3 +1,10 @@
+<?php
+/** @var Period $period */
+use OpeningHours\Entity\Period;
+
+$period = $this->data['period'];
+?>
+
 <tr class="period">
 
 	<td class="col-time-start">
@@ -10,7 +17,7 @@
 
 	<td class="col-time-end">
 		<input
-			name="opening-hours[<?php echo $period->getWeekday(); ?>][end][]"
+			name="opening-hours[<?php echo $this->data['period']->getWeekday(); ?>][end][]"
 			type="text"
 			class="input-timepicker input-time-end"
 			value="<?php echo $period->getTimeEnd( true ); ?>"/>
