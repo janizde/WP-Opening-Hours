@@ -1,17 +1,15 @@
 <?php
-/**
- *  Opening Hours: Template: Part: MetaBox OP Set
- */
 
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as MetaBox;
+use OpeningHours\Util\ViewRenderer;
 use OpeningHours\Util\Weekdays;
 
 MetaBox::getInstance()->nonceField();
+$singlePeriodTpl = op_plugin_path() . 'views/ajax/op-set-period.php';
 ?>
 
 <div class="opening-hours">
-
 	<table class="form-table form-opening-hours">
 		<tbody>
 		<?php foreach ( Weekdays::getWeekdays() as $index => $weekday ) : ?>
@@ -26,20 +24,12 @@ MetaBox::getInstance()->nonceField();
 
 						<table class="period-table">
 							<tbody>
-
-							<?php
-							foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $index ) as $period ) :
-								echo OpeningHours::renderTemplate(
-									'ajax/op-set-period.php',
-									array(
-										'period' => $period
-									),
-									'always'
-								);
-							endforeach;
-
-							?>
-
+							<?php foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $index ) as $period ) {
+								$vr = new ViewRenderer( $singlePeriodTpl, array(
+									'period' => $period
+								) );
+								$vr->render();
+							} ?>
 							</tbody>
 						</table>
 
@@ -55,31 +45,4 @@ MetaBox::getInstance()->nonceField();
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-
 </div>
-
-<input type="hidden" name="op-controller-action" value="saveOpSet"/>
-
-<script type="text/html" id="opTemplatePeriodRow">
-	<tr class="period">
-
-		<td class="col-time-start">
-			<input
-				type="text"
-				class="input-timepicker input-start-time"/>
-		</td>
-
-		<td class="col-time-end">
-			<input
-				type="text"
-				class="input-timepicker input-end-time"/>
-		</td>
-
-		<td class="col-delete-period">
-			<a class="button delete-period has-icon red">
-				<i class="dashicons dashicons-no-alt"></i>
-			</a>
-		</td>
-
-	</tr>
-</script>

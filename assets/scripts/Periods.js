@@ -1,90 +1,57 @@
-/**
- * Opening Hours: JS: Backend: Periods
- */
+(function ($) {
+  $.fn.opPeriodsDay = function () {
+    return this.each(function (index, element) {
+      var wrap = $(element);
 
-/** Set Meta Box */
-jQuery.fn.opPeriodsDay = function () {
+      var periodContainer = wrap.find('.period-container');
+      var tbody = periodContainer.find('tbody');
+      var btnAddPeriod = wrap.find('a.add-period');
 
-  var wrap = jQuery(this);
+      function addPeriod() {
+        var data = {
+          'action': 'op_render_single_period',
+          'weekday': periodContainer.attr('data-day'),
+          'set': periodContainer.attr('data-set')
+        };
 
-  if (wrap.length > 1) {
-    wrap.each(function (index, element) {
-      jQuery(element).opPeriodsDay();
+        $.post(ajax_object.ajax_url, data, function (response) {
+          var newPeriod = $(response).clone();
+          newPeriod.opSinglePeriod();
+          tbody.append(newPeriod);
+        });
+      }
+
+      btnAddPeriod.click(function () {
+        addPeriod();
+      });
     });
+  };
 
-    return;
-  }
+  $.fn.opSinglePeriod = function () {
+    return this.each(function (index, element) {
+      var wrap = $(element);
 
-  var periodContainer = wrap.find('.period-container');
-  var tbody = periodContainer.find('tbody');
+      var btnDeletePeriod = wrap.find('.delete-period');
+      var inputs_tp = wrap.find('.input-timepicker');
 
-  var btnAddPeriod = wrap.find('a.add-period');
+      btnDeletePeriod.click(function () {
+        wrap.remove();
+      });
 
-  function addPeriod() {
+      inputs_tp.timepicker({
+        hourText: translations.tp_hour,
+        minuteText: translations.tp_minute
+      });
 
-    var data = {
-      'action': 'op_render_single_period',
-      'weekday': periodContainer.attr('data-day'),
-      'set': periodContainer.attr('data-set')
-    };
-
-    jQuery.post(ajax_object.ajax_url, data, function (response) {
-      var newPeriod = jQuery(response).clone();
-
-      newPeriod.opSinglePeriod();
-
-      tbody.append(newPeriod);
+      inputs_tp.focus(function () {
+        inputs_tp.blur();
+      });
     });
+  };
 
-  }
-
-  btnAddPeriod.click(function () {
-    addPeriod();
+  $(document).ready(function () {
+    var form = $('.form-opening-hours');
+    form.find('tr.periods-day').opPeriodsDay();
+    form.find('tr.period').opSinglePeriod();
   });
-
-};
-
-/** Set Meta Box Period */
-jQuery.fn.opSinglePeriod = function () {
-
-  var wrap = jQuery(this);
-
-  if (wrap.length > 1) {
-    wrap.each(function (index, element) {
-      jQuery(element).opSinglePeriod();
-    });
-
-    return;
-  }
-
-  var btnDeletePeriod = wrap.find('.delete-period');
-  var inputs_tp = wrap.find('.input-timepicker');
-
-  function deletePeriod() {
-    wrap.remove();
-  }
-
-  btnDeletePeriod.click(function () {
-    deletePeriod();
-  });
-
-  inputs_tp.timepicker({
-    hourText: translations.tp_hour,
-    minuteText: translations.tp_minute
-  });
-
-  inputs_tp.focus(function () {
-    inputs_tp.blur();
-  });
-
-};
-
-/**
- *  Mapping
- */
-jQuery(document).ready(function () {
-
-  jQuery('tr.periods-day').opPeriodsDay();
-  jQuery('tr.period').opSinglePeriod();
-
-});
+})(jQuery);

@@ -7,6 +7,7 @@ use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Persistence;
+use OpeningHours\Util\ViewRenderer;
 use WP_Post;
 
 /**
@@ -17,7 +18,7 @@ use WP_Post;
  */
 class OpeningHours extends AbstractMetaBox {
 
-	const TEMPLATE_PATH = 'op-set-meta-box.php';
+	const TEMPLATE_PATH = 'views/meta-box/opening-hours.php';
 
 	public function __construct () {
 		parent::__construct( 'op_meta_box_opening_hours', __('Opening Hours', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH );
@@ -32,12 +33,8 @@ class OpeningHours extends AbstractMetaBox {
 		$set = OpeningHoursModule::getCurrentSet();
 		$set->addDummyPeriods();
 
-		$variables = array(
-			'post' => $post,
-			'set'  => $set
-		);
-
-		echo static::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );
+		$vr = new ViewRenderer( op_plugin_path() . self::TEMPLATE_PATH, array() );
+		$vr->render();
 	}
 
 	/** @inheritdoc */
@@ -52,6 +49,11 @@ class OpeningHours extends AbstractMetaBox {
 		$persistence->savePeriods( $periods );
 	}
 
+	/**
+	 * Converts raw post data to an array of Periods
+	 * @param     array     $data     associative array of raw post data
+	 * @return    Period[]            array of Periods derived from post data
+	 */
 	public function getPeriodsFromPostData ( array $data ) {
 		$periods = array();
 
@@ -74,5 +76,4 @@ class OpeningHours extends AbstractMetaBox {
 
 		return $periods;
 	}
-
 }
