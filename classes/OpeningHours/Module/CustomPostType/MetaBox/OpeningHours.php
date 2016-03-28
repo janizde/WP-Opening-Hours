@@ -8,7 +8,6 @@ use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\ViewRenderer;
-use OpeningHours\Util\Weekdays;
 use WP_Post;
 
 /**

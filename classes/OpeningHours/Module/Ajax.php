@@ -38,40 +38,9 @@ class Ajax extends AbstractModule {
 
 	/** Registers AJAX actions */
 	public static function registerActions() {
-		self::registerAjaxAction( 'op_render_periods_day', 'renderPeriodsDay' );
 		self::registerAjaxAction( 'op_render_single_period', 'renderSinglePeriod' );
 		self::registerAjaxAction( 'op_render_single_dummy_holiday', 'renderSingleDummyHoliday' );
 		self::registerAjaxAction( 'op_render_single_dummy_irregular_opening', 'renderSingleDummyIrregularOpening' );
-	}
-
-	/** Action: Render Periods Day */
-	public static function renderPeriodsDay() {
-		$day = $_POST['day'];
-		$setId = $_POST['set'];
-
-		if ( !is_int( $day ) )
-			self::terminate( 'Day is not an integer' );
-
-		if ( !is_int( $setId ) )
-			self::terminate( 'SetId is not an integer' );
-
-		$empty = $setId === 0;
-		$set = OpeningHours::getInstance()->getSet( $setId );
-
-		if ( !$empty and !$set instanceof Set )
-			self::terminate( sprintf( 'Set with id %d does not exist', $setId ) );
-
-		echo self::renderTemplate(
-			'ajax/op-set-periods-day.php',
-			array(
-				'day'   => $day,
-				'set'   => $set,
-				'empty' => $empty
-			),
-			'always'
-		);
-
-		die();
 	}
 
 	/** Action: Render Single Period */
