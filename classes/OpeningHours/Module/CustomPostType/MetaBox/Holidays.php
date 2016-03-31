@@ -6,6 +6,7 @@ use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
+use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\ViewRenderer;
 use WP_Post;
@@ -48,6 +49,21 @@ class Holidays extends AbstractMetaBox {
 		);
 
 		$vr = new ViewRenderer( op_plugin_path() . self::TEMPLATE_PATH, $variables );
+		$vr->render();
+	}
+
+	/**
+	 * Renders a single holiday row
+	 * @param     Holiday   $holiday  The Holiday to render
+	 */
+	public function renderSingleHoliday ( Holiday $holiday ) {
+		$data = array(
+			'name' => $holiday->getName(),
+			'dateStart' => $holiday->isDummy() ? '' : $holiday->getDateStart()->format( Dates::STD_DATE_FORMAT ),
+			'dateEnd' => $holiday->isDummy() ? '' : $holiday->getDateEnd()->format( Dates::STD_DATE_FORMAT )
+		);
+
+		$vr = new ViewRenderer( op_plugin_path() . self::TEMPLATE_PATH_SINGLE, $data );
 		$vr->render();
 	}
 

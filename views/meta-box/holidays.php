@@ -1,18 +1,8 @@
 <?php
-/**
- * Opening Hours: View: Meta Box: Holiday
- */
-
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
-use OpeningHours\Util\ArrayObject;
-use OpeningHours\Util\ViewRenderer;
 
-/**
- * Pre-defined variables
- *
- * @var         $holidays           ArrayObject w/ Holiday objects
- */
+$holidays = Holidays::getInstance();
 ?>
 
 <div id="op-holidays-wrap">
@@ -33,20 +23,11 @@ use OpeningHours\Util\ViewRenderer;
 		</thead>
 
 		<tbody>
-		<?php
-
-		foreach ( $this->data['holidays'] as $holiday ) {
-			$vr = new ViewRenderer( op_plugin_path() . Holidays::TEMPLATE_PATH_SINGLE, array(
-				'holiday' => $holiday
-			) );
-			$vr->render();
-		}
-		?>
+		<?php foreach ( $this->data['holidays'] as $holiday ) $holidays->renderSingleHoliday( $holiday ); ?>
 		</tbody>
 	</table>
 
 	<button class="button button-primary button-add add-holiday">
 		<?php _e( 'Add New Holiday', I18n::TEXTDOMAIN ); ?>
 	</button>
-
 </div>
