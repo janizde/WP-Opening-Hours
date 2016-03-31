@@ -1,21 +1,13 @@
 <?php
-/**
- * Opening Hours: Views: Ajax: OP Set Holiday
- */
-
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Util\Dates;
 
-/**
- * pre-defined variables
- *
- * @var         $holiday        Holiday object
- */
-
-$name      = $holiday->getName();
+/** @var Holiday $holiday  */
+$holiday = $this->data['holiday'];
+$name = $holiday->getName();
 $dateStart = ( $holiday->isDummy() ) ? null : $holiday->getDateStart()->format( Dates::STD_DATE_FORMAT );
-$dateEnd   = ( $holiday->isDummy() ) ? null : $holiday->getDateEnd()->format( Dates::STD_DATE_FORMAT );
+$dateEnd = ( $holiday->isDummy() ) ? null : $holiday->getDateEnd()->format( Dates::STD_DATE_FORMAT );
 
 echo '<tr class="op-holiday">';
 

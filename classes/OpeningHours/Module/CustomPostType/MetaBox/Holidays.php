@@ -7,6 +7,7 @@ use OpeningHours\Entity\Holiday;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Persistence;
+use OpeningHours\Util\ViewRenderer;
 use WP_Post;
 
 /**
@@ -17,8 +18,8 @@ use WP_Post;
  */
 class Holidays extends AbstractMetaBox {
 
-	const TEMPLATE_PATH = 'meta-box/holidays.php';
-	const TEMPLATE_PATH_SINGLE = 'ajax/op-set-holiday.php';
+	const TEMPLATE_PATH = 'views/meta-box/holidays.php';
+	const TEMPLATE_PATH_SINGLE = 'views/ajax/op-set-holiday.php';
 
 	const POST_KEY = 'opening-hours-holidays';
 
@@ -28,7 +29,7 @@ class Holidays extends AbstractMetaBox {
 
 	/** @inheritdoc */
 	public function registerMetaBox () {
-		if ( !self::currentSetIsParent() )
+		if ( !$this->currentSetIsParent() )
 			return;
 
 		parent::registerMetaBox();
@@ -46,7 +47,8 @@ class Holidays extends AbstractMetaBox {
 			'holidays' => $set->getHolidays()
 		);
 
-		echo $this->renderTemplate( self::TEMPLATE_PATH, $variables, 'once' );
+		$vr = new ViewRenderer( op_plugin_path() . self::TEMPLATE_PATH, $variables );
+		$vr->render();
 	}
 
 	/** @inheritdoc */

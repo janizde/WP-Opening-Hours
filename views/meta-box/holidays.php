@@ -6,6 +6,7 @@
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Util\ArrayObject;
+use OpeningHours\Util\ViewRenderer;
 
 /**
  * Pre-defined variables
@@ -15,9 +16,7 @@ use OpeningHours\Util\ArrayObject;
 ?>
 
 <div id="op-holidays-wrap">
-
 	<?php Holidays::getInstance()->nonceField(); ?>
-
 	<table class="op-holidays" id="op-holidays-table">
 		<thead>
 		<th>
@@ -36,14 +35,12 @@ use OpeningHours\Util\ArrayObject;
 		<tbody>
 		<?php
 
-		foreach ( $holidays as $holiday ) :
-
-			echo Holidays::renderTemplate( Holidays::TEMPLATE_PATH_SINGLE, array(
+		foreach ( $this->data['holidays'] as $holiday ) {
+			$vr = new ViewRenderer( op_plugin_path() . Holidays::TEMPLATE_PATH_SINGLE, array(
 				'holiday' => $holiday
-			), 'always' );
-
-		endforeach;
-
+			) );
+			$vr->render();
+		}
 		?>
 		</tbody>
 	</table>
