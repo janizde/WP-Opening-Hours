@@ -1,24 +1,24 @@
 .ui-timepicker {
 
-  @color-bg: #444444;
-  @color-bg-active: #0074a2;
-  @color-bg-hover: darken(@color-bg-active, 10%);
+  $color-bg: #444444;
+  $color-bg-active: #0074a2;
+  $color-bg-hover: darken($color-bg-active, 10%);
 
-  @color-text: #ffffff;
+  $color-text: #ffffff;
 
-  background: @color-bg;
+  background: $color-bg;
   margin-top: 5px;
 
   .ui-timepicker-table {
 
     .ui-timepicker-title {
-      color: @color-text;
+      color: $color-text;
       text-align: center;
       font-weight: bold;
     }
 
     .ui-timepicker-hours {
-      border-right: 1px solid @color-text;
+      border-right: 1px solid $color-text;
     }
 
     table.ui-timepicker {
@@ -43,11 +43,11 @@
           border: 1px solid transparent;
 
           &:hover {
-            border-color: @color-bg-active;
+            border-color: $color-bg-active;
           }
 
           &.ui-state-active, &.ui-state-active:hover {
-            background: @color-bg-active;
+            background: $color-bg-active;
             border-color: transparent;
           }
         }

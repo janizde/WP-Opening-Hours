@@ -1,23 +1,12 @@
 <?php
-/**
- * Opening Hours: View: Meta Box: Holiday
- */
-
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
-use OpeningHours\Util\ArrayObject;
 
-/**
- * Pre-defined variables
- *
- * @var         $holidays           ArrayObject w/ Holiday objects
- */
+$holidays = Holidays::getInstance();
 ?>
 
 <div id="op-holidays-wrap">
-
 	<?php Holidays::getInstance()->nonceField(); ?>
-
 	<table class="op-holidays" id="op-holidays-table">
 		<thead>
 		<th>
@@ -34,22 +23,11 @@ use OpeningHours\Util\ArrayObject;
 		</thead>
 
 		<tbody>
-		<?php
-
-		foreach ( $holidays as $holiday ) :
-
-			echo Holidays::renderTemplate( Holidays::TEMPLATE_PATH_SINGLE, array(
-				'holiday' => $holiday
-			), 'always' );
-
-		endforeach;
-
-		?>
+		<?php foreach ( $this->data['holidays'] as $holiday ) $holidays->renderSingleHoliday( $holiday ); ?>
 		</tbody>
 	</table>
 
 	<button class="button button-primary button-add add-holiday">
 		<?php _e( 'Add New Holiday', I18n::TEXTDOMAIN ); ?>
 	</button>
-
 </div>

@@ -66,15 +66,9 @@ class Ajax extends AbstractModule {
 	}
 
 	/** Action: Render Single Dummy Holiday */
-	public static function renderSingleDummyHoliday() {
-		echo self::renderTemplate(
-			Holidays::TEMPLATE_PATH_SINGLE,
-			array(
-				'holiday' => Holiday::createDummyPeriod()
-			),
-			'once'
-		);
-
+	public static function renderSingleDummyHoliday () {
+		$holiday = Holiday::createDummyPeriod();
+		Holidays::getInstance()->renderSingleHoliday( $holiday );
 		die();
 	}
 

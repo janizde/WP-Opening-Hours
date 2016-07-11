@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
-var less = require('gulp-less');
+var sass = require('gulp-sass');
 var cssmin = require('gulp-minify-css');
 var watch = require('gulp-watch');
 var sourcemaps = require('gulp-sourcemaps');
@@ -18,7 +18,7 @@ var paths = {
       './assets/scripts/**/*.js'
     ],
     styles: [
-      './assets/styles/main.less',
+      './assets/styles/main.scss',
       './includes/jquery-ui-timepicker/jquery.ui.timepicker.css'
     ]
   },
@@ -41,7 +41,7 @@ gulp.task( 'scripts', [], function () {
 gulp.task( 'styles', [], function () {
   return gulp.src( paths.src.styles )
     .pipe( sourcemaps.init() )
-    .pipe( gulpIf('*.less', less()) )
+    .pipe( gulpIf('*.scss', sass()) )
     .pipe( concat('main.css') )
     .pipe( autoprefixer() )
     .pipe( cssmin() )

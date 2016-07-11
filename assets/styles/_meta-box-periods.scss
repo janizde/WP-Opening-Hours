@@ -5,17 +5,17 @@ table.form-opening-hours {
 
   margin: auto;
 
-  @col-day-width: 20%;
-  @col-times-width: 60%;
-  @col-options-width: 10%;
+  $col-day-width: 20%;
+  $col-times-width: 60%;
+  $col-options-width: 10%;
 
-  @col-time-width: 40%;
-  @col-delete-width: 20%;
+  $col-time-width: 40%;
+  $col-delete-width: 20%;
 
-  @screen-breakpoint: 782px;
+  $screen-breakpoint: 782px;
 
-  @color-green: green;
-  @color-red: red;
+  $color-green: green;
+  $color-red: red;
 
   tbody {
 
@@ -26,7 +26,7 @@ table.form-opening-hours {
 
     td.col-times {
 
-      width: @col-times-width;
+      width: $col-times-width;
 
       table.period-table {
         width: 100%;
@@ -42,16 +42,16 @@ table.form-opening-hours {
           }
 
           .col-time-start, .col-time-end {
-            width: @col-time-width;
+            width: $col-time-width;
             text-align: center;
           }
 
           .col-delete-period {
-            width: @col-delete-width;
+            width: $col-delete-width;
             text-align: left;
 
             .delete-period {
-              .button-remove();
+              @include button-remove();
             }
           }
         }
@@ -59,18 +59,18 @@ table.form-opening-hours {
     }
 
     td.col-name {
-      width: @col-day-width;
+      width: $col-day-width;
       font-weight: bold;
     }
 
     td.col-options {
-      width: @col-options-width;
+      width: $col-options-width;
 
       .add-period {
-        color: @color-green;
-        border: 1px solid @color-green;
+        color: $color-green;
+        border: 1px solid $color-green;
 
-        background: desaturate(lighten(@color-green, 60%), 30%);
+        background: desaturate(lighten($color-green, 60%), 30%);
 
         box-shadow: none;
 
@@ -80,7 +80,7 @@ table.form-opening-hours {
   }
 
   // responsive
-  @media ( max-width: @screen-breakpoint ) {
+  @media ( max-width: $screen-breakpoint ) {
     td, th {
       display: table-cell;
     }
