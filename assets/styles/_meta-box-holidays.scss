@@ -1,5 +1,4 @@
 table.op-holidays {
-
   width: 100%;
 
   .col-name {
@@ -14,7 +13,7 @@ table.op-holidays {
     width: 10%;
 
     .remove-holiday {
-      .button-remove();
+      @include button-remove();
     }
   }
 }

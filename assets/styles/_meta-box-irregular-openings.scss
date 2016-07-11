@@ -1,5 +1,4 @@
 table.op-irregular-openings {
-
   width:    100%;
 
   .op-irregular-opening {
@@ -12,7 +11,7 @@ table.op-irregular-openings {
       width:    10%;
 
       .button-remove {
-        .button-remove();
+        @include button-remove();
       }
     }
   }

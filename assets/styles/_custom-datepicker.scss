@@ -1,13 +1,13 @@
 .ui-datepicker {
 
-  @color-bg: #444444;
-  @color-bg-active: #0074a2;
-  @color-bg-hover: darken(@color-bg-active, 10%);
-  @color-bg-today: darken( @color-bg, 10% );
+  $color-bg: #444444;
+  $color-bg-active: #0074a2;
+  $color-bg-hover: darken($color-bg-active, 10%);
+  $color-bg-today: darken( $color-bg, 10% );
 
-  @color-text: #ffffff;
+  $color-text: #ffffff;
 
-  background: @color-bg;
+  background: $color-bg;
   margin-top: 5px;
 
   .ui-datepicker-header {
@@ -24,8 +24,8 @@
       width: 22px;
 
       &:before {
-        color: @color-text;
-        background: @color-bg-active;
+        color: $color-text;
+        background: $color-bg-active;
 
         display: inline-block;
         padding: 2px 7px;
@@ -54,7 +54,7 @@
 
       margin-top: 5px;
 
-      color: @color-text;
+      color: $color-text;
     }
   }
 
@@ -65,7 +65,7 @@
     padding-top: 3px;
     padding-bottom: 3px;
 
-    color: @color-text;
+    color: $color-text;
 
     text-decoration: none;
     text-align: center;
@@ -73,16 +73,16 @@
     border: 1px solid transparent;
 
     &:hover {
-      border-color: @color-bg-active;
+      border-color: $color-bg-active;
     }
 
     &.ui-state-active {
-      background: @color-bg-active;
+      background: $color-bg-active;
     }
   }
 
   .ui-datepicker-today a.ui-state-highlight {
-    background:  @color-bg-today;
+    background:  $color-bg-today;
   }
 
   .ui-datepicker-unselectable span.ui-state-default {
