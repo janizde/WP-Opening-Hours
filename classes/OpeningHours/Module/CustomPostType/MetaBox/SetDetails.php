@@ -42,17 +42,20 @@ class SetDetails extends AbstractMetaBox {
 			array(
 				'type' => 'textarea',
 				'name' => 'description',
-				'caption' => __('Description', I18n::TEXTDOMAIN)
+				'caption' => __('Description', I18n::TEXTDOMAIN),
+				'show_when' => 'child'
 			),
 			array (
 				'type' => 'date',
 				'name' => 'dateStart',
-				'caption' => __('Date Start', I18n::TEXTDOMAIN)
+				'caption' => __('Date Start', I18n::TEXTDOMAIN),
+				'show_when' => 'child'
 			),
 			array(
 				'type' => 'date',
 				'name' => 'dateEnd',
-				'caption' => __('Date End', I18n::TEXTDOMAIN)
+				'caption' => __('Date End', I18n::TEXTDOMAIN),
+				'show_when' => 'child'
 			),
 			array(
 				'type' => 'select',
@@ -62,13 +65,15 @@ class SetDetails extends AbstractMetaBox {
 					'all' => __('Every week', I18n::TEXTDOMAIN),
 					'even' => __('Even weeks only', I18n::TEXTDOMAIN),
 					'odd' => __('Odd weeks only', I18n::TEXTDOMAIN)
-				)
+				),
+				'show_when' => 'child'
 			),
 			array(
 				'type' => 'heading',
 				'name' => 'childSetNotice',
 				'heading'     => __( 'Add a Child-Set', I18n::TEXTDOMAIN ),
-				'description' => __( 'You may add a child set that overwrites the parent Opening Hours in specific time range. Use the post type hierarchy.', I18n::TEXTDOMAIN )
+				'description' => __( 'You may add a child set that overwrites the parent Opening Hours in specific time range. Use the post type hierarchy.', I18n::TEXTDOMAIN ),
+				'show_when' => 'parent'
 			)
 		);
 	}
@@ -77,7 +82,12 @@ class SetDetails extends AbstractMetaBox {
 	public function renderMetaBox ( WP_Post $post ) {
 		$this->nonceField();
 
+		$type = $post->post_parent == 0 ? 'parent' : 'child';
+
 		foreach ( $this->fields as $field ) {
+			if ( array_key_exists('show_when', $field) && $field['show_when'] != $type )
+				continue;
+
 			$value = $this->persistence->getValue( $field['name'], $post->ID );
 			echo $this->fieldRenderer->getFieldMarkup( $field, $value );
 		}
