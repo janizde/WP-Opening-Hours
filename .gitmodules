@@ -1,9 +1,6 @@
 [submodule "includes/admin-notice-helper"]
 	path = includes/admin-notice-helper
 	url = https://github.com/iandunn/admin-notice-helper.git
-[submodule "includes/wp-detail-fields"]
-	path = includes/wp-detail-fields
-	url = https://github.com/janizde/WP-Detail-Fields.git
 [submodule "includes/jquery-ui-timepicker"]
 	path = includes/jquery-ui-timepicker
 	url = https://github.com/fgelinas/timepicker.git
