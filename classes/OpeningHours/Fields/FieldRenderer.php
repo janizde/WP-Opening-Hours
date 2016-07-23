@@ -37,9 +37,9 @@ class FieldRenderer {
 	 * @param     mixed     $value    the value that the field shall be populated with. (default: null)
 	 */
 	protected function renderField ( array $field, $value = null ) {
-		$caption = $field['caption'];
+    $id = array_key_exists('id', $field) ? $field['id'] : '';
+		$caption = array_key_exists('caption', $field) ? $field['caption'] : '';
 		$type = $field['type'];
-		$id = $field['id'];
 		$name = $field['name'];
 		$options = array_key_exists('options', $field) ? $field['options'] : array();
 
