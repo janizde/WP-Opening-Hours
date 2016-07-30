@@ -103,7 +103,7 @@ class Set extends AbstractModule {
 			'hierarchical'       => true,
 			'menu_position'      => 400,
 			'menu_icon'          => 'dashicons-clock',
-			'supports'           => array( 'title', 'custom-fields', 'page-attributes' )
+			'supports'           => array( 'title', 'page-attributes' )
 		);
 	}
 }
