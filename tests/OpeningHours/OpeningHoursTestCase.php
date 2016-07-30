@@ -23,6 +23,11 @@ class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     \WP_Mock::wpPassthruFunction('_n');
   }
 
+  protected function tearDown () {
+    parent::tearDown();
+    \WP_Mock::tearDown();
+  }
+
   protected function applyOptionsMap ( array $map ) {
     foreach ($map as $key => $value) {
       \WP_Mock::wpFunction('get_option', array(
@@ -33,8 +38,11 @@ class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     }
   }
 
-  protected function tearDown () {
-    parent::tearDown();
-    \WP_Mock::tearDown();
+  protected function createPost (array $data = array()) {
+    $post = $this->getMockBuilder('WP_Post')->getMock();
+    foreach ($data as $key => $value) {
+      $post->$key = $value;
+    }
+    return $post;
   }
 }
