@@ -70,8 +70,8 @@ class IrregularOpenings extends AbstractMetaBox {
 				$io = new IrregularOpening( $data['name'][$i], $data['date'][$i], $data['timeStart'][$i], $data['timeEnd'][$i] );
 				$ios[] = $io;
 			} catch ( \InvalidArgumentException $e ) {
-				trigger_error( sprintf( 'Irregular Opening could not be saved due to: %s', $e->getMessage() ) );
-			}
+			  // ignore item
+      }
 		}
 		return $ios;
 	}
