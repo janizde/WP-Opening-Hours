@@ -16,6 +16,11 @@ class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     );
 
     $this->applyOptionsMap($defaultOptions);
+
+    \WP_Mock::wpPassthruFunction('__');
+    \WP_Mock::wpPassthruFunction('_e');
+    \WP_Mock::wpPassthruFunction('_x');
+    \WP_Mock::wpPassthruFunction('_n');
   }
 
   protected function applyOptionsMap ( array $map ) {

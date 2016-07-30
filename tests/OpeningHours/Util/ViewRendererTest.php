@@ -2,10 +2,10 @@
 
 namespace OpeningHours\Test\Util;
 
-
+use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\ViewRenderer;
 
-class ViewRendererTest extends \PHPUnit_Framework_TestCase {
+class ViewRendererTest extends OpeningHoursTestCase {
 
 	public function test_viewRenderer () {
 		$data = array(
