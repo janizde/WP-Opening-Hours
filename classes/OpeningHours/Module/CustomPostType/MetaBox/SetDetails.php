@@ -95,6 +95,9 @@ class SetDetails extends AbstractMetaBox {
 
 	/** @inheritdoc */
 	protected function saveData ( $post_id, WP_Post $post, $update ) {
+	  if (!array_key_exists($this->id, $_POST))
+	    return;
+
 		$data = $_POST[ $this->id ];
 		foreach ( $this->fields as $field ) {
 			$value = array_key_exists( $field['name'], $data ) ? $data[ $field['name'] ] : null;
