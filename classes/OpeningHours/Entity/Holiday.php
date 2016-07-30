@@ -49,6 +49,9 @@ class Holiday {
 	 * @param     bool      $dummy      Whether holiday is a dummy or not
 	 */
 	public function __construct ( $name, DateTime $dateStart, DateTime $dateEnd, $dummy = false ) {
+	  if (!$dummy && empty($name))
+	    throw new \InvalidArgumentException("\$name must not be empty when holiday is no dummy.");
+
 		$this->name = $name;
 		$this->setDateStart( $dateStart );
 		$this->setDateEnd( $dateEnd );

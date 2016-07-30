@@ -85,11 +85,14 @@ class Holidays extends AbstractMetaBox {
 	public function getHolidaysFromPostData ( array $data ) {
 		$holidays = array();
 		for ( $i = 0; $i < count( $data['name'] ); $i++ ) {
+		  if (!empty($data['name'][$i]) && (empty($data['dateStart'][$i]) || empty($data['dateEnd'][$i])))
+		    continue;
+
 			try {
 				$holiday = new Holiday( $data['name'][$i], new DateTime($data['dateStart'][$i]), new DateTime($data['dateEnd'][$i]) );
 				$holidays[] = $holiday;
 			} catch ( \InvalidArgumentException $e ) {
-				trigger_error( sprintf( 'Holiday could not be saved due to: %s', $e->getMessage() ) );
+				// ignore item
 			}
 		}
 		return $holidays;
