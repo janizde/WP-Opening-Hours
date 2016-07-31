@@ -31,8 +31,7 @@ class Overview extends AbstractWidget {
 		$this->addField( 'set_id', array(
 			'type'             => 'select',
 			'caption'          => __( 'Set to show', I18n::TEXTDOMAIN ),
-			'options'          => array( 'OpeningHours\Module\OpeningHours', 'getSetsOptions' ),
-			'options_strategy' => 'callback'
+			'options_callback' => array( 'OpeningHours\Module\OpeningHours', 'getSetsOptions' )
 		) );
 
 		$this->addField( 'highlight', array(

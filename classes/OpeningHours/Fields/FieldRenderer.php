@@ -27,6 +27,9 @@ class FieldRenderer {
 			$field['attributes']['class'] = array('widefat');
 		}
 
+    if (array_key_exists('options_callback', $field) && is_callable($field['options_callback']))
+      $field['options'] = call_user_func($field['options_callback']);
+
 		return $field;
 	}
 
