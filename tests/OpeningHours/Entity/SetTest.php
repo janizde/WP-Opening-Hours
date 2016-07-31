@@ -23,19 +23,17 @@ class SetTest extends OpeningHoursTestCase {
    */
   protected function setUpCriteria ($postId, $dateStartOffset = null, $dateEndOffset = null, $weekSchemeMatches = null) {
     $setDetails = SetDetails::getInstance()->getPersistence();
-    $now = new DateTime();
 
     if ($dateStartOffset !== null) {
       $interval = new DateInterval('P'.abs($dateStartOffset).'D');
       if ($dateStartOffset < 0)
         $interval->invert = true;
 
-      $key = $setDetails->generateMetaKey('dateStart');
-      $val = (clone $now)->add($interval)->format(Dates::STD_DATE_FORMAT);
+      $now = new DateTime();
       \WP_Mock::wpFunction('get_post_meta', array(
         'times' => 1,
-        'args' => array($postId, $key, true),
-        'return' => $val
+        'args' => array($postId, $setDetails->generateMetaKey('dateStart'), true),
+        'return' => $now->add($interval)->format(Dates::STD_DATE_FORMAT)
       ));
     }
 
@@ -44,9 +42,10 @@ class SetTest extends OpeningHoursTestCase {
       if ($dateEndOffset < 0)
         $interval->invert = true;
 
+      $now = new DateTime();
       \WP_Mock::wpFunction('get_post_meta', array(
         'args' => array($postId, $setDetails->generateMetaKey('dateEnd'), true),
-        'return' => (clone $now)->add($interval)->format(Dates::STD_DATE_FORMAT)
+        'return' => $now->add($interval)->format(Dates::STD_DATE_FORMAT)
       ));
     }
 
@@ -54,6 +53,7 @@ class SetTest extends OpeningHoursTestCase {
       if ($weekSchemeMatches === 'all') {
         $weekScheme = 'all';
       } else {
+        $now = new DateTime();
         $current = (int) $now->format('W');
         $even = $current % 2 == 0;
         if ($weekSchemeMatches == false)

@@ -36,18 +36,11 @@ class Overview extends AbstractShortcode {
       'include_io' => false,
       'include_holidays' => false,
       'caption_closed' => __('Closed', I18n::TEXTDOMAIN),
-      'table_classes' => null,
-      'row_classes' => null,
-      'cell_classes' => null,
-      'cell_heading_classes' => null,
-      'cell_periods_classes' => null,
-      'cell_description_classes' => 'op-set-description',
       'highlighted_period_class' => 'highlighted',
       'highlighted_day_class' => 'highlighted',
-      'table_id_prefix' => 'op-table-set-',
       'time_format' => Dates::getTimeFormat(),
       'hide_io_date' => false,
-      'span_period_classes' => ''
+      'template' => 'table'
     );
 
     $this->validAttributeValues = array(
@@ -56,10 +49,9 @@ class Overview extends AbstractShortcode {
       'show_description' => array(true, false),
       'include_io' => array(false, true),
       'include_holidays' => array(false, true),
-      'hide_io_date' => array(false, true)
+      'hide_io_date' => array(false, true),
+      'template' => array('table', 'list')
     );
-
-    $this->templatePath = 'shortcode/overview.php';
   }
 
   /** @inheritdoc */
@@ -68,6 +60,11 @@ class Overview extends AbstractShortcode {
       trigger_error("Set id not properly set in Opening Hours Overview shortcode");
       return;
     }
+
+    $templateMap = array(
+      'table' => 'shortcode/overview.php',
+      'list' => 'shortcode/overview-list.php'
+    );
 
     $setId = (int)$attributes['set_id'];
     $set = OpeningHours::getSet($setId);
@@ -78,7 +75,7 @@ class Overview extends AbstractShortcode {
     }
 
     $attributes['set'] = $set;
-    echo $this->renderShortcodeTemplate($attributes);
+    echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }
 
   /**
@@ -94,25 +91,26 @@ class Overview extends AbstractShortcode {
     $heading = ($attributes['hide_io_date']) ? $name : sprintf('%s (%s)', $name, $date);
 
     $now = Dates::getNow();
-    $highlighted = ($attributes['highlight'] == 'period' and $io->getTimeStart() <= $now and $now <= $io->getTimeEnd()) ? $attributes['highlighted_period_class'] : null;
+    $highlighted = ($attributes['highlight'] == 'period'
+      && $io->getTimeStart() <= $now
+      && $now <= $io->getTimeEnd())
+      ? $attributes['highlighted_period_class']
+      : null;
 
-    echo '<span class="op-period-time irregular-opening ' . $highlighted . '">' . $heading . '</span>';
+    printf('<span class="op-period-time irregular-opening %s">%s</span>', $highlighted, $heading);
 
     $time_start = $io->getTimeStart()->format($attributes['time_format']);
     $time_end = $io->getTimeEnd()->format($attributes['time_format']);
 
-    $period = sprintf('%s – %s', $time_start, $time_end);
-
-    echo '<span class="op-period-time ' . $highlighted . ' ' . $attributes['span_period_classes'] . '">' . $period . '</span>';
+    printf('<span class="op-period-time %s">%s – %s</span>', $highlighted, $time_start, $time_end);
   }
 
   /**
    * Renders a Holiday Item for Overview table
    *
    * @param     Holiday $holiday    The Holiday item to show
-   * @param     array   $attributes The shortcode attributes
    */
-  public static function renderHoliday ( Holiday $holiday, array $attributes ) {
-    echo '<span class="op-period-time holiday ' . $attributes['span_period_classes'] . '">' . $holiday->getName() . '</span>';
+  public static function renderHoliday ( Holiday $holiday ) {
+    echo '<span class="op-period-time holiday">' . $holiday->getName() . '</span>';
   }
 }

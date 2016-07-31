@@ -1,3 +1,7 @@
 .op-holiday.highlighted td {
-  color: green;
+  color: $color-green;
+}
+
+.op-list-holidays .highlighted {
+  color: $color-green;
 }

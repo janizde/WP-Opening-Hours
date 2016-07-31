@@ -74,45 +74,19 @@ class Overview extends AbstractWidget {
       'caption' => __('Include Holidays', I18n::TEXTDOMAIN)
     ));
 
+    $this->addField('template', array(
+      'type' => 'select',
+      'caption' => __('Template', I18n::TEXTDOMAIN),
+      'options' => array(
+        'table' => __('Table', I18n::TEXTDOMAIN),
+        'list' => __('List', I18n::TEXTDOMAIN)
+      )
+    ));
+
     // Extended Fields
     $this->addField('caption_closed', array(
       'type' => 'text',
       'caption' => __('Closed Caption', I18n::TEXTDOMAIN),
-      'extended' => true,
-      'default_placeholder' => true
-    ));
-
-    $this->addField('table_classes', array(
-      'type' => 'text',
-      'caption' => __('Table class', I18n::TEXTDOMAIN),
-      'extended' => true,
-      'default_placeholder' => true
-    ));
-
-    $this->addField('row_classes', array(
-      'type' => 'text',
-      'caption' => __('Table Row class', I18n::TEXTDOMAIN),
-      'extended' => true,
-      'default_placeholder' => true
-    ));
-
-    $this->addField('cell_classes', array(
-      'type' => 'text',
-      'caption' => __('Table Cell class', I18n::TEXTDOMAIN),
-      'extended' => true,
-      'default_placeholder' => true
-    ));
-
-    $this->addField('cell_heading_classes', array(
-      'type' => 'text',
-      'caption' => __('Table Cell Heading class', I18n::TEXTDOMAIN),
-      'extended' => true,
-      'default_placeholder' => true
-    ));
-
-    $this->addField('cell_periods_classes', array(
-      'type' => 'text',
-      'caption' => __('Table Cell Periods class', I18n::TEXTDOMAIN),
       'extended' => true,
       'default_placeholder' => true
     ));
@@ -127,13 +101,6 @@ class Overview extends AbstractWidget {
     $this->addField('highlighted_day_class', array(
       'type' => 'text',
       'caption' => __('Highlighted Day class', I18n::TEXTDOMAIN),
-      'extended' => true,
-      'default_placeholder' => true
-    ));
-
-    $this->addField('table_id_prefix', array(
-      'type' => 'text',
-      'caption' => __('Table ID Prefix', I18n::TEXTDOMAIN),
       'extended' => true,
       'default_placeholder' => true
     ));

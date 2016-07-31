@@ -38,7 +38,7 @@ extract( $this->data['attributes'] );
 echo $before_widget;
 
 if ( $title ) {
-	echo $before_title . $title . $after_title;
+  echo $before_title . $title . $after_title;
 }
 
 OpeningHours::setCurrentSetId( $set->getId() );
@@ -49,54 +49,50 @@ $periods = $compress
   : $set->getPeriodsGroupedByDay();
 ?>
 
-<table class="op-table op-table-overview">
+<dl class="op-list op-list-overview">
   <?php if ($show_description && !empty($description)) : ?>
-    <tr class="op-row op-row-description">
-      <td class="op-cell op-cell-description" colspan="2"><?php echo $description; ?></td>
-    </tr>
+    <dt class="op-cell op-cell-description"><?php echo $description; ?></dt>
   <?php endif; ?>
 
   <?php foreach ($periods as $day => $dayPeriods) :
     $highlightedDay = ($highlight === 'day' && Dates::isToday($day)) ? $highlighted_day_class : null;
     ?>
 
-    <tr class="op-row op-row-day <?php echo $highlightedDay; ?>">
-      <th class="op-cell op-cell-heading" scope="row"><?php echo Weekdays::getDaysCaption($day, $short); ?></th>
-      <td class="op cell op-cell-periods">
-        <?php
-        $finished = false;
-        if ($include_io) {
-          $io = $set->getActiveIrregularOpeningOnWeekday($day);
-          if ($io instanceof IrregularOpening) {
-            Shortcode::renderIrregularOpening($io, $this->data['attributes']);
-            $finished = true;
-          }
-        }
-
-        if (!$finished && $include_holidays) {
-          $holiday = $set->getActiveHolidayOnWeekday($day);
-          if ($holiday instanceof Holiday) {
-            Shortcode::renderHoliday($holiday);
-            $finished = true;
-          }
-        }
-
-        if (!$finished && count($dayPeriods) < 1) {
-          echo '<span class="op-closed">'.$caption_closed.'</span>';
+    <dt class="op-cell op-cell-heading <?php echo $highlightedDay; ?>"><?php echo Weekdays::getDaysCaption($day, $short); ?></dt>
+    <dd class="op cell op-cell-periods <?php echo $highlightedDay; ?>">
+      <?php
+      $finished = false;
+      if ($include_io) {
+        $io = $set->getActiveIrregularOpeningOnWeekday($day);
+        if ($io instanceof IrregularOpening) {
+          Shortcode::renderIrregularOpening($io, $this->data['attributes']);
           $finished = true;
         }
+      }
 
-        if (!$finished) {
-          /** @var \OpeningHours\Entity\Period $period */
-          foreach ($dayPeriods as $period) {
-            $highlightedPeriod = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : '';
-            printf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($time_format));
-          }
+      if (!$finished && $include_holidays) {
+        $holiday = $set->getActiveHolidayOnWeekday($day);
+        if ($holiday instanceof Holiday) {
+          Shortcode::renderHoliday($holiday);
+          $finished = true;
         }
-        ?>
-      </td>
-    </tr>
+      }
+
+      if (!$finished && count($dayPeriods) < 1) {
+        echo '<span class="op-closed">'.$caption_closed.'</span>';
+        $finished = true;
+      }
+
+      if (!$finished) {
+        /** @var \OpeningHours\Entity\Period $period */
+        foreach ($dayPeriods as $period) {
+          $highlightedPeriod = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : '';
+          printf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($time_format));
+        }
+      }
+      ?>
+    </dd>
   <?php endforeach; ?>
-</table>
+</dl>
 
 <?php echo $after_widget; ?>

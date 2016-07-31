@@ -33,20 +33,15 @@ if ( ! empty( $title ) ) {
 }
 
 ?>
-<table class="op-table op-table-holidays">
-  <tbody>
+<dl class="op-list op-list-holidays">
     <?php
     /** @var Holiday $holiday */
     foreach ($holidays as $holiday) :
     $highlighted = ($highlight && $holiday->isActive()) ? $class_highlighted : '';
     ?>
-    <tr class="<?php echo $class_holiday; ?> <?php echo $highlighted; ?>">
-      <td class="col-name"><?php echo $holiday->getName(); ?></td>
-      <td class="col-date-start"><?php echo $holiday->getDateStart()->format($date_format); ?></td>
-      <td class="col-date-end"><?php echo $holiday->getDateEnd()->format($date_format); ?></td>
-    </tr>
+    <dt class="<?php echo $highlighted; ?>"><?php echo $holiday->getName(); ?></dt>
+    <dd class="<?php echo $highlighted; ?>"><?php printf('%s – %s', $holiday->getDateStart()->format($date_format), $holiday->getDateEnd()->format($date_format)); ?></dd>
     <?php endforeach; ?>
-  </tbody>
-</table>
+</dl>
 
 <?php echo $after_widget; ?>

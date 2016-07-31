@@ -43,8 +43,6 @@ class IsOpen extends AbstractShortcode {
     $this->validAttributeValues = array(
       'show_next' => array(false, true)
     );
-
-    $this->templatePath = 'shortcode/is-open.php';
   }
 
   /** @inheritdoc */
@@ -89,6 +87,6 @@ class IsOpen extends AbstractShortcode {
     $attributes['text'] = ($isOpen) ? $attributes['open_text'] : $attributes['closed_text'];
     $attributes['next_period'] = $set->getNextOpenPeriod();
 
-    echo $this->renderShortcodeTemplate($attributes);
+    echo $this->renderShortcodeTemplate($attributes, 'shortcode/is-open.php');
   }
 }
