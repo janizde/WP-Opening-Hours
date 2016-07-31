@@ -2,7 +2,9 @@
 
 namespace OpeningHours\Test;
 
+use OpeningHours\Entity\Set;
 use OpeningHours\Util\Persistence;
+use WP_Mock\Functions;
 
 class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
 
@@ -88,5 +90,33 @@ class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
         'return' => $ios
       ));
     }
+  }
+
+  /**
+   * Sets up common mocks
+   * @param     array     $exclude  array of names of functions that shall not be mocked
+   */
+  protected function commonSetMocks ( array $exclude = array()) {
+    if (!in_array('get_post_meta', $exclude))
+      \WP_Mock::wpFunction('get_post_meta', array(
+        'return' => null
+      ));
+
+    if (!in_array('get_post', $exclude))
+      \WP_Mock::wpPassthruFunction('get_post');
+
+
+    if (!in_array('get_posts', $exclude))
+      \WP_Mock::wpFunction('get_posts', array(
+        'times' => 1,
+        'args' => array(array(
+          'post_type' => \OpeningHours\Module\CustomPostType\Set::CPT_SLUG,
+          'post_parent' => 64
+        )),
+        'return' => array()
+      ));
+
+    if (!in_array(Set::WP_ACTION_BEFORE_SETUP, $exclude))
+      \WP_Mock::expectAction(Set::WP_ACTION_BEFORE_SETUP, Functions::type('OpeningHours\Entity\Set'));
   }
 }

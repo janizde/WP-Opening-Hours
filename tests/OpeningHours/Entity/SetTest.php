@@ -15,34 +15,6 @@ use WP_Mock\Functions;
 class SetTest extends OpeningHoursTestCase {
 
   /**
-   * Sets up common mocks
-   * @param     array     $exclude  array of names of functions that shall not be mocked
-   */
-  protected function commonMocks (array $exclude = array()) {
-    if (!in_array('get_post_meta', $exclude))
-      \WP_Mock::wpFunction('get_post_meta', array(
-        'return' => null
-      ));
-
-    if (!in_array('get_post', $exclude))
-      \WP_Mock::wpPassthruFunction('get_post');
-
-
-    if (!in_array('get_posts', $exclude))
-      \WP_Mock::wpFunction('get_posts', array(
-        'times' => 1,
-        'args' => array(array(
-          'post_type' => \OpeningHours\Module\CustomPostType\Set::CPT_SLUG,
-          'post_parent' => 64
-        )),
-        'return' => array()
-      ));
-
-    if (!in_array(Set::WP_ACTION_BEFORE_SETUP, $exclude))
-      \WP_Mock::expectAction(Set::WP_ACTION_BEFORE_SETUP, Functions::type('OpeningHours\Entity\Set'));
-  }
-
-  /**
    * Sets up post meta mocks for child set criteria
    * @param     int       $postId   The id of the post
    * @param     int       $dateStartOffset  Offset in days relative to current date
@@ -102,7 +74,7 @@ class SetTest extends OpeningHoursTestCase {
    */
   public function testConstructNoPeriods () {
 		$post = $this->createPost(array('ID' => 64));
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 
@@ -130,7 +102,7 @@ class SetTest extends OpeningHoursTestCase {
       'return' => 'Test Description'
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 		$this->assertEquals( 'Test Description', $set->getDescription() );
@@ -147,7 +119,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 		$periods = $set->getPeriods();
@@ -179,7 +151,7 @@ class SetTest extends OpeningHoursTestCase {
       )
     ));
 
-    $this->commonMocks(array('get_posts'));
+    $this->commonSetMocks(array('get_posts'));
 
 		$set = new Set( $parent );
 		$this->assertFalse( $set->isParent() );
@@ -190,7 +162,7 @@ class SetTest extends OpeningHoursTestCase {
 	}
 
 	public function testPostMatchesCriteriaNothingSet () {
-    $this->commonMocks();
+    $this->commonSetMocks();
 		$set = new Set( $this->createPost(array('ID' => 64)) );
 		
 		$post = $this->createPost(array('ID' => 128));
@@ -208,7 +180,7 @@ class SetTest extends OpeningHoursTestCase {
     $post130 = $this->createPost(array('ID' => 130));
     $this->setUpCriteria($post130->ID, 1, null, null);
 
-    $this->commonMocks(array(Set::WP_ACTION_BEFORE_SETUP));
+    $this->commonSetMocks(array(Set::WP_ACTION_BEFORE_SETUP));
     \WP_Mock::expectAction(Set::WP_ACTION_BEFORE_SETUP, Functions::type('OpeningHours\Entity\Set'));
 
     $set = new Set( $this->createPost(array('ID' => 64)) );
@@ -227,7 +199,7 @@ class SetTest extends OpeningHoursTestCase {
     $post130 = $this->createPost(array('ID' => 130));
     $this->setUpCriteria($post130->ID, null, -1, null);
 
-    $this->commonMocks(array(Set::WP_ACTION_BEFORE_SETUP));
+    $this->commonSetMocks(array(Set::WP_ACTION_BEFORE_SETUP));
     \WP_Mock::expectAction(Set::WP_ACTION_BEFORE_SETUP, Functions::type('OpeningHours\Entity\Set'));
 
     $set = new Set( $this->createPost(array('ID' => 64)) );
@@ -246,7 +218,7 @@ class SetTest extends OpeningHoursTestCase {
 		$post130 = $this->createPost(array('ID' => 130));
     $this->setUpCriteria($post130->ID, null, null, false);
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set($this->createPost(array('ID' => 64)));
     $set->postMatchesCriteria($post128);
@@ -257,7 +229,7 @@ class SetTest extends OpeningHoursTestCase {
 
 	public function testAddDummyPeriodsNoPeriods () {
 		$post = $this->createPost(array('ID' => 64));
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertEquals( 0, $set->getPeriods()->count() );
@@ -279,7 +251,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$set->addDummyPeriods();
@@ -299,7 +271,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$day1 = $set->getPeriodsByDay( 1 );
@@ -332,7 +304,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 4, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$periods = $set->getPeriodsGroupedByDay();
@@ -361,7 +333,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '14:00'),
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$periods = $set->getPeriodsGroupedByDayCompressed();
@@ -386,7 +358,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 1, 'timeStart' => '18:00', 'timeEnd' => '22:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 12:59') ) );
@@ -409,7 +381,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'Holiday 1', 'dateStart' => '2016-01-12', 'dateEnd' => '2016-01-14')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertNull( $set->getActiveHoliday( new DateTime('2016-01-11 23:59') ) );
@@ -426,7 +398,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'Holiday 1', 'dateStart' => '2016-01-12', 'dateEnd' => '2016-01-14')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-11 23:59') ) );
@@ -444,7 +416,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'Holiday 2', 'dateStart' => '2016-01-16', 'dateEnd' => '2016-01-17') // Sat - Sun
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 		$date = new DateTime('2016-01-11');
@@ -470,7 +442,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 6, 'timeStart' => '20:00', 'timeEnd' => '22:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 		$this->assertTrue( $set->daysEqual( 1, 4 ) );
@@ -489,7 +461,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'Irregular Opening', 'date' => '2016-01-13', 'timeStart' => '13:00', 'timeEnd' => '17:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 		$this->assertNull( $set->getActiveIrregularOpening( new DateTime('2016-01-12') ) );
@@ -504,7 +476,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'Irregular Opening', 'date' => '2016-01-13', 'timeStart' => '13:00', 'timeEnd' => '17:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertFalse( $set->isIrregularOpeningActive( new DateTime('2016-01-12') ) );
@@ -520,7 +492,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'Irregular Opening 2', 'date' => '2016-01-18', 'timeStart' => '13:00', 'timeEnd' => '17:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 		$now = new DateTime( '2016-01-12' );
@@ -558,7 +530,7 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 
@@ -596,7 +568,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'Test Holiday', 'dateStart' => '2016-01-27', 'dateEnd' => '2016-01-28')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set  = new Set( $post );
 		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-25 07:00' ) ) );
@@ -627,7 +599,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'IO 1', 'date' => '2016-01-26', 'timeStart' => '14:00', 'timeEnd' => '19:30')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
     $set = new Set( $post );
 
@@ -654,7 +626,7 @@ class SetTest extends OpeningHoursTestCase {
       array('name' => 'IO', 'date' => '2016-01-28', 'timeStart' => '15:00', 'timeEnd' => '17:00')
     ));
 
-    $this->commonMocks();
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 
