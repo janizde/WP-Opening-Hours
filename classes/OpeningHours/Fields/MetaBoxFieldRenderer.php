@@ -10,21 +10,21 @@ namespace OpeningHours\Fields;
  */
 class MetaBoxFieldRenderer extends FieldRenderer {
 
-	/**
-	 * The POST namespace for the fields
-	 * @var       string
-	 */
-	protected $namespace;
+  /**
+   * The POST namespace for the fields
+   * @var       string
+   */
+  protected $namespace;
 
-	public function __construct ( $namespace ) {
-		$this->namespace = $namespace;
-	}
+  public function __construct ( $namespace ) {
+    $this->namespace = $namespace;
+  }
 
-	/** @inheritdoc */
-	public function filterField( array $field ) {
-		$field = parent::filterField( $field );
-		$field['name'] = sprintf('%s[%s]', $this->namespace, $field['name']);
+  /** @inheritdoc */
+  public function filterField ( array $field ) {
+    $field = parent::filterField($field);
+    $field['name'] = sprintf('%s[%s]', $this->namespace, $field['name']);
 
-		return $field;
-	}
+    return $field;
+  }
 }

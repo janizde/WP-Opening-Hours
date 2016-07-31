@@ -16,63 +16,63 @@ use WP_Post;
  */
 class IrregularOpenings extends AbstractMetaBox {
 
-	const TEMPLATE_PATH = 'meta-box/irregular-openings.php';
-	const TEMPLATE_PATH_SINGLE = 'ajax/op-set-irregular-opening.php';
+  const TEMPLATE_PATH = 'meta-box/irregular-openings.php';
+  const TEMPLATE_PATH_SINGLE = 'ajax/op-set-irregular-opening.php';
 
-	const POST_KEY = 'opening-hours-irregular-openings';
+  const POST_KEY = 'opening-hours-irregular-openings';
 
-	public function __construct () {
-		parent::__construct( 'op_meta_box_irregular_openings', __('Irregular Openings', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT );
-	}
+  public function __construct () {
+    parent::__construct('op_meta_box_irregular_openings', __('Irregular Openings', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT);
+  }
 
-	/** @inheritdoc */
-	public function registerMetaBox () {
-		if ( !$this->currentSetIsParent() )
-			return;
+  /** @inheritdoc */
+  public function registerMetaBox () {
+    if (!$this->currentSetIsParent())
+      return;
 
-		parent::registerMetaBox();
-	}
+    parent::registerMetaBox();
+  }
 
-	/** @inheritdoc */
-	public function renderMetaBox ( WP_Post $post ) {
-		OpeningHoursModule::setCurrentSetId( $post->ID );
-		$set = OpeningHoursModule::getCurrentSet();
+  /** @inheritdoc */
+  public function renderMetaBox ( WP_Post $post ) {
+    OpeningHoursModule::setCurrentSetId($post->ID);
+    $set = OpeningHoursModule::getCurrentSet();
 
-		if ( count( $set->getIrregularOpenings() ) < 1 )
-			$set->getIrregularOpenings()->append( IrregularOpening::createDummy() );
+    if (count($set->getIrregularOpenings()) < 1)
+      $set->getIrregularOpenings()->append(IrregularOpening::createDummy());
 
-		$variables = array(
-			'irregular_openings' => $set->getIrregularOpenings()
-		);
+    $variables = array(
+      'irregular_openings' => $set->getIrregularOpenings()
+    );
 
-		echo self::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );
-	}
+    echo self::renderTemplate(static::TEMPLATE_PATH, $variables, 'once');
+  }
 
-	/** @inheritdoc */
-	protected function saveData ( $post_id, WP_Post $post, $update ) {
-		$config = $_POST[ static::POST_KEY ];
-		$ios = $this->getIrregularOpeningsFromPostData( $config );
-		$persistence = new Persistence( $post );
-		$persistence->saveIrregularOpenings( $ios );
-	}
+  /** @inheritdoc */
+  protected function saveData ( $post_id, WP_Post $post, $update ) {
+    $config = $_POST[static::POST_KEY];
+    $ios = $this->getIrregularOpeningsFromPostData($config);
+    $persistence = new Persistence($post);
+    $persistence->saveIrregularOpenings($ios);
+  }
 
-	/**
-	 * Creates an array of Irregular Openings from the POST data
-	 *
-	 * @param     array     $data   The post data for irregular openings
-	 *
-	 * @return    IrregularOpening[]
-	 */
-	public function getIrregularOpeningsFromPostData ( array $data ) {
-		$ios = array();
-		for ( $i = 0; $i < count( $data['name'] ); $i++ ) {
-			try {
-				$io = new IrregularOpening( $data['name'][$i], $data['date'][$i], $data['timeStart'][$i], $data['timeEnd'][$i] );
-				$ios[] = $io;
-			} catch ( \InvalidArgumentException $e ) {
-			  // ignore item
+  /**
+   * Creates an array of Irregular Openings from the POST data
+   *
+   * @param     array $data The post data for irregular openings
+   *
+   * @return    IrregularOpening[]
+   */
+  public function getIrregularOpeningsFromPostData ( array $data ) {
+    $ios = array();
+    for ($i = 0; $i < count($data['name']); $i++) {
+      try {
+        $io = new IrregularOpening($data['name'][$i], $data['date'][$i], $data['timeStart'][$i], $data['timeEnd'][$i]);
+        $ios[] = $io;
+      } catch (\InvalidArgumentException $e) {
+        // ignore item
       }
-		}
-		return $ios;
-	}
+    }
+    return $ios;
+  }
 }

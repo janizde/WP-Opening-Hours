@@ -84,8 +84,8 @@ class Overview extends AbstractShortcode {
   /**
    * Renders an Irregular Opening Item for Overview table
    *
-   * @param     IrregularOpening $io The Irregular Opening to show
-   * @param     array $attributes The shortcode attributes
+   * @param     IrregularOpening $io         The Irregular Opening to show
+   * @param     array            $attributes The shortcode attributes
    */
   public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
     $name = $io->getName();
@@ -109,8 +109,8 @@ class Overview extends AbstractShortcode {
   /**
    * Renders a Holiday Item for Overview table
    *
-   * @param     Holiday $holiday The Holiday item to show
-   * @param     array $attributes The shortcode attributes
+   * @param     Holiday $holiday    The Holiday item to show
+   * @param     array   $attributes The shortcode attributes
    */
   public static function renderHoliday ( Holiday $holiday, array $attributes ) {
     echo '<span class="op-period-time holiday ' . $attributes['span_period_classes'] . '">' . $holiday->getName() . '</span>';

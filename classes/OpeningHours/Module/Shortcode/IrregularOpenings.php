@@ -3,7 +3,6 @@
 namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
 
@@ -15,44 +14,44 @@ use OpeningHours\Util\Dates;
  */
 class IrregularOpenings extends AbstractShortcode {
 
-	/** @inheritdoc */
-	protected function init () {
+  /** @inheritdoc */
+  protected function init () {
 
-		$this->setShortcodeTag( 'op-irregular-openings' );
+    $this->setShortcodeTag('op-irregular-openings');
 
-		$this->defaultAttributes = array(
-			'title'             => null,
-			'set_id'            => null,
-			'highlight'         => false,
-			'before_widget'     => null,
-			'after_widget'      => null,
-			'before_title'      => null,
-			'after_title'       => null,
-			'class_io'          => 'op-irregular-opening',
-			'class_highlighted' => 'highlighted',
-			'date_format'       => Dates::getDateFormat(),
-			'time_format'       => Dates::getTimeFormat()
-		);
+    $this->defaultAttributes = array(
+      'title' => null,
+      'set_id' => null,
+      'highlight' => false,
+      'before_widget' => null,
+      'after_widget' => null,
+      'before_title' => null,
+      'after_title' => null,
+      'class_io' => 'op-irregular-opening',
+      'class_highlighted' => 'highlighted',
+      'date_format' => Dates::getDateFormat(),
+      'time_format' => Dates::getTimeFormat()
+    );
 
-		$this->templatePath = 'shortcode/irregular-openings.php';
+    $this->templatePath = 'shortcode/irregular-openings.php';
 
-	}
+  }
 
-	/** @inheritdoc */
-	public function shortcode ( array $attributes ) {
-		$setId = $attributes['set_id'];
+  /** @inheritdoc */
+  public function shortcode ( array $attributes ) {
+    $setId = $attributes['set_id'];
 
-		if ( !is_numeric( $setId ) )
-			return;
+    if (!is_numeric($setId))
+      return;
 
-		$set = OpeningHours::getSet( $setId );
+    $set = OpeningHours::getSet($setId);
 
-		if ( !$set instanceof Set )
-			return;
+    if (!$set instanceof Set)
+      return;
 
-		$attributes['set'] = $set;
-		$attributes['irregular_openings'] = $set->getIrregularOpenings();
+    $attributes['set'] = $set;
+    $attributes['irregular_openings'] = $set->getIrregularOpenings();
 
-		echo $this->renderShortcodeTemplate( $attributes );
-	}
+    echo $this->renderShortcodeTemplate($attributes);
+  }
 }

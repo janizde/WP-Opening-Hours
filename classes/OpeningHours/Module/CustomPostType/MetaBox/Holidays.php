@@ -19,82 +19,83 @@ use WP_Post;
  */
 class Holidays extends AbstractMetaBox {
 
-	const TEMPLATE_PATH = 'views/meta-box/holidays.php';
-	const TEMPLATE_PATH_SINGLE = 'views/ajax/op-set-holiday.php';
+  const TEMPLATE_PATH = 'views/meta-box/holidays.php';
+  const TEMPLATE_PATH_SINGLE = 'views/ajax/op-set-holiday.php';
 
-	const POST_KEY = 'opening-hours-holidays';
+  const POST_KEY = 'opening-hours-holidays';
 
-	public function __construct () {
-		parent::__construct( 'op_meta_box_holidays', __('Holidays', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH );
-	}
+  public function __construct () {
+    parent::__construct('op_meta_box_holidays', __('Holidays', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
+  }
 
-	/** @inheritdoc */
-	public function registerMetaBox () {
-		if ( !$this->currentSetIsParent() )
-			return;
+  /** @inheritdoc */
+  public function registerMetaBox () {
+    if (!$this->currentSetIsParent())
+      return;
 
-		parent::registerMetaBox();
-	}
+    parent::registerMetaBox();
+  }
 
-	/** @inheritdoc */
-	public function renderMetaBox ( WP_Post $post ) {
-		OpeningHoursModule::setCurrentSetId( $post->ID );
-		$set = OpeningHoursModule::getCurrentSet();
+  /** @inheritdoc */
+  public function renderMetaBox ( WP_Post $post ) {
+    OpeningHoursModule::setCurrentSetId($post->ID);
+    $set = OpeningHoursModule::getCurrentSet();
 
-		if ( count( $set->getHolidays() ) < 1 )
-			$set->getHolidays()->append( Holiday::createDummyPeriod() );
+    if (count($set->getHolidays()) < 1)
+      $set->getHolidays()->append(Holiday::createDummyPeriod());
 
-		$variables = array(
-			'holidays' => $set->getHolidays()
-		);
+    $variables = array(
+      'holidays' => $set->getHolidays()
+    );
 
-		$vr = new ViewRenderer( op_plugin_path() . self::TEMPLATE_PATH, $variables );
-		$vr->render();
-	}
+    $vr = new ViewRenderer(op_plugin_path() . self::TEMPLATE_PATH, $variables);
+    $vr->render();
+  }
 
-	/**
-	 * Renders a single holiday row
-	 * @param     Holiday   $holiday  The Holiday to render
-	 */
-	public function renderSingleHoliday ( Holiday $holiday ) {
-		$data = array(
-			'name' => $holiday->getName(),
-			'dateStart' => $holiday->isDummy() ? '' : $holiday->getDateStart()->format( Dates::STD_DATE_FORMAT ),
-			'dateEnd' => $holiday->isDummy() ? '' : $holiday->getDateEnd()->format( Dates::STD_DATE_FORMAT )
-		);
+  /**
+   * Renders a single holiday row
+   *
+   * @param     Holiday $holiday The Holiday to render
+   */
+  public function renderSingleHoliday ( Holiday $holiday ) {
+    $data = array(
+      'name' => $holiday->getName(),
+      'dateStart' => $holiday->isDummy() ? '' : $holiday->getDateStart()->format(Dates::STD_DATE_FORMAT),
+      'dateEnd' => $holiday->isDummy() ? '' : $holiday->getDateEnd()->format(Dates::STD_DATE_FORMAT)
+    );
 
-		$vr = new ViewRenderer( op_plugin_path() . self::TEMPLATE_PATH_SINGLE, $data );
-		$vr->render();
-	}
+    $vr = new ViewRenderer(op_plugin_path() . self::TEMPLATE_PATH_SINGLE, $data);
+    $vr->render();
+  }
 
-	/** @inheritdoc */
-	protected function saveData ( $post_id, WP_Post $post, $update ) {
-		$config = $_POST[ self::POST_KEY ];
-		$holidays = $this->getHolidaysFromPostData( $config );
-		$persistence = new Persistence( $post );
-		$persistence->saveHolidays( $holidays );
-	}
+  /** @inheritdoc */
+  protected function saveData ( $post_id, WP_Post $post, $update ) {
+    $config = $_POST[self::POST_KEY];
+    $holidays = $this->getHolidaysFromPostData($config);
+    $persistence = new Persistence($post);
+    $persistence->saveHolidays($holidays);
+  }
 
-	/**
-	 * Converts the post data to a Holiday array
-	 *
-	 * @param     array     $data     The POST data from the edit screen
-	 *
-	 * @return    Holiday[]           The Holiday array
-	 */
-	public function getHolidaysFromPostData ( array $data ) {
-		$holidays = array();
-		for ( $i = 0; $i < count( $data['name'] ); $i++ ) {
-		  if (!empty($data['name'][$i]) && (empty($data['dateStart'][$i]) || empty($data['dateEnd'][$i])))
-		    continue;
+  /**
+   * Converts the post data to a Holiday array
+   *
+   * @param     array $data The POST data from the edit screen
+   *
+   * @return    Holiday[]           The Holiday array
+   */
+  public function getHolidaysFromPostData ( array $data ) {
+    $holidays = array();
+    for ($i = 0; $i < count($data['name']); $i++) {
+      if (!empty($data['name'][$i]) && (empty($data['dateStart'][$i]) || empty($data['dateEnd'][$i])))
+        continue;
 
-			try {
-				$holiday = new Holiday( $data['name'][$i], new DateTime($data['dateStart'][$i]), new DateTime($data['dateEnd'][$i]) );
-				$holidays[] = $holiday;
-			} catch ( \InvalidArgumentException $e ) {
-				// ignore item
-			}
-		}
-		return $holidays;
-	}
+      try {
+        $holiday = new Holiday($data['name'][$i], new DateTime($data['dateStart'][$i]), new DateTime($data['dateEnd'][$i]));
+        $holidays[] = $holiday;
+      } catch (\InvalidArgumentException $e) {
+        // ignore item
+      }
+    }
+    return $holidays;
+  }
 }
