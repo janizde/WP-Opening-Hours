@@ -74,6 +74,15 @@ class Overview extends AbstractWidget {
       'caption' => __('Include Holidays', I18n::TEXTDOMAIN)
     ));
 
+    $this->addField('template', array(
+      'type' => 'select',
+      'caption' => __('Template', I18n::TEXTDOMAIN),
+      'options' => array(
+        'table' => __('Table', I18n::TEXTDOMAIN),
+        'list' => __('List', I18n::TEXTDOMAIN)
+      )
+    ));
+
     // Extended Fields
     $this->addField('caption_closed', array(
       'type' => 'text',

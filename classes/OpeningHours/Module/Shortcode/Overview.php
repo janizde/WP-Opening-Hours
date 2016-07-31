@@ -39,7 +39,8 @@ class Overview extends AbstractShortcode {
       'highlighted_period_class' => 'highlighted',
       'highlighted_day_class' => 'highlighted',
       'time_format' => Dates::getTimeFormat(),
-      'hide_io_date' => false
+      'hide_io_date' => false,
+      'template' => 'table'
     );
 
     $this->validAttributeValues = array(
@@ -48,7 +49,8 @@ class Overview extends AbstractShortcode {
       'show_description' => array(true, false),
       'include_io' => array(false, true),
       'include_holidays' => array(false, true),
-      'hide_io_date' => array(false, true)
+      'hide_io_date' => array(false, true),
+      'template' => array('table', 'list')
     );
 
     $this->templatePath = 'shortcode/overview.php';
@@ -60,6 +62,13 @@ class Overview extends AbstractShortcode {
       trigger_error("Set id not properly set in Opening Hours Overview shortcode");
       return;
     }
+
+    $templateMap = array(
+      'table' => 'shortcode/overview.php',
+      'list' => 'shortcode/overview-list.php'
+    );
+
+    $this->templatePath = $templateMap[$attributes['template']];
 
     $setId = (int)$attributes['set_id'];
     $set = OpeningHours::getSet($setId);
