@@ -98,39 +98,6 @@ class SetTest extends OpeningHoursTestCase {
   }
 
   /**
-   * Sets up data for a Set
-   * @param     int       $postId   The id of the set/post
-   * @param     array     $periods  Array of period data to set
-   * @param     array     $holidays Array of holiday data to set
-   * @param     array     $ios      Array of irregular opening data to set
-   */
-  protected function setUpSetData ($postId, array $periods = array(), array $holidays = array(), array $ios = array()) {
-    if (count($periods) > 0) {
-      \WP_Mock::wpFunction('get_post_meta', array(
-        'times' => 1,
-        'args' => array($postId, Persistence::PERIODS_META_KEY, true),
-        'return' => $periods
-      ));
-    }
-
-    if (count($holidays) > 0) {
-      \WP_Mock::wpFunction('get_post_meta', array(
-        'times' => 1,
-        'args' => array($postId, Persistence::HOLIDAYS_META_KEY, true),
-        'return' => $holidays
-      ));
-    }
-
-    if (count($ios) > 0) {
-      \WP_Mock::wpFunction('get_post_meta', array(
-        'times' => 1,
-        'args' => array($postId, Persistence::IRREGULAR_OPENINGS_META_KEY, true),
-        'return' => $ios
-      ));
-    }
-  }
-
-  /**
    * Construct new set without any data
    */
   public function testConstructNoPeriods () {
