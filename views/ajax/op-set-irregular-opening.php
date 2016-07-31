@@ -17,7 +17,7 @@ $timeEnd = ( $io->isDummy() ) ? null : $io->getTimeEnd()->format( Dates::STD_TIM
   </td>
 
   <td class="col-date">
-    <input type="text" class="widefat date input gray"
+    <input type="text" class="widefat date input-gray"
            name="<?echo MetaBox::POST_KEY; ?>[date][]" value="<?php echo $date; ?>">
   </td>
 
