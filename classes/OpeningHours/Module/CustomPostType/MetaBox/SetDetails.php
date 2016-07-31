@@ -43,7 +43,7 @@ class SetDetails extends AbstractMetaBox {
         'type' => 'textarea',
         'name' => 'description',
         'caption' => __('Description', I18n::TEXTDOMAIN),
-        'show_when' => 'child'
+        'show_when' => 'parent'
       ),
       array(
         'type' => 'date',
