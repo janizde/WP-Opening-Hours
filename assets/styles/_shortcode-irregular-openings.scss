@@ -3,7 +3,11 @@
   tr.op-irregular-opening.highlighted {
 
     td, th {
-      color: green;
+      color: $color-green;
     }
+  }
+
+  dd.highlighted, dt.highlighted {
+    color: $color-green;
   }
 }

@@ -27,14 +27,18 @@ class IrregularOpenings extends AbstractShortcode {
       'after_widget' => null,
       'before_title' => null,
       'after_title' => null,
-      'class_io' => 'op-irregular-opening',
       'class_highlighted' => 'highlighted',
       'date_format' => Dates::getDateFormat(),
-      'time_format' => Dates::getTimeFormat()
+      'time_format' => Dates::getTimeFormat(),
+      'template' => 'table'
+    );
+
+    $this->validAttributeValues = array(
+      'highlight' => array(false, true),
+      'template' => array('table', 'list')
     );
 
     $this->templatePath = 'shortcode/irregular-openings.php';
-
   }
 
   /** @inheritdoc */
@@ -48,6 +52,13 @@ class IrregularOpenings extends AbstractShortcode {
 
     if (!$set instanceof Set)
       return;
+
+    $templateMap = array(
+      'table' => 'shortcode/irregular-openings.php',
+      'list' => 'shortcode/irregular-openings-list.php'
+    );
+
+    $this->templatePath = $templateMap[$attributes['template']];
 
     $attributes['set'] = $set;
     $attributes['irregular_openings'] = $set->getIrregularOpenings();

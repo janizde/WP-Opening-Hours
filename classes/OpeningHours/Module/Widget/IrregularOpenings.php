@@ -39,14 +39,16 @@ class IrregularOpenings extends AbstractWidget {
       'caption' => __('Highlight active Irregular Opening', I18n::TEXTDOMAIN)
     ));
 
-    // Extended Fields
-    $this->addField('class_io', array(
-      'type' => 'text',
-      'caption' => __('Irregular Opening class', I18n::TEXTDOMAIN),
-      'extended' => true,
-      'default_placeholder' => true
+    $this->addField('template', array(
+      'type' => 'select',
+      'caption' => __('Template', I18n::TEXTDOMAIN),
+      'options' => array(
+        'table' => __('Table', I18n::TEXTDOMAIN),
+        'list' => __('List', I18n::TEXTDOMAIN)
+      )
     ));
 
+    // Extended Fields
     $this->addField('class_highlighted', array(
       'type' => 'text',
       'caption' => __('class for highlighted Irregular Opening', I18n::TEXTDOMAIN),

@@ -40,20 +40,15 @@ if ( ! empty( $title ) ) {
 }
 ?>
 
-<table class="op-table-irregular-openings op-table op-irregular-openings">
-  <tbody>
+<dl class="op-list-irregular-openings op-list op-irregular-openings">
   <?php
   /** @var IrregularOpening $io */
   foreach ($irregular_openings as $io) :
     $highlighted = ($highlight && $io->isActiveOnDay()) ? $class_highlighted : '';
   ?>
-    <tr class="op-irregular-opening <?php echo $highlighted; ?>">
-      <td class="col-name"><?php echo $io->getName(); ?></td>
-      <td class="col-date"><?php echo $io->getDate()->format($date_format); ?></td>
-      <td class="col-time"><?php echo $io->getFormattedTimeRange($time_format); ?></td>
-    </tr>
+    <dt class="col-name <?php echo $highlighted; ?>"><?php echo $io->getName(); ?></dt>
+    <dd class="col-date col-time <?php echo $highlighted; ?>"><?php echo $io->getDate()->format($date_format); ?><br /><?php echo $io->getFormattedTimeRange($time_format); ?></dd>
   <?php endforeach; ?>
-  </tbody>
-</table>
+</dl>
 
 <?php echo $after_widget; ?>
