@@ -3,7 +3,6 @@
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\Shortcode\Overview as Shortcode;
 use OpeningHours\Util\Dates;
@@ -34,17 +33,9 @@ extract( $attributes );
  * @var       $include_holidays   bool whether to be aware of holidays
  *
  * @var       $caption_closed     string w/ caption for closed days
- * @var       $table_classes      string w/ classes for table
- * @var       $table_id_prefix    string w/ prefix for table's id attribute
- * @var       $row_classes        string w/ classes for row
- * @var       $cell_classes       string w/ classes for all table cells
  *
  * @var       $highlighted_day_class      string w/ class for highlighted day
  * @var       $highlighted_period_class   string w/ class for highlighted period
- * @var       $cell_heading_classes       string w/ classes for heading cells
- * @var       $cell_periods_classes       string w/ classes for cells containing periods
- * @var       $cell_description_classes   string w/ classes for description cell
- * @var       $span_period_classes        string w/ classes for period time span
  * @var       $time_format                string w/ PHP time format to format start and end time of a period with
  */
 
@@ -62,10 +53,10 @@ $periods = $compress
   : $set->getPeriodsGroupedByDay();
 ?>
 
-<table class="op-table op-table-overview <?php echo $table_classes; ?>" id="<?php echo $table_id_prefix . $set->getId(); ?>">
+<table class="op-table op-table-overview">
   <?php if ($show_description && !empty($description)) : ?>
     <tr class="op-row op-row-description">
-      <td class="op-cell <?php echo $cell_classes.' '.$cell_description_classes; ?>" colspan="2"><?php echo $description; ?></td>
+      <td class="op-cell op-cell-description" colspan="2"><?php echo $description; ?></td>
     </tr>
   <?php endif; ?>
 
@@ -73,9 +64,9 @@ $periods = $compress
     $highlightedDay = ($highlight === 'day' && Dates::isToday($day)) ? $highlighted_day_class : null;
     ?>
 
-    <tr class="op-row op-row-day <?php echo $row_classes.' '.$highlightedDay; ?>">
-      <th class="op-cell op-cell-heading <?php echo $cell_periods_classes.' '.$cell_classes; ?>" scope="row"><?php echo Weekdays::getDaysCaption($day, $short); ?></th>
-      <td class="op cell op-cell-periods <?php echo $cell_periods_classes.' '.$cell_classes; ?>">
+    <tr class="op-row op-row-day <?php echo $highlightedDay; ?>">
+      <th class="op-cell op-cell-heading" scope="row"><?php echo Weekdays::getDaysCaption($day, $short); ?></th>
+      <td class="op cell op-cell-periods">
         <?php
         $finished = false;
         if ($include_io) {
@@ -89,7 +80,7 @@ $periods = $compress
         if (!$finished && $include_holidays) {
           $holiday = $set->getActiveHolidayOnWeekday($day);
           if ($holiday instanceof Holiday) {
-            Shortcode::renderHoliday($holiday, $attributes);
+            Shortcode::renderHoliday($holiday);
             $finished = true;
           }
         }
@@ -103,7 +94,7 @@ $periods = $compress
           /** @var \OpeningHours\Entity\Period $period */
           foreach ($dayPeriods as $period) {
             $highlightedPeriod = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : '';
-            printf('<span class="op-period-time %s %s">%s</span>', $span_period_classes, $highlightedPeriod, $period->getFormattedTimeRange($time_format));
+            printf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($time_format));
           }
         }
         ?>
