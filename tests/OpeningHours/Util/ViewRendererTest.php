@@ -2,10 +2,10 @@
 
 namespace OpeningHours\Test\Util;
 
-
+use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\ViewRenderer;
 
-class ViewRendererTest extends \PHPUnit_Framework_TestCase {
+class ViewRendererTest extends OpeningHoursTestCase {
 
 	public function test_viewRenderer () {
 		$data = array(
@@ -14,12 +14,11 @@ class ViewRendererTest extends \PHPUnit_Framework_TestCase {
 			'bar' => 'Dog'
 		);
 
-		$template = op_plugin_path() . 'tests/views/test-view.php';
+		$template = __DIR__ . '/../../views/test-view.php';
 
 		$viewRenderer = new ViewRenderer( $template, $data );
 		$expected = "Hello Peter,\nCat Dog.";
 
 		$this->assertEquals( $expected, $viewRenderer->getContents() );
 	}
-
 }

@@ -4,8 +4,9 @@ namespace OpeningHours\Test\Entity;
 
 use DateTime;
 use OpeningHours\Entity\IrregularOpening;
+use OpeningHours\Test\OpeningHoursTestCase;
 
-class IrregularOpeningTest extends \WP_UnitTestCase {
+class IrregularOpeningTest extends OpeningHoursTestCase{
 
 	/**
 	 * @expectedException \InvalidArgumentException
@@ -130,5 +131,4 @@ class IrregularOpeningTest extends \WP_UnitTestCase {
 		$this->assertEquals( $expectedDate, $io->getTimeStart() );
 		$this->assertTrue( $io->isDummy() );
 	}
-
 }

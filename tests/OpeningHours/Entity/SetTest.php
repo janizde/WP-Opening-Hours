@@ -4,22 +4,78 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
-use OpeningHours\Entity\Holiday;
-use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
-use OpeningHours\Module\CustomPostType\Set as SetPostType;
-use OpeningHours\Test\TestScenario;
+use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
-use WP_Post;
+use WP_Mock\Functions;
 
-class SetTest extends \WP_UnitTestCase {
+class SetTest extends OpeningHoursTestCase {
 
-	public function testConstructNoPeriods () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
+  /**
+   * Sets up post meta mocks for child set criteria
+   * @param     int       $postId   The id of the post
+   * @param     int       $dateStartOffset  Offset in days relative to current date
+   * @param     int       $dateEndOffset    Offset in days relative to current date
+   * @param     bool|string $weekSchemeMatches  whether the week scheme should match regarding the current date. 'all' is also possible
+   */
+  protected function setUpCriteria ($postId, $dateStartOffset = null, $dateEndOffset = null, $weekSchemeMatches = null) {
+    $setDetails = SetDetails::getInstance()->getPersistence();
+    $now = new DateTime();
+
+    if ($dateStartOffset !== null) {
+      $interval = new DateInterval('P'.abs($dateStartOffset).'D');
+      if ($dateStartOffset < 0)
+        $interval->invert = true;
+
+      $key = $setDetails->generateMetaKey('dateStart');
+      $val = (clone $now)->add($interval)->format(Dates::STD_DATE_FORMAT);
+      \WP_Mock::wpFunction('get_post_meta', array(
+        'times' => 1,
+        'args' => array($postId, $key, true),
+        'return' => $val
+      ));
+    }
+
+    if ($dateEndOffset !== null) {
+      $interval = new DateInterval('P'.abs($dateEndOffset).'D');
+      if ($dateEndOffset < 0)
+        $interval->invert = true;
+
+      \WP_Mock::wpFunction('get_post_meta', array(
+        'args' => array($postId, $setDetails->generateMetaKey('dateEnd'), true),
+        'return' => (clone $now)->add($interval)->format(Dates::STD_DATE_FORMAT)
+      ));
+    }
+
+    if ($weekSchemeMatches !== null) {
+      if ($weekSchemeMatches === 'all') {
+        $weekScheme = 'all';
+      } else {
+        $current = (int) $now->format('W');
+        $even = $current % 2 == 0;
+        if ($weekSchemeMatches == false)
+          $even = !$even;
+
+        $weekScheme = $even ? 'even' : 'odd';
+      }
+
+      \WP_Mock::wpFunction('get_post_meta', array(
+        'args' => array($postId, $setDetails->generateMetaKey('weekScheme'), true),
+        'return' => $weekScheme
+      ));
+    }
+  }
+
+  /**
+   * Construct new set without any data
+   */
+  public function testConstructNoPeriods () {
+		$post = $this->createPost(array('ID' => 64));
+    $this->commonSetMocks();
+
 		$set = new Set( $post );
 
 		$this->assertEquals( $post->ID, $set->getId() );
@@ -33,124 +89,148 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertEquals( '', $set->getDescription() );
 	}
 
+  /**
+   * Add description to Set
+   */
 	public function testConstructWithDescription () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
+	  $post = $this->createPost(array('ID' => 64));
 		$setDetails = SetDetails::getInstance()->getPersistence();
-		add_post_meta( $post->ID, $setDetails->generateMetaKey('description'), 'Test Description' );
-		$set = new Set( $post );
 
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'times' => 1,
+      'args' => array(64, $setDetails->generateMetaKey('description'), true),
+      'return' => 'Test Description'
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 		$this->assertEquals( 'Test Description', $set->getDescription() );
 	}
 
+  /**
+   * Associate Periods with Set
+   */
 	public function testConstructLoadsPeriods () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
-		$persistence = new Persistence( $post );
-		$persistence->savePeriods( array(
-			new Period( 2, '13:00', '17:00' ),
-			new Period( 1, '13:00', '17:00' )
-		) );
+		$post = $this->createPost(array('ID' => 64));
 
-		$set = new Set( $post );
+    $this->setUpSetData(64, array(
+      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00')
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 		$periods = $set->getPeriods();
 		$this->assertEquals( 2, count( $periods ) );
 		$this->assertEquals( 2, $periods->offsetGet( 0 )->getWeekday() );
 		$this->assertEquals( 1, $periods->offsetGet( 1 )->getWeekday() );
 	}
 
+  /**
+   * Add a child set matching the criteria
+   */
 	public function testConstructChildSet () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
-		$parentSet = new Set( $post );
-		$this->assertTrue( $parentSet->isParent() );
+		$parent = $this->createPost(array('ID' => 64));
+    $child = $this->createPost(array(
+      'ID' => 128,
+      'post_parent' => 64
+    ));
 
-		$childPost = $this->setUpSetWithCriteria( -1, 1, true, array(
-			'post_parent' => $post->ID
-		) );
+    $this->setUpCriteria(128, -2, 2, 'all');
 
-		$childSet = new Set( $post );
-		$this->assertEquals( $post->ID, $childSet->getParentId() );
-		$this->assertEquals( $post, $childSet->getParentPost() );
-		$this->assertEquals( $childPost->ID, $childSet->getId() );
-		$this->assertEquals( $childPost, $childSet->getPost() );
+    \WP_Mock::wpFunction('get_posts', array(
+      'times' => 1,
+      'args' => array(array(
+        'post_type' => \OpeningHours\Module\CustomPostType\Set::CPT_SLUG,
+        'post_parent' => 64
+      )),
+      'return' => array(
+        $child
+      )
+    ));
+
+    $this->commonSetMocks(array('get_posts'));
+
+		$set = new Set( $parent );
+		$this->assertFalse( $set->isParent() );
+    $this->assertEquals($parent->ID, $set->getParentId());
+    $this->assertEquals($parent, $set->getParentPost());
+    $this->assertEquals($child->ID, $set->getId());
+    $this->assertEquals($child, $set->getPost());
 	}
 
-	public function testPostMatchesCriteriaNotingSet () {
-		$set = new Set( $this->setUpSetWithCriteria() );
+	public function testPostMatchesCriteriaNothingSet () {
+    $this->commonSetMocks();
+		$set = new Set( $this->createPost(array('ID' => 64)) );
 		
-		$post = $this->setUpSetWithCriteria();
+		$post = $this->createPost(array('ID' => 128));
+    $this->setUpCriteria(128, null, null, null);
 		$this->assertFalse( $set->postMatchesCriteria( $post ) );
 	}
 
 	public function testPostMatchesCriteriaDateStart () {
-		$set = new Set( $this->setUpSetWithCriteria() );
-		
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1 ) ) );
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 0 ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1 ) ) );
+    $post128 = $this->createPost(array('ID' => 128));
+    $this->setUpCriteria($post128->ID, -1, null, null);
+
+    $post129 = $this->createPost(array('ID' => 129));
+    $this->setUpCriteria($post129->ID, 0, null, null);
+
+    $post130 = $this->createPost(array('ID' => 130));
+    $this->setUpCriteria($post130->ID, 1, null, null);
+
+    $this->commonSetMocks(array(Set::WP_ACTION_BEFORE_SETUP));
+    \WP_Mock::expectAction(Set::WP_ACTION_BEFORE_SETUP, Functions::type('OpeningHours\Entity\Set'));
+
+    $set = new Set( $this->createPost(array('ID' => 64)) );
+    $this->assertTrue($set->postMatchesCriteria($post128));
+    $this->assertTrue($set->postMatchesCriteria($post129));
+    $this->assertFalse($set->postMatchesCriteria($post130));
 	}
 
 	public function testPostMatchesCriteriaDateEnd () {
-		$set = new Set( $this->setUpSetWithCriteria() );
-		
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 1 ) ) );
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 0 ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, -1 ) ) );
+    $post128 = $this->createPost(array('ID' => 128));
+    $this->setUpCriteria($post128->ID, null, 1, null);
+
+    $post129 = $this->createPost(array('ID' => 129));
+    $this->setUpCriteria($post129->ID, null, 0, null);
+
+    $post130 = $this->createPost(array('ID' => 130));
+    $this->setUpCriteria($post130->ID, null, -1, null);
+
+    $this->commonSetMocks(array(Set::WP_ACTION_BEFORE_SETUP));
+    \WP_Mock::expectAction(Set::WP_ACTION_BEFORE_SETUP, Functions::type('OpeningHours\Entity\Set'));
+
+    $set = new Set( $this->createPost(array('ID' => 64)) );
+    $this->assertTrue($set->postMatchesCriteria($post128));
+    $this->assertTrue($set->postMatchesCriteria($post129));
+    $this->assertFalse($set->postMatchesCriteria($post130));
 	}
 
 	public function testPostMatchesCriteriaWeekScheme () {
-		$set = new Set( $this->setUpSetWithCriteria() );
-		
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, null, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, null, false ) ) );
-	}
+		$post128 = $this->createPost(array('ID' => 128));
+    $this->setUpCriteria($post128->ID, null, null, 'all');
 
-	public function testPostMatchesCriteriaCombined () {
-		$set = new Set( $this->setUpSetWithCriteria() );
-		
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1 ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1 ) ) );
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1 ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1 ) ) );
+		$post129 = $this->createPost(array('ID' => 129));
+    $this->setUpCriteria($post129->ID, null, null, true);
 
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, null, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, null, false ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, null, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, null, false ) ) );
+		$post130 = $this->createPost(array('ID' => 130));
+    $this->setUpCriteria($post130->ID, null, null, false);
 
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 1, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, -1, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, 1, false ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( null, -1, false ) ) );
+    $this->commonSetMocks();
 
-		$this->assertTrue( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, -1, true ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, 1, false ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, 1, false ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( -1, -1, false ) ) );
-		$this->assertFalse( $set->postMatchesCriteria( $this->setUpSetWithCriteria( 1, -1, false ) ) );
-	}
-
-	public function testIsParent () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
-		$parentSet = new Set( $post );
-		$this->assertTrue( $parentSet->isParent() );
-
-		$this->setUpSetWithCriteria( -1, 1, true, array(
-			'post_parent' => $post->ID
-		) );
-
-		$childSet = new Set( $post );
-		$this->assertFalse( $childSet->isParent() );
+    $set = new Set($this->createPost(array('ID' => 64)));
+    $set->postMatchesCriteria($post128);
+    $this->assertFalse($set->postMatchesCriteria($post128));
+    $this->assertTrue($set->postMatchesCriteria($post129));
+    $this->assertFalse($set->postMatchesCriteria($post130));
 	}
 
 	public function testAddDummyPeriodsNoPeriods () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
+		$post = $this->createPost(array('ID' => 64));
+    $this->commonSetMocks();
+
 		$set = new Set( $post );
 		$this->assertEquals( 0, $set->getPeriods()->count() );
 		$set->addDummyPeriods();
@@ -163,14 +243,15 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testAddDummyPeriodsHasPeriods () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
-		$persistence = new Persistence( $post );
-		$persistence->savePeriods( array(
-			new Period( 1, '13:00', '17:00' ),
-			new Period( 1, '18:00', '21:00' ),
-			new Period( 2, '13:00', '17:00' )
-		) );
+		$post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 1, 'timeStart' => '18:00', 'timeEnd' => '21:00'),
+      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00')
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$set->addDummyPeriods();
@@ -182,17 +263,17 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetPeriodsByDay () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet();
-		$persistence = new Persistence( $post );
-		$persistence->savePeriods( array(
-			new Period( 1, '13:00', '17:00' ),
-			new Period( 1, '18:00', '21:00' ),
-			new Period( 2, '13:00', '17:00' )
-		) );
+		$post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 1, 'timeStart' => '18:00', 'timeEnd' => '21:00'),
+      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00')
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
-
 		$day1 = $set->getPeriodsByDay( 1 );
 		$this->assertEquals( 2, count( $day1 ) );
 		$this->assertEquals( 1, $day1[0]->getWeekday() );
@@ -212,15 +293,18 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetPeriodsGroupedByDay () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(
-			new Period( 0, '13:00', '17:00' ),
-			new Period( 2, '13:00', '17:00' ),
-			new Period( 2, '20:00', '22:00' ),
-			new Period( 3, '13:00', '17:00' ),
-			new Period( 5, '13:00', '17:00' ),
-			new Period( 4, '13:00', '17:00' ),
-		) );
+    $post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(
+      array('weekday' => 0, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 2, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 5, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 4, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$periods = $set->getPeriodsGroupedByDay();
@@ -239,14 +323,17 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetPeriodsGroupedByDayCompressed () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(
-			new Period( 0, '08:00', '12:00' ),
-			new Period( 1, '09:00', '10:00' ),
-			new Period( 1, '13:00', '14:00' ),
-			new Period( 4, '13:00', '14:00' ),
-			new Period( 6, '13:00', '14:00' )
-		) );
+	  $post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(
+      array('weekday' => 0, 'timeStart' => '08:00', 'timeEnd' => '12:00'),
+      array('weekday' => 1, 'timeStart' => '09:00', 'timeEnd' => '10:00'),
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '14:00'),
+      array('weekday' => 4, 'timeStart' => '13:00', 'timeEnd' => '14:00'),
+      array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '14:00'),
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$periods = $set->getPeriodsGroupedByDayCompressed();
@@ -264,11 +351,14 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testIsOpenOpeningHours () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(
-			new Period( 1, '13:00', '17:00' ),
-			new Period( 1, '18:00', '22:00' )
-		) );
+    $post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 1, 'timeStart' => '18:00', 'timeEnd' => '22:00')
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 12:59') ) );
@@ -284,11 +374,14 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 22:01') ) );
 	}
 
-	public function testGetActiveHoliday () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(), array(
-			new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14') )
-		) );
+	public function XtestGetActiveHoliday () {
+    $post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(), array(
+      array('name' => 'Holiday 1', 'dateStart' => '2016-01-12', 'dateEnd' => '2016-01-14')
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertNull( $set->getActiveHoliday( new DateTime('2016-01-11 23:59') ) );
@@ -299,10 +392,13 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testIsHolidayActive () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(), array(
-			new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14') )
-		) );
+    $post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(), array(
+      array('name' => 'Holiday 1', 'dateStart' => '2016-01-12', 'dateEnd' => '2016-01-14')
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-11 23:59') ) );
@@ -313,13 +409,16 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetActiveHolidayOnWeekday () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(), array(
-			new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14') ), // Tue - Thu
-			new Holiday('Holiday 2', new DateTime('2016-01-16'), new DateTime('2016-01-17') ) // Sat - Sun
-		) );
+    $post = $this->createPost(array('ID' => 64));
 
-		$set = new Set( $post );
+    $this->setUpSetData(64, array(), array(
+      array('name' => 'Holiday 1', 'dateStart' => '2016-01-12', 'dateEnd' => '2016-01-14'), // Tue - Thu
+      array('name' => 'Holiday 2', 'dateStart' => '2016-01-16', 'dateEnd' => '2016-01-17') // Sat - Sun
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 		$date = new DateTime('2016-01-11');
 
 		$this->assertNull( $set->getActiveHolidayOnWeekday( 0, $date ) );
@@ -332,17 +431,20 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testDaysEqual () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(
-			new Period( 1, '13:00', '19:00' ),
-			new Period( 1, '20:00', '22:00' ),
-			new Period( 4, '13:00', '19:00' ),
-			new Period( 4, '20:00', '22:00' ),
-			new Period( 5, '13:00', '19:00' ),
-			new Period( 6, '20:00', '22:00' )
-		) );
+    $post = $this->createPost(array('ID' => 64));
 
-		$set = new Set( $post );
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '19:00'),
+      array('weekday' => 1, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 4, 'timeStart' => '13:00', 'timeEnd' => '19:00'),
+      array('weekday' => 4, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 5, 'timeStart' => '13:00', 'timeEnd' => '19:00'),
+      array('weekday' => 6, 'timeStart' => '20:00', 'timeEnd' => '22:00')
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 		$this->assertTrue( $set->daysEqual( 1, 4 ) );
 		$this->assertTrue( $set->daysEqual( 4, 1 ) );
 		$this->assertFalse( $set->daysEqual( 1, 5 ) );
@@ -353,22 +455,28 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetActiveIrregularOpening () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(), array(), array(
-			new IrregularOpening( 'Irregular Opening', '2016-01-13', '13:00', '17:00' )
-		) );
+    $post = $this->createPost(array('ID' => 64));
 
-		$set = new Set( $post );
+    $this->setUpSetData(64, array(), array(), array(
+      array('name' => 'Irregular Opening', 'date' => '2016-01-13', 'timeStart' => '13:00', 'timeEnd' => '17:00')
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 		$this->assertNull( $set->getActiveIrregularOpening( new DateTime('2016-01-12') ) );
 		$this->assertNotNull( $set->getActiveIrregularOpening( new DateTime('2016-01-13') ) );
 		$this->assertNull( $set->getActiveIrregularOpening( new DateTime('2016-01-14') ) );
 	}
 
 	public function testIsIrregularOpeningActive () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(), array(), array(
-			new IrregularOpening( 'Irregular Opening', '2016-01-13', '13:00', '17:00' )
-		) );
+    $post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(), array(), array(
+      array('name' => 'Irregular Opening', 'date' => '2016-01-13', 'timeStart' => '13:00', 'timeEnd' => '17:00')
+    ));
+
+    $this->commonSetMocks();
 
 		$set = new Set( $post );
 		$this->assertFalse( $set->isIrregularOpeningActive( new DateTime('2016-01-12') ) );
@@ -377,13 +485,16 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetActiveIrregularOpeningOnWeekday () {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpSetWithData( array(), array(), array(), array(
-			new IrregularOpening( 'Irregular Opening 1', '2016-01-13', '13:00', '17:00' ),
-			new IrregularOpening( 'Irregular Opening 2', '2016-01-18', '13:00', '17:00' )
-		) );
+    $post = $this->createPost(array('ID' => 64));
 
-		$set = new Set( $post );
+    $this->setUpSetData(64, array(), array(), array(
+      array('name' => 'Irregular Opening 1', 'date' => '2016-01-13', 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('name' => 'Irregular Opening 2', 'date' => '2016-01-18', 'timeStart' => '13:00', 'timeEnd' => '17:00')
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 		$now = new DateTime( '2016-01-12' );
 
 		$io0 = $set->getActiveIrregularOpeningOnWeekday( 0, $now );
@@ -400,7 +511,6 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetNextOpenPeriodOnlyPeriods () {
-		$ts = new TestScenario( $this->factory );
 		/** @var Period[] $periods */
 		$periods = array(
 			new Period(1, '13:00', '18:00'),
@@ -410,8 +520,19 @@ class SetTest extends \WP_UnitTestCase {
 			new Period(6, '13:00', '03:00')
 		);
 
-		$post = $ts->setUpSetWithData( array(), $periods );
-		$set = new Set( $post );
+    $post = $this->createPost(array('ID' => 64));
+
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 1, 'timeStart' => '19:00', 'timeEnd' => '21:00'),
+      array('weekday' => 1, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 
 		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-25 07:00') ) );
 		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 12:00') ) );
@@ -426,7 +547,6 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetNextOpenPeriodHolidays () {
-		$ts = new TestScenario( $this->factory );
 		/** @var Period[] $periods */
 		$periods = array(
 			new Period( 1, '13:00', '18:00' ),
@@ -436,13 +556,21 @@ class SetTest extends \WP_UnitTestCase {
 			new Period( 6, '13:00', '03:00' )
 		);
 
-		$holidays = array(
-			new Holiday( 'Test holiday', new DateTime( '2016-01-27' ), new DateTime( '2016-01-28' ) )
-		);
+    $post = $this->createPost(array('ID' => 64));
 
-		$post = $ts->setUpSetWithData( array(), $periods, $holidays );
-		$set  = new Set( $post );
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 1, 'timeStart' => '19:00', 'timeEnd' => '21:00'),
+      array('weekday' => 1, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
+    ), array(
+      array('name' => 'Test Holiday', 'dateStart' => '2016-01-27', 'dateEnd' => '2016-01-28')
+    ));
 
+    $this->commonSetMocks();
+
+    $set  = new Set( $post );
 		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-25 07:00' ) ) );
 		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 12:00' ) ) );
 		$this->assertEquals( $periods[1]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 18:30' ) ) );
@@ -450,7 +578,6 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testGetNextOpenPeriodIrregularOpenings () {
-		$ts = new TestScenario( $this->factory );
 		/** @var Period[] $periods */
 		$periods = array(
 			new Period(1, '13:00', '18:00'),
@@ -460,12 +587,21 @@ class SetTest extends \WP_UnitTestCase {
 			new Period(6, '13:00', '03:00')
 		);
 
-		$ios = array(
-			new IrregularOpening( 'IO 1', '2016-01-26', '14:00', '19:30' )
-		);
+    $post = $this->createPost(array('ID' => 64));
 
-		$post = $ts->setUpSetWithData( array(), $periods, array(), $ios );
-		$set = new Set( $post );
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 1, 'timeStart' => '19:00', 'timeEnd' => '21:00'),
+      array('weekday' => 1, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
+    ), array(), array(
+      array('name' => 'IO 1', 'date' => '2016-01-26', 'timeStart' => '14:00', 'timeEnd' => '19:30')
+    ));
+
+    $this->commonSetMocks();
+
+    $set = new Set( $post );
 
 		$expected = $periods[3]->getCopyInDateContext( new DateTime('2016-01-27') );
 		$times = array('12:59', '13:00', '18:00', '18:01', '18:59', '19:00', '21:00', '21:01', '19:59', '20:00', '22:00', '22:01');
@@ -476,25 +612,22 @@ class SetTest extends \WP_UnitTestCase {
 	}
 
 	public function testIsOpen () {
-		$ts = new TestScenario( $this->factory );
+    $post = $this->createPost(array('ID' => 64));
 
-		$periods = array(
-			new Period(1, '13:00', '18:00'),
-			new Period(1, '19:00', '21:00'),
-			new Period(1, '20:00', '22:00'),
-			new Period(3, '13:00', '18:00'),
-			new Period(6, '13:00', '03:00')
-		);
+    $this->setUpSetData(64, array(
+      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 1, 'timeStart' => '19:00', 'timeEnd' => '21:00'),
+      array('weekday' => 1, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
+    ), array(
+      array('name' => 'Test Holiday', 'dateStart' => '2016-01-25', 'dateEnd' => '2016-01-26')
+    ), array(
+      array('name' => 'IO', 'date' => '2016-01-28', 'timeStart' => '15:00', 'timeEnd' => '17:00')
+    ));
 
-		$holidays = array(
-			new Holiday('Holiday', new DateTime('2016-01-25'), new DateTime('2016-01-26'))
-		);
+    $this->commonSetMocks();
 
-		$ios = array(
-			new IrregularOpening( 'IO', '2016-01-28', '15:00', '17:00' )
-		);
-
-		$post = $ts->setUpSetWithData( array(), $periods, $holidays, $ios );
 		$set = new Set( $post );
 
 		$this->assertFalse( $set->isOpen( new DateTime('2016-01-25 13:00') ) );
@@ -513,55 +646,5 @@ class SetTest extends \WP_UnitTestCase {
 		$this->assertTrue( $set->isOpen( new DateTime('2016-01-31 13:00') ) );
 		$this->assertTrue( $set->isOpen( new DateTime('2016-02-01 03:00') ) );
 		$this->assertFalse( $set->isOpen( new DateTime('2016-02-01 03:01') ) );
-	}
-
-	/**
-	 * Sets up test set with criteria to test postMatchesCriteria
-	 * Any parameter can be null and no meta will be saved
-	 *
-	 * @param     int       $startOffset  The offset in days from today
-	 * @param     int       $endOffset    The offset in days from today
-	 * @param     bool      $weekScheme   Whether the week scheme shall match
-	 * @param     array     $postArgs     Custom args for the new post
-	 * @return    WP_Post                 The post representing the newly created set
-	 */
-	protected function setUpSetWithCriteria ( $startOffset = null, $endOffset = null, $weekScheme = null, $postArgs = array() ) {
-		$ts = new TestScenario( $this->factory );
-		$post = $ts->setUpBasicSet( $postArgs );
-		$setDetails = SetDetails::getInstance()->getPersistence();
-
-		if ( $startOffset !== null ) {
-			$date     = new DateTime( '00:00' );
-			$interval = new DateInterval( 'P' . abs($startOffset) . 'D' );
-			if ( $startOffset < 0 )
-				$interval->invert = 1;
-			$date->add( $interval );
-			update_post_meta( $post->ID, $setDetails->generateMetaKey('dateStart'), $date->format( Dates::STD_DATE_FORMAT ) );
-		}
-
-		if ( $endOffset !== null ) {
-			$date = new DateTime( '23:59:59' );
-			$interval = new DateInterval( 'P'.abs($endOffset).'D' );
-			if ( $endOffset < 0 )
-				$interval->invert = 1;
-			$date->add( $interval );
-			update_post_meta( $post->ID, $setDetails->generateMetaKey('dateEnd'), $date->format( Dates::STD_DATE_FORMAT ) );
-		}
-
-		if ( $weekScheme === null ) {
-			$wsm = 'all';
-		} else {
-			$now = new DateTime('now');
-			$nowEven = (int) $now->format('W') % 2 === 0;
-
-			if ( !$weekScheme )
-				$nowEven = !$nowEven;
-
-			$wsm = $nowEven ? 'even' : 'odd';
-		}
-
-		update_post_meta( $post->ID, $setDetails->generateMetaKey('weekScheme'), $wsm );
-
-		return $post;
 	}
 }

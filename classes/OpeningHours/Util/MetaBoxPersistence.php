@@ -25,10 +25,10 @@ class MetaBoxPersistence {
 	 * Returns the value for the specified key from post meta
 	 * @param     string    $key      The nice key of the value
 	 * @param     int       $postId   The id of the post whose meta data to retrieve
-	 * @return    mixed               The meta value for the specifiec key nad post id
+	 * @return    mixed               The meta value for the specified key and post id
 	 */
 	public function getValue ( $key, $postId ) {
-		return get_post_meta( $postId, $this->generateMetaKey( $key ), true );
+		return get_post_meta( $postId, $this->generateMetaKey($key), true );
 	}
 
 	/**

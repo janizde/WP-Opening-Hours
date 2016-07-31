@@ -7,7 +7,10 @@ notifications:
 
 php:
   - 5.3
+  - 5.4
+  - 5.5
   - 5.6
+  - 7
 
 env:
   - WP_VERSION=latest WP_MULTISITE=0
@@ -16,8 +19,5 @@ matrix:
   include:
     - php: 5.3
       env: WP_VERSION=latest WP_MULTISITE=1
-
-before_script:
-  - bash bin/install-wp-tests.sh wp_opening_hours_test root 'root' localhost $WP_VERSION
 
 script: phpunit

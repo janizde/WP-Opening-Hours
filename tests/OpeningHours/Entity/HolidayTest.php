@@ -4,8 +4,9 @@ namespace OpeningHours\Test\Entity;
 
 use DateTime;
 use OpeningHours\Entity\Holiday;
+use OpeningHours\Test\OpeningHoursTestCase;
 
-class HolidayTest extends \WP_UnitTestCase {
+class HolidayTest extends OpeningHoursTestCase {
 
 	protected static $testConfig = array(
 		'name' => 'Test Holiday',

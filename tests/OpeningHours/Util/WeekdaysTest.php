@@ -2,9 +2,10 @@
 
 namespace OpeningHours\Test\Util;
 
+use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Weekdays;
 
-class WeekdaysTest extends \WP_UnitTestCase {
+class WeekdaysTest extends OpeningHoursTestCase {
 
 	protected static $slugs = array(
 		'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
@@ -63,5 +64,4 @@ class WeekdaysTest extends \WP_UnitTestCase {
 		$this->assertEquals( 'Monday - Friday', Weekdays::getDaysCaption( '2,0,4,1,3' ) );
 		$this->assertEquals( 'Monday - Friday', Weekdays::getDaysCaption( ' 2 ,0    , 4 ,  1 , 3 ' ) );
 	}
-
 }

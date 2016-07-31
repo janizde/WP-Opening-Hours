@@ -4,25 +4,14 @@ namespace OpeningHours\Test\Util;
 
 use DateTime;
 use DateTimeZone;
+use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 
-class DatesTest extends \WP_UnitTestCase {
-
-	public function testOptions () {
-		$this->assertEquals( 'H:i', get_option( 'time_format' ) );
-		$this->assertEquals( 'd.m.Y', get_option( 'date_format' ) );
-		$this->assertEquals( 'Europe/Berlin', get_option( 'timezone_string' ) );
-	}
-
-	public function testAttributes () {
-		$this->assertEquals( 'H:i', Dates::getTimeFormat() );
-		$this->assertEquals( 'd.m.Y', Dates::getDateFormat() );
-		$this->assertEquals( 'Europe/Berlin', Dates::getTimezone()->getName() );
-	}
+class DatesTest extends OpeningHoursTestCase {
 
 	public function testIsValidTime () {
-		$this->assertTrue( Dates::isValidTime( '01:30' ) );
-		$this->assertFalse( Dates::isValidTime( '01:348' ) );
+		$this->assertTrue( Dates::isValidTime('01:30') );
+		$this->assertFalse( Dates::isValidTime('01:348') );
 	}
 
 	public function testMergeDateIntoTime () {
@@ -80,5 +69,4 @@ class DatesTest extends \WP_UnitTestCase {
 		$this->assertEquals( 0, Dates::compareDate( $d1, $d3 ) );
 		$this->assertEquals( 1, Dates::compareDate( $d2, $d1 ) );
 	}
-
 }
