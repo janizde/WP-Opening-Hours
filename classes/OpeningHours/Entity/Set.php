@@ -162,23 +162,23 @@ class Set {
 		if ( $detailDateEnd !== null )
 			$detailDateEnd->setTime( 23, 59, 59 );
 
-		if ( $detailDateStart == null and $detailDateEnd == null and ( $detailWeekScheme == 'all' or empty( $detailWeekScheme ) ) )
+		if ( $detailDateStart == null && $detailDateEnd == null && ( $detailWeekScheme == 'all' || empty( $detailWeekScheme ) ) )
 			return false;
 
 		$now = Dates::getNow();
 
-		if ( $detailDateStart != null and $now < $detailDateStart )
+		if ( $detailDateStart != null && $now < $detailDateStart )
 			return false;
 
-		if ( $detailDateEnd != null and $now > $detailDateEnd )
+		if ( $detailDateEnd != null && $now > $detailDateEnd )
 			return false;
 
 		$week_number_modulo = (int) $now->format( 'W' ) % 2;
 
-		if ( $detailWeekScheme == 'even' and $week_number_modulo === 1 )
+		if ( $detailWeekScheme == 'even' && $week_number_modulo === 1 )
 			return false;
 
-		if ( $detailWeekScheme == 'odd' and $week_number_modulo === 0 )
+		if ( $detailWeekScheme == 'odd' && $week_number_modulo === 0 )
 			return false;
 
 		return true;
