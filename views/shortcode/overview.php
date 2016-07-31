@@ -56,76 +56,60 @@ if ( $title ) {
 
 OpeningHours::setCurrentSetId( $set->getId() );
 
-echo '<table class="op-table op-table-overview ' . $table_classes . '" id="' . $table_id_prefix . $set->getId() . '">';
+$description = $set->getDescription();
+$periods = $compress
+  ? $set->getPeriodsGroupedByDayCompressed()
+  : $set->getPeriodsGroupedByDay();
+?>
 
-if ( $show_description and $set->getDescription() ) :
-	echo '<tr class="op-row op-row-description">';
+<table class="op-table op-table-overview <?php echo $table_classes; ?>" id="<?php echo $table_id_prefix . $set->getId(); ?>">
+  <?php if ($show_description && !empty($description)) : ?>
+    <tr class="op-row op-row-description">
+      <td class="op-cell <?php echo $cell_classes.' '.$cell_description_classes; ?>" colspan="2"><?php echo $description; ?></td>
+    </tr>
+  <?php endif; ?>
 
-	echo '<td class="op-cell ' . $cell_classes . ' ' . $cell_description_classes . '" colspan="2">';
-	echo $set->getDescription();
-	echo '</td>';
+  <?php foreach ($periods as $day => $dayPeriods) :
+    $highlightedDay = ($highlight === 'day' && Dates::isToday($day)) ? $highlighted_day_class : null;
+    ?>
 
-	echo '</tr>';
-endif;
+    <tr class="op-row op-row-day <?php echo $row_classes.' '.$highlightedDay; ?>">
+      <th class="op-cell op-cell-heading <?php echo $cell_periods_classes.' '.$cell_classes; ?>" scope="row"><?php echo Weekdays::getDaysCaption($day, $short); ?></th>
+      <td class="op cell op-cell-periods <?php echo $cell_periods_classes.' '.$cell_classes; ?>">
+        <?php
+        $finished = false;
+        if ($include_io) {
+          $io = $set->getActiveIrregularOpeningOnWeekday($day);
+          if ($io instanceof IrregularOpening) {
+            Shortcode::renderIrregularOpening($io, $attributes);
+            $finished = true;
+          }
+        }
 
-$periods = ( $compress )
-	? $set->getPeriodsGroupedByDayCompressed()
-	: $set->getPeriodsGroupedByDay();
+        if (!$finished && $include_holidays) {
+          $holiday = $set->getActiveHolidayOnWeekday($day);
+          if ($holiday instanceof Holiday) {
+            Shortcode::renderHoliday($holiday, $attributes);
+            $finished = true;
+          }
+        }
 
-foreach ( $periods as $day => $d_periods ) :
+        if (!$finished && count($dayPeriods) < 1) {
+          echo '<span class="op-closed">'.$caption_closed.'</span>';
+          $finished = true;
+        }
 
-	$highlighted_day = ( $highlight == 'day' and Dates::isToday( $day ) ) ? $highlighted_day_class : null;
+        if (!$finished) {
+          /** @var \OpeningHours\Entity\Period $period */
+          foreach ($dayPeriods as $period) {
+            $highlightedPeriod = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : '';
+            printf('<span class="op-period-time %s %s">%s</span>', $span_period_classes, $highlightedPeriod, $period->getFormattedTimeRange($time_format));
+          }
+        }
+        ?>
+      </td>
+    </tr>
+  <?php endforeach; ?>
+</table>
 
-	echo '<tr class="op-row op-row-day ' . $row_classes . ' ' . $highlighted_day . '">';
-
-	echo '<th scope="row" class="op-cell op-cell-heading ' . $cell_heading_classes . ' ' . $cell_classes . '">';
-	echo Weekdays::getDaysCaption( $day, $short );
-	echo '</th>';
-
-	echo '<td class="op-cell op-cell-periods ' . $cell_periods_classes . ' ' . $cell_classes . '">';
-
-	if ( $include_io ) :
-
-		$io   = $set->getActiveIrregularOpeningOnWeekday( $day );
-
-		if ( $io instanceof IrregularOpening ) :
-			Shortcode::renderIrregularOpening( $io, $attributes );
-			continue;
-		endif;
-
-	endif;
-
-	if ( $include_holidays ) :
-
-		$holiday  = $set->getActiveHolidayOnWeekday( $day );
-
-		if ( $holiday instanceof Holiday ) :
-			Shortcode::renderHoliday( $holiday, $attributes );
-			continue;
-		endif;
-
-	endif;
-
-	if ( ! count( $d_periods ) ) :
-		echo '<span class="op-closed">' . $caption_closed . '</span>';
-	endif;
-
-	foreach ( $d_periods as $period ) :
-
-		/**
-		 * @var     $period     \OpeningHours\Entity\Period
-		 */
-
-		$highlighted_period = ( $highlight == 'period' and $period->isOpen() ) ? $highlighted_period_class : null;
-		echo '<span class="op-period-time ' . $span_period_classes . ' ' . $highlighted_period . '">' . $period->getFormattedTimeRange( $time_format ) . '</span>';
-	endforeach;
-
-	echo '</td>';
-
-	echo '</tr>';
-
-endforeach;
-
-echo '</table>';
-
-echo $after_widget;
+<?php echo $after_widget; ?>
