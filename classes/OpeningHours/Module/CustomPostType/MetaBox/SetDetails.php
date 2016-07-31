@@ -72,7 +72,7 @@ class SetDetails extends AbstractMetaBox {
         'type' => 'heading',
         'name' => 'childSetNotice',
         'heading' => __('Add a Child-Set', I18n::TEXTDOMAIN),
-        'description' => __('You may add a child set that overwrites the parent Opening Hours in specific time range. Use the post type hierarchy.', I18n::TEXTDOMAIN),
+        'description' => __('You may add a child set that overwrites the parent Opening Hours in a specific time range. Choose a parent set under "Attributes".', I18n::TEXTDOMAIN),
         'show_when' => 'parent'
       )
     );
