@@ -28,7 +28,12 @@ class Holidays extends AbstractShortcode {
       'after_title' => null,
       'class_holiday' => 'op-holiday',
       'class_highlighted' => 'highlighted',
-      'date_format' => Dates::getDateFormat()
+      'date_format' => Dates::getDateFormat(),
+      'template' => 'table'
+    );
+
+    $this->validAttributeValues = array(
+      'template' => array('table', 'list')
     );
 
     $this->templatePath = 'shortcode/holidays.php';
@@ -45,6 +50,13 @@ class Holidays extends AbstractShortcode {
 
     if (!$set instanceof Set)
       return;
+
+    $templateMap = array(
+      'table' => 'shortcode/holidays.php',
+      'list' => 'shortcode/holidays-list.php'
+    );
+
+    $this->templatePath = $templateMap[$attributes['template']];
 
     $attributes['set'] = $set;
     $attributes['holidays'] = $set->getHolidays();

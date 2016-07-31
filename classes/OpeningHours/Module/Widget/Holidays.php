@@ -39,6 +39,15 @@ class Holidays extends AbstractWidget {
       'caption' => __('Highlight active Holiday', I18n::TEXTDOMAIN)
     ));
 
+    $this->addField('template', array(
+      'type' => 'select',
+      'caption' => __('Template', I18n::TEXTDOMAIN),
+      'options' => array(
+        'table' => __('Table', I18n::TEXTDOMAIN),
+        'list' => __('List', I18n::TEXTDOMAIN)
+      )
+    ));
+
     // Extended Fields
     $this->addField('class_holiday', array(
       'type' => 'text',

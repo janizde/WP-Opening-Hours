@@ -7,20 +7,21 @@ td.op-set-description {
 }
 
 tr.op-row-day.highlighted td,
-tr.op-row-day.highlighted th {
-  color: green;
+tr.op-row-day.highlighted th,
+.op-list-overview .highlighted {
+  color: $color-green;
 }
 
 span.op-period-time.highlighted {
-  color: green;
+  color: $color-green;
 }
 
 span.op-closed {
-  color: red;
+  color: $color-red;
 }
 
 span.op-open {
-  color: green;
+  color: $color-red;
 }
 
 span.op-next-period {

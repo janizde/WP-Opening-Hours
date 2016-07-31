@@ -57,7 +57,7 @@ gulp.task( 'watch', [], function () {
     gulp.start( 'scripts' );
   } );
 
-  watch( './assets/styles/**/*.less', function () {
+  watch( './assets/styles/**/*.scss', function () {
     gulp.start( 'styles' );
   } );
 } );
