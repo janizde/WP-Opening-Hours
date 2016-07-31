@@ -116,7 +116,7 @@ abstract class AbstractWidget extends WP_Widget {
 		ob_start();
 
 		foreach ( $this->fields as $field ) {
-			if ( $field['extended'] !== true ) {
+			if ( !array_key_exists('extended', $field) || $field['extended'] !== true ) {
 				echo $this->renderField( $field, $instance );
 			} else {
 				$extended[] = $field;
