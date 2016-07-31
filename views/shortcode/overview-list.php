@@ -8,11 +8,7 @@ use OpeningHours\Module\Shortcode\Overview as Shortcode;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
 
-/**
- * @var       $attributes         array (associative) w/ shortcode attributes
- */
-
-extract( $attributes );
+extract( $this->data['attributes'] );
 
 /**
  * Variables defined by extraction
@@ -69,7 +65,7 @@ $periods = $compress
       if ($include_io) {
         $io = $set->getActiveIrregularOpeningOnWeekday($day);
         if ($io instanceof IrregularOpening) {
-          Shortcode::renderIrregularOpening($io, $attributes);
+          Shortcode::renderIrregularOpening($io, $this->data['attributes']);
           $finished = true;
         }
       }

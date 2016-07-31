@@ -1,9 +1,6 @@
 <?php
-/**
- *  Opening Hours: Template: Shortcode: Is Open
- */
 
-extract( $attributes );
+extract( $this->data['attributes'] );
 
 /**
  * Variables defined by extraction

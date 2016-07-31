@@ -52,8 +52,6 @@ class Overview extends AbstractShortcode {
       'hide_io_date' => array(false, true),
       'template' => array('table', 'list')
     );
-
-    $this->templatePath = 'shortcode/overview.php';
   }
 
   /** @inheritdoc */
@@ -68,8 +66,6 @@ class Overview extends AbstractShortcode {
       'list' => 'shortcode/overview-list.php'
     );
 
-    $this->templatePath = $templateMap[$attributes['template']];
-
     $setId = (int)$attributes['set_id'];
     $set = OpeningHours::getSet($setId);
 
@@ -79,7 +75,7 @@ class Overview extends AbstractShortcode {
     }
 
     $attributes['set'] = $set;
-    echo $this->renderShortcodeTemplate($attributes);
+    echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }
 
   /**

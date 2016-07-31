@@ -1,16 +1,9 @@
 <?php
-/**
- * OpeningHours: Views: Shortcode: Holidays
- */
 
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\Set;
 
-/**
- * @var         $attributes         array w/ attributes
- */
-
-extract( $attributes );
+extract( $this->data['attributes'] );
 
 /**
  * variables defined by extract

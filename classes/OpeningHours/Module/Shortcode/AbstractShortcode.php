@@ -5,6 +5,7 @@ namespace OpeningHours\Module\Shortcode;
 use InvalidArgumentException;
 use OpeningHours\Module\AbstractModule;
 use OpeningHours\Util\Helpers;
+use OpeningHours\Util\ViewRenderer;
 
 /**
  * Abstraction for a Shortcode
@@ -37,12 +38,6 @@ abstract class AbstractShortcode extends AbstractModule {
    * @var       array
    */
   protected $validAttributeValues = array();
-
-  /**
-   * Path to shortcode template file. Default directory is /views/
-   * @var       string
-   */
-  protected $templatePath;
 
   public function __construct () {
     $this->registerHookCallbacks();
@@ -103,19 +98,23 @@ abstract class AbstractShortcode extends AbstractModule {
   /**
    * Renders the Shortcode Template
    *
-   * @param     array  $attributes The shortcode attributes
-   * @param     array  $variables  The variables for the template
-   * @param     string $require    Whether to require the template file once or always
+   * @param     array   $attributes   The shortcode attributes
+   * @param     string  $templatePath Path to the template relative to view directory
    *
    * @return    string    The shortcode markup
    */
-  public function renderShortcodeTemplate ( array $attributes, $variables = array(), $require = 'always' ) {
-    if (empty($this->templatePath))
+  public function renderShortcodeTemplate ( array $attributes, $templatePath ) {
+    if (empty($templatePath))
       return '';
 
-    $variables['attributes'] = $attributes;
+    $data = array(
+      'attributes' => $attributes
+    );
 
-    return self::renderTemplate($this->templatePath, $variables, $require);
+    $templatePath = sprintf('%s/views/%s', op_plugin_path(), $templatePath);
+
+    $view = new ViewRenderer($templatePath, $data);
+    return $view->getContents();
   }
 
   /**

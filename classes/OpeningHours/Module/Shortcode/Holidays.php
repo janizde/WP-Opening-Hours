@@ -35,8 +35,6 @@ class Holidays extends AbstractShortcode {
     $this->validAttributeValues = array(
       'template' => array('table', 'list')
     );
-
-    $this->templatePath = 'shortcode/holidays.php';
   }
 
   /** @inheritdoc */
@@ -56,11 +54,9 @@ class Holidays extends AbstractShortcode {
       'list' => 'shortcode/holidays-list.php'
     );
 
-    $this->templatePath = $templateMap[$attributes['template']];
-
     $attributes['set'] = $set;
     $attributes['holidays'] = $set->getHolidays();
-    echo $this->renderShortcodeTemplate($attributes);
+    echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }
 
 }

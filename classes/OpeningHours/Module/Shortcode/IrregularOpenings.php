@@ -37,8 +37,6 @@ class IrregularOpenings extends AbstractShortcode {
       'highlight' => array(false, true),
       'template' => array('table', 'list')
     );
-
-    $this->templatePath = 'shortcode/irregular-openings.php';
   }
 
   /** @inheritdoc */
@@ -58,11 +56,9 @@ class IrregularOpenings extends AbstractShortcode {
       'list' => 'shortcode/irregular-openings-list.php'
     );
 
-    $this->templatePath = $templateMap[$attributes['template']];
-
     $attributes['set'] = $set;
     $attributes['irregular_openings'] = $set->getIrregularOpenings();
 
-    echo $this->renderShortcodeTemplate($attributes);
+    echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }
 }
