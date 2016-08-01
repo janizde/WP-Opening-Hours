@@ -24,7 +24,10 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * [Filters](#filters)
 * [Action Hooks](#actions)
 * [Contributing](#contributing)
+	* [Contributing to Code](#contributing-to-code)
+	* [Contributing to Translations](#contributing-to-translations)
 * [Changelog](#changelog)
+* [License](#license)
 
 ## <a name="features"></a>Features
 * Supports multiple Sets of Opening Hours (e.g. one for your restaurant and one fpr your bar) that you can use independently.
@@ -586,7 +589,23 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 ## <a name="filters"></a>Filters
 ## <a name="actions"></a>Action Hooks
 ## <a name="contributing"></a>Contributing
+### <a name="contributing-to-code"></a>Contribute to Code
+### <a name="contributing-to-translations"></a>Contribute to Translations
 ## <a name="changelog"></a>Changelog
 ### v2.0.0
 Completely new Plugin.
-[php_date_formats]: http://bit.ly/16Wsegh "More on PHP date and time formats"
+## <a name="license"></a>License
+Copyright &copy; 2016 Jannik Portz
+
+This program is free software: you can redistribute it and/or modify  
+it under the terms of the GNU General Public License as published by  
+the Free Software Foundation, either version 3 of the License, or  
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,  
+but WITHOUT ANY WARRANTY; without even the implied warranty of  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the  
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License  
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
