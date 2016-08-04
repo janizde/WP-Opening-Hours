@@ -37,6 +37,49 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * Four highly customizable Widgets and Shortcodes also displaying contextual information (e.g. "We're currently closed but will be open again on Monday at 8am")
 
 ## <a name="installation"></a>Installation
+
+**Please Note: The Opening Hours Plugin is currently in beta. If you want to use the beta version, you will have to clone the repository or download the .zip file and install it manually**
+
+### <a name="wordpress-plugin-installer"></a>WordPress Plugin Installer
+1. Go to your WordPress dashboard
+1. Navigate to "Plugins"
+1. Click "Install"
+1. Search for "Opening Hours"
+1. Click "Install" on the Plugin "Opening Hours" by Jannik Portz
+1. Activate the Plugin
+
+### <a name="manual-installation"></a>Manual Installation
+1. Download the .zip-archive from <https://wordpress.org/plugins/wp-opening-hours/>
+1. Unzip the archive
+1. Upload the directory /opening-hours to your wp-content/plugins
+1. In your Admin Panel go to Plugins and active the Opening Hours Plugin
+1. Now you can edit your Opening Hours in the Settings-Section
+1. Place the Widgets in your Sidebars or use the Shortcode in your posts and Pages
+
+### <a name="composer"></a>Composer
+If you are managing your WordPress Plugins via composer (e.g. when using [Bedrock](https://roots.io/bedrock/docs/composer/)) the Opening Hours Plugin is also available on [wpackagist](https://wpackagist.org/).
+
+Make sure you have wpackagist registered as repository in your composer.json file
+
+~~~json
+"repositories": [
+  {
+    "type": "composer",
+    "url": "https://wpackagist.org"
+  }
+],
+~~~
+
+Add the Opening Hours plugin as dependency
+
+~~~json
+"require": {
+  // ...
+  "wpackagist-plugin/wp-opening-hours": "1.2",
+  // ...
+}
+~~~
+
 ## <a name="getting-started"></a>Getting Started
 ### <a name="set-up"></a>Setting up your Opening Hours
 ### <a name="child-sets"></a>Child Sets
