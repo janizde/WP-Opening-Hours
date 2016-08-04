@@ -82,7 +82,49 @@ Add the Opening Hours plugin as dependency
 
 ## <a name="getting-started"></a>Getting Started
 ### <a name="set-up"></a>Setting up your Opening Hours
+
+The first step to set up your Opening Hours is to create a Set.
+A Set consists of Periods for all weekdays, Holidays and Irregular Openings.
+If you only want to display the Opening Hours for one venue you're fine with a single Set but you can as well add multiple Sets, each representing individual Opening Hours. You can for example add one Set for your restaurant and one Set for your Bar if you use one website for them and specify the desired Set per Widget or Shortcode.
+
+**Please Note: You will need to have administrator priviledges to manage Sets**
+
+**Step 1:** Go to your admin Dashboard and navigate to "Opening Hours". You will see a list of all your Sets. To add a new Set click "Add New" next to the heading.
+
+**Step 2:** Give your Set a name in the "Enter title here" input. The name is only used internally and you can specify individual titles per Widget or Shortcode.
+
+**Step 3:** Set up Opening Hours. In the Opening Hours Section you can edit the time inputs for each weekday. When clicking the `+`-Button you can add more periods per day. When clicking the `x`-Button next to a period you can delete periods.
+
+**Step 4:** Set up Holidays. In the Holidays Section you can edit the name and the start and end dates. When clicking the "Add New Holiday" you can add more Holidays. You can also delete holidays when clicking the `x`-Button next to a Holiday.
+
+**Step 5:** Set up Irregular Openings. Irregular Openings specify irregular opening hours for a specific day. You would for example add an Irregular Opening for NYE when you are only open in the morning. You can edit the name, the date and start and end time.  
+When clicking the "Add New Irregular Opening" you can add more Irregular Openings. You can also delete Irregular Openings when clicking the `x`-Button next to a row.
+
+**Step 6:** In the Set Details Section you can give your Set a description. This is optional but the description can be displayed in the Overview Widget/Shortcode.
+
+**Step 7:** Save the data by clicking the "Save"/"Publish"-Button. **Any changes will not be saved without saving the whole Set!**
+
 ### <a name="child-sets"></a>Child Sets
+
+You may also set up child Sets with different Opening Hours for a longer Period of time. You can define a date range or a week scheme (even/odd weeks) when the Opening Hours of the Child Set should be used. You can for example use Child Sets if you have different Opening Hours in winter.   
+In Child Sets you can only set up Opening Hours but no Holidays or Irregular Openings.
+
+**Step 1:** Make sure you have another Set which you can use as parent Set with the "regular" Opening Hours.
+
+**Step 2:** Add a new Set by clicking the "Add New"-Button in the list of Sets.
+
+**Step 3:** In the Attributes Section select the parent Set unter "Parent".
+
+**Step 4:** Click the "Save"/"Publish"-Button
+
+**Step 5:** Set up the custom Opening Hours for the Child Set.
+
+**Step 6:** Set the usage criteria in the Set Details Section. You can set a start and end date and/or a week scheme. Note that if you don't set start or end date and leave week scheme at "Every Week" the Child Set will never be used.
+
+**Step 7:** Save the Child Set.
+
+The Plugin will now automatically use the Opening Hours of the Child Set when the usage criteria matches the current time.
+
 ## <a name="widgets"></a>Widgets
 ### <a name="overview-widget"></a>Overview Widget
 The Overview widget displays a table with all the opening hours in the speficied set.  
@@ -328,7 +370,7 @@ There are the following options:
 
 ## <a name="shortcodes"></a>Shortcodes
 Shortcodes have exactly the same options as Widgets because every Widget is basically a representation of the corresponding Shortcode with a GUI for the Widget edit section.  
-**The only required attribute for all Shortcodes is set_id. All other attributes are optional!**
+**The only required attribute for all Shortcodes is `set_id`. All other attributes are optional!**
 
 ### <a name="common-attributes"></a>Common attributes for all Shortcodes
 <table>
@@ -633,6 +675,18 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 ## <a name="actions"></a>Action Hooks
 ## <a name="contributing"></a>Contributing
 ### <a name="contributing-to-code"></a>Contribute to Code
+
+The development of the Opening Hours Plugin takes place at [GitHub](https://github.com/janizde/WP-Opening-Hours).  
+If you want to contribute feel free to fork the repository and send pull requests.
+
+**Git flow**  
+The project uses GitFlow. You can get more information on GitFlow on the [GitFlow Cheat Sheet](http://danielkummer.github.io/git-flow-cheatsheet/).  
+When forking the repository for contributions please fork from the `develop` branch. If the pull request will be accepted it will be released to the `master` branch for a new version of the Plugin.
+
+**Unit Testing**  
+The core logic of the Plugin (classes that are not in the `OpeningHours\Module` namespace) is covered with [PHPUnit](https://phpunit.de/) tests (version 4.8).  
+If you find an issue in the core logic please write one or more unit test which demonstrate this issue. If you add something to the core logic please also write a unit test. Also, before sending a pull request, run all unit tests to check whether your change has broken anything (it will be automatically tested by travis anyway).
+
 ### <a name="contributing-to-translations"></a>Contribute to Translations
 ## <a name="changelog"></a>Changelog
 ### v2.0.0
