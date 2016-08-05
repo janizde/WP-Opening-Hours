@@ -69,10 +69,8 @@ class Overview extends AbstractShortcode {
     $setId = (int)$attributes['set_id'];
     $set = OpeningHours::getSet($setId);
 
-    if (!$set instanceof Set) {
-      trigger_error(sprintf("Set with id %d does not exist", $setId));
+    if (!$set instanceof Set)
       return;
-    }
 
     $attributes['set'] = $set;
     echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
