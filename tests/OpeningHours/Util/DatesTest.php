@@ -51,6 +51,34 @@ class DatesTest extends OpeningHoursTestCase {
 		$this->assertFalse( Dates::isToday( $today + 1 ) );
 	}
 
+	public function testIsTodayMultiple () {
+	  $now = new DateTime('now');
+    $today = $today = (int) $now->format('N') - 1;
+    $days = array((int)$today, 3, 4, 2, 1, 5);
+    $this->assertTrue(Dates::isToday($days));
+
+    foreach ($days as $i => $day) {
+      if ($day === $today)
+        unset($days[$i]);
+    }
+
+    $this->assertFalse(Dates::isToday($days));
+  }
+
+	public function testIsTodayMultipleAsString () {
+	  $now = new DateTime('now');
+    $today = $today = (int) $now->format('N') - 1;
+    $days = array((int)$today, 3, 4, 2, 1, 5);
+    $this->assertTrue(Dates::isToday(implode(',', $days)));
+
+    foreach ($days as $i => $day) {
+      if ($day === $today)
+        unset($days[$i]);
+    }
+
+    $this->assertFalse(Dates::isToday(implode(',',$days)));
+  }
+
 	public function testCompareTime () {
 		$d1 = new DateTime('2016-02-03 12:30');
 		$d2 = new DateTime('2016-12-23 01:45');

@@ -151,13 +151,27 @@ class Dates extends AbstractModule {
   }
 
   /**
-   * Checks whether the provided weekday is equal to today's weekday
+   * Checks whether the provided weekday is equal to today's weekday.
+   * When passed an int[] it will check if any of the provided weekdays match the current time
    *
-   * @param     int $day The weekday to check for in numeric representation
+   * @param     int|array $day      The weekday to check for in numeric representation
+   *                                or an array of weekday numeric representations
    *
    * @return    bool                Whether $day equals today's weekday
    */
-  public static function isToday ( $day ) {
+  public static function isToday ($day) {
+    if (is_string($day) && !is_numeric($day))
+      return self::isToday(explode(',', trim($day)));
+
+    if (is_array($day)) {
+      foreach ($day as $aDay) {
+        if (self::isToday($aDay))
+          return true;
+      }
+
+      return false;
+    }
+
     if (!is_numeric($day))
       return false;
 
