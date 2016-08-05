@@ -679,18 +679,57 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 The development of the Opening Hours Plugin takes place at [GitHub](https://github.com/janizde/WP-Opening-Hours).  
 If you want to contribute feel free to fork the repository and send pull requests.
 
-**Git flow**  
+##### <a name="git-flow"></a>GitFlow 
 The project uses GitFlow. You can get more information on GitFlow on the [GitFlow Cheat Sheet](http://danielkummer.github.io/git-flow-cheatsheet/).  
 When forking the repository for contributions please fork from the `develop` branch. If the pull request will be accepted it will be released to the `master` branch for a new version of the Plugin.
 
-**Unit Testing**  
+##### Unit Testing
 The core logic of the Plugin (classes that are not in the `OpeningHours\Module` namespace) is covered with [PHPUnit](https://phpunit.de/) tests (version 4.8).  
 If you find an issue in the core logic please write one or more unit test which demonstrate this issue. If you add something to the core logic please also write a unit test. Also, before sending a pull request, run all unit tests to check whether your change has broken anything (it will be automatically tested by travis anyway).
 
 ### <a name="contributing-to-translations"></a>Contribute to Translations
+
+If you want the Plugin to be compatible with your language, you can easily translate it and contribute to the project. There are two ways how you can translate the Plugin to your language.
+
+##### Pull Request on GitHub
+If you know how Plugin translations are made with gettext, the preferred way is to fork the repository on [GitHub](https://github.com/janizde/WP-Opening-Hours) (please mind to fork from the `develop` branch as explained in the [section above on GitFlow](#git-flow)), translate the Plugin and then send a pull request.
+
+1. Fork the Plugin on [GitHub](https://github.com/janizde/WP-Opening-Hours) from the `develop` branch
+1. In the `/translations` directory you will find all translations and the `opening-hours.pot` file which contains all strings that can be translated.
+1. Create a new translation (a `.po` file) with [PoEdit](https://poedit.net/) and name it `opening-hours-{locale}.po`. [Click here](https://make.wordpress.org/polyglots/teams/) for a full list of locales supported by WordPress.
+1. In the PoEdit-Menu go to **Catalog** -> **Update from POT-File** and select the `opening-hours.pot` file.
+1. Translate all strings to your language.
+1. Save the File
+1. Commit **both**, the .po and .mo files of your translations
+1. Send a pull request.
+
+#### [translate.jannikportz.de](http://translate.jannikportz.de)
+If you are not familiar with gettext and/or GitHub you can as well add your translations in the GlotPress System for the plugin. **You do not have to** fork the repository, send a pull request or use PoEdit.
+
+1. Register at <http://wp.jannikportz.de/wp-signup.php>
+1. Visit <http://translate.jannikportz.de>
+1. Sign in with your Account
+1. Select the Project `WP Opening Hours`
+1. Search for your language. If your language is not in the list of languages please open an issue in the [GitHub repository](https://github.com/janizde/WP-Opening-Hours) and I will add a new translation set for you.
+1. Translate the strings.
+
+Before releasing a new version I will update the translatable string on GlotPress and integrate all translations made with the new release.
+
+If you can't wait for a new release containing your translations you can directly add it to your installation of the plugin:
+
+1. Select the translation set in the list of available languages.
+1. Scroll to the bottom.
+1. In the line below the legend, select `all current` as `Machine Object Message (.mo)` and click `Export`.
+1. Rename the file to `opening-hours-{locale}.mo` (replace `{locale}` with the actual locale of the translation, e.g. `de_DE` for German).
+1. Move the file to `/path/to/wordpress/wp-content/plugins/wp-opening-hours/translations`
+
+**Important Note: When you update the Plugin and your translations are not yet included, your translation file will be lost, so before updating better check whether your translation has been added.**
+
+
 ## <a name="changelog"></a>Changelog
 ### v2.0.0
-Completely new Plugin.
+Completely new Plugin. When Updating you will have to set up your Opening Hours and Widgets / Shortcodes again!
+
 ## <a name="license"></a>License
 Copyright &copy; 2016 Jannik Portz
 
