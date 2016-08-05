@@ -3,7 +3,7 @@
 
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
 
-## Contents
+## <a name="contents"></a>Contents
 * [Features](#features)
 * [Installation](#installation)
 	* [WordPress Plugin Installer](#wordpress-plugin-installer)
@@ -37,6 +37,8 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * Supports Irregular Openings (e.g. different opening hours during Christmas)
 * Supports child sets that overwrite your regular opening hours in a specific time period (e.g. seasonal opening hours or an extra day in every second week)
 * Four highly customizable Widgets and Shortcodes also displaying contextual information (e.g. "We're currently closed but will be open again on Monday at 8am")
+
+[↑ Table of Contents](#contents)
 
 ## <a name="installation"></a>Installation
 
@@ -79,6 +81,8 @@ Add the Opening Hours plugin as dependency
   "wpackagist-plugin/wp-opening-hours": "1.2"
 }
 ~~~
+
+[↑ Table of Contents](#contents)
 
 ## <a name="getting-started"></a>Getting Started
 ### <a name="set-up"></a>Setting up your Opening Hours
@@ -140,6 +144,8 @@ In Child Sets you can only set up Opening Hours but no Holidays or Irregular Ope
 **Step 7:** Save the Child Set.
 
 The Plugin will now automatically use the Opening Hours of the Child Set when the usage criteria matches the current time.
+
+[↑ Table of Contents](#contents)
 
 ## <a name="widgets"></a>Widgets
 ### <a name="overview-widget"></a>Overview Widget
@@ -413,6 +419,8 @@ There are the following options:
 
 #### Irregular Openings Widget options
 ![Irregular Openings Widget options](./doc/screenshots/widget-irregular-openings-options.png)
+
+[↑ Table of Contents](#contents)
 
 ## <a name="shortcodes"></a>Shortcodes
 Shortcodes have exactly the same options as Widgets because every Widget is basically a representation of the corresponding Shortcode with a GUI for the Widget edit section.  
@@ -717,8 +725,10 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 	</tbody>
 </table>
 
+[↑ Table of Contents](#contents)
+
 ## <a name="filters"></a>Filters
-## <a name="actions"></a>Action Hooks
+[↑ Table of Contents](#contents)
 ## <a name="contributing"></a>Contributing
 ### <a name="contributing-to-code"></a>Contribute to Code
 
@@ -771,10 +781,13 @@ If you can't wait for a new release containing your translations you can directl
 
 **Important Note: When you update the Plugin and your translations are not yet included, your translation file will be lost, so before updating better check whether your translation has been added.**
 
+[↑ Table of Contents](#contents)
 
 ## <a name="changelog"></a>Changelog
 ### v2.0.0
 Completely new Plugin. When Updating you will have to set up your Opening Hours and Widgets / Shortcodes again!
+
+[↑ Table of Contents](#contents)
 
 ## <a name="license"></a>License
 Copyright &copy; 2016 Jannik Portz
@@ -791,3 +804,5 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License  
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+[↑ Table of Contents](#contents)
