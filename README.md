@@ -89,16 +89,28 @@ If you only want to display the Opening Hours for one venue you're fine with a s
 
 **Step 1:** Go to your admin Dashboard and navigate to "Opening Hours". You will see a list of all your Sets. To add a new Set click "Add New" next to the heading.
 
+![Opening Hours Menu](./doc/screenshots/menu.png)
+
 **Step 2:** Give your Set a name in the "Enter title here" input. The name is only used internally and you can specify individual titles per Widget or Shortcode.
+
+![Specify Set name](./doc/screenshots/set-name.png)
 
 **Step 3:** Set up Opening Hours. In the Opening Hours Section you can edit the time inputs for each weekday. When clicking the `+`-Button you can add more periods per day. When clicking the `x`-Button next to a period you can delete periods.
 
+![Specify Opening Hours](./doc/screenshots/opening-hours.png)
+
 **Step 4:** Set up Holidays. In the Holidays Section you can edit the name and the start and end dates. When clicking the "Add New Holiday" you can add more Holidays. You can also delete holidays when clicking the `x`-Button next to a Holiday.
+
+![Specify Holidays](./doc/screenshots/holidays.png)
 
 **Step 5:** Set up Irregular Openings. Irregular Openings specify irregular opening hours for a specific day. You would for example add an Irregular Opening for NYE when you are only open in the morning. You can edit the name, the date and start and end time.  
 When clicking the "Add New Irregular Opening" you can add more Irregular Openings. You can also delete Irregular Openings when clicking the `x`-Button next to a row.
 
+![Specify Irregular Openings](./doc/screenshots/irregular-openings.png)
+
 **Step 6:** In the Set Details Section you can give your Set a description. This is optional but the description can be displayed in the Overview Widget/Shortcode.
+
+![Specify Set name](./doc/screenshots/set-description.png)
 
 **Step 7:** Save the data by clicking the "Save"/"Publish"-Button. **Any changes will not be saved without saving the whole Set!**
 
@@ -111,11 +123,15 @@ In Child Sets you can only set up Opening Hours but no Holidays or Irregular Ope
 
 **Step 2:** Add a new Set by clicking the "Add New"-Button in the list of Sets.
 
-**Step 3:** In the Attributes Section select the parent Set unter "Parent".
+**Step 3:** In the Attributes Section select the parent Set under "Parent".
+
+![Specify parent Set](./doc/screenshots/child-set-parent.png)
 
 **Step 4:** Click the "Save"/"Publish"-Button
 
 **Step 5:** Set up the custom Opening Hours for the Child Set.
+
+![Specify child Set criteria](./doc/screenshots/child-set-criteria.png)
 
 **Step 6:** Set the usage criteria in the Set Details Section. You can set a start and end date and/or a week scheme. Note that if you don't set start or end date and leave week scheme at "Every Week" the Child Set will never be used.
 
@@ -210,6 +226,15 @@ There are the following options:
 	</tbody>
 </table>
 
+#### Overview Widget in table view
+![Overview Widget Table](./doc/screenshots/widget-overview-table.png)
+
+#### Overview Widget in list view
+![Overview Widget List](./doc/screenshots/widget-overview-list.png)
+
+#### Overview Widget Options
+![Overview Widget Options](./doc/screenshots/widget-overview-options.png)
+
 ### <a name="is-open-widget"></a>Is Open Widget
 The Is Open Widget displays a message whether a venue (a Set) is currently open/active.  
 There are the folliwing options:
@@ -277,6 +302,12 @@ There are the folliwing options:
 	</tbody>
 </table>
 
+#### Is Open Widget showing next open Period
+![Is Open Widget](./doc/screenshots/widget-is-open.png)
+
+#### Is Open Widget Options
+![Is Open Widget Options](./doc/screenshots/widget-is-open-options.png)
+
 ### <a name="holidays-widget"></a>Holidays Widget
 The holiday widget displays all holidays in the specified set in a table or list.  
 There are the following options:
@@ -319,7 +350,16 @@ There are the following options:
 	</tbody>
 </table>
 
-### <a name="irregular-openings-widget"></a>Irregular Openings
+#### Holidays Widget in table view
+![Holidays Widget in table view](./doc/screenshots/widget-holidays-table.png)
+
+#### Holidays Widget in list view
+![Holidays Widget in list view](./doc/screenshots/widget-holidays-list.png)
+
+#### Holidays Widget Options
+![Holidays Widget options](./doc/screenshots/widget-holidays-options.png)
+
+### <a name="irregular-openings-widget"></a>Irregular Openings Widget
 
 The Irregular Openings Widget displays all Irregular Openings in the specified Set in a table or list.  
 There are the following options:
@@ -365,6 +405,12 @@ There are the following options:
 		</tr>
 	</tbody>
 </table>
+
+#### Irregular Openings Widget in list view
+![Irregular Openings Widget in list view](./doc/screenshots/widget-irregular-openings-list.png)
+
+#### Irregular Openings Widget options
+![Irregular Openings Widget options](./doc/screenshots/widget-irregular-openings-options.png)
 
 ## <a name="shortcodes"></a>Shortcodes
 Shortcodes have exactly the same options as Widgets because every Widget is basically a representation of the corresponding Shortcode with a GUI for the Widget edit section.  
