@@ -169,7 +169,10 @@ class OpeningHours extends AbstractModule {
    * @return    Set
    */
   public static function getSet ( $setId ) {
-    return self::getSets()->offsetGet($setId);
+    if (!self::$sets->offsetExists($setId))
+      return null;
+
+    return self::$sets->offsetGet($setId);
   }
 
   /**
