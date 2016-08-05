@@ -1,4 +1,6 @@
 # WordPress Opening Hours
+[![Build Status](https://travis-ci.org/janizde/WP-Opening-Hours.svg?branch=develop)](https://travis-ci.org/janizde/WP-Opening-Hours)
+
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
 
 ## Contents
