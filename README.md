@@ -74,9 +74,7 @@ Add the Opening Hours plugin as dependency
 
 ~~~json
 "require": {
-  // ...
-  "wpackagist-plugin/wp-opening-hours": "1.2",
-  // ...
+  "wpackagist-plugin/wp-opening-hours": "1.2"
 }
 ~~~
 
