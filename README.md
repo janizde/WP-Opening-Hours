@@ -451,25 +451,25 @@ Shortcodes have exactly the same options as Widgets because every Widget is basi
 			<td><code>before_title</code></td>
 			<td><code>string</code></td>
 			<td><code>&lt;h3 class="op-{name}-title"&gt;</code></td>
-			<td>HTML before the title</td>
+			<td>HTML before the title. When using Widgets this will be overridden by the sidebar's <code>before_title</code> attribute.</td>
 		</tr>
 		<tr>
 			<td><code>after_title</code></td>
 			<td><code>string</code></td>
 			<td><code>&lt;/h3&gt;</code></td>
-			<td>HTML after the title</td>
+			<td>HTML after the title. When using Widgets this will be overridden by the sidebar's <code>after_title</code> attribute.</td>
 		</tr>
 		<tr>
 			<td><code>before_widget</code></td>
 			<td><code>string</code></td>
 			<td><code>&lt;div class="op-{name}-shortcode"&gt;</code></td>
-			<td>HTML before shortcode contents</td>
+			<td>HTML before shortcode contents. When using Widgets this will be overridden by the sidebar's <code>before_widget</code> attribute.</td>
 		</tr>
 		<tr>
 			<td><code>after_widget</code></td>
 			<td><code>string</code></td>
 			<td><code>&lt;/div&gt;</code></td>
-			<td>HTML after shortcode contents</td>
+			<td>HTML after shortcode contents. When using Widgets this will be overridden by the sidebar's <code>after_widget</code> attribute.</td>
 		</tr>
 	</tbody>
 </table>
