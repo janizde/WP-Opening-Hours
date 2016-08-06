@@ -11,11 +11,6 @@ namespace OpeningHours\Module;
 abstract class AbstractModule {
 
   /**
-   * The gettext text domain used for plugin translations
-   */
-  const TEXTDOMAIN = 'opening-hours';
-
-  /**
    * Collection of all singleton instances
    * @var       AbstractModule[]
    */

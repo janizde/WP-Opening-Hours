@@ -11,6 +11,9 @@ namespace OpeningHours\Module;
  */
 class I18n extends AbstractModule {
 
+  /** The gettext text domain used for plugin translations */
+  const TEXTDOMAIN = 'opening-hours';
+
   /** Path to the language directory */
   const LANGUAGE_PATH = '/language/';
 
@@ -40,8 +43,8 @@ class I18n extends AbstractModule {
    */
   public static function getJavascriptTranslations () {
     return array(
-      'tp_hour' => __('Hour', static::TEXTDOMAIN),
-      'tp_minute' => __('Minute', static::TEXTDOMAIN)
+      'tp_hour' => __('Hour', self::TEXTDOMAIN),
+      'tp_minute' => __('Minute', self::TEXTDOMAIN)
     );
   }
 }

@@ -4,6 +4,7 @@ namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
+use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
@@ -23,10 +24,10 @@ class IsOpen extends AbstractShortcode {
 
     $this->defaultAttributes = array(
       'set_id' => null,
-      'open_text' => __('We\'re currently open.', self::TEXTDOMAIN),
-      'closed_text' => __('We\'re currently closed.', self::TEXTDOMAIN),
+      'open_text' => __('We\'re currently open.', I18n::TEXTDOMAIN),
+      'closed_text' => __('We\'re currently closed.', I18n::TEXTDOMAIN),
       'show_next' => false,
-      'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', self::TEXTDOMAIN),
+      'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', I18n::TEXTDOMAIN),
       'before_widget' => null,
       'after_widget' => null,
       'before_title' => null,
