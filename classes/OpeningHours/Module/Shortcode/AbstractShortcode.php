@@ -15,6 +15,10 @@ use OpeningHours\Util\ViewRenderer;
  */
 abstract class AbstractShortcode extends AbstractModule {
 
+  const FILTER_ATTRIBUTES = 'op_shortcode_attributes';
+
+  const FILTER_TEMPLATE = 'op_shortcode_template';
+
   /**
    * The tag used for the shortcode
    * @var       string
@@ -104,6 +108,22 @@ abstract class AbstractShortcode extends AbstractModule {
    * @return    string    The shortcode markup
    */
   public function renderShortcodeTemplate ( array $attributes, $templatePath ) {
+    /**
+     * Filter shortcode template path. Callback should be:
+     * @param   string            $templatePath   Absolute path to template file
+     * @param   AbstractShortcode $shortcode      The shortcode singleton instance
+     * @return  string                            The filtered template path
+     */
+    $templatePath = apply_filters(self::FILTER_TEMPLATE, $templatePath, $this);
+
+    /**
+     * Filter shortcode attributes path. Callback should be:
+     * @param   array             $templatePath   Associative array with all shortcode attributes
+     * @param   AbstractShortcode $shortcode      The shortcode singleton instance
+     * @return  array                             Filtered attributes array
+     */
+    $attributes = apply_filters(self::FILTER_ATTRIBUTES, $attributes, $this);
+
     if (empty($templatePath))
       return '';
 
