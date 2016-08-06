@@ -60,7 +60,6 @@ class FieldRenderer {
 
     switch ($type) {
       case FieldTypes::TEXT:
-      case FieldTypes::DATE:
       case FieldTypes::TIME:
       case FieldTypes::EMAIL:
       case FieldTypes::URL:

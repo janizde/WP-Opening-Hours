@@ -42,20 +42,25 @@ class SetDetails extends AbstractMetaBox {
       array(
         'type' => 'textarea',
         'name' => 'description',
-        'caption' => __('Description', I18n::TEXTDOMAIN),
-        'show_when' => 'parent'
+        'caption' => __('Description', I18n::TEXTDOMAIN)
       ),
       array(
-        'type' => 'date',
+        'type' => 'text',
         'name' => 'dateStart',
         'caption' => __('Date Start', I18n::TEXTDOMAIN),
-        'show_when' => 'child'
+        'show_when' => 'child',
+        'attributes' => array(
+          'class' => 'op-criteria-date-start op-date-input'
+        )
       ),
       array(
-        'type' => 'date',
+        'type' => 'text',
         'name' => 'dateEnd',
         'caption' => __('Date End', I18n::TEXTDOMAIN),
-        'show_when' => 'child'
+        'show_when' => 'child',
+        'attributes' => array(
+          'class' => 'op-criteria-date-end op-date-input'
+        )
       ),
       array(
         'type' => 'select',

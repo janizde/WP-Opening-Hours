@@ -7,7 +7,6 @@ $period = $this->data['period'];
 ?>
 
 <tr class="period">
-
 	<td class="col-time-start">
 		<input
 			name="opening-hours[<?php echo $period->getWeekday(); ?>][start][]"
@@ -29,5 +28,4 @@ $period = $this->data['period'];
 			<i class="dashicons dashicons-no-alt"></i>
 		</a>
 	</td>
-
 </tr>
