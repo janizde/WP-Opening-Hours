@@ -6,7 +6,6 @@ use OpeningHours\Util\ViewRenderer;
 use OpeningHours\Util\Weekdays;
 
 MetaBox::getInstance()->nonceField();
-$singlePeriodTpl = op_plugin_path() . 'views/ajax/op-set-period.php';
 ?>
 
 <div class="opening-hours">
@@ -25,7 +24,7 @@ $singlePeriodTpl = op_plugin_path() . 'views/ajax/op-set-period.php';
 						<table class="period-table">
 							<tbody>
 							<?php foreach ( OpeningHours::getCurrentSet()->getPeriodsByDay( $index ) as $period ) {
-								$vr = new ViewRenderer( $singlePeriodTpl, array(
+								$vr = new ViewRenderer(op_view_path(MetaBox::TEMPLATE_PATH_SINGLE), array(
 									'period' => $period
 								) );
 								$vr->render();

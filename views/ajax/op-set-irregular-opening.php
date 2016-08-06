@@ -4,6 +4,9 @@ use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as MetaBox;
 use OpeningHours\Util\Dates;
 
 /** @var \OpeningHours\Entity\IrregularOpening $io */
+$io = $this->data['io'];
+
+/** @var \OpeningHours\Entity\IrregularOpening $io */
 $name = $io->getName();
 $date = ( $io->isDummy() ) ? null : $io->getDate()->format( Dates::STD_DATE_FORMAT );
 $timeStart = ( $io->isDummy() ) ? null : $io->getTimeStart()->format( Dates::STD_TIME_FORMAT );

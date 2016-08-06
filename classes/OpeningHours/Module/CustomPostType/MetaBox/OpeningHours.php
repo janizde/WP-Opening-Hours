@@ -18,7 +18,8 @@ use WP_Post;
  */
 class OpeningHours extends AbstractMetaBox {
 
-  const TEMPLATE_PATH = 'views/meta-box/opening-hours.php';
+  const TEMPLATE_PATH = 'meta-box/opening-hours.php';
+  const TEMPLATE_PATH_SINGLE = 'ajax/op-set-period.php';
 
   public function __construct () {
     parent::__construct('op_meta_box_opening_hours', __('Opening Hours', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
@@ -33,7 +34,7 @@ class OpeningHours extends AbstractMetaBox {
     $set = OpeningHoursModule::getCurrentSet();
     $set->addDummyPeriods();
 
-    $vr = new ViewRenderer(op_plugin_path() . self::TEMPLATE_PATH, array());
+    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array());
     $vr->render();
   }
 

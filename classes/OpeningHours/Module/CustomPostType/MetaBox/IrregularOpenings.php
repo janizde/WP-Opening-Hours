@@ -6,6 +6,7 @@ use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Persistence;
+use OpeningHours\Util\ViewRenderer;
 use WP_Post;
 
 /**
@@ -45,7 +46,8 @@ class IrregularOpenings extends AbstractMetaBox {
       'irregular_openings' => $set->getIrregularOpenings()
     );
 
-    echo self::renderTemplate(static::TEMPLATE_PATH, $variables, 'once');
+    $view = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), $variables);
+    $view->render();
   }
 
   /** @inheritdoc */
