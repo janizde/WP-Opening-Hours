@@ -4,6 +4,7 @@ namespace OpeningHours\Module\Shortcode;
 
 use InvalidArgumentException;
 use OpeningHours\Module\AbstractModule;
+use OpeningHours\Module\I18n;
 use OpeningHours\Util\Helpers;
 use OpeningHours\Util\ViewRenderer;
 
@@ -14,6 +15,12 @@ use OpeningHours\Util\ViewRenderer;
  * @package     OpeningHours\Module\Shortcode
  */
 abstract class AbstractShortcode extends AbstractModule {
+
+  const FILTER_ATTRIBUTES = 'op_shortcode_attributes';
+
+  const FILTER_TEMPLATE = 'op_shortcode_template';
+
+  const FILTER_SHORTCODE_MARKUP = 'op_shortcode_markup';
 
   /**
    * The tag used for the shortcode
@@ -67,7 +74,7 @@ abstract class AbstractShortcode extends AbstractModule {
    */
   public function validate () {
     if (empty($this->shortcodeTag))
-      throw new InvalidArgumentException(__('Shortcode has no tag name and could not be registered', self::TEXTDOMAIN));
+      throw new InvalidArgumentException(__('Shortcode has no tag name and could not be registered', I18n::TEXTDOMAIN));
   }
 
   /**
@@ -89,10 +96,13 @@ abstract class AbstractShortcode extends AbstractModule {
     $shortcodeMarkup = ob_get_contents();
     ob_end_clean();
 
-    $filterHook = 'op_shortcode_' . $this->shortcodeTag . '_markup';
-    apply_filters($filterHook, $shortcodeMarkup, static::getInstance());
-
-    return $shortcodeMarkup;
+    /**
+     * Filter shortcode markup. Callback should be:
+     * @param   string            $markup         The final Shortcode output as HTML
+     * @param   AbstractShortcode $shortcode      The shortcode singleton instance
+     * @return  string                            The filtered Shortcode output
+     */
+    return apply_filters(self::FILTER_SHORTCODE_MARKUP, $shortcodeMarkup, $this);
   }
 
   /**
@@ -104,6 +114,22 @@ abstract class AbstractShortcode extends AbstractModule {
    * @return    string    The shortcode markup
    */
   public function renderShortcodeTemplate ( array $attributes, $templatePath ) {
+    /**
+     * Filter shortcode template path. Callback should be:
+     * @param   string            $templatePath   Absolute path to template file
+     * @param   AbstractShortcode $shortcode      The shortcode singleton instance
+     * @return  string                            The filtered template path
+     */
+    $templatePath = apply_filters(self::FILTER_TEMPLATE, $templatePath, $this);
+
+    /**
+     * Filter shortcode attributes path. Callback should be:
+     * @param   array             $templatePath   Associative array with all shortcode attributes
+     * @param   AbstractShortcode $shortcode      The shortcode singleton instance
+     * @return  array                             Filtered attributes array
+     */
+    $attributes = apply_filters(self::FILTER_ATTRIBUTES, $attributes, $this);
+
     if (empty($templatePath))
       return '';
 
@@ -126,14 +152,8 @@ abstract class AbstractShortcode extends AbstractModule {
    */
   protected function filterAttributes ( array $attributes ) {
     $validValues = $this->validAttributeValues;
-    $filterHookAttributes = 'op_shortcode_' . $this->shortcodeTag . '_attributes';
-
-    $attributes = apply_filters($filterHookAttributes, $attributes, static::getInstance());
 
     foreach ($attributes as $key => &$value) {
-      $filterHook = 'op_shortcode_' . $this->shortcodeTag . '_' . $key;
-      $value = apply_filters($filterHook, $value, static::getInstance());
-
       if (!array_key_exists($key, $validValues) or !is_array($validValues[$key]) or
         count($validValues[$key]) < 1 or in_array($value, $validValues[$key]) or
         !isset($validValues[$key][0])
@@ -162,7 +182,6 @@ abstract class AbstractShortcode extends AbstractModule {
   public function setShortcodeTag ( $shortcodeTag ) {
     $this->shortcodeTag = apply_filters('op_shortcode_tag', $shortcodeTag);
   }
-
 
   /**
    * Getter: Default Attribute (single)

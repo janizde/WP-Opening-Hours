@@ -54,6 +54,15 @@ function op_plugin_path() {
 	return plugin_dir_path( __FILE__ );
 }
 
+/**
+ * Returns the absolute path of the specified view
+ * @param       string    $view     view path relative to views directory
+ * @return      string              absolute path to view
+ */
+function op_view_path ($view) {
+  return op_plugin_path() . 'views/' . $view;
+}
+
 /** ReturnsBootstrap File Path */
 function op_bootstrap_file() {
 	return __FILE__;

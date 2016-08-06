@@ -19,8 +19,8 @@ use WP_Post;
  */
 class Holidays extends AbstractMetaBox {
 
-  const TEMPLATE_PATH = 'views/meta-box/holidays.php';
-  const TEMPLATE_PATH_SINGLE = 'views/ajax/op-set-holiday.php';
+  const TEMPLATE_PATH = 'meta-box/holidays.php';
+  const TEMPLATE_PATH_SINGLE = 'ajax/op-set-holiday.php';
 
   const POST_KEY = 'opening-hours-holidays';
 
@@ -48,7 +48,7 @@ class Holidays extends AbstractMetaBox {
       'holidays' => $set->getHolidays()
     );
 
-    $vr = new ViewRenderer(op_plugin_path() . self::TEMPLATE_PATH, $variables);
+    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), $variables);
     $vr->render();
   }
 
@@ -64,7 +64,7 @@ class Holidays extends AbstractMetaBox {
       'dateEnd' => $holiday->isDummy() ? '' : $holiday->getDateEnd()->format(Dates::STD_DATE_FORMAT)
     );
 
-    $vr = new ViewRenderer(op_plugin_path() . self::TEMPLATE_PATH_SINGLE, $data);
+    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH_SINGLE), $data);
     $vr->render();
   }
 

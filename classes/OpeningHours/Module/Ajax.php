@@ -7,6 +7,7 @@ use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings;
+use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as OpeningHoursMetaBox;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\ViewRenderer;
 
@@ -55,7 +56,7 @@ class Ajax extends AbstractModule {
     $config['timeEnd'] = (Dates::isValidTime($timeEnd)) ? $timeEnd : '00:00';
     $period = new Period($config['weekday'], $config['timeStart'], $config['timeEnd']);
 
-    $vr = new ViewRenderer(op_plugin_path() . 'views/ajax/op-set-period.php', array(
+    $vr = new ViewRenderer(op_view_path(OpeningHoursMetaBox::TEMPLATE_PATH_SINGLE), array(
       'period' => $period
     ));
 
@@ -73,14 +74,11 @@ class Ajax extends AbstractModule {
 
   /** Action: Render Single Dummy Irregular Opening */
   public static function renderSingleDummyIrregularOpening () {
-    echo self::renderTemplate(
-      IrregularOpenings::TEMPLATE_PATH_SINGLE,
-      array(
-        'io' => IrregularOpening::createDummy()
-      ),
-      'once'
-    );
+    $view = new ViewRenderer(op_view_path(IrregularOpenings::TEMPLATE_PATH_SINGLE), array(
+      'io' => IrregularOpening::createDummy()
+    ));
 
+    $view->render();
     die();
   }
 

@@ -97,8 +97,6 @@ abstract class AbstractWidget extends WP_Widget {
    * @param     array $instance The current widget instance
    */
   public function widget ( $args, $instance ) {
-    $filterHook = 'op_widget_' . $this->widgetId . '_instance';
-    $instance = apply_filters($filterHook, $instance, $this);
     $this->widgetContent($args, $instance);
   }
 
