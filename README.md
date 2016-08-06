@@ -728,6 +728,88 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 [↑ Table of Contents](#contents)
 
 ## <a name="filters"></a>Filters
+There are two filters for all Shortcodes that you can hook into to modify the data. Both filters are executed right before the HTML for the Shortcode is generated.  
+Mind that every Widget internally uses the corresponding Shortcode **so these filters will work for both Widgets and Shortcodes.**
+
+### `op_shortcode_attributes`
+With the `op_shortcode_attributes` filter you can filter the associative array containing all Shortcode attributes.
+
+Parameters passed to the filter callback:
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="25%">Type</th>
+		<th width="50%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>$attributes</code></td>
+			<td><code>array</code></td>
+			<td>Associative array containing all shortcode attributes including the Set object under the key `set`. You can see all attributes for the specfic Shortcodes in the section on [Shortcodes](#shortcodes).</td>
+		</tr>
+		<tr>
+			<td><code>$shortcode</code></td>
+			<td><code>AbstractShortcode</code></td>
+			<td>The Shortcode singleton instance. You can for example check for the type of Shortcode with the `instanceof` operator.</td>
+		</tr>
+	</tbody>
+</table>
+
+#### Example: Always use a custom date and time format for Irregular Openings
+~~~php
+use OpeningHours\Module\Shortcode\IrregularOpenings;
+
+add_filter('op_shortcode_attributes', function (array $attributes, $shortcode) {
+	// As this happens just before the HTML is generated
+	// it will always override date and time format and ignore custom
+	// Widget options.
+	if ($shortcode instanceof IrregularOpenings) {
+		$attributes['time_format'] = 'H:i:s';
+		$attributes['date_format'] = 'd.m.Y';
+	}
+	
+	return $attributes;
+});
+~~~
+
+### `op_shortcode_template`
+With the `op_shortcode_template` filter you can specify your own shortcode template.
+
+Parameters passed to the filter callback:
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="25%">Type</th>
+		<th width="50%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>$template</code></td>
+			<td><code>string</code></td>
+			<td>Absolute path to a `.php` template file.</td>
+		</tr>
+		<tr>
+			<td><code>$shortcode</code></td>
+			<td><code>AbstractShortcode</code></td>
+			<td>The Shortcode singleton instance. You can for example check for the type of Shortcode with the `instanceof` operator.</td>
+		</tr>
+	</tbody>
+</table>
+
+#### Example: Specify own shortcode template for Holidays
+~~~php
+use OpeningHours\Module\Shortcode\Holidays;
+
+add_filter('op_shortcode_template', function ($template, $shortcode) {
+	// If the Shortcode is a Holidays shortcode return you custom template
+	if ($shortcode instanceof Holidays)
+		return '/path/to/template.php';
+	
+	// If it is any other type of Shortcode keep $template unchanged
+	return $template;
+});
+~~~
+
 [↑ Table of Contents](#contents)
 ## <a name="contributing"></a>Contributing
 ### <a name="contributing-to-code"></a>Contribute to Code
