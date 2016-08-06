@@ -7,7 +7,6 @@ namespace OpeningHours\Module;
  *
  * @author      Jannik Portz
  * @package     OpeningHours\Module
- * @todo        static attributes to singleton attributes
  */
 class I18n extends AbstractModule {
 
