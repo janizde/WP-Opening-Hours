@@ -137,9 +137,9 @@ In Child Sets you can only set up Opening Hours but no Holidays or Irregular Ope
 
 **Step 5:** Set up the custom Opening Hours for the Child Set.
 
-![Specify child Set criteria](./doc/screenshots/child-set-criteria.png)
-
 **Step 6:** Set the usage criteria in the Set Details Section. You can set a start and end date and/or a week scheme. Note that if you don't set start or end date and leave week scheme at "Every Week" the Child Set will never be used.
+
+![Specify child Set criteria](./doc/screenshots/child-set-criteria.png)
 
 **Step 7:** Save the Child Set.
 
