@@ -33,40 +33,4 @@ abstract class AbstractModule {
 
     return self::$instances[$class];
   }
-
-  /**
-   * Renders a template
-   *
-   * @param     string $templatePath Path to the template file relative to plugin directory
-   * @param     array  $variables    Associative array of variables to expose to template file
-   * @param     string $require      'once' or 'always'. Whether to require the template only once per runtime
-   *
-   * @return    string    The template markup
-   * @deprecated          Use a ViewRenderer instead
-   */
-  public static function renderTemplate ( $templatePath, $variables = array(), $require = 'once' ) {
-    do_action('op_render_template_pre', $templatePath, $variables);
-
-    $templatePath = op_plugin_path() . 'views/' . $templatePath;
-    $templatePath = apply_filters('op_template_path', $templatePath, $variables);
-
-    if (is_file($templatePath)) {
-      extract($variables);
-      ob_start();
-
-      if ($require === 'always') {
-        require($templatePath);
-      } else {
-        require_once($templatePath);
-      }
-
-      $template_content = apply_filters('op_template_content', ob_get_clean(), $templatePath, $templatePath, $variables);
-    } else {
-      $template_content = '';
-    }
-
-    do_action('op_render_template_post', $templatePath, $variables, $templatePath, $template_content);
-    return $template_content;
-  }
-
 }
