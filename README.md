@@ -24,7 +24,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 	* [[op-holidays] Shortcode](#op-holidays-shortcode)
 	* [[op-irregular-openings] Shortcode](#op-irregular-openings-shortcode)
 * [Filters](#filters)
-* [Action Hooks](#actions)
+* [Troubleshooting / FAQ](#troubleshooting)
 * [Contributing](#contributing)
 	* [Contributing to Code](#contributing-to-code)
 	* [Contributing to Translations](#contributing-to-translations)
@@ -845,7 +845,22 @@ add_filter('op_shortcode_markup', function ($markup, $shortcode) {
 
 **Note:** You can also achieve this by using the `op_shortcode_attributes` filter and modifying the attributes `before_widget` and `after_widget`.
 
+### Need another filter?
+Filters are a great way to give developers more control over the behavior of an external Plugin and are very easy to integrate.  
+If you feel you would want to have another filter, open an [issue on GitHub](https://github.com/janizde/WP-Opening-Hours/issues).
+
 [↑ Table of Contents](#contents)
+
+## <a name="troubleshooting"></a>Troubleshooting / FAQ
+### Where can I set the standard date and time formats?
+If you worked with previous verions of the Plugin you may miss the settings page. The new version of the Plugin uses your WordPress setting you can set under **Settings > General**  
+Furthermore you may also set your custom date and time formates per Widget / Shortcode.
+
+### The Is Open Widget / Shortcode does not work properly
+The calculation of the Is Open status depends on the Timezone setting in WordPress. Please double check your Timezone setting under **Settings > General** before opening an issue.
+
+[↑ Table of Contents](#contents)
+
 ## <a name="contributing"></a>Contributing
 ### <a name="contributing-to-code"></a>Contribute to Code
 
