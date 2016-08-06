@@ -728,7 +728,7 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 [↑ Table of Contents](#contents)
 
 ## <a name="filters"></a>Filters
-There are two filters for all Shortcodes that you can hook into to modify the data. Both filters are executed right before the HTML for the Shortcode is generated.  
+The Widget offers some Filter you can hook into in your custom theme or plugin.
 Mind that every Widget internally uses the corresponding Shortcode **so these filters will work for both Widgets and Shortcodes.**
 
 ### `op_shortcode_attributes`
