@@ -20,6 +20,8 @@ abstract class AbstractShortcode extends AbstractModule {
 
   const FILTER_TEMPLATE = 'op_shortcode_template';
 
+  const FILTER_SHORTCODE_MARKUP = 'op_shortcode_markup';
+
   /**
    * The tag used for the shortcode
    * @var       string
@@ -94,10 +96,13 @@ abstract class AbstractShortcode extends AbstractModule {
     $shortcodeMarkup = ob_get_contents();
     ob_end_clean();
 
-    $filterHook = 'op_shortcode_' . $this->shortcodeTag . '_markup';
-    apply_filters($filterHook, $shortcodeMarkup, static::getInstance());
-
-    return $shortcodeMarkup;
+    /**
+     * Filter shortcode markup. Callback should be:
+     * @param   string            $markup         The final Shortcode output as HTML
+     * @param   AbstractShortcode $shortcode      The shortcode singleton instance
+     * @return  string                            The filtered Shortcode output
+     */
+    return apply_filters(self::FILTER_SHORTCODE_MARKUP, $shortcodeMarkup, $this);
   }
 
   /**
@@ -147,14 +152,8 @@ abstract class AbstractShortcode extends AbstractModule {
    */
   protected function filterAttributes ( array $attributes ) {
     $validValues = $this->validAttributeValues;
-    $filterHookAttributes = 'op_shortcode_' . $this->shortcodeTag . '_attributes';
-
-    $attributes = apply_filters($filterHookAttributes, $attributes, static::getInstance());
 
     foreach ($attributes as $key => &$value) {
-      $filterHook = 'op_shortcode_' . $this->shortcodeTag . '_' . $key;
-      $value = apply_filters($filterHook, $value, static::getInstance());
-
       if (!array_key_exists($key, $validValues) or !is_array($validValues[$key]) or
         count($validValues[$key]) < 1 or in_array($value, $validValues[$key]) or
         !isset($validValues[$key][0])
@@ -183,7 +182,6 @@ abstract class AbstractShortcode extends AbstractModule {
   public function setShortcodeTag ( $shortcodeTag ) {
     $this->shortcodeTag = apply_filters('op_shortcode_tag', $shortcodeTag);
   }
-
 
   /**
    * Getter: Default Attribute (single)

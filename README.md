@@ -810,6 +810,41 @@ add_filter('op_shortcode_template', function ($template, $shortcode) {
 });
 ~~~
 
+### `op_shortcode_markup`
+With the `op_shortcode_template` filter you can filter the final Shortcode output. It will be called right before the Plugin returns the Shortcode markup to WordPress.
+
+Parameters passed to the filter callback:
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="25%">Type</th>
+		<th width="50%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>$markup</code></td>
+			<td><code>string</code></td>
+			<td>The final Shortcode markup as HTML string.</td>
+		</tr>
+		<tr>
+			<td><code>$shortcode</code></td>
+			<td><code>AbstractShortcode</code></td>
+			<td>The Shortcode singleton instance. You can for example check for the type of Shortcode with the `instanceof` operator.</td>
+		</tr>
+	</tbody>
+</table>
+
+#### Example: Wrapping the Shortcode markup in a `<section>` tag.
+
+~~~php
+add_filter('op_shortcode_markup', function ($markup, $shortcode) {
+	// We don't need $shortcode here
+	return '<section class="my-section">'.$markup.'</section>';
+});
+~~~
+
+**Note:** You can also achieve this by using the `op_shortcode_attributes` filter and modifying the attributes `before_widget` and `after_widget`.
+
 [↑ Table of Contents](#contents)
 ## <a name="contributing"></a>Contributing
 ### <a name="contributing-to-code"></a>Contribute to Code
