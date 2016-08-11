@@ -28,6 +28,44 @@ class Importer extends AbstractModule {
 
   const REGEX_OLD_WIDGET_KEY = '/^widget_op_(.*?)-([0-9]+)$/';
 
+  protected static $widgetMap = array(
+    'overview' => array(
+      'oldId' => 'widget_widget_op_overview',
+      'newId' => 'widget_widget_op_overview',
+      'attributeMap' => array(
+        'title' => 'title',
+        'caption-closed' => 'caption_closed',
+        'show-closed' => 'show_closed_days',
+        'highlight' => 'highlight'
+      )
+    ),
+    'status' => array(
+      'oldId' => 'widget_widget_op_status',
+      'newId' => 'widget_widget_op_is_open',
+      'attributeMap' => array(
+        'title' => 'title',
+        'caption-open' => 'open_text',
+        'caption-closed' => 'closed_text'
+      )
+    ),
+    'holidays' => array(
+      'oldId' => 'widget_widget_op_holidays',
+      'newId' => 'widget_widget_op_holidays',
+      'attributeMap' => array(
+        'title' => 'title',
+        'highlighted' => 'highlight'
+      )
+    ),
+    'special_openings' => array(
+      'oldId' => 'widget_widget_op_special_openings',
+      'newId' => 'widget_widget_op_irregular_openings',
+      'attributeMap' => array(
+        'title' => 'title',
+        'highlighted' => 'highlight'
+      )
+    )
+  );
+
   /**
    * The WP_Post instance representing the new set
    * @var       \WP_Post
@@ -38,6 +76,8 @@ class Importer extends AbstractModule {
     $this->importOpeningHours();
     if (!$this->post instanceof \WP_Post)
       return;
+
+    $this->upgradeWidgets();
   }
 
   /**
@@ -152,59 +192,46 @@ class Importer extends AbstractModule {
   }
 
   protected function upgradeWidgets () {
-    $sidebars = get_option(self::OPTION_KEY_SIDEBARS);
+    foreach (self::$widgetMap as $widget) {
+      $old = get_option($widget['oldId']);
+      if (!$old || !is_array($old) || count($old) < 1)
+        continue;
 
+      $new = array();
+      foreach ($old as $key => $oldWidget) {
+        $newWidget = array(
+          'set_id' => $this->post->ID
+        );
+
+        foreach ($widget['attributeMap'] as $oldKey => $newKey) {
+          if (array_key_exists($oldKey, $oldWidget))
+            $newWidget[$newKey] = $oldWidget[$oldKey];
+        }
+
+        $new[$key] = $newWidget;
+      }
+
+      delete_option($widget['oldId']);
+      add_option($widget['newId'], $new);
+    }
+
+    $sidebars = get_option(self::OPTION_KEY_SIDEBARS);
     foreach ($sidebars as $key => &$widgets) {
       if ($key === 'array_version')
         continue;
 
-      foreach ($widgets as $i => &$widgetKey) {
-        if (preg_match(self::REGEX_OLD_WIDGET_KEY, $widgetKey, $matches) === false)
+      foreach ($widgets as $offset => $id) {
+        if (preg_match(self::REGEX_OLD_WIDGET_KEY, $id) === false)
           continue;
 
-        $type = $matches[1];
-        $id = $matches[2];
-
-        switch ($type) {
-          case 'overview':
-            $widgetKey = $this->upgradeWidgetOverview($id);
-            break;
-
-          case 'status':
-            $widgetKey = $this->upgradeWidgetIsOpen($id);
-            break;
-
-          case 'holidays':
-            $widgetKey = $this->upgradeWidgetHolidays($id);
-            break;
-
-          case 'special_openings':
-            $widgetKey = $this->upgradeWidgetIrregularOpenings($id);
-            break;
-
-          default:
-            continue;
-        }
+        $id = str_replace(array('status', 'special_openings'), array('is_open', 'irregular_openings'), $id);
+        $widgets[$offset] = $id;
       }
     }
 
     update_option(self::OPTION_KEY_SIDEBARS, $sidebars);
   }
-
-  protected function upgradeWidgetOverview ($id) {
-    /**
-     * - Load old widget config
-     * - Convert to new widget config
-     * - Find id for new widget config
-     */
-  }
-
-  protected function upgradeWidgetIsOpen ($id) {}
-
-  protected function upgradeWidgetHolidays ($id) {}
-
-  protected function upgradeWidgetIrregularOpenings ($id) {}
-
+  
   /**
    * Parses a date string used in older versions of the Plugin and build a DateTime object
    * @param     string    $dateString     Date string used in old versions
