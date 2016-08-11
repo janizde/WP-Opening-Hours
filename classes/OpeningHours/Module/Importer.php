@@ -191,6 +191,9 @@ class Importer extends AbstractModule {
     return $irregularOpenings;
   }
 
+  /**
+   * Upgrades old widget data to new widget data
+   */
   protected function upgradeWidgets () {
     foreach (self::$widgetMap as $widget) {
       $old = get_option($widget['oldId']);
@@ -216,6 +219,10 @@ class Importer extends AbstractModule {
     }
 
     $sidebars = get_option(self::OPTION_KEY_SIDEBARS);
+
+    if (!is_array($sidebars))
+      return;
+
     foreach ($sidebars as $key => &$widgets) {
       if ($key === 'array_version')
         continue;
@@ -231,7 +238,7 @@ class Importer extends AbstractModule {
 
     update_option(self::OPTION_KEY_SIDEBARS, $sidebars);
   }
-  
+
   /**
    * Parses a date string used in older versions of the Plugin and build a DateTime object
    * @param     string    $dateString     Date string used in old versions
