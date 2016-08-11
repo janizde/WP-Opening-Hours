@@ -94,7 +94,8 @@ class Importer extends AbstractModule {
 
     $postId = wp_insert_post(array(
       'post_type' => SetCPT::CPT_SLUG,
-      'post_title' => __('Opening Hours', I18n::TEXTDOMAIN)
+      'post_title' => __('Opening Hours', I18n::TEXTDOMAIN),
+      'post_status' => 'publish'
     ));
 
     $this->post = get_post($postId);
