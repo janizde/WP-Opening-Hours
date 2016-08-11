@@ -27,7 +27,7 @@ if ( ! empty( $title ) ) {
 
 echo '<span class="' . $classes . '">' . $text . '</span>';
 
-if ( ! $is_open and is_string( $next_string ) ) {
+if ( !$is_open && isset($next_string) && is_string($next_string) ) {
 	echo '<span class="op-next-period ' . $next_period_classes . '">' . $next_string . '</span>';
 }
 

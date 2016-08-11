@@ -111,12 +111,14 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $post->ID = 64;
     $post->post_type = SetCPT::CPT_SLUG;
     $post->post_title = 'Opening Hours';
+    $post->post_status = 'publish';
 
     \WP_Mock::wpFunction('wp_insert_post', array(
       'times' => 1,
       'args' => array(array(
         'post_type' => SetCPT::CPT_SLUG,
-        'post_title' => 'Opening Hours'
+        'post_title' => 'Opening Hours',
+        'post_status' => 'publish'
       )),
       'return' => $post->ID
     ));
