@@ -5,6 +5,7 @@ namespace OpeningHours\Module;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
+use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\Weekdays;
 use OpeningHours\Module\CustomPostType\Set as SetCPT;
@@ -23,9 +24,20 @@ class Importer extends AbstractModule {
   const OPTION_KEY_IRREGULAR_OPENINGS = 'wp_opening_hours_special_openings';
   const OPTION_KEY_SETTINGS = 'wp_opening_hours_settings';
 
+  const OPTION_KEY_SIDEBARS = 'sidebars_widgets';
+
+  const REGEX_OLD_WIDGET_KEY = '/^widget_op_(.*?)-([0-9]+)$/';
+
+  /**
+   * The WP_Post instance representing the new set
+   * @var       \WP_Post
+   */
+  protected $post;
+
   public function import () {
     $this->importOpeningHours();
-    // update / change widgets
+    if (!$this->post instanceof \WP_Post)
+      return;
   }
 
   /**
@@ -40,14 +52,13 @@ class Importer extends AbstractModule {
     if (count($periods) + count($holidays) + count($irregularOpenings) < 1)
       return null;
 
-
     $postId = wp_insert_post(array(
       'post_type' => SetCPT::CPT_SLUG,
       'post_title' => __('Opening Hours', I18n::TEXTDOMAIN)
     ));
 
-    $post = get_post($postId);
-    $persistence = new Persistence($post);
+    $this->post = get_post($postId);
+    $persistence = new Persistence($this->post);
     $persistence->savePeriods($periods);
     $persistence->saveHolidays($holidays);
     $persistence->saveIrregularOpenings($irregularOpenings);
@@ -57,7 +68,7 @@ class Importer extends AbstractModule {
     delete_option(self::OPTION_KEY_IRREGULAR_OPENINGS);
     delete_option(self::OPTION_KEY_SETTINGS);
 
-    return $post;
+    return $this->post;
   }
 
   /**
@@ -80,7 +91,11 @@ class Importer extends AbstractModule {
         continue;
 
       foreach ($times as $period) {
-        $periods[] = new Period($weekday->getIndex(), $period[0].':'.$period[1], $period[2].':'.$period[3]);
+        try {
+          $periods[] = new Period($weekday->getIndex(), $period[0].':'.$period[1], $period[2].':'.$period[3]);
+        } catch (\InvalidArgumentException $e) {
+          // Ignore invalid periods
+        }
       }
     }
 
@@ -99,7 +114,14 @@ class Importer extends AbstractModule {
     $holidays = array();
 
     foreach ($meta as $holidayData) {
-      $holidays[] = new Holiday($holidayData['name'], $this->parseDateString($holidayData['start']), $this->parseDateString($holidayData['end']));
+      if (!is_array($holidayData) || count(array_diff(array('name', 'start', 'end'), array_keys($holidayData))) > 0)
+        continue;
+
+      try {
+        $holidays[] = new Holiday($holidayData['name'], $this->parseDateString($holidayData['start']), $this->parseDateString($holidayData['end']));
+      } catch (\InvalidArgumentException $e) {
+        // Ignore invalid holidays
+      }
     }
 
     return $holidays;
@@ -116,29 +138,85 @@ class Importer extends AbstractModule {
 
     $irregularOpenings = array();
     foreach ($meta as $ioData) {
-      $irregularOpenings[] = new IrregularOpening($ioData['name'], $this->parseDateString($ioData['date']), $ioData['start'], $ioData['end']);
+      if (!is_array($ioData) || count(array_diff(array('name', 'start', 'end', 'date'), array_keys($ioData))) > 0)
+        continue;
+
+      try {
+        $irregularOpenings[] = new IrregularOpening($ioData['name'], $this->parseDateString($ioData['date'])->format(Dates::STD_DATE_FORMAT), $ioData['start'], $ioData['end']);
+      } catch (\InvalidArgumentException $e) {
+        // Ignore invalid irregular openings
+      }
     }
 
     return $irregularOpenings;
   }
 
-  protected function upgradeWidgets ($setId) {
+  protected function upgradeWidgets () {
+    $sidebars = get_option(self::OPTION_KEY_SIDEBARS);
+
+    foreach ($sidebars as $key => &$widgets) {
+      if ($key === 'array_version')
+        continue;
+
+      foreach ($widgets as $i => &$widgetKey) {
+        if (preg_match(self::REGEX_OLD_WIDGET_KEY, $widgetKey, $matches) === false)
+          continue;
+
+        $type = $matches[1];
+        $id = $matches[2];
+
+        switch ($type) {
+          case 'overview':
+            $widgetKey = $this->upgradeWidgetOverview($id);
+            break;
+
+          case 'status':
+            $widgetKey = $this->upgradeWidgetIsOpen($id);
+            break;
+
+          case 'holidays':
+            $widgetKey = $this->upgradeWidgetHolidays($id);
+            break;
+
+          case 'special_openings':
+            $widgetKey = $this->upgradeWidgetIrregularOpenings($id);
+            break;
+
+          default:
+            continue;
+        }
+      }
+    }
+
+    update_option(self::OPTION_KEY_SIDEBARS, $sidebars);
+  }
+
+  protected function upgradeWidgetOverview ($id) {
     /**
-     * - Load old widget data
-     * - Foreach old-widget new-widget combination:
-     *  - Update widget
+     * - Load old widget config
+     * - Convert to new widget config
+     * - Find id for new widget config
      */
   }
 
-  protected function upgradeWidgetOverview ($setId) {}
+  protected function upgradeWidgetIsOpen ($id) {}
+
+  protected function upgradeWidgetHolidays ($id) {}
+
+  protected function upgradeWidgetIrregularOpenings ($id) {}
 
   /**
    * Parses a date string used in older versions of the Plugin and build a DateTime object
-   * @param     string    $dateString   Date string used in old versions
-   * @return    \DateTime               The result DateTime object
+   * @param     string    $dateString     Date string used in old versions
+   * @return    \DateTime                 The result DateTime object
+   * @throws    \InvalidArgumentException If the $dateString is not in the expected format
    */
   public function parseDateString ($dateString) {
-    $elements = preg_split('/(\\\/|\/)/', $dateString);
+    $elements = preg_split('/\//', $dateString);
+
+    if (count($elements) !== 3)
+      throw new \InvalidArgumentException("\$dateString must be in the format MM/dd/yyyy.");
+
     return new \DateTime(sprintf('%s-%s-%s', $elements[2], $elements[0], $elements[1]));
   }
 }
