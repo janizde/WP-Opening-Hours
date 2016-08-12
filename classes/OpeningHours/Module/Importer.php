@@ -78,6 +78,12 @@ class Importer extends AbstractModule {
       return;
 
     $this->upgradeWidgets();
+
+    add_action('init', array($this, 'addImportedNotice'));
+  }
+
+  public function addImportedNotice () {
+    add_notice(__('Your Opening Hours and related widgets have automatically been upgraded to work with the updated version of the Plugin. Please double check your Opening Hours and Widgets.', I18n::TEXTDOMAIN), 'update');
   }
 
   /**
@@ -203,6 +209,9 @@ class Importer extends AbstractModule {
 
       $new = array();
       foreach ($old as $key => $oldWidget) {
+        if (!is_array($oldWidget))
+          continue;
+
         $newWidget = array(
           'set_id' => $this->post->ID
         );
