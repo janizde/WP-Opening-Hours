@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Opening Hours\n"
-"POT-Creation-Date: 2016-08-01 00:00+0200\n"
+"POT-Creation-Date: 2016-08-13 00:14+0200\n"
 "PO-Revision-Date: 2015-04-28 11:21+0100\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: \n"
@@ -28,12 +28,13 @@ msgstr ""
 msgid "Holidays"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:25
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:26
 msgid "Irregular Openings"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/OpeningHours.php:24
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/OpeningHours.php:25
 #: classes/OpeningHours/Module/CustomPostType/Set.php:74
+#: classes/OpeningHours/Module/Importer.php:103
 msgid "Opening Hours"
 msgstr ""
 
@@ -45,37 +46,37 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:51
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:50
 #: views/meta-box/holidays.php:17
 msgid "Date Start"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:57
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:59
 #: views/meta-box/holidays.php:21
 msgid "Date End"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:63
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:68
 msgid "Week Scheme"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:65
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:70
 msgid "Every week"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:66
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:71
 msgid "Even weeks only"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:67
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:72
 msgid "Odd weeks only"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:74
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:79
 msgid "Add a Child-Set"
 msgstr ""
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:75
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:80
 msgid ""
 "You may add a child set that overwrites the parent Opening Hours in a "
 "specific time range. Choose a parent set under \"Attributes\"."
@@ -133,40 +134,47 @@ msgstr ""
 msgid "No sets found in Trash."
 msgstr ""
 
-#: classes/OpeningHours/Module/I18n.php:43
+#: classes/OpeningHours/Module/I18n.php:45
 msgid "Hour"
 msgstr ""
 
-#: classes/OpeningHours/Module/I18n.php:44
+#: classes/OpeningHours/Module/I18n.php:46
 msgid "Minute"
 msgstr ""
 
-#: classes/OpeningHours/Module/Shortcode/AbstractShortcode.php:70
+#: classes/OpeningHours/Module/Importer.php:86
+msgid ""
+"Your Opening Hours and related widgets have automatically been upgraded to "
+"work with the updated version of the Plugin. Please double check your "
+"Opening Hours and Widgets."
+msgstr ""
+
+#: classes/OpeningHours/Module/Shortcode/AbstractShortcode.php:77
 msgid "Shortcode has no tag name and could not be registered"
 msgstr ""
 
-#: classes/OpeningHours/Module/Shortcode/IsOpen.php:26
+#: classes/OpeningHours/Module/Shortcode/IsOpen.php:27
 msgid "We're currently open."
 msgstr ""
 
-#: classes/OpeningHours/Module/Shortcode/IsOpen.php:27
+#: classes/OpeningHours/Module/Shortcode/IsOpen.php:28
 msgid "We're currently closed."
 msgstr ""
 
-#: classes/OpeningHours/Module/Shortcode/IsOpen.php:29
+#: classes/OpeningHours/Module/Shortcode/IsOpen.php:30
 #, php-format
 msgid "We're open again on %2$s (%1$s) from %3$s to %4$s"
 msgstr ""
 
-#: classes/OpeningHours/Module/Shortcode/Overview.php:38
+#: classes/OpeningHours/Module/Shortcode/Overview.php:39
 msgid "Closed"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/AbstractWidget.php:130
+#: classes/OpeningHours/Module/Widget/AbstractWidget.php:128
 msgid "More Settings"
 msgstr ""
 
-#: classes/OpeningHours/Module/Widget/AbstractWidget.php:169
+#: classes/OpeningHours/Module/Widget/AbstractWidget.php:167
 msgid "More about PHP date and time formats."
 msgstr ""
 
@@ -423,7 +431,7 @@ msgstr ""
 msgid "Sun."
 msgstr ""
 
-#: views/meta-box/holidays.php:13 views/meta-box/irregular-openings.php:24
+#: views/meta-box/holidays.php:13 views/meta-box/irregular-openings.php:21
 msgid "Name"
 msgstr ""
 
@@ -431,19 +439,19 @@ msgstr ""
 msgid "Add New Holiday"
 msgstr ""
 
-#: views/meta-box/irregular-openings.php:28
+#: views/meta-box/irregular-openings.php:25
 msgid "Date"
 msgstr ""
 
-#: views/meta-box/irregular-openings.php:32
+#: views/meta-box/irregular-openings.php:29
 msgid "Time Start"
 msgstr ""
 
-#: views/meta-box/irregular-openings.php:36
+#: views/meta-box/irregular-openings.php:33
 msgid "Time End"
 msgstr ""
 
-#: views/meta-box/irregular-openings.php:56
+#: views/meta-box/irregular-openings.php:50
 msgid "Add New Irregular Opening"
 msgstr ""
 
