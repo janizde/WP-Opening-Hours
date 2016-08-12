@@ -11,6 +11,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
 
 == Description ==
+
 * Supports multiple Sets of Opening Hours (e.g. one for your restaurant and one for your bar) that you can use independently.
 * Supports Holidays
 * Supports Irregular Openings (e.g. different opening hours during Christmas)
@@ -18,6 +19,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * Four highly customizable Widgets and Shortcodes also displaying contextual information (e.g. "We're currently closed but will be open again on Monday at 8am")
 
 = Widgets =
+
 * Overview Widget: Lists up all Opening Hours with contextual information in a table or list
 * Is Open Widget: Indicates whether the selected venue is currently open or closed and optionally shows when it will be open again
 * Holidays Widget: Lists up all Holidays in a table or list
@@ -31,16 +33,44 @@ All of the widgets listed up above are also available as shortcodes.
 [More on Shortcodes](https://github.com/janizde/WP-Opening-Hours#shortcodes)
 
 = Further Documentation =
-Further documentation is available on [GitHub](https://github.com/janizde/WP-Opening-Hours)
+**Further documentation is available on [GitHub](https://github.com/janizde/WP-Opening-Hours).**
+
+* [Features](https://github.com/janizde/WP-Opening-Hours#features)
+* [Installation](https://github.com/janizde/WP-Opening-Hours#installation)
+	* [WordPress Plugin Installer](https://github.com/janizde/WP-Opening-Hours#wordpress-plugin-installer)
+	* [Manual Installation](https://github.com/janizde/WP-Opening-Hours#manual-installation)
+	* [Composer](https://github.com/janizde/WP-Opening-Hours#composer)
+	* [Clone GitHub Repository](https://github.com/janizde/WP-Opening-Hours#clone-repository)
+* [Getting Started](https://github.com/janizde/WP-Opening-Hours#getting-started)
+	* [Setting up your Opening Hours](https://github.com/janizde/WP-Opening-Hours#set-up)
+	* [Child Sets](https://github.com/janizde/WP-Opening-Hours#child-sets)
+* [Widgets](https://github.com/janizde/WP-Opening-Hours#widgets)
+	* [Overview Widget](https://github.com/janizde/WP-Opening-Hours#overview-widget)
+	* [Is Open Widget](https://github.com/janizde/WP-Opening-Hours#is-open-widget)
+	* [Holidays Widget](https://github.com/janizde/WP-Opening-Hours#holidays-widget)
+	* [Irregular Openings Widget](https://github.com/janizde/WP-Opening-Hours#irregular-openings-widget)
+* [Shortcodes](https://github.com/janizde/WP-Opening-Hours#shortcodes)
+	* [Common Attributes](https://github.com/janizde/WP-Opening-Hours#common-attributes)
+	* [[op-overview] Shortcode](https://github.com/janizde/WP-Opening-Hours#op-overview-shortcode)
+	* [[op-is-open] Shortcode](https://github.com/janizde/WP-Opening-Hours#op-is-open-shortcode)
+	* [[op-holidays] Shortcode](https://github.com/janizde/WP-Opening-Hours#op-holidays-shortcode)
+	* [[op-irregular-openings] Shortcode](https://github.com/janizde/WP-Opening-Hours#op-irregular-openings-shortcode)
+* [Filters](https://github.com/janizde/WP-Opening-Hours#filters)
+* [Troubleshooting / FAQ](https://github.com/janizde/WP-Opening-Hours#troubleshooting)
+* [Contributing](https://github.com/janizde/WP-Opening-Hours#contributing)
+	* [Contributing to Code](https://github.com/janizde/WP-Opening-Hours#contributing-to-code)
+	* [Contributing to Translations](https://github.com/janizde/WP-Opening-Hours#contributing-to-translations)
+* [Changelog](https://github.com/janizde/WP-Opening-Hours#changelog)
+* [License](https://github.com/janizde/WP-Opening-Hours#license)
 
 == Installation ==
 
-1. Download the .zip-archive
-1. Unzip the archive
-1. Upload the directory /wp-opening-hours to your wp-content/plugins
-1. In your Admin Panel go to Plugins and active the Opening Hours Plugin
-1. Now you can edit your Opening Hours in the Settings-Section
-1. Place the Widgets in your Sidebars or use the Shortcode in your Posts and Pages
+There are multiple ways to install the Opening Hours Plugin
+
+1. [WordPress Plugin Installer](https://github.com/janizde/WP-Opening-Hours#wordpress-plugin-installer)
+1. [Manual Installation](https://github.com/janizde/WP-Opening-Hours#manual-installation)
+1. [Composer](https://github.com/janizde/WP-Opening-Hours#composer)
+1. [Clone GitHub Repository](https://github.com/janizde/WP-Opening-Hours#clone-repository)
 
 == Frequently Asked Questions ==
 
