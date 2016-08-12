@@ -56,8 +56,8 @@ class Dates extends AbstractModule {
 
   /** Sets up date/time formats, timezone and current date/time */
   protected function __construct () {
-    $this->dateFormat = get_option('date_format');
-    $this->timeFormat = get_option('time_format');
+    $this->dateFormat = get_option('date_format', self::STD_DATE_FORMAT);
+    $this->timeFormat = get_option('time_format', self::STD_TIME_FORMAT);
     $this->initDateTimeZone();
     $this->now = new DateTime('now', $this->timezone);
   }
