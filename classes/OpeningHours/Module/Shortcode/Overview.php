@@ -8,6 +8,7 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekdays;
 
 /**
  * Shortcode implementation for a list or regular Opening Periods
@@ -73,6 +74,58 @@ class Overview extends AbstractShortcode {
       return;
 
     $attributes['set'] = $set;
+
+    $periods = $attributes['compress']
+      ? $set->getPeriodsGroupedByDayCompressed()
+      : $set->getPeriodsGroupedByDay();
+
+    $days = array();
+    foreach ($periods as $day => $dayPeriods) {
+      $dayData = array(
+        'highlightedDayClass' => ($attributes['highlight'] === 'day' && Dates::isToday($day)) ? $attributes['highlighted_day_class'] : '',
+        'dayCaption' => Weekdays::getDaysCaption($day, $attributes['short'])
+      );
+
+      $finished = false;
+      if ($attributes['include_io']) {
+        $io = $set->getActiveIrregularOpeningOnWeekday($day);
+        if ($io instanceof IrregularOpening) {
+          $dayData['periodsMarkup'] = self::renderIrregularOpening($io, $attributes);
+          $finished = true;
+        }
+      }
+
+      if (!$finished && $attributes['include_holidays']) {
+        $holiday = $set->getActiveHolidayOnWeekday($day);
+        if ($holiday instanceof Holiday) {
+          $dayData['periodsMarkup'] = self::renderHoliday($holiday);
+          $finished = true;
+        }
+      }
+
+      if (!$finished && count($dayPeriods) < 1) {
+        if (!$attributes['show_closed'])
+          continue;
+
+        $dayData['periodsMarkup'] = '<span class="op-closed">'.$attributes['caption_closed'].'</span>';
+        $finished = true;
+      }
+
+      if (!$finished) {
+        $dayData['periodsMarkup'] = '';
+
+        /** @var \OpeningHours\Entity\Period $period */
+        foreach ($dayPeriods as $period) {
+          $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpen() ) ? $attributes['highlighted_period_class'] : '';
+          $dayData['periodsMarkup'] .= sprintf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($attributes['time_format']));
+        }
+      }
+
+      $days[] = $dayData;
+    }
+
+    $attributes['days'] = $days;
+
     echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }
 
@@ -81,10 +134,12 @@ class Overview extends AbstractShortcode {
    *
    * @param     IrregularOpening $io         The Irregular Opening to show
    * @param     array            $attributes The shortcode attributes
+   * @return    string                       The markup for the Irregular Opening
    */
   public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
     $name = $io->getName();
     $date = $io->getTimeStart()->format(Dates::getDateFormat());
+    $markup = '';
 
     $heading = ($attributes['hide_io_date']) ? $name : sprintf('%s (%s)', $name, $date);
 
@@ -95,20 +150,22 @@ class Overview extends AbstractShortcode {
       ? $attributes['highlighted_period_class']
       : null;
 
-    printf('<span class="op-period-time irregular-opening %s">%s</span>', $highlighted, $heading);
+    $markup .= sprintf('<span class="op-period-time irregular-opening %s">%s</span>', $highlighted, $heading);
 
     $time_start = $io->getTimeStart()->format($attributes['time_format']);
     $time_end = $io->getTimeEnd()->format($attributes['time_format']);
 
-    printf('<span class="op-period-time %s">%s – %s</span>', $highlighted, $time_start, $time_end);
+    $markup .= sprintf('<span class="op-period-time %s">%s – %s</span>', $highlighted, $time_start, $time_end);
+    return $markup;
   }
 
   /**
    * Renders a Holiday Item for Overview table
    *
    * @param     Holiday $holiday    The Holiday item to show
+   * @return    string              The holiday markup
    */
   public static function renderHoliday ( Holiday $holiday ) {
-    echo '<span class="op-period-time holiday">' . $holiday->getName() . '</span>';
+    return '<span class="op-period-time holiday">' . $holiday->getName() . '</span>';
   }
 }
