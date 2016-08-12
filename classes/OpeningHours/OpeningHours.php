@@ -29,6 +29,9 @@ class OpeningHours extends AbstractModule {
   /** The plugin version */
   const VERSION = '2.0';
 
+  /** The Plugin DB version */
+  const DB_VERSION = 2;
+
   /** The plugin prefix */
   const PREFIX = 'op_';
 
@@ -61,6 +64,28 @@ class OpeningHours extends AbstractModule {
     add_action('admin_enqueue_scripts', array($this, 'loadResources'));
 
     add_action('widgets_init', array($this, 'registerWidgets'));
+    add_action('plugins_loaded', array($this, 'maybeUpdate'));
+
+    register_activation_hook(op_bootstrap_file(), array($this, 'activate'));
+    register_deactivation_hook(op_bootstrap_file(), array($this, 'deactivate'));
+  }
+
+  public function maybeUpdate () {
+    $dbVersion = get_option('opening_hours_db_version', false);
+
+    if ($dbVersion === false) {
+      Module\Importer::getInstance()->import();
+      add_option('opening_hours_db_version', self::DB_VERSION);
+    } else if ($dbVersion !== self::DB_VERSION) {
+      update_option('opening_hours_db_version', self::DB_VERSION);
+    }
+
+    $version = get_option('opening_hours_version');
+    if ($version === false) {
+      add_option('opening_hours_version', self::VERSION);
+    } else if ($version !== self::VERSION) {
+      update_option('opening_hours_version', self::VERSION);
+    }
   }
 
   /** Registers all plugin widgets */
@@ -71,7 +96,6 @@ class OpeningHours extends AbstractModule {
 
   /**
    * Enqueues resources
-   * @todo      separate callbacks for admin and frontend
    */
   public function loadResources () {
     wp_register_script(
