@@ -84,7 +84,10 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @return    string    The shortcode markup
    */
-  public function renderShortcode ( array $attributes ) {
+  public function renderShortcode ( $attributes ) {
+    if (!is_array($attributes))
+      return '';
+
     $attributes = Helpers::unsetEmptyValues($attributes);
     $attributes = shortcode_atts($this->defaultAttributes, $attributes, $this->shortcodeTag);
 
