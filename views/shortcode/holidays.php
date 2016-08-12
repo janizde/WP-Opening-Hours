@@ -2,6 +2,7 @@
 
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\Set;
+use OpeningHours\Util\Dates;
 
 extract( $this->data['attributes'] );
 
@@ -42,8 +43,8 @@ if ( ! empty( $title ) ) {
     ?>
     <tr class="<?php echo $class_holiday; ?> <?php echo $highlighted; ?>">
       <td class="col-name"><?php echo $holiday->getName(); ?></td>
-      <td class="col-date-start"><?php echo $holiday->getDateStart()->format($date_format); ?></td>
-      <td class="col-date-end"><?php echo $holiday->getDateEnd()->format($date_format); ?></td>
+      <td class="col-date-start"><?php echo Dates::format($date_format, $holiday->getDateStart()); ?></td>
+      <td class="col-date-end"><?php echo Dates::format($date_format, $holiday->getDateEnd()); ?></td>
     </tr>
     <?php endforeach; ?>
   </tbody>

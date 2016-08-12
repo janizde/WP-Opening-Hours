@@ -70,7 +70,7 @@ class IsOpen extends AbstractShortcode {
         $attributes['next_format'],
 
         // 1$: Formatted Date
-        $nextPeriod->getTimeStart()->format($attributes['date_format']),
+        Dates::format($attributes['date_format'], $nextPeriod->getTimeStart()),
 
         // 2$: Translated Weekday
         Weekdays::getWeekday($nextPeriod->getWeekday())->getName(),

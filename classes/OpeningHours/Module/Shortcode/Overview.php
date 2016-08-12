@@ -138,7 +138,7 @@ class Overview extends AbstractShortcode {
    */
   public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
     $name = $io->getName();
-    $date = $io->getTimeStart()->format(Dates::getDateFormat());
+    $date = Dates::format(Dates::getDateFormat(), $io->getTimeStart());
     $markup = '';
 
     $heading = ($attributes['hide_io_date']) ? $name : sprintf('%s (%s)', $name, $date);

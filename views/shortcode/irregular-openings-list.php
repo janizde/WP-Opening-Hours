@@ -2,6 +2,7 @@
 
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
+use OpeningHours\Util\Dates;
 
 extract( $this->data['attributes'] );
 
@@ -40,7 +41,7 @@ if ( ! empty( $title ) ) {
     $highlighted = ($highlight && $io->isActiveOnDay()) ? $class_highlighted : '';
   ?>
     <dt class="col-name <?php echo $highlighted; ?>"><?php echo $io->getName(); ?></dt>
-    <dd class="col-date col-time <?php echo $highlighted; ?>"><?php echo $io->getDate()->format($date_format); ?><br /><?php echo $io->getFormattedTimeRange($time_format); ?></dd>
+    <dd class="col-date col-time <?php echo $highlighted; ?>"><?php echo Dates::format($date_format, $io->getDate()); ?><br /><?php echo $io->getFormattedTimeRange($time_format); ?></dd>
   <?php endforeach; ?>
 </dl>
 

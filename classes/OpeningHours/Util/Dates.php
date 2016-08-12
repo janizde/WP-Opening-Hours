@@ -226,6 +226,16 @@ class Dates extends AbstractModule {
   }
 
   /**
+   * Formats a DateTime object to a date string using the date_i18n function to translate months
+   * @param     string    $format   The PHP date format
+   * @param     DateTime  $date     The DateTime object to format
+   * @return    string              The formatted and translated date
+   */
+  public static function format ($format, DateTime $date) {
+    return date_i18n($format, (int) $date->format('U'));
+  }
+
+  /**
    * Getter: Date Format
    * @return    string
    */

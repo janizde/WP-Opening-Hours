@@ -2,6 +2,7 @@
 
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\Set;
+use OpeningHours\Util\Dates;
 
 extract( $this->data['attributes'] );
 
@@ -40,7 +41,7 @@ if ( ! empty( $title ) ) {
     $highlighted = ($highlight && $holiday->isActive()) ? $class_highlighted : '';
     ?>
     <dt class="<?php echo $highlighted; ?>"><?php echo $holiday->getName(); ?></dt>
-    <dd class="<?php echo $highlighted; ?>"><?php printf('%s – %s', $holiday->getDateStart()->format($date_format), $holiday->getDateEnd()->format($date_format)); ?></dd>
+    <dd class="<?php echo $highlighted; ?>"><?php printf('%s – %s', Dates::format($date_format, $holiday->getDateStart()), Dates::format($date_format, $holiday->getDateEnd())); ?></dd>
     <?php endforeach; ?>
 </dl>
 

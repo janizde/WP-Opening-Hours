@@ -2,6 +2,7 @@
 
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
+use OpeningHours\Util\Dates;
 
 extract( $this->data['attributes'] );
 
@@ -42,7 +43,7 @@ if ( ! empty( $title ) ) {
   ?>
     <tr class="op-irregular-opening <?php echo $highlighted; ?>">
       <td class="col-name"><?php echo $io->getName(); ?></td>
-      <td class="col-date"><?php echo $io->getDate()->format($date_format); ?></td>
+      <td class="col-date"><?php echo Dates::format($date_format, $io->getDate()); ?></td>
       <td class="col-time"><?php echo $io->getFormattedTimeRange($time_format); ?></td>
     </tr>
   <?php endforeach; ?>
