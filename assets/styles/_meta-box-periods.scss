@@ -1,0 +1,113 @@
+table.form-opening-hours {
+
+  width: 100%;
+  max-width: 500px;
+
+  margin: auto;
+
+  $col-day-width: 20%;
+  $col-times-width: 60%;
+  $col-options-width: 10%;
+
+  $col-time-width: 40%;
+  $col-delete-width: 20%;
+
+  $screen-breakpoint: 782px;
+
+  $color-green: green;
+  $color-red: red;
+
+  tbody {
+
+    td {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    td.col-times {
+
+      width: $col-times-width;
+
+      table.period-table {
+        width: 100%;
+
+        tr.period {
+
+          .input-timepicker {
+            width: 70px;
+            box-shadow: none;
+            background: #efefef;
+            border: 1px solid #cccccc;
+            text-align: center;
+          }
+
+          .col-time-start, .col-time-end {
+            width: $col-time-width;
+            text-align: center;
+          }
+
+          .col-delete-period {
+            width: $col-delete-width;
+            text-align: left;
+
+            .delete-period {
+              @include button-remove();
+            }
+          }
+        }
+      }
+    }
+
+    td.col-name {
+      width: $col-day-width;
+      font-weight: bold;
+    }
+
+    td.col-options {
+      width: $col-options-width;
+
+      .add-period {
+        color: $color-green;
+        border: 1px solid $color-green;
+
+        background: desaturate(lighten($color-green, 60%), 30%);
+
+        box-shadow: none;
+
+        padding-top: 4px;
+      }
+    }
+  }
+
+  // responsive
+  @media ( max-width: $screen-breakpoint ) {
+    td, th {
+      display: table-cell;
+    }
+  }
+
+  @media ( max-width: 530px ) {
+
+    .input-timepicker {
+      font-size: 12px;
+    }
+
+    .button {
+      padding: 3px 5px;
+    }
+
+  }
+  // /responsive
+}
+
+.field h4.heading {
+  margin-bottom:    0;
+
+  + p {
+    margin-top:     5px;
+
+    > small {
+      font-size:    12px;
+    }
+  }
+}

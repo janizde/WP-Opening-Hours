@@ -2,19 +2,8 @@
 
   $(document).ready( function () {
 
-    var dateStart = $('#op-set-detail-date-start');
-    var dateEnd = $('#op-set-detail-date-end');
-
-    var parent = $('#parent_id');
-
-    if ( parent.val() === "" ) {
-
-      dateStart.parents('.field').hide();
-      dateEnd.parents('.field').hide();
-      $('#op-set-detail-week-scheme-all').parents('.field').hide();
-
-      return;
-    }
+    var dateStart = $('.op-criteria-date-start');
+    var dateEnd = $('.op-criteria-date-end');
 
     dateStart.addClass('input-gray');
     dateEnd.addClass('input-gray');

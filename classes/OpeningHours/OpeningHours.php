@@ -2,8 +2,8 @@
 
 namespace OpeningHours;
 
-use OpeningHours\Module\AbstractModule;
 use OpeningHours\Module as Module;
+use OpeningHours\Module\AbstractModule;
 use OpeningHours\Module\Widget\AbstractWidget;
 
 /**
@@ -14,106 +14,129 @@ use OpeningHours\Module\Widget\AbstractWidget;
  */
 class OpeningHours extends AbstractModule {
 
-	/**
-	 * Collection of all plugin modules
-	 * @var       AbstractModule[]
-	 */
-	protected $modules;
+  /**
+   * Collection of all plugin modules
+   * @var       AbstractModule[]
+   */
+  protected $modules;
 
-	/**
-	 * Collection of all plugin widgets
-	 * @var       AbstractWidget[]
-	 */
-	protected $widgets;
+  /**
+   * Collection of all plugin widgets
+   * @var       AbstractWidget[]
+   */
+  protected $widgets;
 
-	/** The plugin version */
-	const VERSION = '2.0';
+  /** The plugin version */
+  const VERSION = '2.0';
 
-	/** The plugin prefix */
-	const PREFIX = 'op_';
+  /** The Plugin DB version */
+  const DB_VERSION = 2;
 
-	/** Constructor for OpeningHours module */
-	protected function __construct() {
-		$this->registerHookCallbacks();
+  /** The plugin prefix */
+  const PREFIX = 'op_';
 
-		$this->modules = array(
-			'OpeningHours'                => Module\OpeningHours::getInstance(),
-			'I18n'                        => Module\I18n::getInstance(),
-			'Ajax'                        => Module\Ajax::getInstance(),
-			'CustomPostType\Set'          => Module\CustomPostType\Set::getInstance(),
-			'Shortcode\IsOpen'            => Module\Shortcode\IsOpen::getInstance(),
-			'Shortcode\Overview'          => Module\Shortcode\Overview::getInstance(),
-			'Shortcode\Holidays'          => Module\Shortcode\Holidays::getInstance(),
-			'Shortcode\IrregularOpenings' => Module\Shortcode\IrregularOpenings::getInstance()
-		);
+  /** Constructor for OpeningHours module */
+  protected function __construct () {
+    $this->registerHookCallbacks();
 
-		$this->widgets = array(
-			'OpeningHours\Module\Widget\Overview',
-			'OpeningHours\Module\Widget\IsOpen',
-			'OpeningHours\Module\Widget\Holidays',
-			'OpeningHours\Module\Widget\IrregularOpenings'
-		);
-	}
+    $this->modules = array(
+      'OpeningHours' => Module\OpeningHours::getInstance(),
+      'I18n' => Module\I18n::getInstance(),
+      'Ajax' => Module\Ajax::getInstance(),
+      'CustomPostType\Set' => Module\CustomPostType\Set::getInstance(),
+      'Shortcode\IsOpen' => Module\Shortcode\IsOpen::getInstance(),
+      'Shortcode\Overview' => Module\Shortcode\Overview::getInstance(),
+      'Shortcode\Holidays' => Module\Shortcode\Holidays::getInstance(),
+      'Shortcode\IrregularOpenings' => Module\Shortcode\IrregularOpenings::getInstance()
+    );
 
-	/** Registers callbacks for actions and filters */
-	public function registerHookCallbacks() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'loadResources' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'loadResources' ) );
+    $this->widgets = array(
+      'OpeningHours\Module\Widget\Overview',
+      'OpeningHours\Module\Widget\IsOpen',
+      'OpeningHours\Module\Widget\Holidays',
+      'OpeningHours\Module\Widget\IrregularOpenings'
+    );
+  }
 
-		add_action( 'widgets_init', array( $this, 'registerWidgets' ) );
-	}
+  /** Registers callbacks for actions and filters */
+  public function registerHookCallbacks () {
+    add_action('wp_enqueue_scripts', array($this, 'loadResources'));
+    add_action('admin_enqueue_scripts', array($this, 'loadResources'));
 
-	/** Registers all plugin widgets */
-	public function registerWidgets() {
-		foreach ( $this->widgets as $widgetClass )
-			$widgetClass::registerWidget();
-	}
+    add_action('widgets_init', array($this, 'registerWidgets'));
+    add_action('plugins_loaded', array($this, 'maybeUpdate'));
 
-	/**
-	 * Enqueues resources
-	 * @todo      separate callbacks for admin and frontend
-	 */
-	public function loadResources() {
-		wp_register_script(
-			self::PREFIX . 'js',
-			plugins_url( 'dist/scripts/main.js', op_bootstrap_file() ),
-			array( 'jquery', 'jquery-ui' ),
-			self::VERSION,
-			true
-		);
+    register_activation_hook(op_bootstrap_file(), array($this, 'activate'));
+    register_deactivation_hook(op_bootstrap_file(), array($this, 'deactivate'));
+  }
 
-		wp_register_style(
-			self::PREFIX . 'css',
-			plugins_url( 'dist/styles/main.css', op_bootstrap_file() )
-		);
+  public function maybeUpdate () {
+    $dbVersion = get_option('opening_hours_db_version', false);
 
-		// Backend Styles and Scripts
-		wp_enqueue_script( 'jquery-ui' );
+    if ($dbVersion === false) {
+      Module\Importer::getInstance()->import();
+      add_option('opening_hours_db_version', self::DB_VERSION);
+    } else if ($dbVersion !== self::DB_VERSION) {
+      update_option('opening_hours_db_version', self::DB_VERSION);
+    }
+
+    $version = get_option('opening_hours_version');
+    if ($version === false) {
+      add_option('opening_hours_version', self::VERSION);
+    } else if ($version !== self::VERSION) {
+      update_option('opening_hours_version', self::VERSION);
+    }
+  }
+
+  /** Registers all plugin widgets */
+  public function registerWidgets () {
+    foreach ($this->widgets as $widgetClass)
+      $widgetClass::registerWidget();
+  }
+
+  /**
+   * Enqueues resources
+   */
+  public function loadResources () {
+    wp_register_script(
+      self::PREFIX . 'js',
+      plugins_url('dist/scripts/main.js', op_bootstrap_file()),
+      array('jquery', 'jquery-ui'),
+      self::VERSION,
+      true
+    );
+
+    wp_register_style(
+      self::PREFIX . 'css',
+      plugins_url('dist/styles/main.css', op_bootstrap_file())
+    );
+
+    // Backend Styles and Scripts
+    wp_enqueue_script('jquery-ui');
 
 
-		if ( ! wp_script_is( 'jquery-ui' ) ) :
-			wp_register_script( 'jquery-ui', 'http://code.jquery.com/ui/1.11.4/jquery-ui.min.js', array( 'jquery' ) );
-			wp_enqueue_script( 'jquery-ui' );
-		endif;
+    if (!wp_script_is('jquery-ui')) :
+      wp_register_script('jquery-ui', 'http://code.jquery.com/ui/1.11.4/jquery-ui.min.js', array('jquery'));
+      wp_enqueue_script('jquery-ui');
+    endif;
+
+    Module\Ajax::injectAjaxUrl(self::PREFIX . 'js');
 
 
-		Module\Ajax::injectAjaxUrl( self::PREFIX . 'js' );
+    // Frontend Styles and Scripts
+    wp_enqueue_style(self::PREFIX . 'css');
 
+    if (is_admin())
+      wp_enqueue_script(self::PREFIX . 'js');
 
-		// Frontend Styles and Scripts
-		wp_enqueue_style( self::PREFIX . 'css' );
+    wp_localize_script(self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations());
+  }
 
-		if ( is_admin() )
-			wp_enqueue_script( self::PREFIX . 'js' );
+  public function activate () {
+    // Silence is golden
+  }
 
-		wp_localize_script( self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations() );
-	}
-
-	public function activate () {
-		// Silence is golden
-	}
-
-	public function deactivate () {
-		// Silence is golden
-	}
+  public function deactivate () {
+    // Silence is golden
+  }
 }

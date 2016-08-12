@@ -3,7 +3,6 @@
 namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
 
@@ -15,41 +14,49 @@ use OpeningHours\Util\Dates;
  */
 class Holidays extends AbstractShortcode {
 
-	/** @inheritdoc */
-	protected function init() {
-		$this->setShortcodeTag( 'op-holidays' );
+  /** @inheritdoc */
+  protected function init () {
+    $this->setShortcodeTag('op-holidays');
 
-		$this->defaultAttributes = array(
-			'title'             => null,
-			'set_id'            => null,
-			'highlight'         => false,
-			'before_widget'     => null,
-			'after_widget'      => null,
-			'before_title'      => null,
-			'after_title'       => null,
-			'class_holiday'     => 'op-holiday',
-			'class_highlighted' => 'highlighted',
-			'date_format'       => Dates::getDateFormat()
-		);
+    $this->defaultAttributes = array(
+      'title' => null,
+      'set_id' => null,
+      'highlight' => false,
+      'before_widget' => '<div class="op-holidays-shortcode">',
+      'after_widget' => '</div>',
+      'before_title' => '<h3 class="op-holidays-title">',
+      'after_title' => '</h3>',
+      'class_holiday' => 'op-holiday',
+      'class_highlighted' => 'highlighted',
+      'date_format' => Dates::getDateFormat(),
+      'template' => 'table'
+    );
 
-		$this->templatePath = 'shortcode/holidays.php';
-	}
+    $this->validAttributeValues = array(
+      'template' => array('table', 'list')
+    );
+  }
 
-	/** @inheritdoc */
-	public function shortcode( array $attributes ) {
-		$setId = $attributes['set_id'];
+  /** @inheritdoc */
+  public function shortcode ( array $attributes ) {
+    $setId = $attributes['set_id'];
 
-		if ( !is_numeric( $setId ) )
-			return;
+    if (!is_numeric($setId))
+      return;
 
-		$set = OpeningHours::getSet( $setId );
+    $set = OpeningHours::getSet($setId);
 
-		if ( !$set instanceof Set )
-			return;
+    if (!$set instanceof Set)
+      return;
 
-		$attributes['set'] = $set;
-		$attributes['holidays'] = $set->getHolidays();
-		echo $this->renderShortcodeTemplate( $attributes );
-	}
+    $templateMap = array(
+      'table' => 'shortcode/holidays.php',
+      'list' => 'shortcode/holidays-list.php'
+    );
+
+    $attributes['set'] = $set;
+    $attributes['holidays'] = $set->getHolidays();
+    echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
+  }
 
 }

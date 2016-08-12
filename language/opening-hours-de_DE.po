@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Opening Hours Plugin 2.0\n"
-"POT-Creation-Date: 2015-04-18 16:37+0100\n"
-"PO-Revision-Date: 2016-02-11 00:01+0100\n"
+"POT-Creation-Date: 2016-08-13 00:14+0200\n"
+"PO-Revision-Date: 2016-08-13 00:15+0200\n"
 "Last-Translator: Jannik Portz <hello@jannikportz.de>\n"
 "Language-Team: Jannik Portz <hello@jannikportz.de>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.8\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __;_e;_x;_n;gettext\n"
@@ -18,240 +18,150 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: node_modules\n"
 "X-Poedit-SearchPathExcluded-2: assets\n"
 
-#: bootstrap.php:30
-#, php-format
-msgid ""
-"Plugin Opening Hours requires at least PHP Version %s. Your Installation of "
-"WordPress is currently running on PHP %s"
-msgstr ""
-"Das Plugin Opening Hours benötigt mindestens PHP Verison %s. Deine WordPress-"
-"Version läuft aktuell auf PHP %s"
-
-#: bootstrap.php:41
-#, php-format
-msgid ""
-"Plugin Opening Hours requires at least WordPress version %s. Your "
-"Installation of WordPress is running on WordPress %s"
-msgstr ""
-"Das Plugin Opening Hours benötigt mindestens WordPress Version %s. Deine "
-"WordPress-Installation läuft aktuell unter WordPress %s"
-
-#: classes/OpeningHours/Module/Converter.php:72
-msgid "Convert Data"
-msgstr "Daten konvertieren"
-
-#: classes/OpeningHours/Module/Converter.php:79
-msgid "Delete Data"
-msgstr "Daten löschen"
-
-#: classes/OpeningHours/Module/Converter.php:83
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/OpeningHours.php:37
-#: classes/OpeningHours/Module/CustomPostType/Set.php:162
-msgid "Opening Hours"
-msgstr "Öffnungszeiten"
-
-#: classes/OpeningHours/Module/Converter.php:84
-msgid ""
-"There is data from older versions of the Opening Hours Plugin in your "
-"WordPress installation that is not compatible with the currently installed "
-"version. Would you like to convert this data?"
-msgstr ""
-"In deiner WordPress Installation gibt es noch Daten einer älteren Version "
-"des Öffnungszeiten Plugins, die nicht mit der aktuellen Version kompatibel "
-"sind. Willst du diese Daten konvertieren?"
-
-#: classes/OpeningHours/Module/Converter.php:176
-msgid "OpeningHours"
-msgstr "Öffnungszeiten"
-
-#: classes/OpeningHours/Module/Converter.php:383
-msgid "The old data has successfully been deleted"
-msgstr "Die alten Daten wurden erfolgreich aus der Datenbank gelöscht"
-
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/Donation.php:38
-msgid "Please Donate"
-msgstr "Bitte Spende"
-
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/Holidays.php:45
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/Holidays.php:28
 msgid "Holidays"
 msgstr "Ferien"
 
-#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:44
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:26
 msgid "Irregular Openings"
 msgstr "Ausnahmen"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:110
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/OpeningHours.php:25
+#: classes/OpeningHours/Module/CustomPostType/Set.php:74
+#: classes/OpeningHours/Module/Importer.php:103
+msgid "Opening Hours"
+msgstr "Öffnungszeiten"
+
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:37
+msgid "Set Details"
+msgstr "Set Details"
+
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:45
 msgid "Description"
 msgstr "Beschreibung"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:117
-#: views/meta-box/holidays.php:28
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:50
+#: views/meta-box/holidays.php:17
 msgid "Date Start"
 msgstr "Startdatum"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:124
-#: views/meta-box/holidays.php:32
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:59
+#: views/meta-box/holidays.php:21
 msgid "Date End"
 msgstr "Enddatum"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:131
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:68
 msgid "Week Scheme"
 msgstr "Wochenschema"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:134
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:70
 msgid "Every week"
 msgstr "Jede Woche"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:135
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:71
 msgid "Even weeks only"
 msgstr "Nur gerade Wochen"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:136
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:72
 msgid "Odd weeks only"
 msgstr "Nur ungerade Wochen"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:144
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:79
 msgid "Add a Child-Set"
 msgstr "Nutze Child-Sets"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:145
+#: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:80
 msgid ""
-"You may add a child set that overwrites the parent Opening Hours in specific "
-"time range. Use the post type hierarchy."
+"You may add a child set that overwrites the parent Opening Hours in a "
+"specific time range. Choose a parent set under \"Attributes\"."
 msgstr ""
-"Du kannst Unter-Sets anlegen, die die regulären Öffnungszeiten nach "
-"bestimmten Kriterien überschreiben. Nutze dafür die Post Type Hierarchie "
-"(\"Eltern\" Auswahlbox)."
+"Du kannst ein untergeordnetes Set anlegen, das die eigentlichen "
+"Öffnungszeiten für eine festgelegte Zeitspanne überdeckt. Wähle ein Eltern-"
+"Set unter „Attribute“"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:160
+#: classes/OpeningHours/Module/CustomPostType/Set.php:72
 msgid "Sets"
 msgstr "Sets"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:161
-#: classes/OpeningHours/Module/CustomPostType/Set.php:163
-#: classes/OpeningHours/Module/Widget/Holidays.php:52
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:53
-#: classes/OpeningHours/Module/Widget/IsOpen.php:52
+#: classes/OpeningHours/Module/CustomPostType/Set.php:73
+#: classes/OpeningHours/Module/CustomPostType/Set.php:75
+#: classes/OpeningHours/Module/Widget/Holidays.php:33
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:33
+#: classes/OpeningHours/Module/Widget/IsOpen.php:33
 msgid "Set"
 msgstr "Set"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:164
+#: classes/OpeningHours/Module/CustomPostType/Set.php:76
 msgid "Add New"
 msgstr "Hinzufügen"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:165
+#: classes/OpeningHours/Module/CustomPostType/Set.php:77
 msgid "Add New Set"
 msgstr "Set hinzufügen"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:166
+#: classes/OpeningHours/Module/CustomPostType/Set.php:78
 msgid "New Set"
 msgstr "Neues Set"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:167
+#: classes/OpeningHours/Module/CustomPostType/Set.php:79
 msgid "Edit Set"
 msgstr "Set bearbeiten"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:168
+#: classes/OpeningHours/Module/CustomPostType/Set.php:80
 msgid "View Set"
 msgstr "Set anzeigen"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:169
+#: classes/OpeningHours/Module/CustomPostType/Set.php:81
 msgid "All Sets"
 msgstr "Alle Sets"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:170
+#: classes/OpeningHours/Module/CustomPostType/Set.php:82
 msgid "Search Sets"
 msgstr "Set suchen"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:171
+#: classes/OpeningHours/Module/CustomPostType/Set.php:83
 msgid "Parent Sets:"
 msgstr "Übergeordnetes Set:"
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:172
+#: classes/OpeningHours/Module/CustomPostType/Set.php:84
 msgid "No sets found."
 msgstr "Keine Sets gefunden."
 
-#: classes/OpeningHours/Module/CustomPostType/Set.php:173
+#: classes/OpeningHours/Module/CustomPostType/Set.php:85
 msgid "No sets found in Trash."
 msgstr "Keine Sets im Papierkorb gefunden."
 
-#: classes/OpeningHours/Module/I18n.php:422
-msgid "Monday"
-msgstr "Montag"
-
-#: classes/OpeningHours/Module/I18n.php:423
-msgid "Tuesday"
-msgstr "Dienstag"
-
-#: classes/OpeningHours/Module/I18n.php:424
-msgid "Wednesday"
-msgstr "Mittwoch"
-
-#: classes/OpeningHours/Module/I18n.php:425
-msgid "Thursday"
-msgstr "Donnerstag"
-
-#: classes/OpeningHours/Module/I18n.php:426
-msgid "Friday"
-msgstr "Freitag"
-
-#: classes/OpeningHours/Module/I18n.php:427
-msgid "Saturday"
-msgstr "Samstag"
-
-#: classes/OpeningHours/Module/I18n.php:428
-msgid "Sunday"
-msgstr "Sonntag"
-
-#: classes/OpeningHours/Module/I18n.php:471
-msgid "Mon."
-msgstr "Mo."
-
-#: classes/OpeningHours/Module/I18n.php:472
-msgid "Tue."
-msgstr "Di."
-
-#: classes/OpeningHours/Module/I18n.php:473
-msgid "Wed."
-msgstr "Mi."
-
-#: classes/OpeningHours/Module/I18n.php:474
-msgid "Thu."
-msgstr "Do."
-
-#: classes/OpeningHours/Module/I18n.php:475
-msgid "Fri."
-msgstr "Fr."
-
-#: classes/OpeningHours/Module/I18n.php:476
-msgid "Sat."
-msgstr "Sa."
-
-#: classes/OpeningHours/Module/I18n.php:477
-msgid "Sun."
-msgstr "So."
-
-#: classes/OpeningHours/Module/I18n.php:504
+#: classes/OpeningHours/Module/I18n.php:45
 msgid "Hour"
 msgstr "Stunde"
 
-#: classes/OpeningHours/Module/I18n.php:505
+#: classes/OpeningHours/Module/I18n.php:46
 msgid "Minute"
 msgstr "Minute"
 
-#: classes/OpeningHours/Module/Shortcode/AbstractShortcode.php:105
-msgid "Shortcode has no tagname and could not be registered"
-msgstr "Shortcode hat keinen Tag-Namen und konnte nicht registriert werden."
+#: classes/OpeningHours/Module/Importer.php:86
+msgid ""
+"Your Opening Hours and related widgets have automatically been upgraded to "
+"work with the updated version of the Plugin. Please double check your "
+"Opening Hours and Widgets."
+msgstr ""
+"Deine Öffnungszeiten und Widgets wurden automatisch aktualisiert, um mit der "
+"neuen Version der Plugins zu funktionieren. Bitte prüfe dennoch noch mal "
+"nach!"
 
-#: classes/OpeningHours/Module/Shortcode/IsOpen.php:26
+#: classes/OpeningHours/Module/Shortcode/AbstractShortcode.php:77
+msgid "Shortcode has no tag name and could not be registered"
+msgstr "Shortcode hat keinen Tag Namen und konnte nicht registriert werden."
+
+#: classes/OpeningHours/Module/Shortcode/IsOpen.php:27
 msgid "We're currently open."
 msgstr "Wir haben geöffnet."
 
-#: classes/OpeningHours/Module/Shortcode/IsOpen.php:27
+#: classes/OpeningHours/Module/Shortcode/IsOpen.php:28
 msgid "We're currently closed."
 msgstr "Wir haben geschlossen."
 
-#: classes/OpeningHours/Module/Shortcode/IsOpen.php:29
+#: classes/OpeningHours/Module/Shortcode/IsOpen.php:30
 #, php-format
 msgid "We're open again on %2$s (%1$s) from %3$s to %4$s"
 msgstr "Wir haben wieder am %2$s (%1$s) von %3$s bis %4$s geöffnet"
@@ -260,270 +170,380 @@ msgstr "Wir haben wieder am %2$s (%1$s) von %3$s bis %4$s geöffnet"
 msgid "Closed"
 msgstr "Geschlossen"
 
-#: classes/OpeningHours/Module/Widget/AbstractWidget.php:161
+#: classes/OpeningHours/Module/Widget/AbstractWidget.php:128
 msgid "More Settings"
 msgstr "Mehr Optionen"
 
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:184
-#, php-format
-msgid "Field configuration has to be array. %s given"
-msgstr "Feld-Konfiguration muss ein array sein. %s gegeben"
-
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:188
-msgid "Field name is empty or not a string."
-msgstr "Feld Name ist leer oder kein String."
-
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:192
-#, php-format
-msgid "No Type option set for field %s."
-msgstr "Kein Typ festgelegt für Feld %s."
-
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:196
-#, php-format
-msgid "Field type %s provided for field %s is not a valid type."
-msgstr "Feld Typ %s für Feld %s ist kein gültiger Feld-Typ."
-
-#: classes/OpeningHours/Module/Widget/FieldRenderer.php:202
-#, php-format
-msgid "Field %s with field type select, required the options array."
-msgstr "Feld %s mit Feld-Typ select benötigt den options-array."
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:26
-msgid "Opening Hours: Holidays"
-msgstr "Öffnungszeiten: Ferien"
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:28
-msgid "Lists up all Holidays in the selected Set."
-msgstr "Listet alle Ferien des ausgewählen Sets auf."
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:46
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:47
-#: classes/OpeningHours/Module/Widget/IsOpen.php:46
-#: classes/OpeningHours/Module/Widget/Overview.php:46
-msgid "Title"
-msgstr "Titel"
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:60
-msgid "Highlight active Holiday"
-msgstr "aktive Ferien hervorheben"
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:70
-msgid "Holiday <tr> class"
-msgstr "Ferien <tr> Klasse"
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:78
-msgid "class for highlighted Holiday"
-msgstr "Klasse für hervorgehobene Ferien"
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:86
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:87
-msgid "PHP Date Format"
-msgstr "PHP Datumsformat"
-
-#: classes/OpeningHours/Module/Widget/Holidays.php:88
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:89
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:98
-#: classes/OpeningHours/Module/Widget/Overview.php:185
+#: classes/OpeningHours/Module/Widget/AbstractWidget.php:167
 msgid "More about PHP date and time formats."
 msgstr "Mehr über PHP Datums- und Zeitformate."
 
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:27
+#: classes/OpeningHours/Module/Widget/Holidays.php:17
+msgid "Opening Hours: Holidays"
+msgstr "Öffnungszeiten: Ferien"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:18
+msgid "Lists up all Holidays in the selected Set."
+msgstr "Listet alle Ferien des ausgewählen Sets auf."
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:28
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:28
+#: classes/OpeningHours/Module/Widget/IsOpen.php:28
+#: classes/OpeningHours/Module/Widget/Overview.php:28
+msgid "Title"
+msgstr "Titel"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:39
+msgid "Highlight active Holiday"
+msgstr "aktive Ferien hervorheben"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:44
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:44
+#: classes/OpeningHours/Module/Widget/Overview.php:79
+msgid "Template"
+msgstr "Ansicht"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:46
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:46
+#: classes/OpeningHours/Module/Widget/Overview.php:81
+msgid "Table"
+msgstr "Tabelle"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:47
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:47
+#: classes/OpeningHours/Module/Widget/Overview.php:82
+msgid "List"
+msgstr "Liste"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:54
+msgid "Holiday <tr> class"
+msgstr "Ferien <tr> Klasse"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:61
+msgid "class for highlighted Holiday"
+msgstr "Klasse für hervorgehobene Ferien"
+
+#: classes/OpeningHours/Module/Widget/Holidays.php:68
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:61
+#: classes/OpeningHours/Module/Widget/IsOpen.php:93
+msgid "PHP Date Format"
+msgstr "PHP Datumsformat"
+
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:17
 msgid "Opening Hours: Irregular Openings"
 msgstr "Öffnungszeiten: Ausnahmen"
 
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:29
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:18
 msgid "Lists up all Irregular Openings in the selected Set."
 msgstr "Listet alle Öffnungszeiten-Ausnahmen im gewählten Set auf."
 
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:61
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:39
 msgid "Highlight active Irregular Opening"
 msgstr "Aktuell laufende Ausnahme hervorheben"
 
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:71
-msgid "Irregular Opening <tr> class"
-msgstr "Ausnahme <tr> Klasse"
-
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:79
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:54
 msgid "class for highlighted Irregular Opening"
 msgstr "Klasse für hervorgehobene Ausnahme"
 
-#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:96
-#: classes/OpeningHours/Module/Widget/Overview.php:183
+#: classes/OpeningHours/Module/Widget/IrregularOpenings.php:69
+#: classes/OpeningHours/Module/Widget/IsOpen.php:101
+#: classes/OpeningHours/Module/Widget/Overview.php:110
 msgid "PHP Time Format"
 msgstr "PHP Zeitformat"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:26
+#: classes/OpeningHours/Module/Widget/IsOpen.php:17
 msgid "Opening Hours: Is Open Status"
 msgstr "Öffnungszeiten: Geöffnet Status"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:28
+#: classes/OpeningHours/Module/Widget/IsOpen.php:18
 msgid ""
 "Shows a box saying whether a specific set is currently open or closed based "
 "on Periods."
 msgstr ""
 "Zeigt eine Box, die anzeigt, ob das ausgewählte Set zur Zeit geöffnet ist."
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:60
+#: classes/OpeningHours/Module/Widget/IsOpen.php:39
 msgid "Show next open Period"
 msgstr "Nächste geöffnete Periode anzeigen (wenn geschlossen)"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:70
+#: classes/OpeningHours/Module/Widget/IsOpen.php:45
 msgid "Caption if open"
 msgstr "Beschriftung, wenn geöffnet"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:78
+#: classes/OpeningHours/Module/Widget/IsOpen.php:52
 msgid "Caption if closed"
 msgstr "Beschriftung, wenn geschlossen"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:86
+#: classes/OpeningHours/Module/Widget/IsOpen.php:59
 msgid "Class if open (span)"
 msgstr "Klasse wenn geöffnet (span)"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:94
+#: classes/OpeningHours/Module/Widget/IsOpen.php:66
 msgid "Class if closed (span)"
 msgstr "Klasse wenn geschlossen (span)"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:102
+#: classes/OpeningHours/Module/Widget/IsOpen.php:73
 msgid "Next Period String Format"
 msgstr "Nächste Periode String Format"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:106
+#: classes/OpeningHours/Module/Widget/IsOpen.php:77
 msgid "Formatted Date"
 msgstr "Formatiertes Datum"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:107
+#: classes/OpeningHours/Module/Widget/IsOpen.php:78
 msgid "Weekday"
 msgstr "Wochentag"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:108
+#: classes/OpeningHours/Module/Widget/IsOpen.php:79
 msgid "Formatted Start Time"
 msgstr "Formatierte Startzeit"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:109
+#: classes/OpeningHours/Module/Widget/IsOpen.php:80
 msgid "Formatted End Time"
 msgstr "Formatierte Endzeit"
 
-#: classes/OpeningHours/Module/Widget/IsOpen.php:116
+#: classes/OpeningHours/Module/Widget/IsOpen.php:86
 msgid "Class for span"
 msgstr "Klasse für span"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:26
+#: classes/OpeningHours/Module/Widget/Overview.php:17
 msgid "Opening Hours: Overview"
 msgstr "Öffnungszeiten: Übersicht"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:28
+#: classes/OpeningHours/Module/Widget/Overview.php:18
 msgid ""
 "Displays a Table with your Opening Hours. Alternatively use the op-overview "
 "Shortcode."
 msgstr "Zeigt eine Tabelle mit allen Öffnungs-Perioden im ausgewählten Set an."
 
-#: classes/OpeningHours/Module/Widget/Overview.php:52
+#: classes/OpeningHours/Module/Widget/Overview.php:33
 msgid "Set to show"
 msgstr "Anzuzeigendes Set"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:60
+#: classes/OpeningHours/Module/Widget/Overview.php:39
 msgid "Highlight"
 msgstr "Hervorheben"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:62
+#: classes/OpeningHours/Module/Widget/Overview.php:41
 msgid "Nothing"
 msgstr "Nichts"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:63
+#: classes/OpeningHours/Module/Widget/Overview.php:42
 msgid "Running Period"
 msgstr "aktive Periode"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:64
+#: classes/OpeningHours/Module/Widget/Overview.php:43
 msgid "Current Weekday"
 msgstr "aktueller Wochentag"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:71
+#: classes/OpeningHours/Module/Widget/Overview.php:49
 msgid "Show closed days"
 msgstr "Geschlossene Tage anzeigen"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:77
+#: classes/OpeningHours/Module/Widget/Overview.php:54
 msgid "Show Set Description"
 msgstr "Set-Beschreibung anzeigen"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:83
+#: classes/OpeningHours/Module/Widget/Overview.php:59
 msgid "Compress Opening Hours"
 msgstr "Öffnungszeiten komprimieren"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:89
+#: classes/OpeningHours/Module/Widget/Overview.php:64
 msgid "Use short day captions"
 msgstr "Abkürzungen für Wochentage benutzen"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:95
+#: classes/OpeningHours/Module/Widget/Overview.php:69
 msgid "Include Irregular Openings"
 msgstr "Ausnahmen beachten"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:101
+#: classes/OpeningHours/Module/Widget/Overview.php:74
 msgid "Include Holidays"
 msgstr "Ferien beachten"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:111
+#: classes/OpeningHours/Module/Widget/Overview.php:89
 msgid "Closed Caption"
 msgstr "Geschlossen-Beschriftung"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:119
-msgid "Table class"
-msgstr "Klasse für Tabelle (table)"
-
-#: classes/OpeningHours/Module/Widget/Overview.php:127
-msgid "Table Row class"
-msgstr "Klasse für Tabellen Zeile (tr)"
-
-#: classes/OpeningHours/Module/Widget/Overview.php:135
-msgid "Table Cell class"
-msgstr "Klasse für Tabellen Zelle (td, th)"
-
-#: classes/OpeningHours/Module/Widget/Overview.php:143
-msgid "Table Cell Heading class"
-msgstr "Klasse für Tabellen Überschrift Zelle (th)"
-
-#: classes/OpeningHours/Module/Widget/Overview.php:151
-msgid "Table Cell Periods class"
-msgstr "Klasse für Zelle mit Perioden (td)"
-
-#: classes/OpeningHours/Module/Widget/Overview.php:159
+#: classes/OpeningHours/Module/Widget/Overview.php:96
 msgid "Highlighted Period class"
 msgstr "Klasse für hervorgehobene Periode"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:167
+#: classes/OpeningHours/Module/Widget/Overview.php:103
 msgid "Highlighted Day class"
 msgstr "Klasse für hervorgehobenen Tag"
 
-#: classes/OpeningHours/Module/Widget/Overview.php:175
-msgid "Table ID Prefix"
-msgstr "Tabellen ID Prefix"
-
-#: classes/OpeningHours/Module/Widget/Overview.php:192
+#: classes/OpeningHours/Module/Widget/Overview.php:118
 msgid "Hide date of Irregular Openings"
 msgstr "Datum von Ausnahmen verstecken"
 
-#: views/meta-box/holidays.php:24 views/meta-box/irregular-openings.php:24
+#: classes/OpeningHours/Util/Weekdays.php:27
+msgid "Monday"
+msgstr "Montag"
+
+#: classes/OpeningHours/Util/Weekdays.php:27
+msgid "Mon."
+msgstr "Mo."
+
+#: classes/OpeningHours/Util/Weekdays.php:28
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#: classes/OpeningHours/Util/Weekdays.php:28
+msgid "Tue."
+msgstr "Di."
+
+#: classes/OpeningHours/Util/Weekdays.php:29
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: classes/OpeningHours/Util/Weekdays.php:29
+msgid "Wed."
+msgstr "Mi."
+
+#: classes/OpeningHours/Util/Weekdays.php:30
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#: classes/OpeningHours/Util/Weekdays.php:30
+msgid "Thu."
+msgstr "Do."
+
+#: classes/OpeningHours/Util/Weekdays.php:31
+msgid "Friday"
+msgstr "Freitag"
+
+#: classes/OpeningHours/Util/Weekdays.php:31
+msgid "Fri."
+msgstr "Fr."
+
+#: classes/OpeningHours/Util/Weekdays.php:32
+msgid "Saturday"
+msgstr "Samstag"
+
+#: classes/OpeningHours/Util/Weekdays.php:32
+msgid "Sat."
+msgstr "Sa."
+
+#: classes/OpeningHours/Util/Weekdays.php:33
+msgid "Sunday"
+msgstr "Sonntag"
+
+#: classes/OpeningHours/Util/Weekdays.php:33
+msgid "Sun."
+msgstr "So."
+
+#: views/meta-box/holidays.php:13 views/meta-box/irregular-openings.php:21
 msgid "Name"
 msgstr "Name"
 
-#: views/meta-box/holidays.php:52
+#: views/meta-box/holidays.php:31
 msgid "Add New Holiday"
 msgstr "Ferien hinzufügen"
 
-#: views/meta-box/irregular-openings.php:28
+#: views/meta-box/irregular-openings.php:25
 msgid "Date"
 msgstr "Datum"
 
-#: views/meta-box/irregular-openings.php:32
+#: views/meta-box/irregular-openings.php:29
 msgid "Time Start"
 msgstr "Startzeit"
 
-#: views/meta-box/irregular-openings.php:36
+#: views/meta-box/irregular-openings.php:33
 msgid "Time End"
 msgstr "Endzeit"
 
-#: views/meta-box/irregular-openings.php:56
+#: views/meta-box/irregular-openings.php:50
 msgid "Add New Irregular Opening"
 msgstr "Ausnahme hinzufügen"
+
+#: wp-opening-hours.php:21
+#, php-format
+msgid ""
+"Plugin Opening Hours requires at least PHP Version %s. Your Installation of "
+"WordPress is currently running on PHP %s"
+msgstr ""
+"Das Plugin Opening Hours benötigt mindestens PHP Verison %s. Deine WordPress-"
+"Version läuft aktuell auf PHP %s"
+
+#: wp-opening-hours.php:27
+#, php-format
+msgid ""
+"Plugin Opening Hours requires at least WordPress version %s. Your "
+"Installation of WordPress is running on WordPress %s"
+msgstr ""
+"Das Plugin Opening Hours benötigt mindestens WordPress Version %s. Deine "
+"WordPress-Installation läuft aktuell unter WordPress %s"
+
+#~ msgid "Convert Data"
+#~ msgstr "Daten konvertieren"
+
+#~ msgid "Delete Data"
+#~ msgstr "Daten löschen"
+
+#~ msgid ""
+#~ "There is data from older versions of the Opening Hours Plugin in your "
+#~ "WordPress installation that is not compatible with the currently "
+#~ "installed version. Would you like to convert this data?"
+#~ msgstr ""
+#~ "In deiner WordPress Installation gibt es noch Daten einer älteren Version "
+#~ "des Öffnungszeiten Plugins, die nicht mit der aktuellen Version "
+#~ "kompatibel sind. Willst du diese Daten konvertieren?"
+
+#~ msgid "OpeningHours"
+#~ msgstr "Öffnungszeiten"
+
+#~ msgid "The old data has successfully been deleted"
+#~ msgstr "Die alten Daten wurden erfolgreich aus der Datenbank gelöscht"
+
+#~ msgid "Please Donate"
+#~ msgstr "Bitte Spende"
+
+#~ msgid ""
+#~ "You may add a child set that overwrites the parent Opening Hours in "
+#~ "specific time range. Use the post type hierarchy."
+#~ msgstr ""
+#~ "Du kannst Unter-Sets anlegen, die die regulären Öffnungszeiten nach "
+#~ "bestimmten Kriterien überschreiben. Nutze dafür die Post Type Hierarchie "
+#~ "(\"Eltern\" Auswahlbox)."
+
+#~ msgid "Shortcode has no tagname and could not be registered"
+#~ msgstr "Shortcode hat keinen Tag-Namen und konnte nicht registriert werden."
+
+#~ msgid "Field configuration has to be array. %s given"
+#~ msgstr "Feld-Konfiguration muss ein array sein. %s gegeben"
+
+#~ msgid "Field name is empty or not a string."
+#~ msgstr "Feld Name ist leer oder kein String."
+
+#~ msgid "No Type option set for field %s."
+#~ msgstr "Kein Typ festgelegt für Feld %s."
+
+#~ msgid "Field type %s provided for field %s is not a valid type."
+#~ msgstr "Feld Typ %s für Feld %s ist kein gültiger Feld-Typ."
+
+#~ msgid "Field %s with field type select, required the options array."
+#~ msgstr "Feld %s mit Feld-Typ select benötigt den options-array."
+
+#~ msgid "Irregular Opening <tr> class"
+#~ msgstr "Ausnahme <tr> Klasse"
+
+#~ msgid "Table class"
+#~ msgstr "Klasse für Tabelle (table)"
+
+#~ msgid "Table Row class"
+#~ msgstr "Klasse für Tabellen Zeile (tr)"
+
+#~ msgid "Table Cell class"
+#~ msgstr "Klasse für Tabellen Zelle (td, th)"
+
+#~ msgid "Table Cell Heading class"
+#~ msgstr "Klasse für Tabellen Überschrift Zelle (th)"
+
+#~ msgid "Table Cell Periods class"
+#~ msgstr "Klasse für Zelle mit Perioden (td)"
+
+#~ msgid "Table ID Prefix"
+#~ msgstr "Tabellen ID Prefix"
 
 #~ msgid "-- None --"
 #~ msgstr "-- Keine --"

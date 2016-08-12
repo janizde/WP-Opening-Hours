@@ -2,21 +2,24 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
-var less = require('gulp-less');
+var sass = require('gulp-sass');
 var cssmin = require('gulp-minify-css');
 var watch = require('gulp-watch');
 var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var gulpZip = require('gulp-zip');
+var gulpIf = require('gulp-if');
 var runSequence = require('run-sequence');
 
 var paths = {
   src: {
     scripts: [
+      './includes/jquery-ui-timepicker/jquery.ui.timepicker.js',
       './assets/scripts/**/*.js'
     ],
     styles: [
-      './assets/styles/main.less'
+      './assets/styles/main.scss',
+      './includes/jquery-ui-timepicker/jquery.ui.timepicker.css'
     ]
   },
   dest: {
@@ -38,7 +41,8 @@ gulp.task( 'scripts', [], function () {
 gulp.task( 'styles', [], function () {
   return gulp.src( paths.src.styles )
     .pipe( sourcemaps.init() )
-    .pipe( less() )
+    .pipe( gulpIf('*.scss', sass()) )
+    .pipe( concat('main.css') )
     .pipe( autoprefixer() )
     .pipe( cssmin() )
     .pipe( sourcemaps.write('.') )
@@ -53,7 +57,7 @@ gulp.task( 'watch', [], function () {
     gulp.start( 'scripts' );
   } );
 
-  watch( './assets/styles/**/*.less', function () {
+  watch( './assets/styles/**/*.scss', function () {
     gulp.start( 'styles' );
   } );
 } );
@@ -73,12 +77,19 @@ gulp.task( 'export', ['build'], function () {
     '!vendor',
     '!**/.git/**/*',
     '!.gitignore',
+    '!.gitmodules',
     '!gulpfile.js',
     '!package.json',
-    '!composer.lock'
+    '!composer.lock',
+    '!phpunit.xml',
+    '!./tests/**/*',
+    '!tests',
+    '!./doc/**/*',
+    '!doc',
+    '!.travis.yml'
   ];
 
   return gulp.src( files )
-    .pipe( gulpZip( 'opening-hours.zip' ) )
+    .pipe( gulpZip( 'wp-opening-hours.zip' ) )
     .pipe( gulp.dest( '.' ) );
 } );

@@ -1,0 +1,29 @@
+span.op-period-time {
+  display: block;
+}
+
+td.op-set-description {
+  font-size: 1.1em;
+}
+
+tr.op-row-day.highlighted td,
+tr.op-row-day.highlighted th,
+.op-list-overview .highlighted {
+  color: $color-green;
+}
+
+span.op-period-time.highlighted {
+  color: $color-green;
+}
+
+span.op-closed {
+  color: $color-red;
+}
+
+span.op-open {
+  color: $color-red;
+}
+
+span.op-next-period {
+  display: block;
+}

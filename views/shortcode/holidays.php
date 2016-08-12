@@ -1,16 +1,10 @@
 <?php
-/**
- * OpeningHours: Views: Shortcode: Holidays
- */
 
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\Set;
+use OpeningHours\Util\Dates;
 
-/**
- * @var         $attributes         array w/ attributes
- */
-
-extract( $attributes );
+extract( $this->data['attributes'] );
 
 /**
  * variables defined by extract
@@ -39,32 +33,21 @@ if ( ! empty( $title ) ) {
 	echo $before_title . $title . $after_title;
 }
 
-echo '<table>';
+?>
+<table class="op-table op-table-holidays">
+  <tbody>
+    <?php
+    /** @var Holiday $holiday */
+    foreach ($holidays as $holiday) :
+    $highlighted = ($highlight && $holiday->isActive()) ? $class_highlighted : '';
+    ?>
+    <tr class="<?php echo $class_holiday; ?> <?php echo $highlighted; ?>">
+      <td class="col-name"><?php echo $holiday->getName(); ?></td>
+      <td class="col-date-start"><?php echo Dates::format($date_format, $holiday->getDateStart()); ?></td>
+      <td class="col-date-end"><?php echo Dates::format($date_format, $holiday->getDateEnd()); ?></td>
+    </tr>
+    <?php endforeach; ?>
+  </tbody>
+</table>
 
-echo '<tbody>';
-
-foreach ( $holidays as $holiday ) :
-
-	/**
-	 * @var         $holiday        Holiday object
-	 */
-
-	$highlighted = ( $highlight and $holiday->isActive() ) ? $class_highlighted : null;
-
-	echo '<tr class="' . $class_holiday . ' ' . $highlighted . '">';
-
-	echo '<td class="col-name">' . $holiday->getName() . '</td>';
-
-	echo '<td class="col-date-start">' . $holiday->getDateStart()->format( $date_format ) . '</td>';
-
-	echo '<td class="col-date-end">' . $holiday->getDateEnd()->format( $date_format ) . '</td>';
-
-	echo '</tr>';
-
-endforeach;
-
-echo '</tbody>';
-
-echo '</table>';
-
-echo $after_widget;
+<?php echo $after_widget; ?>

@@ -6,9 +6,9 @@ use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
-use OpeningHours\Module\CustomPostType\Set;
-
+use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
+use OpeningHours\Util\ViewRenderer;
 use WP_Post;
 
 /**
@@ -19,76 +19,85 @@ use WP_Post;
  */
 class Holidays extends AbstractMetaBox {
 
-	const ID = 'op_meta_box_holidays';
-	const POST_TYPE = Set::CPT_SLUG;
-	const TEMPLATE_PATH = 'meta-box/holidays.php';
-	const TEMPLATE_PATH_SINGLE = 'ajax/op-set-holiday.php';
-	const CONTEXT = 'advanced';
-	const PRIORITY = 'core';
+  const TEMPLATE_PATH = 'meta-box/holidays.php';
+  const TEMPLATE_PATH_SINGLE = 'ajax/op-set-holiday.php';
 
-	const WP_NONCE_NAME = 'op-set-holidays-nonce';
-	const WP_NONCE_ACTION = 'save_data';
+  const POST_KEY = 'opening-hours-holidays';
 
-	const HOLIDAYS_META_KEY = '_op_set_holidays';
-	const GLOBAL_POST_KEY = 'opening-hours-holidays';
+  public function __construct () {
+    parent::__construct('op_meta_box_holidays', __('Holidays', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
+  }
 
-	/** @inheritdoc */
-	public function registerMetaBox () {
+  /** @inheritdoc */
+  public function registerMetaBox () {
+    if (!$this->currentSetIsParent())
+      return;
 
-		if ( !static::currentSetIsParent() )
-			return;
+    parent::registerMetaBox();
+  }
 
-		add_meta_box(
-			static::ID,
-			__( 'Holidays', I18n::TEXTDOMAIN ),
-			array( get_called_class(), 'renderMetaBox' ),
-			static::POST_TYPE,
-			static::CONTEXT,
-			static::PRIORITY
-		);
+  /** @inheritdoc */
+  public function renderMetaBox ( WP_Post $post ) {
+    OpeningHoursModule::setCurrentSetId($post->ID);
+    $set = OpeningHoursModule::getCurrentSet();
 
-	}
+    if (count($set->getHolidays()) < 1)
+      $set->getHolidays()->append(Holiday::createDummyPeriod());
 
-	/** @inheritdoc */
-	public function renderMetaBox ( WP_Post $post ) {
-		OpeningHoursModule::setCurrentSetId( $post->ID );
-		$set = OpeningHoursModule::getCurrentSet();
+    $variables = array(
+      'holidays' => $set->getHolidays()
+    );
 
-		if ( count( $set->getHolidays() ) < 1 )
-			$set->getHolidays()->append( Holiday::createDummyPeriod() );
+    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), $variables);
+    $vr->render();
+  }
 
-		$variables = array(
-			'holidays' => $set->getHolidays()
-		);
+  /**
+   * Renders a single holiday row
+   *
+   * @param     Holiday $holiday The Holiday to render
+   */
+  public function renderSingleHoliday ( Holiday $holiday ) {
+    $data = array(
+      'name' => $holiday->getName(),
+      'dateStart' => $holiday->isDummy() ? '' : $holiday->getDateStart()->format(Dates::STD_DATE_FORMAT),
+      'dateEnd' => $holiday->isDummy() ? '' : $holiday->getDateEnd()->format(Dates::STD_DATE_FORMAT)
+    );
 
-		echo $this->renderTemplate( self::TEMPLATE_PATH, $variables, 'once' );
-	}
+    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH_SINGLE), $data);
+    $vr->render();
+  }
 
-	/** @inheritdoc */
-	protected function saveData ( $post_id, WP_Post $post, $update ) {
-		$config = $_POST[ static::GLOBAL_POST_KEY ];
-		$holidays = $this->getHolidaysFromPostData( $config );
-		$persistence = new Persistence( $post );
-		$persistence->saveHolidays( $holidays );
-	}
+  /** @inheritdoc */
+  protected function saveData ( $post_id, WP_Post $post, $update ) {
+    $holidays = (array_key_exists(self::POST_KEY, $_POST) && is_array($postData = $_POST[self::POST_KEY]))
+      ? $this->getHolidaysFromPostData($postData)
+      : array();
 
-	/**
-	 * Converts the post data to a Holiday array
-	 *
-	 * @param     array     $data     The POST data from the edit screen
-	 *
-	 * @return    Holiday[]           The Holiday array
-	 */
-	public function getHolidaysFromPostData ( array $data ) {
-		$holidays = array();
-		for ( $i = 0; $i < count( $data['name'] ); $i++ ) {
-			try {
-				$holiday = new Holiday( $data['name'][$i], new DateTime($data['dateStart'][$i]), new DateTime($data['dateEnd'][$i]) );
-				$holidays[] = $holiday;
-			} catch ( \InvalidArgumentException $e ) {
-				trigger_error( sprintf( 'Holiday could not be saved due to: %s', $e->getMessage() ) );
-			}
-		}
-		return $holidays;
-	}
+    $persistence = new Persistence($post);
+    $persistence->saveHolidays($holidays);
+  }
+
+  /**
+   * Converts the post data to a Holiday array
+   *
+   * @param     array $data The POST data from the edit screen
+   *
+   * @return    Holiday[]           The Holiday array
+   */
+  public function getHolidaysFromPostData ( array $data ) {
+    $holidays = array();
+    for ($i = 0; $i < count($data['name']); $i++) {
+      if (!empty($data['name'][$i]) && (empty($data['dateStart'][$i]) || empty($data['dateEnd'][$i])))
+        continue;
+
+      try {
+        $holiday = new Holiday($data['name'][$i], new DateTime($data['dateStart'][$i]), new DateTime($data['dateEnd'][$i]));
+        $holidays[] = $holiday;
+      } catch (\InvalidArgumentException $e) {
+        // ignore item
+      }
+    }
+    return $holidays;
+  }
 }

@@ -1,0 +1,22 @@
+table.op-irregular-openings {
+  width:    100%;
+
+  .op-irregular-opening {
+
+    .col-name, .col-date, .col-time-start, .col-time-end {
+      width:    18%;
+    }
+
+    .col-remove {
+      width:    10%;
+
+      .button-remove {
+        @include button-remove();
+      }
+    }
+  }
+}
+
+.button.add-io {
+  margin:   5px 3px;
+}

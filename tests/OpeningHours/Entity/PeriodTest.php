@@ -4,14 +4,12 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
-use OpeningHours\Entity\Holiday;
-use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
-use OpeningHours\Test\TestScenario;
+use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 
-class PeriodTest extends \WP_UnitTestCase {
+class PeriodTest extends OpeningHoursTestCase {
 
 	/**
 	 * @expectedException \InvalidArgumentException
@@ -88,18 +86,17 @@ class PeriodTest extends \WP_UnitTestCase {
 	}
 
 	public function testIsOpen () {
-		$ts = new TestScenario( $this->factory );
-		$holidays = array(
-			new Holiday( 'Holiday1', new DateTime('2016-01-16'), new DateTime('2016-01-17') ) // Sat - Sun
-		);
-		$ios = array(
-			new IrregularOpening( 'IO1', '2016-01-19', '13:00', '17:00' ) // Tue
-		);
-
 		$p1 = new Period( 1, '12:00', '18:00' );
 		$p2 = new Period( 5, '12:00', '18:00' );
 
-		$post = $ts->setUpSetWithData( array(), array(), $holidays, $ios );
+    $post = $this->createPost(array('ID' => 64));
+    $this->setUpSetData(64, array(), array(
+      array('name' => 'Holiday 1', 'dateStart' => '2016-01-16', 'dateEnd' => '2016-01-17') // Sat - Sun
+    ), array(
+      array('name' => 'IO1', 'date' => '2016-01-19', 'timeStart' => '13:00', 'timeEnd' => '17:00') // Tue
+    ));
+    $this->commonSetMocks();
+
 		$set = new Set( $post );
 
 		$this->assertFalse( $p1->isOpen( new DateTime('2016-01-18 13:00'), $set ) );
@@ -114,14 +111,16 @@ class PeriodTest extends \WP_UnitTestCase {
 	}
 
 	public function testWillBeOpen () {
-		$ts = new TestScenario( $this->factory );
 		$hStart = Dates::applyWeekContext( new DateTime('00:00:00'), 2 );
 		$hEnd = clone $hStart;
 		$hEnd->add( new DateInterval('P1D') );
 
-		$post = $ts->setUpSetWithData( array(), array(), array(
-			new Holiday( 'Holiday', $hStart, $hEnd )
-		) );
+    $post = $this->createPost(array('ID' => 64));
+    $this->setUpSetData(64, array(), array(
+      array('name' => 'Holiday', 'dateStart' => $hStart->format(Dates::STD_DATE_FORMAT), 'dateEnd' => $hEnd->format(Dates::STD_DATE_FORMAT))
+    ));
+    $this->commonSetMocks();
+
 		$set = new Set( $post );
 		$p1 = new Period( 2, '13:00', '18:00' );
 		$p2 = new Period( 4, '13:00', '18:00' );

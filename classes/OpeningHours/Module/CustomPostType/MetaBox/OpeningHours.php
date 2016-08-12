@@ -5,10 +5,9 @@ namespace OpeningHours\Module\CustomPostType\MetaBox;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\I18n;
-use OpeningHours\Module\CustomPostType\Set;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
-
 use OpeningHours\Util\Persistence;
+use OpeningHours\Util\ViewRenderer;
 use WP_Post;
 
 /**
@@ -19,75 +18,65 @@ use WP_Post;
  */
 class OpeningHours extends AbstractMetaBox {
 
-	const ID = 'op_meta_box_opening_hours';
-	const POST_TYPE = Set::CPT_SLUG;
-	const TEMPLATE_PATH = 'op-set-meta-box.php';
-	const CONTEXT = 'advanced';
-	const PRIORITY = 'high';
+  const TEMPLATE_PATH = 'meta-box/opening-hours.php';
+  const TEMPLATE_PATH_SINGLE = 'ajax/op-set-period.php';
 
-	const WP_NONCE_NAME = 'op-set-opening-hours';
-	const WP_NONCE_ACTION = 'save_data';
+  public function __construct () {
+    parent::__construct('op_meta_box_opening_hours', __('Opening Hours', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
+  }
 
-	const PERIODS_META_KEY = '_op_set_periods';
+  /** @inheritdoc */
+  public function renderMetaBox ( WP_Post $post ) {
+    if (!OpeningHoursModule::getSets()->offsetExists($post->ID))
+      OpeningHoursModule::getSets()->offsetSet($post->ID, new SetEntity($post->ID));
 
-	/** @inheritdoc */
-	public function registerMetaBox () {
-		add_meta_box(
-			static::ID,
-			__( 'Opening Hours', I18n::TEXTDOMAIN ),
-			array( get_called_class(), 'renderMetaBox' ),
-			static::POST_TYPE,
-			static::CONTEXT,
-			static::PRIORITY
-		);
-	}
+    OpeningHoursModule::setCurrentSetId($post->ID);
+    $set = OpeningHoursModule::getCurrentSet();
+    $set->addDummyPeriods();
 
-	/** @inheritdoc */
-	public function renderMetaBox ( WP_Post $post ) {
-		if ( !OpeningHoursModule::getSets()->offsetExists( $post->ID ) )
-			OpeningHoursModule::getSets()->offsetSet( $post->ID, new SetEntity( $post->ID ) );
+    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array());
+    $vr->render();
+  }
 
-		OpeningHoursModule::setCurrentSetId( $post->ID );
-		$set = OpeningHoursModule::getCurrentSet();
-		$set->addDummyPeriods();
+  /** @inheritdoc */
+  protected function saveData ( $post_id, WP_Post $post, $update ) {
+    $config = $_POST['opening-hours'];
 
-		$variables = array(
-			'post' => $post,
-			'set'  => $set
-		);
+    if (!is_array($config))
+      $config = array();
 
-		echo static::renderTemplate( static::TEMPLATE_PATH, $variables, 'once' );
-	}
+    $periods = $this->getPeriodsFromPostData($config);
+    $persistence = new Persistence($post);
+    $persistence->savePeriods($periods);
+  }
 
-	/** @inheritdoc */
-	protected function saveData ( $post_id, WP_Post $post, $update ) {
-		$config = $_POST['opening-hours'];
-		$periods = $this->getPeriodsFromPostData( $config );
-		$persistence = new Persistence( $post );
-		$persistence->savePeriods( $periods );
-	}
+  /**
+   * Converts raw post data to an array of Periods
+   *
+   * @param     array $data associative array of raw post data
+   *
+   * @return    Period[]            array of Periods derived from post data
+   */
+  public function getPeriodsFromPostData ( array $data ) {
+    $periods = array();
 
-	public function getPeriodsFromPostData ( array $data ) {
-		$periods = array();
+    foreach ($data as $weekday => $dayConfig) {
+      for ($i = 0; $i <= count($dayConfig['start']); $i++) {
+        if (empty($dayConfig['start'][$i]) or empty($dayConfig['end'][$i]))
+          continue;
 
-		foreach ( $data as $weekday => $dayConfig ) {
-			for ( $i = 0; $i <= count( $dayConfig['start'] ); $i ++ ) {
-				if ( empty( $dayConfig['start'][$i] ) or empty( $dayConfig['end'][$i] ) )
-					continue;
+        if ($dayConfig['start'][$i] === '00:00' and $dayConfig['end'][$i] === '00:00')
+          continue;
 
-				if ( $dayConfig['start'][$i] === '00:00' and $dayConfig['end'][$i] === '00:00' )
-					continue;
+        try {
+          $period = new Period($weekday, $dayConfig['start'][$i], $dayConfig['end'][$i]);
+          $periods[] = $period;
+        } catch (\InvalidArgumentException $e) {
+          trigger_error(sprintf('Period could not be saved due to: %s', $e->getMessage()));
+        }
+      }
+    }
 
-				try {
-					$period = new Period( $weekday, $dayConfig['start'][$i], $dayConfig['end'][$i] );
-					$periods[] = $period;
-				} catch ( \InvalidArgumentException $e ) {
-					trigger_error( sprintf( 'Period could not be saved due to: %s', $e->getMessage() ) );
-				}
-			}
-		}
-
-		return $periods;
-	}
-
+    return $periods;
+  }
 }

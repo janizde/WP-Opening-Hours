@@ -5,18 +5,15 @@
 
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as MetaBox;
-use OpeningHours\Util\ArrayObject;
+use OpeningHours\Util\ViewRenderer;
 
-/**
- * Pre-defined variables
- *
- * @var         $irregular_openings           ArrayObject w/ IrregularOpening objects
- */
+/** @var \OpeningHours\Entity\IrregularOpening[] $irregular_openings */
+$irregular_openings = $this->data['irregular_openings'];
 ?>
 
 <div id="op-irregular-openings-wrap">
 
-	<?php MetaBox::nonceField(); ?>
+	<?php MetaBox::getInstance()->nonceField(); ?>
 
 	<table class="op-irregular-openings" id="op-io-table">
 		<thead>
@@ -39,15 +36,12 @@ use OpeningHours\Util\ArrayObject;
 
 		<tbody>
 		<?php
-
-		foreach ( $irregular_openings as $io ) :
-
-			echo MetaBox::renderTemplate( MetaBox::TEMPLATE_PATH_SINGLE, array(
+		foreach ($irregular_openings as $io) {
+			$view = new ViewRenderer(op_view_path(MetaBox::TEMPLATE_PATH_SINGLE), array(
 				'io' => $io
-			), 'always' );
-
-		endforeach;
-
+			));
+			$view->render();
+		}
 		?>
 		</tbody>
 	</table>

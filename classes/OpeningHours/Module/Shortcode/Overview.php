@@ -8,6 +8,7 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekdays;
 
 /**
  * Shortcode implementation for a list or regular Opening Periods
@@ -17,101 +18,154 @@ use OpeningHours\Util\Dates;
  */
 class Overview extends AbstractShortcode {
 
-	/** @inheritdoc */
-	protected function init() {
-		$this->setShortcodeTag( 'op-overview' );
+  /** @inheritdoc */
+  protected function init () {
+    $this->setShortcodeTag('op-overview');
 
-		$this->defaultAttributes = array(
-			'before_title'             => '<h3 class="op-overview-title">',
-			'after_title'              => '</h3>',
-			'before_widget'            => '<div class="op-overview-shortcode">',
-			'after_widget'             => '</div>',
-			'set_id'                   => 0,
-			'title'                    => null,
-			'show_closed_days'         => false,
-			'show_description'         => true,
-			'highlight'                => 'nothing',
-			'compress'                 => false,
-			'short'                    => false,
-			'include_io'               => false,
-			'include_holidays'         => false,
-			'caption_closed'           => __( 'Closed', I18n::TEXTDOMAIN ),
-			'table_classes'            => null,
-			'row_classes'              => null,
-			'cell_classes'             => null,
-			'cell_heading_classes'     => null,
-			'cell_periods_classes'     => null,
-			'cell_description_classes' => 'op-set-description',
-			'highlighted_period_class' => 'highlighted',
-			'highlighted_day_class'    => 'highlighted',
-			'table_id_prefix'          => 'op-table-set-',
-			'time_format'              => Dates::getTimeFormat(),
-			'hide_io_date'             => false
-		);
+    $this->defaultAttributes = array(
+      'before_title' => '<h3 class="op-overview-title">',
+      'after_title' => '</h3>',
+      'before_widget' => '<div class="op-overview-shortcode">',
+      'after_widget' => '</div>',
+      'set_id' => 0,
+      'title' => null,
+      'show_closed_days' => false,
+      'show_description' => true,
+      'highlight' => 'nothing',
+      'compress' => false,
+      'short' => false,
+      'include_io' => false,
+      'include_holidays' => false,
+      'caption_closed' => __('Closed', I18n::TEXTDOMAIN),
+      'highlighted_period_class' => 'highlighted',
+      'highlighted_day_class' => 'highlighted',
+      'time_format' => Dates::getTimeFormat(),
+      'hide_io_date' => false,
+      'template' => 'table'
+    );
 
-		$this->validAttributeValues = array(
-			'highlight'        => array( 'nothing', 'period', 'day' ),
-			'show_closed_day'  => array( false, true ),
-			'show_description' => array( true, false ),
-			'include_io'       => array( false, true ),
-			'include_holidays' => array( false, true ),
-			'hide_io_date'     => array( false, true )
-		);
+    $this->validAttributeValues = array(
+      'highlight' => array('nothing', 'period', 'day'),
+      'show_closed_day' => array(false, true),
+      'show_description' => array(true, false),
+      'include_io' => array(false, true),
+      'include_holidays' => array(false, true),
+      'hide_io_date' => array(false, true),
+      'template' => array('table', 'list')
+    );
+  }
 
-		$this->templatePath = 'shortcode/overview.php';
-	}
+  /** @inheritdoc */
+  public function shortcode ( array $attributes ) {
+    if (!isset($attributes['set_id']) or !is_numeric($attributes['set_id']) or $attributes['set_id'] == 0) {
+      trigger_error("Set id not properly set in Opening Hours Overview shortcode");
+      return;
+    }
 
-	/** @inheritdoc */
-	public function shortcode ( array $attributes ) {
-		if ( !isset( $attributes['set_id'] ) or !is_numeric( $attributes['set_id'] ) or $attributes['set_id'] == 0 ) {
-			trigger_error( "Set id not properly set in Opening Hours Overview shortcode" );
-			return;
-		}
+    $templateMap = array(
+      'table' => 'shortcode/overview.php',
+      'list' => 'shortcode/overview-list.php'
+    );
 
-		$setId = (int) $attributes['set_id'];
-		$set = OpeningHours::getSet( $setId );
+    $setId = (int)$attributes['set_id'];
+    $set = OpeningHours::getSet($setId);
 
-		if ( !$set instanceof Set ) {
-			trigger_error( sprintf( "Set with id %d does not exist", $setId ) );
-			return;
-		}
+    if (!$set instanceof Set)
+      return;
 
-		$attributes['set'] = $set;
-		echo $this->renderShortcodeTemplate( $attributes );
-	}
+    $attributes['set'] = $set;
 
-	/**
-	 * Renders an Irregular Opening Item for Overview table
-	 *
-	 * @param     IrregularOpening  $io           The Irregular Opening to show
-	 * @param     array             $attributes   The shortcode attributes
-	 */
-	public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
-		$name = $io->getName();
-		$date = $io->getTimeStart()->format( Dates::getDateFormat() );
+    $periods = $attributes['compress']
+      ? $set->getPeriodsGroupedByDayCompressed()
+      : $set->getPeriodsGroupedByDay();
 
-		$heading = ( $attributes['hide_io_date'] ) ? $name : sprintf( '%s (%s)', $name, $date );
+    $days = array();
+    foreach ($periods as $day => $dayPeriods) {
+      $dayData = array(
+        'highlightedDayClass' => ($attributes['highlight'] === 'day' && Dates::isToday($day)) ? $attributes['highlighted_day_class'] : '',
+        'dayCaption' => Weekdays::getDaysCaption($day, $attributes['short'])
+      );
 
-		$now = Dates::getNow();
-		$highlighted = ( $attributes['highlight'] == 'period' and $io->getTimeStart() <= $now and $now <= $io->getTimeEnd() ) ? $attributes['highlighted_period_class'] : null;
+      $finished = false;
+      if ($attributes['include_io']) {
+        $io = $set->getActiveIrregularOpeningOnWeekday($day);
+        if ($io instanceof IrregularOpening) {
+          $dayData['periodsMarkup'] = self::renderIrregularOpening($io, $attributes);
+          $finished = true;
+        }
+      }
 
-		echo '<span class="op-period-time irregular-opening '. $highlighted .'">'. $heading .'</span>';
+      if (!$finished && $attributes['include_holidays']) {
+        $holiday = $set->getActiveHolidayOnWeekday($day);
+        if ($holiday instanceof Holiday) {
+          $dayData['periodsMarkup'] = self::renderHoliday($holiday);
+          $finished = true;
+        }
+      }
 
-		$time_start = $io->getTimeStart()->format( $attributes['time_format'] );
-		$time_end = $io->getTimeEnd()->format( $attributes['time_format'] );
+      if (!$finished && count($dayPeriods) < 1) {
+        if (!$attributes['show_closed'])
+          continue;
 
-		$period   = sprintf( '%s – %s', $time_start, $time_end );
+        $dayData['periodsMarkup'] = '<span class="op-closed">'.$attributes['caption_closed'].'</span>';
+        $finished = true;
+      }
 
-		echo '<span class="op-period-time '. $highlighted .' '. $attributes['span_period_classes'] .'">'. $period .'</span>';
-	}
+      if (!$finished) {
+        $dayData['periodsMarkup'] = '';
 
-	/**
-	 * Renders a Holiday Item for Overview table
-	 *
-	 * @param     Holiday   $holiday      The Holiday item to show
-	 * @param     array     $attributes   The shortcode attributes
-	 */
-	public static function renderHoliday ( Holiday $holiday, array $attributes ) {
-		echo '<span class="op-period-time holiday '. $attributes['span_period_classes'] .'">'. $holiday->getName() .'</span>';
-	}
+        /** @var \OpeningHours\Entity\Period $period */
+        foreach ($dayPeriods as $period) {
+          $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpen() ) ? $attributes['highlighted_period_class'] : '';
+          $dayData['periodsMarkup'] .= sprintf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($attributes['time_format']));
+        }
+      }
+
+      $days[] = $dayData;
+    }
+
+    $attributes['days'] = $days;
+
+    echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
+  }
+
+  /**
+   * Renders an Irregular Opening Item for Overview table
+   *
+   * @param     IrregularOpening $io         The Irregular Opening to show
+   * @param     array            $attributes The shortcode attributes
+   * @return    string                       The markup for the Irregular Opening
+   */
+  public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
+    $name = $io->getName();
+    $date = Dates::format(Dates::getDateFormat(), $io->getTimeStart());
+    $markup = '';
+
+    $heading = ($attributes['hide_io_date']) ? $name : sprintf('%s (%s)', $name, $date);
+
+    $now = Dates::getNow();
+    $highlighted = ($attributes['highlight'] == 'period'
+      && $io->getTimeStart() <= $now
+      && $now <= $io->getTimeEnd())
+      ? $attributes['highlighted_period_class']
+      : null;
+
+    $markup .= sprintf('<span class="op-period-time irregular-opening %s">%s</span>', $highlighted, $heading);
+
+    $time_start = $io->getTimeStart()->format($attributes['time_format']);
+    $time_end = $io->getTimeEnd()->format($attributes['time_format']);
+
+    $markup .= sprintf('<span class="op-period-time %s">%s – %s</span>', $highlighted, $time_start, $time_end);
+    return $markup;
+  }
+
+  /**
+   * Renders a Holiday Item for Overview table
+   *
+   * @param     Holiday $holiday    The Holiday item to show
+   * @return    string              The holiday markup
+   */
+  public static function renderHoliday ( Holiday $holiday ) {
+    return '<span class="op-period-time holiday">' . $holiday->getName() . '</span>';
+  }
 }

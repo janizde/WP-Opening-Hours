@@ -15,8 +15,7 @@ define( 'OP_NAME', 'Opening Hours' );
 define( 'OP_REQUIRED_PHP_VERSION', '5.3' );
 define( 'OP_REQUIRED_WP_VERSION', '3.1' );
 
-require_once( 'includes/admin-notice-helper/admin-notice-helper.php' );
-require_once( 'includes/wp-detail-fields/detail-fields.php' );
+require_once 'includes/admin-notice-helper/admin-notice-helper.php';
 
 function op_admin_notice_php () {
 	$string = __( 'Plugin Opening Hours requires at least PHP Version %s. Your Installation of WordPress is currently running on PHP %s', 'opening-hours' );
@@ -53,6 +52,15 @@ function op_requirements_met () {
 /** Returns Plugin Directory Path */
 function op_plugin_path() {
 	return plugin_dir_path( __FILE__ );
+}
+
+/**
+ * Returns the absolute path of the specified view
+ * @param       string    $view     view path relative to views directory
+ * @return      string              absolute path to view
+ */
+function op_view_path ($view) {
+  return op_plugin_path() . 'views/' . $view;
 }
 
 /** ReturnsBootstrap File Path */

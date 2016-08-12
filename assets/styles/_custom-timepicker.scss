@@ -1,0 +1,59 @@
+.post-type-op-set {
+  .ui-timepicker {
+
+    $color-bg: #444444;
+    $color-bg-active: #0074a2;
+    $color-bg-hover: darken($color-bg-active, 10%);
+
+    $color-text: #ffffff;
+
+    background: $color-bg;
+    margin-top: 5px;
+
+    .ui-timepicker-table {
+
+      .ui-timepicker-title {
+        color: $color-text;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .ui-timepicker-hours {
+        border-right: 1px solid $color-text;
+      }
+
+      table.ui-timepicker {
+
+        th.periods {
+          color: white;
+          font-weight: bold;
+
+          padding-right: 5px;
+        }
+
+        td.ui-timepicker-hour-cell, td.ui-timepicker-minute-cell {
+
+          a {
+            color: white;
+            cursor: pointer;
+
+            display: inline-block;
+            padding-left: 3px;
+            padding-right: 3px;
+
+            border: 1px solid transparent;
+
+            &:hover {
+              border-color: $color-bg-active;
+            }
+
+            &.ui-state-active, &.ui-state-active:hover {
+              background: $color-bg-active;
+              border-color: transparent;
+            }
+          }
+        }
+      }
+    }
+  }
+}

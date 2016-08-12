@@ -1,16 +1,10 @@
 <?php
-/**
- * OpeningHours: Views: Shortcode: Holidays
- */
 
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
+use OpeningHours\Util\Dates;
 
-/**
- * @var         $attributes         array of attributes
- */
-
-extract( $attributes );
+extract( $this->data['attributes'] );
 
 /**
  * variables defined by extract
@@ -25,7 +19,6 @@ extract( $attributes );
  * @var         $highlight          bool whether highlight active Holiday or not
  * @var         $title              string w/ Widget title
  *
- * @var         $class_io           string w/ class for irregular opening row
  * @var         $class_highlighted  string w/ class for highlighted IrregularOpening
  * @var         $date_format        string w/ PHP date format
  * @var         $time_format        string w/ PHP time format
@@ -39,33 +32,22 @@ echo $before_widget;
 if ( ! empty( $title ) ) {
 	echo $before_title . $title . $after_title;
 }
+?>
 
-echo '<table class="op-irregular-openings">';
+<table class="op-table-irregular-openings op-table op-irregular-openings">
+  <tbody>
+  <?php
+  /** @var IrregularOpening $io */
+  foreach ($irregular_openings as $io) :
+    $highlighted = ($highlight && $io->isActiveOnDay()) ? $class_highlighted : '';
+  ?>
+    <tr class="op-irregular-opening <?php echo $highlighted; ?>">
+      <td class="col-name"><?php echo $io->getName(); ?></td>
+      <td class="col-date"><?php echo Dates::format($date_format, $io->getDate()); ?></td>
+      <td class="col-time"><?php echo $io->getFormattedTimeRange($time_format); ?></td>
+    </tr>
+  <?php endforeach; ?>
+  </tbody>
+</table>
 
-echo '<tbody>';
-
-foreach ( $irregular_openings as $io ) :
-
-	/**
-	 * @var         $io         IrregularOpening object
-	 */
-
-	$highlighted = ( $highlight and $io->isActiveOnDay() ) ? $class_highlighted : null;
-
-	echo '<tr class="' . $class_io . ' ' . $highlighted . '">';
-
-	echo '<td class="col-name">' . $io->getName() . '</td>';
-
-	echo '<td class="col-date">' . $io->getDate()->format( $date_format ) . '</td>';
-
-	echo '<td class="col-time">' . $io->getFormattedTimeRange( $time_format ) . '</td>';
-
-	echo '</tr>';
-
-endforeach;
-
-echo '</tbody>';
-
-echo '</table>';
-
-echo $after_widget;
+<?php echo $after_widget; ?>

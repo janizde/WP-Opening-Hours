@@ -4,25 +4,14 @@ namespace OpeningHours\Test\Util;
 
 use DateTime;
 use DateTimeZone;
+use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 
-class DatesTest extends \WP_UnitTestCase {
-
-	public function testOptions () {
-		$this->assertEquals( 'H:i', get_option( 'time_format' ) );
-		$this->assertEquals( 'd.m.Y', get_option( 'date_format' ) );
-		$this->assertEquals( 'Europe/Berlin', get_option( 'timezone_string' ) );
-	}
-
-	public function testAttributes () {
-		$this->assertEquals( 'H:i', Dates::getTimeFormat() );
-		$this->assertEquals( 'd.m.Y', Dates::getDateFormat() );
-		$this->assertEquals( 'Europe/Berlin', Dates::getTimezone()->getName() );
-	}
+class DatesTest extends OpeningHoursTestCase {
 
 	public function testIsValidTime () {
-		$this->assertTrue( Dates::isValidTime( '01:30' ) );
-		$this->assertFalse( Dates::isValidTime( '01:348' ) );
+		$this->assertTrue( Dates::isValidTime('01:30') );
+		$this->assertFalse( Dates::isValidTime('01:348') );
 	}
 
 	public function testMergeDateIntoTime () {
@@ -62,6 +51,34 @@ class DatesTest extends \WP_UnitTestCase {
 		$this->assertFalse( Dates::isToday( $today + 1 ) );
 	}
 
+	public function testIsTodayMultiple () {
+	  $now = new DateTime('now');
+    $today = $today = (int) $now->format('N') - 1;
+    $days = array((int)$today, 3, 4, 2, 1, 5);
+    $this->assertTrue(Dates::isToday($days));
+
+    foreach ($days as $i => $day) {
+      if ($day === $today)
+        unset($days[$i]);
+    }
+
+    $this->assertFalse(Dates::isToday($days));
+  }
+
+	public function testIsTodayMultipleAsString () {
+	  $now = new DateTime('now');
+    $today = $today = (int) $now->format('N') - 1;
+    $days = array((int)$today, 3, 4, 2, 1, 5);
+    $this->assertTrue(Dates::isToday(implode(',', $days)));
+
+    foreach ($days as $i => $day) {
+      if ($day === $today)
+        unset($days[$i]);
+    }
+
+    $this->assertFalse(Dates::isToday(implode(',',$days)));
+  }
+
 	public function testCompareTime () {
 		$d1 = new DateTime('2016-02-03 12:30');
 		$d2 = new DateTime('2016-12-23 01:45');
@@ -80,5 +97,4 @@ class DatesTest extends \WP_UnitTestCase {
 		$this->assertEquals( 0, Dates::compareDate( $d1, $d3 ) );
 		$this->assertEquals( 1, Dates::compareDate( $d2, $d1 ) );
 	}
-
 }
