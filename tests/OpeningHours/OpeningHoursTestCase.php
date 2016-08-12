@@ -43,6 +43,12 @@ class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
         'args' => array($key),
         'return' => $value
       ));
+
+      \WP_Mock::wpFunction('get_option', array(
+        'times' => '0+',
+        'args' => array($key, Functions::type('string')),
+        'return' => $value
+      ));
     }
   }
 
