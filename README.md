@@ -1,5 +1,6 @@
 # WordPress Opening Hours
 [![Build Status](https://travis-ci.org/janizde/WP-Opening-Hours.svg?branch=develop)](https://travis-ci.org/janizde/WP-Opening-Hours)
+[![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)
 
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
 
@@ -9,6 +10,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 	* [WordPress Plugin Installer](#wordpress-plugin-installer)
 	* [Manual Installation](#manual-installation)
 	* [Composer](#composer)
+	* [Clone GitHub Repository](#clone-repository)
 * [Getting Started](#getting-started)
 	* [Setting up your Opening Hours](#set-up)
 	* [Child Sets](#child-sets)
@@ -32,7 +34,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * [License](#license)
 
 ## <a name="features"></a>Features
-* Supports multiple Sets of Opening Hours (e.g. one for your restaurant and one fpr your bar) that you can use independently.
+* Supports multiple Sets of Opening Hours (e.g. one for your restaurant and one for your bar) that you can use independently.
 * Supports Hollidays
 * Supports Irregular Openings (e.g. different opening hours during Christmas)
 * Supports child sets that overwrite your regular opening hours in a specific time period (e.g. seasonal opening hours or an extra day in every second week)
@@ -42,7 +44,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 
 ## <a name="installation"></a>Installation
 
-**Please Note: The Opening Hours Plugin is currently in beta. If you want to use the beta version, you will have to clone the repository or download the .zip file and install it manually**
+**Please Note: The Opening Hours Plugin is currently in beta. If you want to use the beta version, you will have to [clone the repository](#clone-repository) or download the .zip file and install it manually**
 
 ### <a name="wordpress-plugin-installer"></a>WordPress Plugin Installer
 1. Go to your WordPress dashboard
@@ -81,6 +83,20 @@ Add the Opening Hours plugin as dependency
   "wpackagist-plugin/wp-opening-hours": "1.2"
 }
 ~~~
+
+### <a name="clone-repository"></a>From GitHub repository
+Especially when installing a beta version for testing it makes sense to clone the GitHub Repository and checkout the branch
+from which you want to install the plugin. Before you can actually use the plugin you will have to perform the following steps **(Node.js required)**
+
+1. Open your command line and navigate to the project directory
+1. Make sure you have already loaded the submodules. If not run `git submodule update`
+1. If you do not already have gulp installed globally run `npm install -g gulp`
+1. `npm install`
+1. `gulp build`
+
+Alternatively you can also clone the repository somewhere on your computer and run `gulp export` instead of `gulp build`.
+A .zip archive containing a built version of the plugin will be placed inside the project directory that you can unzip and place in
+the `wp-content/plugins` directory of the WordPress installation of your choice.
 
 [↑ Table of Contents](#contents)
 
