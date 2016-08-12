@@ -92,7 +92,7 @@ class OpeningHours extends AbstractModule {
 
 
 		if ( ! wp_script_is( 'jquery-ui' ) ) :
-			wp_register_script( 'jquery-ui', 'http://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array( 'jquery' ) );
+			wp_register_script( 'jquery-ui', 'http://code.jquery.com/ui/1.11.4/jquery-ui.min.js', array( 'jquery' ) );
 			wp_enqueue_script( 'jquery-ui' );
 		endif;
 
