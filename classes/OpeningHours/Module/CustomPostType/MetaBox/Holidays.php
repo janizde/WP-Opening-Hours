@@ -70,8 +70,10 @@ class Holidays extends AbstractMetaBox {
 
   /** @inheritdoc */
   protected function saveData ( $post_id, WP_Post $post, $update ) {
-    $config = $_POST[self::POST_KEY];
-    $holidays = $this->getHolidaysFromPostData($config);
+    $holidays = (array_key_exists(self::POST_KEY, $_POST) && is_array($postData = $_POST[self::POST_KEY]))
+      ? $this->getHolidaysFromPostData($postData)
+      : array();
+
     $persistence = new Persistence($post);
     $persistence->saveHolidays($holidays);
   }

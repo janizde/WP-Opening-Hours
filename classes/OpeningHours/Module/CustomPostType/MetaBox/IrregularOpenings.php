@@ -52,8 +52,10 @@ class IrregularOpenings extends AbstractMetaBox {
 
   /** @inheritdoc */
   protected function saveData ( $post_id, WP_Post $post, $update ) {
-    $config = $_POST[static::POST_KEY];
-    $ios = $this->getIrregularOpeningsFromPostData($config);
+    $ios = (array_key_exists(self::POST_KEY, $_POST) && is_array($postData = $_POST[self::POST_KEY]))
+      ? $this->getIrregularOpeningsFromPostData($postData)
+      : array();
+
     $persistence = new Persistence($post);
     $persistence->saveIrregularOpenings($ios);
   }
