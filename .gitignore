@@ -2,6 +2,7 @@
 node_modules
 npm-debug.log
 dist
-opening-hours.zip
+wp-opening-hours
+wp-opening-hours.zip
 /vendor/
 composer.lock

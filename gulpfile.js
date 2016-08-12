@@ -83,10 +83,13 @@ gulp.task( 'export', ['build'], function () {
     '!composer.lock',
     '!phpunit.xml',
     '!./tests/**/*',
+    '!tests',
+    '!./doc/**/*',
+    '!doc',
     '!.travis.yml'
   ];
 
   return gulp.src( files )
-    .pipe( gulpZip( 'opening-hours.zip' ) )
+    .pipe( gulpZip( 'wp-opening-hours.zip' ) )
     .pipe( gulp.dest( '.' ) );
 } );
