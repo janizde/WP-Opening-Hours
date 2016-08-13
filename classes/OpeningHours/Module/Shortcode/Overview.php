@@ -104,7 +104,7 @@ class Overview extends AbstractShortcode {
       }
 
       if (!$finished && count($dayPeriods) < 1) {
-        if (!$attributes['show_closed'])
+        if (!$attributes['show_closed_days'])
           continue;
 
         $dayData['periodsMarkup'] = '<span class="op-closed">'.$attributes['caption_closed'].'</span>';
