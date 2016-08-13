@@ -13,7 +13,7 @@ if ( !defined( 'ABSPATH' ) )
 
 define( 'OP_NAME', 'Opening Hours' );
 define( 'OP_REQUIRED_PHP_VERSION', '5.3' );
-define( 'OP_REQUIRED_WP_VERSION', '3.1' );
+define( 'OP_REQUIRED_WP_VERSION', '4.0' );
 
 require_once 'includes/admin-notice-helper/admin-notice-helper.php';
 
