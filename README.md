@@ -1,6 +1,7 @@
 # WordPress Opening Hours
 [![Build Status](https://travis-ci.org/janizde/WP-Opening-Hours.svg?branch=develop)](https://travis-ci.org/janizde/WP-Opening-Hours)
 [![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)
 
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
 
