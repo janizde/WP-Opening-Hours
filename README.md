@@ -894,41 +894,30 @@ If you find an issue in the core logic please write one or more unit test which 
 
 ### <a name="contributing-to-translations"></a>Contribute to Translations
 
-If you want the Plugin to be compatible with your language, you can easily translate it and contribute to the project. There are two ways how you can translate the Plugin to your language.
+#### <a name="central-translation-system"></a>[Central WordPress Translation System](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours)
+Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours). Advantages of using the central system are:
 
-##### Pull Request on GitHub
-If you know how Plugin translations are made with gettext, the preferred way is to fork the repository on [GitHub](https://github.com/janizde/WP-Opening-Hours) (please mind to fork from the `develop` branch as explained in the [section above on GitFlow](#git-flow)), translate the Plugin and then send a pull request.
+* Larger translation community
+* Translation can be extracted from the actual development of the Plugin
+* Supports automatic translation updates, so you do not have to wait for the next release to get new translations
 
-1. Fork the Plugin on [GitHub](https://github.com/janizde/WP-Opening-Hours) from the `develop` branch
-1. In the `/translations` directory you will find all translations and the `wp-opening-hours.pot` file which contains all strings that can be translated.
-1. Create a new translation (a `.po` file) with [PoEdit](https://poedit.net/) and name it `wp-opening-hours-{locale}.po`. [Click here](https://make.wordpress.org/polyglots/teams/) for a full list of locales supported by WordPress.
-1. In the PoEdit-Menu go to **Catalog** -> **Update from POT-File** and select the `wp-opening-hours.pot` file.
-1. Translate all strings to your language.
-1. Save the File
-1. Commit **both**, the .po and .mo files of your translations
-1. Send a pull request.
+However translations at translate.wordpress.org have to be approved by the community so it may take some time until the translations will actually be available as language bundle. Furthermore a translation set (locale) has to be fully translated to be shipped with the language bundle.
 
-#### [translate.jannikportz.de](http://translate.jannikportz.de)
-If you are not familiar with gettext and/or GitHub you can as well add your translations in the GlotPress System for the plugin. **You do not have to** fork the repository, send a pull request or use PoEdit.
-
-1. Register at <http://wp.jannikportz.de/wp-signup.php>
-1. Visit <http://translate.jannikportz.de>
-1. Sign in with your Account
-1. Select the Project `WP Opening Hours`
-1. Search for your language. If your language is not in the list of languages please open an issue in the [GitHub repository](https://github.com/janizde/WP-Opening-Hours) and I will add a new translation set for you.
-1. Translate the strings.
-
-Before releasing a new version I will update the translatable string on GlotPress and integrate all translations made with the new release.
-
-If you can't wait for a new release containing your translations you can directly add it to your installation of the plugin:
+If you can not translate the whole plugin or don't want to wait until everything is approved you may perform the following steps to immediately use your translations.
 
 1. Select the translation set in the list of available languages.
 1. Scroll to the bottom.
 1. In the line below the legend, select `all current` as `Machine Object Message (.mo)` and click `Export`.
 1. Rename the file to `wp-opening-hours-{locale}.mo` (replace `{locale}` with the actual locale of the translation, e.g. `de_DE` for German).
-1. Move the file to `/path/to/wordpress/wp-content/plugins/wp-opening-hours/translations`
+1. Move the file to `/path/to/wordpress/wp-content/plugins/wp-opening-hours/language`
 
-**Important Note: When you update the Plugin and your translations are not yet included, your translation file will be lost, so before updating better check whether your translation has been added.**
+**Be aware that when you update the Plugin and your translations are not yet included, your translation file will be lost, so before updating better check whether the translation is available in the language bundle.**
+
+##### Pull Request on GitHub
+Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at the central WordPress translation system. Please refer to [the section on the Central WordPress Translation System](#central-translation-system)
+
+#### [translate.jannikportz.de](http://translate.jannikportz.de)
+translate.jannikportz.de has been shut down in favor of the central WordPress translation system. Please refer to [the section on the Central WordPress Translation System](#central-translation-system)
 
 [↑ Table of Contents](#contents)
 
