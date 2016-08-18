@@ -900,9 +900,9 @@ If you want the Plugin to be compatible with your language, you can easily trans
 If you know how Plugin translations are made with gettext, the preferred way is to fork the repository on [GitHub](https://github.com/janizde/WP-Opening-Hours) (please mind to fork from the `develop` branch as explained in the [section above on GitFlow](#git-flow)), translate the Plugin and then send a pull request.
 
 1. Fork the Plugin on [GitHub](https://github.com/janizde/WP-Opening-Hours) from the `develop` branch
-1. In the `/translations` directory you will find all translations and the `opening-hours.pot` file which contains all strings that can be translated.
-1. Create a new translation (a `.po` file) with [PoEdit](https://poedit.net/) and name it `opening-hours-{locale}.po`. [Click here](https://make.wordpress.org/polyglots/teams/) for a full list of locales supported by WordPress.
-1. In the PoEdit-Menu go to **Catalog** -> **Update from POT-File** and select the `opening-hours.pot` file.
+1. In the `/translations` directory you will find all translations and the `wp-opening-hours.pot` file which contains all strings that can be translated.
+1. Create a new translation (a `.po` file) with [PoEdit](https://poedit.net/) and name it `wp-opening-hours-{locale}.po`. [Click here](https://make.wordpress.org/polyglots/teams/) for a full list of locales supported by WordPress.
+1. In the PoEdit-Menu go to **Catalog** -> **Update from POT-File** and select the `wp-opening-hours.pot` file.
 1. Translate all strings to your language.
 1. Save the File
 1. Commit **both**, the .po and .mo files of your translations
@@ -925,7 +925,7 @@ If you can't wait for a new release containing your translations you can directl
 1. Select the translation set in the list of available languages.
 1. Scroll to the bottom.
 1. In the line below the legend, select `all current` as `Machine Object Message (.mo)` and click `Export`.
-1. Rename the file to `opening-hours-{locale}.mo` (replace `{locale}` with the actual locale of the translation, e.g. `de_DE` for German).
+1. Rename the file to `wp-opening-hours-{locale}.mo` (replace `{locale}` with the actual locale of the translation, e.g. `de_DE` for German).
 1. Move the file to `/path/to/wordpress/wp-content/plugins/wp-opening-hours/translations`
 
 **Important Note: When you update the Plugin and your translations are not yet included, your translation file will be lost, so before updating better check whether your translation has been added.**
