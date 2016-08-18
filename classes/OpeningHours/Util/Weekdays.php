@@ -20,7 +20,7 @@ class Weekdays extends AbstractModule {
 
   /** Sets up all weekday instances */
   protected function __construct () {
-    $domain = 'opening-hours';
+    $domain = 'wp-opening-hours';
 
     $this->weekdays = array(
       new Weekday(0, 'monday', __('Monday', $domain), __('Mon.', $domain)),

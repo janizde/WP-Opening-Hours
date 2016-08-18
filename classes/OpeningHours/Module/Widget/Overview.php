@@ -13,8 +13,8 @@ use OpeningHours\Module\Shortcode\Overview as OverviewShortcode;
 class Overview extends AbstractWidget {
 
   public function __construct () {
-    $title = __('Opening Hours: Overview', 'opening-hours');
-    $description = __('Displays a Table with your Opening Hours. Alternatively use the op-overview Shortcode.', 'opening-hours');
+    $title = __('Opening Hours: Overview', 'wp-opening-hours');
+    $description = __('Displays a Table with your Opening Hours. Alternatively use the op-overview Shortcode.', 'wp-opening-hours');
     parent::__construct('widget_op_overview', $title, $description, OverviewShortcode::getInstance());
   }
 
@@ -24,89 +24,89 @@ class Overview extends AbstractWidget {
     // Standard Fields
     $this->addField('title', array(
       'type' => 'text',
-      'caption' => __('Title', 'opening-hours')
+      'caption' => __('Title', 'wp-opening-hours')
     ));
 
     $this->addField('set_id', array(
       'type' => 'select',
-      'caption' => __('Set to show', 'opening-hours'),
+      'caption' => __('Set to show', 'wp-opening-hours'),
       'options_callback' => array('OpeningHours\Module\OpeningHours', 'getSetsOptions')
     ));
 
     $this->addField('highlight', array(
       'type' => 'select',
-      'caption' => __('Highlight', 'opening-hours'),
+      'caption' => __('Highlight', 'wp-opening-hours'),
       'options' => array(
-        'nothing' => __('Nothing', 'opening-hours'),
-        'period' => __('Running Period', 'opening-hours'),
-        'day' => __('Current Weekday', 'opening-hours')
+        'nothing' => __('Nothing', 'wp-opening-hours'),
+        'period' => __('Running Period', 'wp-opening-hours'),
+        'day' => __('Current Weekday', 'wp-opening-hours')
       )
     ));
 
     $this->addField('show_closed_days', array(
       'type' => 'checkbox',
-      'caption' => __('Show closed days', 'opening-hours')
+      'caption' => __('Show closed days', 'wp-opening-hours')
     ));
 
     $this->addField('show_description', array(
       'type' => 'checkbox',
-      'caption' => __('Show Set Description', 'opening-hours')
+      'caption' => __('Show Set Description', 'wp-opening-hours')
     ));
 
     $this->addField('compress', array(
       'type' => 'checkbox',
-      'caption' => __('Compress Opening Hours', 'opening-hours')
+      'caption' => __('Compress Opening Hours', 'wp-opening-hours')
     ));
 
     $this->addField('short', array(
       'type' => 'checkbox',
-      'caption' => __('Use short day captions', 'opening-hours')
+      'caption' => __('Use short day captions', 'wp-opening-hours')
     ));
 
     $this->addField('include_io', array(
       'type' => 'checkbox',
-      'caption' => __('Include Irregular Openings', 'opening-hours'),
+      'caption' => __('Include Irregular Openings', 'wp-opening-hours'),
     ));
 
     $this->addField('include_holidays', array(
       'type' => 'checkbox',
-      'caption' => __('Include Holidays', 'opening-hours')
+      'caption' => __('Include Holidays', 'wp-opening-hours')
     ));
 
     $this->addField('template', array(
       'type' => 'select',
-      'caption' => __('Template', 'opening-hours'),
+      'caption' => __('Template', 'wp-opening-hours'),
       'options' => array(
-        'table' => __('Table', 'opening-hours'),
-        'list' => __('List', 'opening-hours')
+        'table' => __('Table', 'wp-opening-hours'),
+        'list' => __('List', 'wp-opening-hours')
       )
     ));
 
     // Extended Fields
     $this->addField('caption_closed', array(
       'type' => 'text',
-      'caption' => __('Closed Caption', 'opening-hours'),
+      'caption' => __('Closed Caption', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true
     ));
 
     $this->addField('highlighted_period_class', array(
       'type' => 'text',
-      'caption' => __('Highlighted Period class', 'opening-hours'),
+      'caption' => __('Highlighted Period class', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true
     ));
 
     $this->addField('highlighted_day_class', array(
       'type' => 'text',
-      'caption' => __('Highlighted Day class', 'opening-hours'),
+      'caption' => __('Highlighted Day class', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true
     ));
 
     $this->addField('time_format', array(
       'type' => 'text',
-      'caption' => __('PHP Time Format', 'opening-hours'),
+      'caption' => __('PHP Time Format', 'wp-opening-hours'),
       'extended' => true,
       'description' => self::getPhpDateFormatInfo(),
       'default_placeholder' => true
@@ -114,7 +114,7 @@ class Overview extends AbstractWidget {
 
     $this->addField('hide_io_date', array(
       'type' => 'checkbox',
-      'caption' => __('Hide date of Irregular Openings', 'opening-hours'),
+      'caption' => __('Hide date of Irregular Openings', 'wp-opening-hours'),
       'extended' => true
     ));
   }

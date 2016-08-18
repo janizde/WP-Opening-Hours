@@ -124,7 +124,7 @@ abstract class AbstractWidget extends WP_Widget {
       return;
 
     echo '<div class="extended-settings">';
-    echo '<p><a class="collapse-toggle">' . __('More Settings', 'opening-hours') . '</a></p>';
+    echo '<p><a class="collapse-toggle">' . __('More Settings', 'wp-opening-hours') . '</a></p>';
     echo '<div class="settings-container hidden">';
 
     foreach ($extended as $field)
@@ -163,7 +163,7 @@ abstract class AbstractWidget extends WP_Widget {
    * @return      string
    */
   public static function getPhpDateFormatInfo () {
-    return sprintf('<a href="http://bit.ly/16Wsegh" target="blank">%s</a>', __('More about PHP date and time formats.', 'opening-hours'));
+    return sprintf('<a href="http://bit.ly/16Wsegh" target="blank">%s</a>', __('More about PHP date and time formats.', 'wp-opening-hours'));
   }
 
   /**

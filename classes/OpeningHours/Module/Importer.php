@@ -83,7 +83,7 @@ class Importer extends AbstractModule {
   }
 
   public function addImportedNotice () {
-    add_notice(__('Your Opening Hours and related widgets have automatically been upgraded to work with the updated version of the Plugin. Please double check your Opening Hours and Widgets.', 'opening-hours'), 'update');
+    add_notice(__('Your Opening Hours and related widgets have automatically been upgraded to work with the updated version of the Plugin. Please double check your Opening Hours and Widgets.', 'wp-opening-hours'), 'update');
   }
 
   /**
@@ -100,7 +100,7 @@ class Importer extends AbstractModule {
 
     $postId = wp_insert_post(array(
       'post_type' => SetCPT::CPT_SLUG,
-      'post_title' => __('Opening Hours', 'opening-hours'),
+      'post_title' => __('Opening Hours', 'wp-opening-hours'),
       'post_status' => 'publish'
     ));
 

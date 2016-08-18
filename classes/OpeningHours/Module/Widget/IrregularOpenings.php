@@ -13,8 +13,8 @@ use OpeningHours\Module\Shortcode\IrregularOpenings as IrregularOpeningsShortcod
 class IrregularOpenings extends AbstractWidget {
 
   public function __construct () {
-    $title = __('Opening Hours: Irregular Openings', 'opening-hours');
-    $description = __('Lists up all Irregular Openings in the selected Set.', 'opening-hours');
+    $title = __('Opening Hours: Irregular Openings', 'wp-opening-hours');
+    $description = __('Lists up all Irregular Openings in the selected Set.', 'wp-opening-hours');
     parent::__construct('widget_op_irregular_openings', $title, $description, IrregularOpeningsShortcode::getInstance());
   }
 
@@ -24,40 +24,40 @@ class IrregularOpenings extends AbstractWidget {
     // Standard Fields
     $this->addField('title', array(
       'type' => 'text',
-      'caption' => __('Title', 'opening-hours')
+      'caption' => __('Title', 'wp-opening-hours')
     ));
 
     $this->addField('set_id', array(
       'type' => 'select',
-      'caption' => __('Set', 'opening-hours'),
+      'caption' => __('Set', 'wp-opening-hours'),
       'options_callback' => array('OpeningHours\Module\OpeningHours', 'getSetsOptions'),
     ));
 
     $this->addField('highlight', array(
       'type' => 'checkbox',
-      'caption' => __('Highlight active Irregular Opening', 'opening-hours')
+      'caption' => __('Highlight active Irregular Opening', 'wp-opening-hours')
     ));
 
     $this->addField('template', array(
       'type' => 'select',
-      'caption' => __('Template', 'opening-hours'),
+      'caption' => __('Template', 'wp-opening-hours'),
       'options' => array(
-        'table' => __('Table', 'opening-hours'),
-        'list' => __('List', 'opening-hours')
+        'table' => __('Table', 'wp-opening-hours'),
+        'list' => __('List', 'wp-opening-hours')
       )
     ));
 
     // Extended Fields
     $this->addField('class_highlighted', array(
       'type' => 'text',
-      'caption' => __('class for highlighted Irregular Opening', 'opening-hours'),
+      'caption' => __('class for highlighted Irregular Opening', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true
     ));
 
     $this->addField('date_format', array(
       'type' => 'text',
-      'caption' => __('PHP Date Format', 'opening-hours'),
+      'caption' => __('PHP Date Format', 'wp-opening-hours'),
       'extended' => true,
       'description' => self::getPhpDateFormatInfo(),
       'default_placeholder' => true
@@ -65,7 +65,7 @@ class IrregularOpenings extends AbstractWidget {
 
     $this->addField('time_format', array(
       'type' => 'text',
-      'caption' => __('PHP Time Format', 'opening-hours'),
+      'caption' => __('PHP Time Format', 'wp-opening-hours'),
       'extended' => true,
       'description' => self::getPhpDateFormatInfo(),
       'default_placeholder' => true

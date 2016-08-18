@@ -22,7 +22,7 @@ class IrregularOpenings extends AbstractMetaBox {
   const POST_KEY = 'opening-hours-irregular-openings';
 
   public function __construct () {
-    parent::__construct('op_meta_box_irregular_openings', __('Irregular Openings', 'opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT);
+    parent::__construct('op_meta_box_irregular_openings', __('Irregular Openings', 'wp-opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT);
   }
 
   /** @inheritdoc */

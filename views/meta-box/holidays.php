@@ -9,15 +9,15 @@ $holidays = Holidays::getInstance();
 	<table class="op-holidays" id="op-holidays-table">
 		<thead>
 		<th>
-			<?php _e( 'Name', 'opening-hours' ); ?>
+			<?php _e( 'Name', 'wp-opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Date Start', 'opening-hours' ); ?>
+			<?php _e( 'Date Start', 'wp-opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Date End', 'opening-hours' ); ?>
+			<?php _e( 'Date End', 'wp-opening-hours' ); ?>
 		</th>
 		</thead>
 
@@ -27,6 +27,6 @@ $holidays = Holidays::getInstance();
 	</table>
 
 	<button class="button button-primary button-add add-holiday">
-		<?php _e( 'Add New Holiday', 'opening-hours' ); ?>
+		<?php _e( 'Add New Holiday', 'wp-opening-hours' ); ?>
 	</button>
 </div>

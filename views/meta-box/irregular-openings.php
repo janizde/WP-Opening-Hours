@@ -17,19 +17,19 @@ $irregular_openings = $this->data['irregular_openings'];
 	<table class="op-irregular-openings" id="op-io-table">
 		<thead>
 		<th>
-			<?php _e( 'Name', 'opening-hours' ); ?>
+			<?php _e( 'Name', 'wp-opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Date', 'opening-hours' ); ?>
+			<?php _e( 'Date', 'wp-opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Time Start', 'opening-hours' ); ?>
+			<?php _e( 'Time Start', 'wp-opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Time End', 'opening-hours' ); ?>
+			<?php _e( 'Time End', 'wp-opening-hours' ); ?>
 		</th>
 		</thead>
 
@@ -46,7 +46,7 @@ $irregular_openings = $this->data['irregular_openings'];
 	</table>
 
 	<button class="button button-primary button-add add-io">
-		<?php _e( 'Add New Irregular Opening', 'opening-hours' ); ?>
+		<?php _e( 'Add New Irregular Opening', 'wp-opening-hours' ); ?>
 	</button>
 
 </div>

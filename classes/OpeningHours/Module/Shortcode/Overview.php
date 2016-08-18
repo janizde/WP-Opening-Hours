@@ -35,7 +35,7 @@ class Overview extends AbstractShortcode {
       'short' => false,
       'include_io' => false,
       'include_holidays' => false,
-      'caption_closed' => __('Closed', 'opening-hours'),
+      'caption_closed' => __('Closed', 'wp-opening-hours'),
       'highlighted_period_class' => 'highlighted',
       'highlighted_day_class' => 'highlighted',
       'time_format' => Dates::getTimeFormat(),

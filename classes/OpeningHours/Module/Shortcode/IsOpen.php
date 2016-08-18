@@ -23,10 +23,10 @@ class IsOpen extends AbstractShortcode {
 
     $this->defaultAttributes = array(
       'set_id' => null,
-      'open_text' => __('We\'re currently open.', 'opening-hours'),
-      'closed_text' => __('We\'re currently closed.', 'opening-hours'),
+      'open_text' => __('We\'re currently open.', 'wp-opening-hours'),
+      'closed_text' => __('We\'re currently closed.', 'wp-opening-hours'),
       'show_next' => false,
-      'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', 'opening-hours'),
+      'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', 'wp-opening-hours'),
       'before_widget' => '<div class="op-is-open-shortcode">',
       'after_widget' => '</div>',
       'before_title' => '<h3 class="op-is-open-title">',

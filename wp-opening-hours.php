@@ -6,7 +6,7 @@
  * Version: 2.0
  * Author: Jannik Portz (@janizde)
  * Author URI: http://jannikportz.de
- * Text Domain: opening-hours
+ * Text Domain: wp-opening-hours
  * Domain Path: /language
  */
 
@@ -20,13 +20,13 @@ define( 'OP_REQUIRED_WP_VERSION', '4.0' );
 require_once 'includes/admin-notice-helper/admin-notice-helper.php';
 
 function op_admin_notice_php () {
-	$string = __( 'Plugin Opening Hours requires at least PHP Version %s. Your Installation of WordPress is currently running on PHP %s', 'opening-hours' );
+	$string = __( 'Plugin Opening Hours requires at least PHP Version %s. Your Installation of WordPress is currently running on PHP %s', 'wp-opening-hours' );
 	add_notice( sprintf( $string, OP_REQUIRED_PHP_VERSION, PHP_VERSION ) );
 }
 
 function op_admin_notice_wp() {
 	global $wp_version;
-	$string = __( 'Plugin Opening Hours requires at least WordPress version %s. Your Installation of WordPress is running on WordPress %s', 'opening-hours' );
+	$string = __( 'Plugin Opening Hours requires at least WordPress version %s. Your Installation of WordPress is running on WordPress %s', 'wp-opening-hours' );
 	add_notice( sprintf( $string, OP_REQUIRED_WP_VERSION, $wp_version )
 	);
 }

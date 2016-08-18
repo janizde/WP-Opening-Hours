@@ -68,20 +68,20 @@ class Set extends AbstractModule {
    */
   public function getLabels () {
     return array(
-      'name' => __('Sets', 'opening-hours'),
-      'singular_name' => __('Set', 'opening-hours'),
-      'menu_name' => __('Opening Hours', 'opening-hours'),
-      'name_admin_bar' => __('Set', 'opening-hours'),
-      'add_new' => __('Add New', 'opening-hours'),
-      'add_new_item' => __('Add New Set', 'opening-hours'),
-      'new_item' => __('New Set', 'opening-hours'),
-      'edit_item' => __('Edit Set', 'opening-hours'),
-      'view_item' => __('View Set', 'opening-hours'),
-      'all_items' => __('All Sets', 'opening-hours'),
-      'search_items' => __('Search Sets', 'opening-hours'),
-      'parent_item_colon' => __('Parent Sets:', 'opening-hours'),
-      'not_found' => __('No sets found.', 'opening-hours'),
-      'not_found_in_trash' => __('No sets found in Trash.', 'opening-hours')
+      'name' => __('Sets', 'wp-opening-hours'),
+      'singular_name' => __('Set', 'wp-opening-hours'),
+      'menu_name' => __('Opening Hours', 'wp-opening-hours'),
+      'name_admin_bar' => __('Set', 'wp-opening-hours'),
+      'add_new' => __('Add New', 'wp-opening-hours'),
+      'add_new_item' => __('Add New Set', 'wp-opening-hours'),
+      'new_item' => __('New Set', 'wp-opening-hours'),
+      'edit_item' => __('Edit Set', 'wp-opening-hours'),
+      'view_item' => __('View Set', 'wp-opening-hours'),
+      'all_items' => __('All Sets', 'wp-opening-hours'),
+      'search_items' => __('Search Sets', 'wp-opening-hours'),
+      'parent_item_colon' => __('Parent Sets:', 'wp-opening-hours'),
+      'not_found' => __('No sets found.', 'wp-opening-hours'),
+      'not_found_in_trash' => __('No sets found in Trash.', 'wp-opening-hours')
     );
   }
 

@@ -24,7 +24,7 @@ class Holidays extends AbstractMetaBox {
   const POST_KEY = 'opening-hours-holidays';
 
   public function __construct () {
-    parent::__construct('op_meta_box_holidays', __('Holidays', 'opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
+    parent::__construct('op_meta_box_holidays', __('Holidays', 'wp-opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
   }
 
   /** @inheritdoc */
