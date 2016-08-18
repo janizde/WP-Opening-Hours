@@ -4,7 +4,6 @@ namespace OpeningHours\Module\Shortcode;
 
 use InvalidArgumentException;
 use OpeningHours\Module\AbstractModule;
-use OpeningHours\Module\I18n;
 use OpeningHours\Util\Helpers;
 use OpeningHours\Util\ViewRenderer;
 
@@ -74,7 +73,7 @@ abstract class AbstractShortcode extends AbstractModule {
    */
   public function validate () {
     if (empty($this->shortcodeTag))
-      throw new InvalidArgumentException(__('Shortcode has no tag name and could not be registered', I18n::TEXTDOMAIN));
+      throw new InvalidArgumentException(__('Shortcode has no tag name and could not be registered', 'opening-hours'));
   }
 
   /**

@@ -6,6 +6,8 @@ Description: Manage your venue's Opening Hours in WordPress
 Version:     2.0
 Author:      Jannik Portz (@janizde)
 Author URI:  http://jannikportz.de
+Text Domain: opening-hours
+Domain Path: /language
 */
 
 if ( !defined( 'ABSPATH' ) )

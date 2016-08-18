@@ -1,12 +1,7 @@
 <?php
 
-use OpeningHours\Entity\Holiday;
-use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\OpeningHours;
-use OpeningHours\Module\Shortcode\Overview as Shortcode;
-use OpeningHours\Util\Dates;
-use OpeningHours\Util\Weekdays;
 
 extract( $this->data['attributes'] );
 

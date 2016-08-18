@@ -5,7 +5,6 @@ namespace OpeningHours\Module\Shortcode;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
@@ -36,7 +35,7 @@ class Overview extends AbstractShortcode {
       'short' => false,
       'include_io' => false,
       'include_holidays' => false,
-      'caption_closed' => __('Closed', I18n::TEXTDOMAIN),
+      'caption_closed' => __('Closed', 'opening-hours'),
       'highlighted_period_class' => 'highlighted',
       'highlighted_day_class' => 'highlighted',
       'time_format' => Dates::getTimeFormat(),

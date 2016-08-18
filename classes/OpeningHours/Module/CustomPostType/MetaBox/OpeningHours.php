@@ -4,7 +4,6 @@ namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set as SetEntity;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\ViewRenderer;
@@ -22,7 +21,7 @@ class OpeningHours extends AbstractMetaBox {
   const TEMPLATE_PATH_SINGLE = 'ajax/op-set-period.php';
 
   public function __construct () {
-    parent::__construct('op_meta_box_opening_hours', __('Opening Hours', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
+    parent::__construct('op_meta_box_opening_hours', __('Opening Hours', 'opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
   }
 
   /** @inheritdoc */

@@ -9,7 +9,6 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
-use OpeningHours\Util\Persistence;
 use WP_Mock\Functions;
 
 class SetTest extends OpeningHoursTestCase {

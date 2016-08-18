@@ -3,7 +3,6 @@
 namespace OpeningHours\Module\CustomPostType;
 
 use OpeningHours\Module\AbstractModule;
-use OpeningHours\Module\I18n;
 
 /**
  * Set Custom Post Type
@@ -69,20 +68,20 @@ class Set extends AbstractModule {
    */
   public function getLabels () {
     return array(
-      'name' => __('Sets', I18n::TEXTDOMAIN),
-      'singular_name' => __('Set', I18n::TEXTDOMAIN),
-      'menu_name' => __('Opening Hours', I18n::TEXTDOMAIN),
-      'name_admin_bar' => __('Set', I18n::TEXTDOMAIN),
-      'add_new' => __('Add New', I18n::TEXTDOMAIN),
-      'add_new_item' => __('Add New Set', I18n::TEXTDOMAIN),
-      'new_item' => __('New Set', I18n::TEXTDOMAIN),
-      'edit_item' => __('Edit Set', I18n::TEXTDOMAIN),
-      'view_item' => __('View Set', I18n::TEXTDOMAIN),
-      'all_items' => __('All Sets', I18n::TEXTDOMAIN),
-      'search_items' => __('Search Sets', I18n::TEXTDOMAIN),
-      'parent_item_colon' => __('Parent Sets:', I18n::TEXTDOMAIN),
-      'not_found' => __('No sets found.', I18n::TEXTDOMAIN),
-      'not_found_in_trash' => __('No sets found in Trash.', I18n::TEXTDOMAIN)
+      'name' => __('Sets', 'opening-hours'),
+      'singular_name' => __('Set', 'opening-hours'),
+      'menu_name' => __('Opening Hours', 'opening-hours'),
+      'name_admin_bar' => __('Set', 'opening-hours'),
+      'add_new' => __('Add New', 'opening-hours'),
+      'add_new_item' => __('Add New Set', 'opening-hours'),
+      'new_item' => __('New Set', 'opening-hours'),
+      'edit_item' => __('Edit Set', 'opening-hours'),
+      'view_item' => __('View Set', 'opening-hours'),
+      'all_items' => __('All Sets', 'opening-hours'),
+      'search_items' => __('Search Sets', 'opening-hours'),
+      'parent_item_colon' => __('Parent Sets:', 'opening-hours'),
+      'not_found' => __('No sets found.', 'opening-hours'),
+      'not_found_in_trash' => __('No sets found in Trash.', 'opening-hours')
     );
   }
 

@@ -2,7 +2,6 @@
 
 namespace OpeningHours\Module\Widget;
 
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\Shortcode\Holidays as HolidaysShortcode;
 
 /**
@@ -14,8 +13,8 @@ use OpeningHours\Module\Shortcode\Holidays as HolidaysShortcode;
 class Holidays extends AbstractWidget {
 
   public function __construct () {
-    $title = __('Opening Hours: Holidays', I18n::TEXTDOMAIN);
-    $description = __('Lists up all Holidays in the selected Set.', I18n::TEXTDOMAIN);
+    $title = __('Opening Hours: Holidays', 'opening-hours');
+    $description = __('Lists up all Holidays in the selected Set.', 'opening-hours');
     parent::__construct('widget_op_holidays', $title, $description, HolidaysShortcode::getInstance());
   }
 
@@ -25,47 +24,47 @@ class Holidays extends AbstractWidget {
     // Standard Fields
     $this->addField('title', array(
       'type' => 'text',
-      'caption' => __('Title', I18n::TEXTDOMAIN)
+      'caption' => __('Title', 'opening-hours')
     ));
 
     $this->addField('set_id', array(
       'type' => 'select',
-      'caption' => __('Set', I18n::TEXTDOMAIN),
+      'caption' => __('Set', 'opening-hours'),
       'options_callback' => array('OpeningHours\Module\OpeningHours', 'getSetsOptions'),
     ));
 
     $this->addField('highlight', array(
       'type' => 'checkbox',
-      'caption' => __('Highlight active Holiday', I18n::TEXTDOMAIN)
+      'caption' => __('Highlight active Holiday', 'opening-hours')
     ));
 
     $this->addField('template', array(
       'type' => 'select',
-      'caption' => __('Template', I18n::TEXTDOMAIN),
+      'caption' => __('Template', 'opening-hours'),
       'options' => array(
-        'table' => __('Table', I18n::TEXTDOMAIN),
-        'list' => __('List', I18n::TEXTDOMAIN)
+        'table' => __('Table', 'opening-hours'),
+        'list' => __('List', 'opening-hours')
       )
     ));
 
     // Extended Fields
     $this->addField('class_holiday', array(
       'type' => 'text',
-      'caption' => __('Holiday <tr> class', I18n::TEXTDOMAIN),
+      'caption' => __('Holiday <tr> class', 'opening-hours'),
       'extended' => true,
       'default_placeholder' => true
     ));
 
     $this->addField('class_highlighted', array(
       'type' => 'text',
-      'caption' => __('class for highlighted Holiday', I18n::TEXTDOMAIN),
+      'caption' => __('class for highlighted Holiday', 'opening-hours'),
       'extended' => true,
       'default_placeholder' => true
     ));
 
     $this->addField('date_format', array(
       'type' => 'text',
-      'caption' => __('PHP Date Format', I18n::TEXTDOMAIN),
+      'caption' => __('PHP Date Format', 'opening-hours'),
       'extended' => true,
       'description' => self::getPhpDateFormatInfo(),
       'default_placeholder' => true

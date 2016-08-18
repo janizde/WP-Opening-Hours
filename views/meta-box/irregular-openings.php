@@ -3,7 +3,6 @@
  * Opening Hours: View: Meta Box: IrregularOpenings
  */
 
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\MetaBox\IrregularOpenings as MetaBox;
 use OpeningHours\Util\ViewRenderer;
 
@@ -18,19 +17,19 @@ $irregular_openings = $this->data['irregular_openings'];
 	<table class="op-irregular-openings" id="op-io-table">
 		<thead>
 		<th>
-			<?php _e( 'Name', I18n::TEXTDOMAIN ); ?>
+			<?php _e( 'Name', 'opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Date', I18n::TEXTDOMAIN ); ?>
+			<?php _e( 'Date', 'opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Time Start', I18n::TEXTDOMAIN ); ?>
+			<?php _e( 'Time Start', 'opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Time End', I18n::TEXTDOMAIN ); ?>
+			<?php _e( 'Time End', 'opening-hours' ); ?>
 		</th>
 		</thead>
 
@@ -47,7 +46,7 @@ $irregular_openings = $this->data['irregular_openings'];
 	</table>
 
 	<button class="button button-primary button-add add-io">
-		<?php _e( 'Add New Irregular Opening', I18n::TEXTDOMAIN ); ?>
+		<?php _e( 'Add New Irregular Opening', 'opening-hours' ); ?>
 	</button>
 
 </div>

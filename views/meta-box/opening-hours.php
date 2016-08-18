@@ -1,7 +1,7 @@
 <?php
 
-use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\CustomPostType\MetaBox\OpeningHours as MetaBox;
+use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\ViewRenderer;
 use OpeningHours\Util\Weekdays;
 

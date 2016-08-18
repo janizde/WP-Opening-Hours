@@ -3,7 +3,6 @@
 namespace OpeningHours\Util;
 
 use OpeningHours\Module\AbstractModule;
-use OpeningHours\Module\I18n;
 
 /**
  * Helper class for dealing with Weekdays
@@ -21,7 +20,7 @@ class Weekdays extends AbstractModule {
 
   /** Sets up all weekday instances */
   protected function __construct () {
-    $domain = I18n::TEXTDOMAIN;
+    $domain = 'opening-hours';
 
     $this->weekdays = array(
       new Weekday(0, 'monday', __('Monday', $domain), __('Mon.', $domain)),

@@ -2,9 +2,9 @@
 
 namespace OpeningHours\Test\Module;
 
+use OpeningHours\Module\CustomPostType\Set as SetCPT;
 use OpeningHours\Module\Importer;
 use OpeningHours\Test\OpeningHoursTestCase;
-use OpeningHours\Module\CustomPostType\Set as SetCPT;
 use OpeningHours\Util\Persistence;
 
 class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
