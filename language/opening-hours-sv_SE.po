@@ -1,8 +1,8 @@
-# Translation of WP Opening Hours in Spanish (Spain)
+# Translation of WP Opening Hours in Swedish
 # This file is distributed under the same license as the WP Opening Hours package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-08-20 16:24:08+0000\n"
+"PO-Revision-Date: 2016-08-18 14:59:40+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -46,107 +46,107 @@ msgstr ""
 
 #: classes/OpeningHours/Module/Shortcode/AbstractShortcode.php:77
 msgid "Shortcode has no tag name and could not be registered"
-msgstr "Shortcode no tiene ningún nombre de etiqueta y no puede ser registrado"
+msgstr "Kortkoden har inget tagnamn och kan inte registreras"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:59
 msgid "Class if open (span)"
-msgstr "Clase si abierto (span)"
+msgstr "Klass vid öppet (span)"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:66
 msgid "Class if closed (span)"
-msgstr "Clase si Cerrado (span)"
+msgstr "Klass vid stängt (span)"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:77
 msgid "Formatted Date"
-msgstr "Formato de fecha"
+msgstr "Formaterat datum"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:78
 msgid "Weekday"
-msgstr "Día de la semana"
+msgstr "Veckodag"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:79
 msgid "Formatted Start Time"
-msgstr "Formato de Hora de inicio"
+msgstr "Formaterad starttid"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:80
 msgid "Formatted End Time"
-msgstr "Formato de Hora de finalización"
+msgstr "Formaterad sluttid"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:118
 msgid "Hide date of Irregular Openings"
-msgstr "Ocultar fecha de aperturas irregulares"
+msgstr "Dölj datum för oregelbundna öppettider"
 
 #: classes/OpeningHours/Module/Shortcode/IsOpen.php:30
 msgid "We're open again on %2$s (%1$s) from %3$s to %4$s"
-msgstr "Abriremos de nuevo el %2$s (%1$s) de %3$sh a %4$sh"
+msgstr "Vi har öppet igen på %2$s (%1$s) mellan %3$s och %4$s"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:69
 msgid "Include Irregular Openings"
-msgstr "Incluir aperturas irregulares"
+msgstr "Inkludera oregelbundna öppettider"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:74
 msgid "Include Holidays"
-msgstr "Incluir festivos"
+msgstr "Inkludera helgdagar"
 
 #: wp-opening-hours.php:21
 msgid "Plugin Opening Hours requires at least PHP Version %s. Your Installation of WordPress is currently running on PHP %s"
-msgstr "El Plugin Opening Hours requiere al menos la versión %s de PHP. Su instalación de WordPress se está ejecutando actualmente en PHP %s"
+msgstr "Plugin Opening Hours kräver minst PHP version %s. Din installation av WordPress har för närvarande PHP %s"
 
 #: wp-opening-hours.php:27
 msgid "Plugin Opening Hours requires at least WordPress version %s. Your Installation of WordPress is running on WordPress %s"
-msgstr "El Plugin Opening Hours requiere al menos la versión %s de WordPress. Su instalación de WordPress se está ejecutando actualmente en WordPress %s"
+msgstr "Plugin Opening Hours kräver mins WordPress version %s. Din installation av WordPress körs på WordPress %s"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/OpeningHours.php:25
 #: classes/OpeningHours/Module/CustomPostType/Set.php:74
 #: classes/OpeningHours/Module/Importer.php:103
 msgid "Opening Hours"
-msgstr "Horario de Apertura"
+msgstr "Öppettider"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/Holidays.php:28
 msgid "Holidays"
-msgstr "Festivos"
+msgstr "Helgdagar"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/IrregularOpenings.php:26
 msgid "Irregular Openings"
-msgstr "Aperturas irregulares"
+msgstr "Oregelbundna öppettider"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:45
 msgid "Description"
-msgstr "Descripción"
+msgstr "Beskrivning"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:50
 #: views/meta-box/holidays.php:17
 msgid "Date Start"
-msgstr "Fecha de Inicio"
+msgstr "Startdatum"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:59
 #: views/meta-box/holidays.php:21
 msgid "Date End"
-msgstr "Fecha Final"
+msgstr "Slutdatum"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:68
 msgid "Week Scheme"
-msgstr "Esquema semanal"
+msgstr "Veckoschema"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:70
 msgid "Every week"
-msgstr "Cada semana"
+msgstr "Varje vecka"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:71
 msgid "Even weeks only"
-msgstr "Incluso semanas solamente"
+msgstr "Endast jämna veckor"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:72
 msgid "Odd weeks only"
-msgstr "Sólo semanas impares"
+msgstr "Endast udda veckor"
 
 #: classes/OpeningHours/Module/CustomPostType/MetaBox/SetDetails.php:79
 msgid "Add a Child-Set"
-msgstr "Añadir a ajuste hijo"
+msgstr "Lägg till ett Child-Set"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:72
 msgid "Sets"
-msgstr "Ajustes"
+msgstr "Sets"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:73
 #: classes/OpeningHours/Module/CustomPostType/Set.php:75
@@ -154,287 +154,287 @@ msgstr "Ajustes"
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:33
 #: classes/OpeningHours/Module/Widget/IsOpen.php:33
 msgid "Set"
-msgstr "Ajuste"
+msgstr "Set"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:76
 msgid "Add New"
-msgstr "Añadir nuevo"
+msgstr "Lägg till"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:77
 msgid "Add New Set"
-msgstr "Añadir Nuevo Ajuste"
+msgstr "Lägg till nytt Set"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:78
 msgid "New Set"
-msgstr "Nuevo Ajuste"
+msgstr "Nytt Set"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:79
 msgid "Edit Set"
-msgstr "Editar Ajuste"
+msgstr "Redigera Set"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:80
 msgid "View Set"
-msgstr "Ver Ajuste"
+msgstr "Visa Set"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:81
 msgid "All Sets"
-msgstr "Todos los Ajustes"
+msgstr "Alla Sets"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:82
 msgid "Search Sets"
-msgstr "Buscar Ajustes"
+msgstr "Sök Set"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:83
 msgid "Parent Sets:"
-msgstr "Ajustes Padres"
+msgstr "Överordnade Set:"
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:84
 msgid "No sets found."
-msgstr "No se han encontrado Ajustes"
+msgstr "Inga set funna."
 
 #: classes/OpeningHours/Module/CustomPostType/Set.php:85
 msgid "No sets found in Trash."
-msgstr "No se han encontrado ajustes en la papelera"
+msgstr "Inga set funna i papperskorgen."
 
 #: classes/OpeningHours/Util/Weekdays.php:27
 msgid "Monday"
-msgstr "Lunes"
+msgstr "Måndag"
 
 #: classes/OpeningHours/Util/Weekdays.php:28
 msgid "Tuesday"
-msgstr "Martes"
+msgstr "Tisdag"
 
 #: classes/OpeningHours/Util/Weekdays.php:29
 msgid "Wednesday"
-msgstr "Miércoles"
+msgstr "Onsdag"
 
 #: classes/OpeningHours/Util/Weekdays.php:30
 msgid "Thursday"
-msgstr "Jueves"
+msgstr "Torsdag"
 
 #: classes/OpeningHours/Util/Weekdays.php:31
 msgid "Friday"
-msgstr "Viernes"
+msgstr "Fredag"
 
 #: classes/OpeningHours/Util/Weekdays.php:32
 msgid "Saturday"
-msgstr "Sábado"
+msgstr "Lördag"
 
 #: classes/OpeningHours/Util/Weekdays.php:33
 msgid "Sunday"
-msgstr "Domingo"
+msgstr "Söndag"
 
 #: classes/OpeningHours/Util/Weekdays.php:27
 msgid "Mon."
-msgstr "Lun."
+msgstr "Mån."
 
 #: classes/OpeningHours/Util/Weekdays.php:28
 msgid "Tue."
-msgstr "Mar."
+msgstr "Tis."
 
 #: classes/OpeningHours/Util/Weekdays.php:29
 msgid "Wed."
-msgstr "Mie."
+msgstr "Ons."
 
 #: classes/OpeningHours/Util/Weekdays.php:30
 msgid "Thu."
-msgstr "Jue."
+msgstr "Tors."
 
 #: classes/OpeningHours/Util/Weekdays.php:31
 msgid "Fri."
-msgstr "Vie."
+msgstr "Fre."
 
 #: classes/OpeningHours/Util/Weekdays.php:32
 msgid "Sat."
-msgstr "Sab."
+msgstr "Lör."
 
 #: classes/OpeningHours/Util/Weekdays.php:33
 msgid "Sun."
-msgstr "Dom."
+msgstr "Sön."
 
 #: classes/OpeningHours/Module/I18n.php:45
 msgid "Hour"
-msgstr "Hora"
+msgstr "Timme"
 
 #: classes/OpeningHours/Module/I18n.php:46
 msgid "Minute"
-msgstr "Minuto"
+msgstr "Minut"
 
 #: classes/OpeningHours/Module/Shortcode/IsOpen.php:27
 msgid "We're currently open."
-msgstr "Actualmente estamos abiertos."
+msgstr "Just nu har vi öppet."
 
 #: classes/OpeningHours/Module/Shortcode/IsOpen.php:28
 msgid "We're currently closed."
-msgstr "Actualmente estamos cerrados."
+msgstr "Just nu har vi stängt."
 
 #: classes/OpeningHours/Module/Shortcode/Overview.php:39
 msgid "Closed"
-msgstr "Cerrado"
+msgstr "Stängt"
 
 #: classes/OpeningHours/Module/Widget/AbstractWidget.php:128
 msgid "More Settings"
-msgstr "Más ajustes"
+msgstr "Fler inställningar"
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:17
 msgid "Opening Hours: Holidays"
-msgstr "Horarios de Apertura: Festivos"
+msgstr "Öppettider: Helgdagar"
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:18
 msgid "Lists up all Holidays in the selected Set."
-msgstr "Lista de todos los Festivos en los ajustes seleccionados."
+msgstr "Lista alla helgdagar i valt set."
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:28
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:28
 #: classes/OpeningHours/Module/Widget/IsOpen.php:28
 #: classes/OpeningHours/Module/Widget/Overview.php:28
 msgid "Title"
-msgstr "Título"
+msgstr "Titel"
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:39
 msgid "Highlight active Holiday"
-msgstr "Destacar los festivos activos"
+msgstr "Markera aktiv helgdag"
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:54
 msgid "Holiday <tr> class"
-msgstr "Festivos <tr> class"
+msgstr "Helgdags <tr> klass"
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:61
 msgid "class for highlighted Holiday"
-msgstr "Clase para destacar los festivos"
+msgstr "klass för markerad helgdag"
 
 #: classes/OpeningHours/Module/Widget/Holidays.php:68
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:61
 #: classes/OpeningHours/Module/Widget/IsOpen.php:93
 msgid "PHP Date Format"
-msgstr "PHP Formato de fecha"
+msgstr "PHP Datumformat"
 
 #: classes/OpeningHours/Module/Widget/AbstractWidget.php:167
 msgid "More about PHP date and time formats."
-msgstr "Más información sobre los formatos de fecha y hora PHP."
+msgstr "Mer om PHP datum och tidsformat."
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:17
 msgid "Opening Hours: Irregular Openings"
-msgstr "Horario de Apertura: Aperturas Irregulares"
+msgstr "Öppettider: Oregelbundna öppettider"
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:18
 msgid "Lists up all Irregular Openings in the selected Set."
-msgstr "Listado de todas las Aperturas Irregulares en el ajuste seleccionado. "
+msgstr "Lista alla oregelbundna öppettider i valt set."
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:39
 msgid "Highlight active Irregular Opening"
-msgstr "Destacar las Aperturas Irregulares activadas"
+msgstr "Markera aktiva oregelbundna öppettider"
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:54
 msgid "class for highlighted Irregular Opening"
-msgstr "Clase para destacar las Aperturas Irregulares"
+msgstr "klass för markerad oregelbunden öppettid"
 
 #: classes/OpeningHours/Module/Widget/IrregularOpenings.php:69
 #: classes/OpeningHours/Module/Widget/IsOpen.php:101
 #: classes/OpeningHours/Module/Widget/Overview.php:110
 msgid "PHP Time Format"
-msgstr "Formato de Hora PHP"
+msgstr "PHP Tidsformat"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:17
 msgid "Opening Hours: Is Open Status"
-msgstr "Horario de Apertura: Está en estado Abierto"
+msgstr "Öppettider: Öppet-status"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:18
 msgid "Shows a box saying whether a specific set is currently open or closed based on Periods."
-msgstr "Muestra un cuadro diciendo si un conjunto específico está actualmente abierto o cerrado basado en períodos."
+msgstr "Visare en box som meddelar huruvida ett specifikt set är för närvarande öppet eller stängt baserat på perioder."
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:39
 msgid "Show next open Period"
-msgstr "Muestra el siguiente periodo Abierto"
+msgstr "Visa nästa öppet period"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:45
 msgid "Caption if open"
-msgstr "Título si está Abierto"
+msgstr "Rubrik vid öppet"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:52
 msgid "Caption if closed"
-msgstr "Título si está Cerrado"
+msgstr "Rubrik vid stängt"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:73
 msgid "Next Period String Format"
-msgstr "Formato de cadena del siguiente periodo"
+msgstr "Nästa periods strängformat"
 
 #: classes/OpeningHours/Module/Widget/IsOpen.php:86
 msgid "Class for span"
-msgstr "Clase de span"
+msgstr "Klass för span"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:17
 msgid "Opening Hours: Overview"
-msgstr "Horario de Apertura: Resumen"
+msgstr "Öppettider: Översikt"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:18
 msgid "Displays a Table with your Opening Hours. Alternatively use the op-overview Shortcode."
-msgstr "Muestra una tabla con el Horario de Apertura. Como alternativa utilizar el shortcode op-overview."
+msgstr "Visar en tabell med dina öppettider. Använd alternativt op-overview shortcode."
 
 #: classes/OpeningHours/Module/Widget/Overview.php:33
 msgid "Set to show"
-msgstr "Ajuste para mostrar"
+msgstr "Set att visa"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:39
 msgid "Highlight"
-msgstr "Destacar"
+msgstr "Markera"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:41
 msgid "Nothing"
-msgstr "Nada"
+msgstr "Inget"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:42
 msgid "Running Period"
-msgstr "Periodo de ejecución"
+msgstr "Löpande period"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:43
 msgid "Current Weekday"
-msgstr "Día de la semana actual"
+msgstr "Aktuell veckodag"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:49
 msgid "Show closed days"
-msgstr "Mostrar días cerrados"
+msgstr "Visa stängda dagar"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:54
 msgid "Show Set Description"
-msgstr "Mostrar descripción de los ajustes"
+msgstr "Visa setbeskrivning"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:59
 msgid "Compress Opening Hours"
-msgstr "Horario de Apertura comprimido"
+msgstr "Komprimera Öppettider"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:89
 msgid "Closed Caption"
-msgstr "Título Cerrado"
+msgstr "Stängt rubrik"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:96
 msgid "Highlighted Period class"
-msgstr "Clase de Periodos destacados"
+msgstr "Markerad period klass"
 
 #: classes/OpeningHours/Module/Widget/Overview.php:103
 msgid "Highlighted Day class"
-msgstr "Clase de Días destacados"
+msgstr "Markerad dag klass"
 
 #: views/meta-box/holidays.php:13 views/meta-box/irregular-openings.php:21
 msgid "Name"
-msgstr "Nombre"
+msgstr "Namn"
 
 #: views/meta-box/holidays.php:31
 msgid "Add New Holiday"
-msgstr "Añadir nuevo Festivo"
+msgstr "Lägg till ny helgdag"
 
 #: views/meta-box/irregular-openings.php:25
 msgid "Date"
-msgstr "Fecha"
+msgstr "Datum"
 
 #: views/meta-box/irregular-openings.php:29
 msgid "Time Start"
-msgstr "Hora de Inicio"
+msgstr "Starttid"
 
 #: views/meta-box/irregular-openings.php:33
 msgid "Time End"
-msgstr "Hora de finalización"
+msgstr "Sluttid"
 
 #: views/meta-box/irregular-openings.php:50
 msgid "Add New Irregular Opening"
-msgstr "Añadir nueva Apertura Irregular"
+msgstr "Lägg till ny oregelbunden öppning"
