@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Name: Opening Hours
-Plugin URI:  http://www.jannikportz.de/wp-opening-hours-plugin/
-Description: Manage your venue's Opening Hours in WordPress
-Version:     2.0
-Author:      Jannik Portz (@janizde)
-Author URI:  http://jannikportz.de
-Text Domain: opening-hours
-Domain Path: /language
-*/
+ * Plugin Name: Opening Hours
+ * Plugin URI: http://www.jannikportz.de/wp-opening-hours-plugin/
+ * Description: Manage your venue's Opening Hours in WordPress
+ * Version: 2.0
+ * Author: Jannik Portz (@janizde)
+ * Author URI: http://jannikportz.de
+ * Text Domain: opening-hours
+ * Domain Path: /language
+ */
 
 if ( !defined( 'ABSPATH' ) )
 	die( 'Access denied.' );
