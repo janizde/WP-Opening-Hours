@@ -49,6 +49,12 @@ class Dates extends AbstractModule {
   protected $timezone;
 
   /**
+   * Index of the day on which the week starts from 0 (Mon) to 6 (Sun)
+   * @var       int
+   */
+  protected $startOfWeek;
+
+  /**
    * Current DateTime
    * @var       DateTime
    */
@@ -58,6 +64,7 @@ class Dates extends AbstractModule {
   protected function __construct () {
     $this->dateFormat = get_option('date_format', self::STD_DATE_FORMAT);
     $this->timeFormat = get_option('time_format', self::STD_TIME_FORMAT);
+    $this->startOfWeek = ((int) get_option('start_of_week', 0) + 6) % 7;
     $this->initDateTimeZone();
     $this->now = new DateTime('now', $this->timezone);
   }
@@ -265,5 +272,13 @@ class Dates extends AbstractModule {
    */
   public static function getNow () {
     return self::getInstance()->now;
+  }
+
+  /**
+   * Getter: Start of Week
+   * @return    int
+   */
+  public static function getStartOfWeek () {
+    return self::getInstance()->startOfWeek;
   }
 }

@@ -15,6 +15,7 @@ class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     $defaultOptions = array(
       'date_format' => 'Y-m-d',
       'time_format' => 'H:i',
+      'start_of_week' => 0,
       'timezone_string' => 'Europe/Berlin',
       'gmt_offset' => ''
     );
@@ -50,6 +51,11 @@ class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
         'return' => $value
       ));
     }
+
+    \WP_Mock::wpFunction('get_option', array(
+      'times' => '0+',
+      'args' => array('start_of_week', Functions::type('int'))
+    ));
   }
 
   /**
