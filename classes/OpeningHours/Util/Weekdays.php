@@ -137,4 +137,27 @@ class Weekdays extends AbstractModule {
 
     return implode(', ', $strings);
   }
+
+  /**
+   * Returns a two-dimensional array containing day translations in the right format for jQuery UI datePicker
+   * @return    array     Associative array with:
+   *                        'full': Array with full day names starting from Sunday
+   *                        'short': Array with short day names starting from Sunday without dot
+   */
+  public static function getDatePickerTranslations () {
+    $weekdays = self::getInstance()->weekdays;
+    $ordered = array($weekdays[6], $weekdays[0], $weekdays[1], $weekdays[2], $weekdays[3], $weekdays[4], $weekdays[5]);
+    $full = array_map(function ( Weekday $d ) {
+      return $d->getName();
+    }, $ordered);
+
+    $short = array_map(function (Weekday $d) {
+      return trim($d->getShortName(), '[\s\.]');
+    }, $ordered);
+
+    return array(
+      'full' => $full,
+      'short' => $short
+    );
+  }
 }
