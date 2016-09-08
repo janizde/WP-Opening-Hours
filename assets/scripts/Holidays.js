@@ -72,6 +72,9 @@ jQuery.fn.opSingleHoliday = function () {
   inputDateStart.datepicker({
     dateFormat: 'yy-mm-dd',
     firstDay: openingHoursData.startOfWeek || 0,
+    dayNames: openingHoursData.weekdays.full,
+    dayNamesMin: openingHoursData.weekdays.short,
+    dayNamesShort: openingHoursData.weekdays.short,
     onClose: function (date) {
       inputDateEnd.datepicker("option", "minDate", date);
     }
@@ -80,6 +83,9 @@ jQuery.fn.opSingleHoliday = function () {
   inputDateEnd.datepicker({
     dateFormat: 'yy-mm-dd',
     firstDay: openingHoursData.startOfWeek || 0,
+    dayNames: openingHoursData.weekdays.full,
+    dayNamesMin: openingHoursData.weekdays.short,
+    dayNamesShort: openingHoursData.weekdays.short,
     onClose: function (date) {
       inputDateStart.datepicker("option", "maxDate", date);
     }

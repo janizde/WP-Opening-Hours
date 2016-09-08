@@ -10,6 +10,10 @@
 
     dateStart.datepicker({
       dateFormat: 'yy-mm-dd',
+      firstDay: openingHoursData.startOfWeek || 0,
+      dayNames: openingHoursData.weekdays.full,
+      dayNamesMin: openingHoursData.weekdays.short,
+      dayNamesShort: openingHoursData.weekdays.short,
       onClose: function (date) {
         dateEnd.datepicker("option", "minDate", date);
       }
@@ -17,6 +21,10 @@
 
     dateEnd.datepicker({
       dateFormat: 'yy-mm-dd',
+      firstDay: openingHoursData.startOfWeek || 0,
+      dayNames: openingHoursData.weekdays.full,
+      dayNamesMin: openingHoursData.weekdays.short,
+      dayNamesShort: openingHoursData.weekdays.short,
       onClose: function (date) {
         dateStart.datepicker("option", "maxDate", date);
       }
