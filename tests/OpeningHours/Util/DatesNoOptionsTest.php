@@ -31,6 +31,11 @@ class DatesNoOptionsTest extends \PHPUnit_Framework_TestCase {
       'return' => Dates::STD_TIME_FORMAT
     ));
 
+    \WP_Mock::wpFunction('get_option', array(
+      'args' => array('start_of_week', 0),
+      'return' => 0
+    ));
+
     foreach (array('gmt_offset', 'timezone_string') as $key) {
       \WP_Mock::wpFunction('get_option', array(
         'args' => array($key),
@@ -41,6 +46,7 @@ class DatesNoOptionsTest extends \PHPUnit_Framework_TestCase {
     Dates::getInstance();
     $this->assertEquals(Dates::STD_DATE_FORMAT, Dates::getDateFormat());
     $this->assertEquals(Dates::STD_TIME_FORMAT, Dates::getTimeFormat());
+    $this->assertEquals(6, Dates::getStartOfWeek());
     $this->assertInstanceOf('DateTimeZone', Dates::getTimezone());
   }
 }

@@ -70,7 +70,11 @@ jQuery.fn.opSingleIO = function () {
   });
 
   inputDate.datepicker({
-    dateFormat: 'yy-mm-dd'
+    dateFormat: 'yy-mm-dd',
+    firstDay: openingHoursData.startOfWeek || 0,
+    dayNames: openingHoursData.weekdays.full,
+    dayNamesMin: openingHoursData.weekdays.short,
+    dayNamesShort: openingHoursData.weekdays.short
   });
 
   inputDate.focus( function() {

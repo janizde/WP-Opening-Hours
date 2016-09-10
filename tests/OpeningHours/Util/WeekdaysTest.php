@@ -64,4 +64,13 @@ class WeekdaysTest extends OpeningHoursTestCase {
 		$this->assertEquals( 'Monday - Friday', Weekdays::getDaysCaption( '2,0,4,1,3' ) );
 		$this->assertEquals( 'Monday - Friday', Weekdays::getDaysCaption( ' 2 ,0    , 4 ,  1 , 3 ' ) );
 	}
+
+	public function testGetDatePickerTranslations () {
+	  $expected = array(
+	    'full' => array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'),
+      'short' => array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat')
+    );
+
+    $this->assertEquals($expected, Weekdays::getDatePickerTranslations());
+  }
 }

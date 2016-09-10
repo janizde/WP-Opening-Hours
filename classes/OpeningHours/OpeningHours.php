@@ -5,6 +5,8 @@ namespace OpeningHours;
 use OpeningHours\Module as Module;
 use OpeningHours\Module\AbstractModule;
 use OpeningHours\Module\Widget\AbstractWidget;
+use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekdays;
 
 /**
  * Core Module for the Opening Hours Plugin
@@ -121,6 +123,10 @@ class OpeningHours extends AbstractModule {
     endif;
 
     Module\Ajax::injectAjaxUrl(self::PREFIX . 'js');
+    wp_localize_script(self::PREFIX . 'js', 'openingHoursData', array(
+      'startOfWeek' => (int) ((Dates::getStartOfWeek()+1) % 7),
+      'weekdays' => Weekdays::getDatePickerTranslations()
+    ));
 
 
     // Frontend Styles and Scripts
