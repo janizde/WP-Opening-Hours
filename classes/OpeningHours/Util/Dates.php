@@ -281,4 +281,39 @@ class Dates extends AbstractModule {
   public static function getStartOfWeek () {
     return self::getInstance()->startOfWeek;
   }
+
+  /**
+   * @param string $dateFormat
+   */
+  public function setDateFormat ( $dateFormat ) {
+    $this->dateFormat = $dateFormat;
+  }
+
+  /**
+   * @param string $timeFormat
+   */
+  public function setTimeFormat ( $timeFormat ) {
+    $this->timeFormat = $timeFormat;
+  }
+
+  /**
+   * @param DateTimeZone $timezone
+   */
+  public function setTimezone ( $timezone ) {
+    $this->timezone = $timezone;
+  }
+
+  /**
+   * @param int $startOfWeek
+   */
+  public function setStartOfWeek ( $startOfWeek ) {
+    $this->startOfWeek = $startOfWeek;
+  }
+
+  /**
+   * @param DateTime $now
+   */
+  public function setNow ( $now ) {
+    $this->now = $now;
+  }
 }
