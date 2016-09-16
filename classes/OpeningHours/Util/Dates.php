@@ -285,35 +285,35 @@ class Dates extends AbstractModule {
   /**
    * @param string $dateFormat
    */
-  public function setDateFormat ( $dateFormat ) {
-    $this->dateFormat = $dateFormat;
+  public static function setDateFormat ( $dateFormat ) {
+    self::getInstance()->dateFormat = $dateFormat;
   }
 
   /**
    * @param string $timeFormat
    */
-  public function setTimeFormat ( $timeFormat ) {
-    $this->timeFormat = $timeFormat;
+  public static function setTimeFormat ( $timeFormat ) {
+    self::getInstance()->timeFormat = $timeFormat;
   }
 
   /**
    * @param DateTimeZone $timezone
    */
-  public function setTimezone ( $timezone ) {
-    $this->timezone = $timezone;
+  public static function setTimezone ( $timezone ) {
+    self::getInstance()->timezone = $timezone;
   }
 
   /**
    * @param int $startOfWeek
    */
-  public function setStartOfWeek ( $startOfWeek ) {
-    $this->startOfWeek = $startOfWeek;
+  public static function setStartOfWeek ( $startOfWeek ) {
+    self::getInstance()->startOfWeek = $startOfWeek;
   }
 
   /**
    * @param DateTime $now
    */
-  public function setNow ( $now ) {
-    $this->now = $now;
+  public static function setNow ( $now ) {
+    self::getInstance()->now = $now;
   }
 }
