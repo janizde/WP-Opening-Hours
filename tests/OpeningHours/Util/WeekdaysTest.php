@@ -3,6 +3,8 @@
 namespace OpeningHours\Test\Util;
 
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekday;
 use OpeningHours\Util\Weekdays;
 
 class WeekdaysTest extends OpeningHoursTestCase {
@@ -72,5 +74,46 @@ class WeekdaysTest extends OpeningHoursTestCase {
     );
 
     $this->assertEquals($expected, Weekdays::getDatePickerTranslations());
+  }
+
+  public function testGetWeekdaysInOrder () {
+    Dates::setStartOfWeek(0);
+    $days = Weekdays::getWeekdaysInOrder();
+    $this->assertWeekdaysInOrder(array(0,1,2,3,4,5,6), $days);
+
+    Dates::setStartOfWeek(1);
+    $days = Weekdays::getWeekdaysInOrder();
+    $this->assertWeekdaysInOrder(array(1,2,3,4,5,6,0), $days);
+
+    Dates::setStartOfWeek(2);
+    $days = Weekdays::getWeekdaysInOrder();
+    $this->assertWeekdaysInOrder(array(2,3,4,5,6,0,1), $days);
+
+    Dates::setStartOfWeek(3);
+    $days = Weekdays::getWeekdaysInOrder();
+    $this->assertWeekdaysInOrder(array(3,4,5,6,0,1,2), $days);
+
+    Dates::setStartOfWeek(4);
+    $days = Weekdays::getWeekdaysInOrder();
+    $this->assertWeekdaysInOrder(array(4,5,6,0,1,2,3), $days);
+
+    Dates::setStartOfWeek(5);
+    $days = Weekdays::getWeekdaysInOrder();
+    $this->assertWeekdaysInOrder(array(5,6,0,1,2,3,4), $days);
+
+    Dates::setStartOfWeek(6);
+    $days = Weekdays::getWeekdaysInOrder();
+    $this->assertWeekdaysInOrder(array(6,0,1,2,3,4,5), $days);
+  }
+
+  /**
+   * @param int[] $expected
+   * @param Weekday[] $days
+   */
+  protected function assertWeekdaysInOrder (array $expected, array $days) {
+    $this->assertEquals(count($expected), count($days));
+    for ($i = 0; $i < count($expected); ++$i) {
+      $this->assertEquals($expected[$i], $days[$i]->getIndex());
+    }
   }
 }

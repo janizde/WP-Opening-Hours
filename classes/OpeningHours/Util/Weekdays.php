@@ -160,4 +160,18 @@ class Weekdays extends AbstractModule {
       'short' => $short
     );
   }
+
+  /**
+   * Returns all Weekdays in order according to startOfWeek
+   * @return    Weekday[]
+   */
+  public static function getWeekdaysInOrder () {
+    $instance = self::getInstance();
+    $days = array();
+    $start = Dates::getStartOfWeek();
+    for ($i = 0; $i < 7; ++$i) {
+      $days[] = $instance->weekdays[($i+$start) % 7];
+    }
+    return $days;
+  }
 }
