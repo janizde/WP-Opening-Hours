@@ -7,7 +7,6 @@ namespace OpeningHours\Util;
  *
  * @author      Jannik Portz
  * @package     OpeningHours\Util
- * @todo        make more popular
  */
 class Weekday {
 
@@ -48,6 +47,16 @@ class Weekday {
     $this->slug = $slug;
     $this->name = $name;
     $this->shortName = $shortName;
+  }
+
+  /**
+   * Retrieves the relative index aware of the start_of_week setting.
+   * E.g. when the start_of_week setting is set to Tuesday it will return 0 for Tuesday, 1 for Wednesday ... 6 for Monday
+   * @return    int       The relative index
+   */
+  public function getRelativeIndex () {
+    $startOfWeek = Dates::getStartOfWeek();
+    return ($this->index - $startOfWeek + 7) % 7;
   }
 
   /**

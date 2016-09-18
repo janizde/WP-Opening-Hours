@@ -79,30 +79,34 @@ class Overview extends AbstractShortcode {
       : $set->getPeriodsGroupedByDay();
 
     $days = array();
-    foreach ($periods as $day => $dayPeriods) {
+    foreach ($periods as $row) {
       $dayData = array(
-        'highlightedDayClass' => ($attributes['highlight'] === 'day' && Dates::isToday($day)) ? $attributes['highlighted_day_class'] : '',
-        'dayCaption' => Weekdays::getDaysCaption($day, $attributes['short'])
+        'highlightedDayClass' => ($attributes['highlight'] === 'day' && Weekdays::containsToday($row['days'])) ? $attributes['highlighted_day_class'] : '',
+        'dayCaption' => Weekdays::getDaysCaption($row['days'], $attributes['short'])
       );
 
       $finished = false;
-      if ($attributes['include_io']) {
-        $io = $set->getActiveIrregularOpeningOnWeekday($day);
-        if ($io instanceof IrregularOpening) {
-          $dayData['periodsMarkup'] = self::renderIrregularOpening($io, $attributes);
-          $finished = true;
+      if (count($row['days']) === 1) {
+        if ($attributes['include_io']) {
+          // todo: use Weekday objects
+          $io = $set->getActiveIrregularOpeningOnWeekday($row['days'][0]->getIndex());
+          if ($io instanceof IrregularOpening) {
+            $dayData['periodsMarkup'] = self::renderIrregularOpening($io, $attributes);
+            $finished = true;
+          }
+        }
+
+        if (!$finished && $attributes['include_holidays']) {
+          // todo: use Weekday objects
+          $holiday = $set->getActiveHolidayOnWeekday($row['days'][0]->getIndex());
+          if ($holiday instanceof Holiday) {
+            $dayData['periodsMarkup'] = self::renderHoliday($holiday);
+            $finished = true;
+          }
         }
       }
 
-      if (!$finished && $attributes['include_holidays']) {
-        $holiday = $set->getActiveHolidayOnWeekday($day);
-        if ($holiday instanceof Holiday) {
-          $dayData['periodsMarkup'] = self::renderHoliday($holiday);
-          $finished = true;
-        }
-      }
-
-      if (!$finished && count($dayPeriods) < 1) {
+      if (!$finished && count($row['periods']) < 1) {
         if (!$attributes['show_closed_days'])
           continue;
 
@@ -114,7 +118,7 @@ class Overview extends AbstractShortcode {
         $dayData['periodsMarkup'] = '';
 
         /** @var \OpeningHours\Entity\Period $period */
-        foreach ($dayPeriods as $period) {
+        foreach ($row['periods'] as $period) {
           $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpen() ) ? $attributes['highlighted_period_class'] : '';
           $dayData['periodsMarkup'] .= sprintf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($attributes['time_format']));
         }

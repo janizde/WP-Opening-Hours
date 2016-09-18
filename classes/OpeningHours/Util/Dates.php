@@ -49,7 +49,7 @@ class Dates extends AbstractModule {
   protected $timezone;
 
   /**
-   * Index of the day on which the week starts from 0 (Mon) to 6 (Sun)
+   * Index of the day on which the week starts from 0 (Sun) to 6 (Mon)
    * @var       int
    */
   protected $startOfWeek;
@@ -64,7 +64,7 @@ class Dates extends AbstractModule {
   protected function __construct () {
     $this->dateFormat = get_option('date_format', self::STD_DATE_FORMAT);
     $this->timeFormat = get_option('time_format', self::STD_TIME_FORMAT);
-    $this->startOfWeek = ((int) get_option('start_of_week', 0) + 6) % 7;
+    $this->startOfWeek = intval(get_option('start_of_week', 0));
     $this->initDateTimeZone();
     $this->now = new DateTime('now', $this->timezone);
   }
@@ -155,35 +155,6 @@ class Dates extends AbstractModule {
     );
 
     return $dateTime->add($interval);
-  }
-
-  /**
-   * Checks whether the provided weekday is equal to today's weekday.
-   * When passed an int[] it will check if any of the provided weekdays match the current time
-   *
-   * @param     int|array $day      The weekday to check for in numeric representation
-   *                                or an array of weekday numeric representations
-   *
-   * @return    bool                Whether $day equals today's weekday
-   */
-  public static function isToday ($day) {
-    if (is_string($day) && !is_numeric($day))
-      return self::isToday(explode(',', trim($day)));
-
-    if (is_array($day)) {
-      foreach ($day as $aDay) {
-        if (self::isToday($aDay))
-          return true;
-      }
-
-      return false;
-    }
-
-    if (!is_numeric($day))
-      return false;
-
-    $dateTime = self::getNow();
-    return (int)$dateTime->format('N') - 1 == $day;
   }
 
   /**
