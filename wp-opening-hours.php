@@ -17,7 +17,7 @@ define( 'OP_NAME', 'Opening Hours' );
 define( 'OP_REQUIRED_PHP_VERSION', '5.3' );
 define( 'OP_REQUIRED_WP_VERSION', '4.0' );
 
-require_once 'includes/admin-notice-helper/admin-notice-helper.php';
+require_once __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php';
 
 function op_admin_notice_php () {
 	$string = __( 'Plugin Opening Hours requires at least PHP Version %s. Your Installation of WordPress is currently running on PHP %s', 'wp-opening-hours' );
