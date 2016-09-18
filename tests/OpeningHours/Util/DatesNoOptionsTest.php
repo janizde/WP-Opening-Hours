@@ -46,7 +46,6 @@ class DatesNoOptionsTest extends \PHPUnit_Framework_TestCase {
     Dates::getInstance();
     $this->assertEquals(Dates::STD_DATE_FORMAT, Dates::getDateFormat());
     $this->assertEquals(Dates::STD_TIME_FORMAT, Dates::getTimeFormat());
-    $this->assertEquals(6, Dates::getStartOfWeek());
     $this->assertInstanceOf('DateTimeZone', Dates::getTimezone());
   }
 }

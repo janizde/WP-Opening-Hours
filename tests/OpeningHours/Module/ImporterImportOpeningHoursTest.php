@@ -42,14 +42,14 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     );
 
     $expectedPeriodData = array(
-      array('weekday' => 0, 'timeStart' => '08:00', 'timeEnd' => '12:00'),
-      array('weekday' => 0, 'timeStart' => '12:30', 'timeEnd' => '18:00'),
       array('weekday' => 1, 'timeStart' => '08:00', 'timeEnd' => '12:00'),
       array('weekday' => 1, 'timeStart' => '12:30', 'timeEnd' => '18:00'),
       array('weekday' => 2, 'timeStart' => '08:00', 'timeEnd' => '12:00'),
       array('weekday' => 2, 'timeStart' => '12:30', 'timeEnd' => '18:00'),
       array('weekday' => 3, 'timeStart' => '08:00', 'timeEnd' => '12:00'),
-      array('weekday' => 6, 'timeStart' => '09:00', 'timeEnd' => '13:00')
+      array('weekday' => 3, 'timeStart' => '12:30', 'timeEnd' => '18:00'),
+      array('weekday' => 4, 'timeStart' => '08:00', 'timeEnd' => '12:00'),
+      array('weekday' => 0, 'timeStart' => '09:00', 'timeEnd' => '13:00')
     );
 
     \WP_Mock::wpFunction('get_option', array(

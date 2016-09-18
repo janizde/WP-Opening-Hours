@@ -23,13 +23,13 @@ class Weekdays extends AbstractModule {
     $domain = 'wp-opening-hours';
 
     $this->weekdays = array(
-      new Weekday(0, 'monday', __('Monday', $domain), __('Mon.', $domain)),
-      new Weekday(1, 'tuesday', __('Tuesday', $domain), __('Tue.', $domain)),
-      new Weekday(2, 'wednesday', __('Wednesday', $domain), __('Wed.', $domain)),
-      new Weekday(3, 'thursday', __('Thursday', $domain), __('Thu.', $domain)),
-      new Weekday(4, 'friday', __('Friday', $domain), __('Fri.', $domain)),
-      new Weekday(5, 'saturday', __('Saturday', $domain), __('Sat.', $domain)),
-      new Weekday(6, 'sunday', __('Sunday', $domain), __('Sun.', $domain)),
+      new Weekday(0, 'sunday', __('Sunday', $domain), __('Sun.', $domain)),
+      new Weekday(1, 'monday', __('Monday', $domain), __('Mon.', $domain)),
+      new Weekday(2, 'tuesday', __('Tuesday', $domain), __('Tue.', $domain)),
+      new Weekday(3, 'wednesday', __('Wednesday', $domain), __('Wed.', $domain)),
+      new Weekday(4, 'thursday', __('Thursday', $domain), __('Thu.', $domain)),
+      new Weekday(5, 'friday', __('Friday', $domain), __('Fri.', $domain)),
+      new Weekday(6, 'saturday', __('Saturday', $domain), __('Sat.', $domain))
     );
   }
 
@@ -91,51 +91,38 @@ class Weekdays extends AbstractModule {
   }
 
   /**
-   * Returns the string representation of the provided days
-   *
-   * @param     string|int|array $days  The days whose string representation to return.
-   *                                    Either one day as numeric representation, a comma separated list of weekdays or
-   *                                    an array of weekday numbers
-   * @param     bool             $short Whether to use short string representations
-   *
-   * @return    string                  The string representation for the provided days
+   * Returns a string containing the names of the weekdays.
+   * If all weekdays are in sequence it will return a from-to string
+   * @param     Weekday[]   $days     The weekdays for which to generate the name string
+   * @param     bool        $short    Whether to use short weekday names
+   * @return    string                Caption for the specified weekdays
    */
-  public static function getDaysCaption ( $days, $short = false ) {
-    $captions = self::getCaptions($short);
+  public static function getDaysCaption (array $days, $short = false) {
+    if (count($days) == 1)
+      return $short ? $days[0]->getShortName() : $days[0]->getName();
 
-    if (is_numeric($days))
-      return $captions[$days];
-
-    if (is_string($days) and strpos($days, ',')) {
-      $days = explode(',', $days);
-      foreach ($days as &$day) {
-        $day = (int)trim($day);
+    $sequence = true;
+    for ($i = 1; $i < count($days); ++$i) {
+      if ($days[$i-1]->getRelativeIndex() !== $days[$i]->getRelativeIndex()-1) {
+        $sequence = false;
+        break;
       }
-      unset($day);
     }
 
-    if (!is_array($days))
-      return '';
-
-    if (count($days) === 1)
-      return self::getDaysCaption($days[0]);
-
-    sort($days);
-    $days = array_values($days);
-
-    $first_el = $days[0];
-    $last_el = $days[count($days) - 1];
-
-    if ($days == range($first_el, $last_el)) {
-      $result_format = "%s - %s";
-      return sprintf($result_format, $captions[$first_el], $captions[$last_el]);
+    if ($sequence) {
+      $format = "%s - %s";
+      $last = $days[count($days)-1];
+      if ($short) {
+        return sprintf($format, $days[0]->getShortName(), $last->getShortName());
+      } else {
+        return sprintf($format, $days[0]->getName(), $last->getName());
+      }
+    } else {
+      $names = array_map(function (Weekday $w) use ($short) {
+        return $short ? $w->getShortName() : $w->getName();
+      }, $days);
+      return implode(', ', $names);
     }
-
-    $strings = array();
-    foreach ($days as $day)
-      $strings[] = $captions[$day];
-
-    return implode(', ', $strings);
   }
 
   /**
@@ -146,18 +133,46 @@ class Weekdays extends AbstractModule {
    */
   public static function getDatePickerTranslations () {
     $weekdays = self::getInstance()->weekdays;
-    $ordered = array($weekdays[6], $weekdays[0], $weekdays[1], $weekdays[2], $weekdays[3], $weekdays[4], $weekdays[5]);
     $full = array_map(function ( Weekday $d ) {
       return $d->getName();
-    }, $ordered);
+    }, $weekdays);
 
     $short = array_map(function (Weekday $d) {
       return trim($d->getShortName(), '[\s\.]');
-    }, $ordered);
+    }, $weekdays);
 
     return array(
       'full' => $full,
       'short' => $short
     );
+  }
+
+  /**
+   * Returns all Weekdays in order according to startOfWeek
+   * @return    Weekday[]
+   */
+  public static function getWeekdaysInOrder () {
+    $instance = self::getInstance();
+    $days = array();
+    $start = Dates::getStartOfWeek();
+    for ($i = 0; $i < 7; ++$i) {
+      $days[] = $instance->weekdays[($i+$start) % 7];
+    }
+    return $days;
+  }
+
+
+  /**
+   * Checks whether any of the provided weekdays represents today's weekday
+   * @param     Weekday[] $weekdays The weekdays to check
+   * @return    bool                Whether $weekdays contains any day that represents today's weekday
+   */
+  public static function containsToday (array $weekdays) {
+    $today = intval(Dates::getNow()->format('w'));
+    foreach ($weekdays as $day) {
+      if ($day->getIndex() === $today)
+        return true;
+    }
+    return false;
   }
 }

@@ -11,6 +11,8 @@ use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\MetaBoxPersistence;
 use OpeningHours\Util\Persistence;
+use OpeningHours\Util\Weekday;
+use OpeningHours\Util\Weekdays;
 use WP_Post;
 
 /**
@@ -190,16 +192,6 @@ class Set {
     return $this->id === $this->parentId;
   }
 
-  /** Adds dummy periods to the set */
-  public function addDummyPeriods () {
-    for ($i = 0; $i < 7; $i++) {
-      if (count($this->getPeriodsByDay($i)) < 1) {
-        $newPeriod = Period::createDummy($i);
-        $this->periods->append($newPeriod);
-      }
-    }
-  }
-
   /**
    * Only evaluates standard opening periods
    *
@@ -370,51 +362,68 @@ class Set {
   }
 
   /**
-   * Getter: (all) Periods Grouped By Day
-   * @return       Period[][]
+   * Returns all Periods grouped by day
+   * @return    array     Sequential array, each element representing a day in the format
+   *                        'days' => Array with containing only the Weekday instance
+   *                        'periods' => Sequential array of Periods for that day
    */
   public function getPeriodsGroupedByDay () {
+    $days = Weekdays::getWeekdaysInOrder();
     $periods = array();
-    for ($i = 0; $i < 7; $i++)
-      $periods[$i] = $this->getPeriodsByDay($i);
+    foreach ($days as $day) {
+      $periods[] = array(
+        'days' => array($day),
+        'periods' => $this->getPeriodsByDay($day->getIndex())
+      );
+    }
 
     return $periods;
   }
 
   /**
-   * Getter: (all) Periods Grouped By Day and Compressed
-   * Applies some kind of array_unique on the array. Days with same Periods are uniqued to one array element with a
-   * comma separated string containing the day IDs
-   *
-   * @return    Period[][]
+   * Returns all Periods grouped by day and adds dummy periods if no periods exist for a specific day
+   * @return    array     see return value of Set::getPeriodsGroupedByDay
    */
-  public function getPeriodsGroupedByDayCompressed () {
-    $periodsArray = $this->getPeriodsGroupedByDay();
-    $newPeriodsArray = array();
-    $compressed = array();
-    $days = range(0, 6);
-
-    foreach ($days as $day1) {
-      if (in_array($day1, $compressed))
+  public function getPeriodsGroupedByDayWithDummy () {
+    $periods = $this->getPeriodsGroupedByDay();
+    foreach ($periods as &$day) {
+      if (count($day['periods']) > 0)
         continue;
 
-      $keys = array($day1);
-      foreach ($days as $day2) {
-        if ($day1 == $day2)
-          continue;
+      /** @var Weekday $weekday */
+      $weekday = $day['days'][0];
+      $day['periods'][] = Period::createDummy($weekday->getIndex());
+    }
+    return $periods;
+  }
 
-        if (in_array($day2, $compressed))
-          continue;
+  /**
+   * Returns all Periods grouped by day and groups days with mutual Periods
+   * @return    array     Sequential array, each element representing a day-group
+   *                        'days' => Weekday[] with all weekdays belonging to the group
+   *                        'periods' => Period[] with all Periods belonging to the group
+   */
+  public function getPeriodsGroupedByDayCompressed () {
+    $periodsByDay = $this->getPeriodsGroupedByDay();
+    $periods = array();
 
-        if ($this->daysEqual($day1, $day2))
-          $keys[] = $day2;
+    foreach ($periodsByDay as $dp) {
+      $inserted = false;
+      foreach ($periods as &$dpCompressed) {
+        if ($this->periodsEqual($dp['periods'], $dpCompressed['periods'])) {
+          $dpCompressed['days'][] = $dp['days'][0];
+          $inserted = true;
+          break;
+        }
       }
 
-      $newPeriodsArray[implode(',', $keys)] = $periodsArray[$day1];
-      $compressed = array_merge($compressed, $keys);
+      if ($inserted)
+        continue;
+
+      $periods[] = $dp;
     }
 
-    return $newPeriodsArray;
+    return $periods;
   }
 
   /**
@@ -447,32 +456,20 @@ class Set {
   }
 
   /**
-   * Checks if two days have equal Periods
-   *
-   * @param     int      $day1
-   * @param     int      $day2
-   * @param     Period[] $periodsByDay
-   *
-   * @return    bool
+   * Checks whether two sets of periods equal
+   * @param     array     $periods1   First set of periods
+   * @param     array     $periods2   Second set of periods
+   * @return    bool                  Whether the sets of periods equal
    */
-  public function daysEqual ( $day1, $day2, array $periodsByDay = null ) {
-    if ($day1 === $day2)
+  public function periodsEqual (array $periods1, array $periods2) {
+    if (count($periods1) < 1 and count($periods2) < 1)
       return true;
 
-    if ($periodsByDay === null or !is_array($periodsByDay))
-      $periodsByDay = $this->getPeriodsGroupedByDay();
-
-    if (count($periodsByDay[$day1]) < 1 and count($periodsByDay[$day2]) < 1)
-      return true;
-
-    if (count($periodsByDay[$day1]) != count($periodsByDay[$day2]))
+    if (count($periods1) !== count($periods2))
       return false;
 
-    for ($i = 0; $i < count($periodsByDay[$day1]); $i++) {
-      $period1 = $periodsByDay[$day1][$i];
-      $period2 = $periodsByDay[$day2][$i];
-
-      if (!$period1->equals($period2, true))
+    for ($i = 0; $i < count($periods1); $i++) {
+      if (!$periods1[$i]->equals($periods2[$i], true))
         return false;
     }
 
