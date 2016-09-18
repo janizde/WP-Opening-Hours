@@ -3,7 +3,6 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Entity\Period;
-use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\ViewRenderer;
@@ -26,11 +25,7 @@ class OpeningHours extends AbstractMetaBox {
 
   /** @inheritdoc */
   public function renderMetaBox ( WP_Post $post ) {
-    if (!OpeningHoursModule::getSets()->offsetExists($post->ID))
-      OpeningHoursModule::getSets()->offsetSet($post->ID, new SetEntity($post->ID));
-
-    OpeningHoursModule::setCurrentSetId($post->ID);
-    $set = OpeningHoursModule::getCurrentSet();
+    $set = OpeningHoursModule::getSet($post->ID);
     $periods = $set->getPeriodsGroupedByDayWithDummy();
 
     $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array(

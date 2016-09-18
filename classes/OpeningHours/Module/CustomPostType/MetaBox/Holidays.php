@@ -36,9 +36,8 @@ class Holidays extends AbstractMetaBox {
   }
 
   /** @inheritdoc */
-  public function renderMetaBox ( WP_Post $post ) {
-    OpeningHoursModule::setCurrentSetId($post->ID);
-    $set = OpeningHoursModule::getCurrentSet();
+  public function renderMetaBox (WP_Post $post) {
+    $set = OpeningHoursModule::getSet($post->ID);
 
     if (count($set->getHolidays()) < 1)
       $set->getHolidays()->append(Holiday::createDummyPeriod());

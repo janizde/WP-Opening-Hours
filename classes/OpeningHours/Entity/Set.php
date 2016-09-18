@@ -99,10 +99,10 @@ class Set {
     $this->irregularOpenings = new ArrayObject();
     $this->setDetails = SetDetails::getInstance()->getPersistence();
 
-    if (!$post instanceof WP_Post && (int) $post < 1)
-      throw new InvalidArgumentException(sprintf('Argument one for __construct has to be of type WP_Post or int. %s given', gettype($post)));
-
     $post = get_post($post);
+
+    if (!$post instanceof WP_Post)
+      throw new InvalidArgumentException("A set with id $post does not exist.");
 
     $this->id = $post->ID;
     $this->post = $post;

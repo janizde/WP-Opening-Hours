@@ -5,7 +5,6 @@ namespace OpeningHours\Entity;
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
-use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
 
 /**
@@ -117,10 +116,7 @@ class Period {
    *
    * @return    bool
    */
-  public function isOpen ( $now = null, Set $set = null ) {
-    if ($set == null)
-      $set = OpeningHours::getCurrentSet();
-
+  public function isOpen ($now, Set $set) {
     if ($set->isHolidayActive($now) or $set->isIrregularOpeningActive($now))
       return false;
 

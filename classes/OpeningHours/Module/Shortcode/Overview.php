@@ -119,7 +119,7 @@ class Overview extends AbstractShortcode {
 
         /** @var \OpeningHours\Entity\Period $period */
         foreach ($row['periods'] as $period) {
-          $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpen() ) ? $attributes['highlighted_period_class'] : '';
+          $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpen(null, $set) ) ? $attributes['highlighted_period_class'] : '';
           $dayData['periodsMarkup'] .= sprintf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($attributes['time_format']));
         }
       }

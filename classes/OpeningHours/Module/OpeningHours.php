@@ -6,8 +6,6 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Entity\Set as SetEntity;
 use OpeningHours\Module\CustomPostType\Set as SetCpt;
 use OpeningHours\Util\ArrayObject;
-use WP_Post;
-use WP_Screen;
 
 /**
  * OpeningHours Module
@@ -18,26 +16,23 @@ use WP_Screen;
 class OpeningHours extends AbstractModule {
 
   /**
-   * Collection of all sets in the system
+   * Collection of all loaded Sets
    * @type      ArrayObject
    */
-  protected static $sets;
-
-  /**
-   * Id of the current Set
-   * @type      int
-   */
-  protected static $currentSetId;
+  protected $sets;
 
   /** Constructor */
   public function __construct () {
-    self::$sets = new ArrayObject();
-    self::registerHookCallbacks();
+    $this->sets = new ArrayObject();
+    $this->registerHookCallbacks();
   }
 
   /** Register Hook Callbacks */
   public function registerHookCallbacks () {
-    add_filter('detail_fields_metabox_context', array($this, 'modifyDetailFieldContext'));
+    add_filter('detail_fields_metabox_context', function () {
+      return 'side';
+    });
+
     add_action('init', array($this, 'init'));
     add_action('current_screen', array($this, 'initAdmin'));
   }
@@ -52,9 +47,7 @@ class OpeningHours extends AbstractModule {
     ));
 
     foreach ($posts as $singlePost)
-      self::$sets->offsetSet($singlePost->ID, new SetEntity($singlePost));
-
-    self::initCurrentSet();
+      $this->sets->offsetSet($singlePost->ID, new SetEntity($singlePost));
   }
 
   /**
@@ -64,12 +57,6 @@ class OpeningHours extends AbstractModule {
   public function initAdmin () {
     $screen = get_current_screen();
 
-    if (!$screen instanceof WP_Screen) {
-      trigger_error(sprintf('%s::%s(): get_current_screen() may be hooked too early. Return value is not an instance of WP_Screen.', __CLASS__, __METHOD__));
-      return;
-    }
-
-    // Skip if current screen is no op_set post edit screen
     if (!$screen->base == 'post' or !$screen->post_type == SetCpt::CPT_SLUG)
       return;
 
@@ -79,37 +66,6 @@ class OpeningHours extends AbstractModule {
       $set->setId($parentPost->ID);
       $set->setPost($parentPost);
     });
-
-    self::$sets = new ArrayObject;
-
-    $posts = get_posts(array(
-      'post_type' => SetCpt::CPT_SLUG,
-      'numberposts' => -1
-    ));
-
-    foreach ($posts as $single_post)
-      self::getSets()->offsetSet($single_post->ID, new SetEntity($single_post));
-
-    self::initCurrentSet();
-  }
-
-  /** Checks global posts and sets current set */
-  protected static function initCurrentSet () {
-    global $post;
-
-    if (!$post instanceof WP_Post)
-      return;
-
-    if (self::$sets->offsetGet($post->ID) instanceof SetEntity)
-      self::$currentSetId = $post->ID;
-  }
-
-  /**
-   * Forces Detail Fields Meta Box to show up in sidebar
-   * @return    string
-   */
-  public function modifyDetailFieldContext () {
-    return 'side';
   }
 
   /**
@@ -117,7 +73,7 @@ class OpeningHours extends AbstractModule {
    * @return    ArrayObject
    */
   public static function getSets () {
-    return self::$sets;
+    return self::getInstance()->sets;
   }
 
   /**
@@ -129,58 +85,28 @@ class OpeningHours extends AbstractModule {
    */
   public static function getSetsOptions () {
     $sets = array();
-    foreach (self::getSets() as $set)
+    foreach (self::getInstance()->sets as $set)
       $sets[$set->getId()] = $set->getPost()->post_title;
 
     return $sets;
   }
 
   /**
-   * Setter: Sets
-   *
-   * @param     ArrayObject $sets
+   * Retrieves a Set
+   * @param     int       $setId    The id of the Set to retrieve
+   * @return    Set|null            The Set with the specified id or null if not foudn
    */
-  public static function setSets ( ArrayObject $sets ) {
-    self::$sets = $sets;
-  }
+  public static function getSet ($setId) {
+    $instance = self::getInstance();
+    if ($instance->sets->offsetExists($setId))
+      return $instance->sets->offsetGet($setId);
 
-  /**
-   * Getter: Current Set Id
-   * @return    int
-   */
-  public static function getCurrentSetId () {
-    return self::$currentSetId;
-  }
-
-  /**
-   * Setter: Current Set Id
-   *
-   * @param     int $currentSetId
-   */
-  public static function setCurrentSetId ( $currentSetId ) {
-    self::$currentSetId = (int)$currentSetId;
-  }
-
-  /**
-   * Getter: Set
-   *
-   * @param     int $setId
-   *
-   * @return    Set
-   */
-  public static function getSet ( $setId ) {
-    if (!self::$sets->offsetExists($setId))
+    try {
+      $set = new Set($setId);
+      $instance->sets->offsetSet($set->getId(), $set);
+      return $set;
+    } catch (\InvalidArgumentException $e) {
       return null;
-
-    return self::$sets->offsetGet($setId);
-  }
-
-  /**
-   * Getter: Current Set
-   * @return     Set
-   */
-  public static function getCurrentSet () {
-    $setId = self::getCurrentSetId();
-    return self::getSet($setId);
+    }
   }
 }
