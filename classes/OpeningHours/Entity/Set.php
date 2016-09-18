@@ -11,6 +11,7 @@ use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\MetaBoxPersistence;
 use OpeningHours\Util\Persistence;
+use OpeningHours\Util\Weekday;
 use OpeningHours\Util\Weekdays;
 use WP_Post;
 
@@ -189,16 +190,6 @@ class Set {
    */
   public function isParent () {
     return $this->id === $this->parentId;
-  }
-
-  /** Adds dummy periods to the set */
-  public function addDummyPeriods () {
-    for ($i = 0; $i < 7; $i++) {
-      if (count($this->getPeriodsByDay($i)) < 1) {
-        $newPeriod = Period::createDummy($i);
-        $this->periods->append($newPeriod);
-      }
-    }
   }
 
   /**
@@ -390,7 +381,27 @@ class Set {
   }
 
   /**
-   *
+   * Returns all Periods grouped by day and adds dummy periods if no periods exist for a specific day
+   * @return    array     see return value of Set::getPeriodsGroupedByDay
+   */
+  public function getPeriodsGroupedByDayWithDummy () {
+    $periods = $this->getPeriodsGroupedByDay();
+    foreach ($periods as &$day) {
+      if (count($day['periods']) > 0)
+        continue;
+
+      /** @var Weekday $weekday */
+      $weekday = $day['days'][0];
+      $day['periods'][] = Period::createDummy($weekday->getIndex());
+    }
+    return $periods;
+  }
+
+  /**
+   * Returns all Periods grouped by day and groups days with mutual Periods
+   * @return    array     Sequential array, each element representing a day-group
+   *                        'days' => Weekday[] with all weekdays belonging to the group
+   *                        'periods' => Period[] with all Periods belonging to the group
    */
   public function getPeriodsGroupedByDayCompressed () {
     $periodsByDay = $this->getPeriodsGroupedByDay();

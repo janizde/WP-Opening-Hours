@@ -31,9 +31,12 @@ class OpeningHours extends AbstractMetaBox {
 
     OpeningHoursModule::setCurrentSetId($post->ID);
     $set = OpeningHoursModule::getCurrentSet();
-    $set->addDummyPeriods();
+    $periods = $set->getPeriodsGroupedByDayWithDummy();
 
-    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array());
+    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array(
+      'periods' => $periods,
+      'set' => $set
+    ));
     $vr->render();
   }
 

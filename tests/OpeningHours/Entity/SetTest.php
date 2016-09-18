@@ -9,6 +9,7 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekday;
 use WP_Mock\Functions;
 
 class SetTest extends OpeningHoursTestCase {
@@ -226,22 +227,28 @@ class SetTest extends OpeningHoursTestCase {
     $this->assertFalse($set->postMatchesCriteria($post130));
 	}
 
-	public function testAddDummyPeriodsNoPeriods () {
+	public function testGetPeriodsGroupedByDayWithDummyNoPeriods () {
 		$post = $this->createPost(array('ID' => 64));
     $this->commonSetMocks();
 
 		$set = new Set( $post );
-		$this->assertEquals( 0, $set->getPeriods()->count() );
-		$set->addDummyPeriods();
-		$this->assertEquals( 7, $set->getPeriods()->count() );
+    $periods = $set->getPeriodsGroupedByDayWithDummy();
 
-		for ( $i = 0; $i < 7; $i++ ) {
-			$days = $set->getPeriodsByDay( $i );
-			$this->assertEquals( 1, count( $days ) );
-		}
+    $this->assertEquals(7, count($periods));
+    foreach ($periods as $day) {
+      $this->assertEquals(1, count($day['days']));
+      $this->assertEquals(1, count($day['periods']));
+      /** @var Period $period */
+      $period = $day['periods'][0];
+      /** @var Weekday $weekday */
+      $weekday = $day['days'][0];
+      $this->assertEquals($weekday->getIndex(), $period->getWeekday());
+      $this->assertEquals('00:00', $period->getTimeStart()->format('H:i'));
+      $this->assertEquals('00:00', $period->getTimeEnd()->format('H:i'));
+    }
 	}
 
-	public function testAddDummyPeriodsHasPeriods () {
+	public function testGetPeriodsGroupedByDayWithDummyHasPeriods () {
 		$post = $this->createPost(array('ID' => 64));
 
     $this->setUpSetData(64, array(
@@ -253,12 +260,16 @@ class SetTest extends OpeningHoursTestCase {
     $this->commonSetMocks();
 
 		$set = new Set( $post );
-		$set->addDummyPeriods();
+    $periods = $set->getPeriodsGroupedByDayWithDummy();
+    $this->assertEquals(7, count($periods));
 
-		for ( $i = 0; $i < 7; $i++ ) {
-			$days = $set->getPeriodsByDay( $i );
-			$this->assertEquals( $i == 1 ? 2 : 1, count($days) );
-		}
+    $this->assertEquals(1, count($periods[0]['periods']));
+    $this->assertEquals(2, count($periods[1]['periods']));
+    $this->assertEquals(1, count($periods[2]['periods']));
+    $this->assertEquals(1, count($periods[3]['periods']));
+    $this->assertEquals(1, count($periods[4]['periods']));
+    $this->assertEquals(1, count($periods[5]['periods']));
+    $this->assertEquals(1, count($periods[6]['periods']));
 	}
 
 	public function testGetPeriodsByDay () {
