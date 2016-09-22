@@ -109,4 +109,8 @@ class OpeningHours extends AbstractModule {
       return null;
     }
   }
+
+  public static function getPrimarySet () {
+
+  }
 }
