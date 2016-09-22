@@ -144,7 +144,7 @@ class Dates extends AbstractModule {
     if ($now == null)
       $now = self::getNow();
 
-    $today = (int)$now->format('N') - 1;
+    $today = (int) $now->format('w');
     $offset = ($weekday + 7 - $today) % 7;
     $interval = new DateInterval('P' . $offset . 'D');
 
