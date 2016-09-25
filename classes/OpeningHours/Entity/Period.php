@@ -88,9 +88,9 @@ class Period {
     if (!$now instanceof DateTime)
       $now = Dates::getNow();
 
-    $today = (int)$now->format('N') - 1;
+    $today = (int)$now->format('w');
     $startDay = $this->weekday;
-    $endDay = (int)$this->timeEnd->format('N') - 1;
+    $endDay = (int)$this->timeEnd->format('w');
 
     if ($today !== $startDay and $today !== $endDay)
       return false;

@@ -387,8 +387,8 @@ class SetTest extends OpeningHoursTestCase {
     $post = $this->createPost(array('ID' => 64));
 
     $this->setUpSetData(64, array(
-      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
-      array('weekday' => 1, 'timeStart' => '18:00', 'timeEnd' => '22:00')
+      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
+      array('weekday' => 2, 'timeStart' => '18:00', 'timeEnd' => '22:00')
     ));
 
     $this->commonSetMocks();
@@ -454,13 +454,13 @@ class SetTest extends OpeningHoursTestCase {
     $set = new Set( $post );
 		$date = new DateTime('2016-01-11');
 
-		$this->assertNull( $set->getActiveHolidayOnWeekday( 0, $date ) );
-		$this->assertEquals( 'Holiday 1', $set->getActiveHolidayOnWeekday( 1, $date )->getName() );
+		$this->assertNull( $set->getActiveHolidayOnWeekday( 1, $date ) );
 		$this->assertEquals( 'Holiday 1', $set->getActiveHolidayOnWeekday( 2, $date )->getName() );
 		$this->assertEquals( 'Holiday 1', $set->getActiveHolidayOnWeekday( 3, $date )->getName() );
-		$this->assertNull( $set->getActiveHolidayOnWeekday( 4, $date ) );
-		$this->assertEquals( 'Holiday 2', $set->getActiveHolidayOnWeekday( 5, $date )->getName() );
+		$this->assertEquals( 'Holiday 1', $set->getActiveHolidayOnWeekday( 4, $date )->getName() );
+		$this->assertNull( $set->getActiveHolidayOnWeekday( 5, $date ) );
 		$this->assertEquals( 'Holiday 2', $set->getActiveHolidayOnWeekday( 6, $date )->getName() );
+		$this->assertEquals( 'Holiday 2', $set->getActiveHolidayOnWeekday( 0, $date )->getName() );
 	}
 
 	public function testPeriodsEqual () {
@@ -522,28 +522,28 @@ class SetTest extends OpeningHoursTestCase {
     $set = new Set( $post );
 		$now = new DateTime( '2016-01-12' );
 
-		$io0 = $set->getActiveIrregularOpeningOnWeekday( 0, $now );
+		$io0 = $set->getActiveIrregularOpeningOnWeekday( 1, $now );
 		$this->assertNotNull( $io0 );
 		$this->assertEquals( 'Irregular Opening 2', $io0->getName() );
-		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 1, $now ) );
-		$io2 = $set->getActiveIrregularOpeningOnWeekday( 2, $now );
+		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 2, $now ) );
+		$io2 = $set->getActiveIrregularOpeningOnWeekday( 3, $now );
 		$this->assertNotNull( $io2 );
 		$this->assertEquals( 'Irregular Opening 1', $io2->getName() );
-		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 3, $now ) );
 		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 4, $now ) );
 		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 5, $now ) );
 		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 6, $now ) );
+		$this->assertNull( $set->getActiveIrregularOpeningOnWeekday( 0, $now ) );
 	}
 
 	public function testGetNextOpenPeriodOnlyPeriods () {
-		/** @var Period[] $periods */
-		$periods = array(
-			new Period(1, '13:00', '18:00'),
-			new Period(1, '19:00', '21:00'),
-			new Period(1, '20:00', '22:00'),
-			new Period(3, '13:00', '18:00'),
-			new Period(6, '13:00', '03:00')
-		);
+    /** @var Period[] $periods */
+    $periods = array(
+      new Period(1, '13:00', '18:00'),
+      new Period(1, '19:00', '21:00'),
+      new Period(1, '20:00', '22:00'),
+      new Period(3, '13:00', '18:00'),
+      new Period(6, '13:00', '03:00')
+    );
 
     $post = $this->createPost(array('ID' => 64));
 
@@ -559,27 +559,31 @@ class SetTest extends OpeningHoursTestCase {
 
     $set = new Set( $post );
 
-		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-25 07:00') ) );
-		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 12:00') ) );
-		$this->assertEquals( $periods[1]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 18:30') ) );
-		$this->assertEquals( $periods[2]->getCopyInDateContext( new DateTime('2016-01-26') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 19:30') ) );
-		$this->assertEquals( $periods[3]->getCopyInDateContext( new DateTime('2016-01-28') ), $set->getNextOpenPeriod( new DateTime('2016-01-26 22:01') ) );
-		$this->assertEquals( $periods[3]->getCopyInDateContext( new DateTime('2016-01-28') ), $set->getNextOpenPeriod( new DateTime('2016-01-28 12:59') ) );
-		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-28 13:00') ) );
-		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-28 18:00') ) );
-		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-31 12:59') ) );
-		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime('2016-02-01') ), $set->getNextOpenPeriod( new DateTime('2016-01-31 13:00') ) );
-	}
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59')));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:00')));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:01')));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:59')));
+    $this->assertEquals($periods[2]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 19:00')));
+    $this->assertEquals($periods[2]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 19:59')));
+    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 20:00')));
+    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-27 12:59')));
+    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 13:00')));
+    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-30 12:59')));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31')), $set->getNextOpenPeriod(new DateTime('2016-01-30 13:00')));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31')), $set->getNextOpenPeriod(new DateTime('2016-01-31 03:00')));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31')), $set->getNextOpenPeriod(new DateTime('2016-01-31 03:01')));
+  }
 
-	public function testGetNextOpenPeriodHolidays () {
-		/** @var Period[] $periods */
-		$periods = array(
-			new Period( 1, '13:00', '18:00' ),
-			new Period( 1, '19:00', '21:00' ),
-			new Period( 2, '20:00', '22:00' ),
-			new Period( 3, '13:00', '18:00' ),
-			new Period( 6, '13:00', '03:00' )
-		);
+  public function testGetNextOpenPeriodHolidays () {
+    /** @var Period[] $periods */
+    $periods = array(
+      new Period(1, '13:00', '18:00'),
+      new Period(1, '19:00', '21:00'),
+      new Period(1, '20:00', '22:00'),
+      new Period(3, '13:00', '18:00'),
+      new Period(6, '13:00', '03:00')
+    );
 
     $post = $this->createPost(array('ID' => 64));
 
@@ -595,22 +599,21 @@ class SetTest extends OpeningHoursTestCase {
 
     $this->commonSetMocks();
 
-    $set  = new Set( $post );
-		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-25 07:00' ) ) );
-		$this->assertEquals( $periods[0]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 12:00' ) ) );
-		$this->assertEquals( $periods[1]->getCopyInDateContext( new DateTime( '2016-01-26' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 18:30' ) ) );
-		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime( '2016-01-31' ) ), $set->getNextOpenPeriod( new DateTime( '2016-01-26 21:01' ) ) );
-	}
+    $set = new Set( $post );
 
-	public function testGetNextOpenPeriodIrregularOpenings () {
-		/** @var Period[] $periods */
-		$periods = array(
-			new Period(1, '13:00', '18:00'),
-			new Period(1, '19:00', '21:00'),
-			new Period(1, '20:00', '22:00'),
-			new Period(3, '13:00', '18:00'),
-			new Period(6, '13:00', '03:00')
-		);
+    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 12:59')));
+    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 13:00')));
+  }
+
+  public function testGetNextOpenPeriodIrregularOpenings () {
+    /** @var Period[] $periods */
+    $periods = array(
+      new Period(1, '13:00', '18:00'),
+      new Period(1, '19:00', '21:00'),
+      new Period(1, '20:00', '22:00'),
+      new Period(3, '13:00', '18:00'),
+      new Period(6, '13:00', '03:00')
+    );
 
     $post = $this->createPost(array('ID' => 64));
 
@@ -621,30 +624,26 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
       array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
     ), array(), array(
-      array('name' => 'IO 1', 'date' => '2016-01-26', 'timeStart' => '14:00', 'timeEnd' => '19:30')
+      array('name' => 'IO1', 'date' => '2016-01-25', 'timeStart' => '14:00', 'timeEnd' => '19:30')
     ));
 
     $this->commonSetMocks();
 
     $set = new Set( $post );
 
-		$expected = $periods[3]->getCopyInDateContext( new DateTime('2016-01-27') );
-		$times = array('12:59', '13:00', '18:00', '18:01', '18:59', '19:00', '21:00', '21:01', '19:59', '20:00', '22:00', '22:01');
-		foreach ( $times as $time ) {
-			$this->assertEquals( $expected, $set->getNextOpenPeriod( new DateTime('2016-01-26 ' . $time) ) );
-		}
-		$this->assertEquals( $periods[4]->getCopyInDateContext( new DateTime('2016-01-31') ), $set->getNextOpenPeriod( new DateTime('2016-01-30 15:00') ) );
-	}
+    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59')));
+    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
+  }
 
 	public function testIsOpen () {
     $post = $this->createPost(array('ID' => 64));
 
     $this->setUpSetData(64, array(
-      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
-      array('weekday' => 1, 'timeStart' => '19:00', 'timeEnd' => '21:00'),
-      array('weekday' => 1, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
-      array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
-      array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
+      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 2, 'timeStart' => '19:00', 'timeEnd' => '21:00'),
+      array('weekday' => 2, 'timeStart' => '20:00', 'timeEnd' => '22:00'),
+      array('weekday' => 4, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
+      array('weekday' => 0, 'timeStart' => '13:00', 'timeEnd' => '03:00')
     ), array(
       array('name' => 'Test Holiday', 'dateStart' => '2016-01-25', 'dateEnd' => '2016-01-26')
     ), array(

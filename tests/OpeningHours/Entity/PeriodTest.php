@@ -86,8 +86,8 @@ class PeriodTest extends OpeningHoursTestCase {
 	}
 
 	public function testIsOpen () {
-		$p1 = new Period( 1, '12:00', '18:00' );
-		$p2 = new Period( 5, '12:00', '18:00' );
+		$p1 = new Period( 2, '12:00', '18:00' );
+		$p2 = new Period( 6, '12:00', '18:00' );
 
     $post = $this->createPost(array('ID' => 64));
     $this->setUpSetData(64, array(), array(
@@ -148,10 +148,10 @@ class PeriodTest extends OpeningHoursTestCase {
 	}
 
 	public function testGetCopyInDateContext () {
-		$period = new Period( 1, '13:00', '01:00' );
+		$period = new Period( 2, '13:00', '01:00' );
 		$copy = $period->getCopyInDateContext( new DateTime('2016-01-25') );
 
-		$this->assertEquals( 1, $copy->getWeekday() );
+		$this->assertEquals( 2, $copy->getWeekday() );
 		$this->assertEquals( new DateTime('2016-01-26 13:00'), $copy->getTimeStart() );
 		$this->assertEquals( new DateTime('2016-01-27 01:00'), $copy->getTimeEnd() );
 	}

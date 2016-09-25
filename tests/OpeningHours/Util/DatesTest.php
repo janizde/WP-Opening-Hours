@@ -35,13 +35,13 @@ class DatesTest extends OpeningHoursTestCase {
 		$now = new DateTime('2016-01-13'); // Wed
 		$date = new DateTime('2016-03-12');
 
-		$this->assertEquals( new DateTime('2016-01-18'), Dates::applyWeekContext( clone $date, 0, $now ) );
-		$this->assertEquals( new DateTime('2016-01-19'), Dates::applyWeekContext( clone $date, 1, $now ) );
-		$this->assertEquals( new DateTime('2016-01-13'), Dates::applyWeekContext( clone $date, 2, $now ) );
-		$this->assertEquals( new DateTime('2016-01-14'), Dates::applyWeekContext( clone $date, 3, $now ) );
-		$this->assertEquals( new DateTime('2016-01-15'), Dates::applyWeekContext( clone $date, 4, $now ) );
-		$this->assertEquals( new DateTime('2016-01-16'), Dates::applyWeekContext( clone $date, 5, $now ) );
-		$this->assertEquals( new DateTime('2016-01-17'), Dates::applyWeekContext( clone $date, 6, $now ) );
+		$this->assertEquals( new DateTime('2016-01-18'), Dates::applyWeekContext( clone $date, 1, $now ) );
+		$this->assertEquals( new DateTime('2016-01-19'), Dates::applyWeekContext( clone $date, 2, $now ) );
+		$this->assertEquals( new DateTime('2016-01-13'), Dates::applyWeekContext( clone $date, 3, $now ) );
+		$this->assertEquals( new DateTime('2016-01-14'), Dates::applyWeekContext( clone $date, 4, $now ) );
+		$this->assertEquals( new DateTime('2016-01-15'), Dates::applyWeekContext( clone $date, 5, $now ) );
+		$this->assertEquals( new DateTime('2016-01-16'), Dates::applyWeekContext( clone $date, 6, $now ) );
+		$this->assertEquals( new DateTime('2016-01-17'), Dates::applyWeekContext( clone $date, 0, $now ) );
 	}
 
 	public function testCompareTime () {
