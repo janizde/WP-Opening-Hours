@@ -594,7 +594,8 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
       array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
     ), array(
-      array('name' => 'Test Holiday', 'dateStart' => '2016-01-27', 'dateEnd' => '2016-01-28')
+      array('name' => 'Test Holiday', 'dateStart' => '2016-01-27', 'dateEnd' => '2016-01-28'),
+      array('name' => 'Long Holiday', 'dateStart' => '2016-02-06', 'dateEnd' => '2016-09-25')
     ));
 
     $this->commonSetMocks();
@@ -603,6 +604,7 @@ class SetTest extends OpeningHoursTestCase {
 
     $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 12:59')));
     $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 13:00')));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-09-26')), $set->getNextOpenPeriod(new DateTime('2016-02-05 13:00')));
   }
 
   public function testGetNextOpenPeriodIrregularOpenings () {

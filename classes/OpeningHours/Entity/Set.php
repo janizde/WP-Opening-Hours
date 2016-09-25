@@ -288,20 +288,18 @@ class Set {
    * @return    Period    The next open period or null if no period has been found
    */
   public function getNextOpenPeriod ( DateTime $now = null ) {
-    $periods = $this->periods;
-
-    if ($now != null) {
-      $periods = new ArrayObject();
-      foreach ($this->periods as $period) {
-        $periods->append($period->getCopyInDateContext($now));
-      }
+    /** @var Period[] $periods */
+    $periods = new ArrayObject();
+    foreach ($this->periods as $period) {
+      $periods->append($now !== null ? $period->getCopyInDateContext($now) : clone $period);
     }
 
     $periods->uasort(array('\OpeningHours\Entity\Period', 'sortStrategy'));
 
-    if (count($periods) < 1)
+    if (count($periods) < 1 && count($this->irregularOpenings) < 1)
       return null;
 
+    // For each period in future: check if it will actually be open
     foreach ($periods as $period) {
       if ($period->compareToDateTime($now) <= 0)
         continue;
@@ -310,20 +308,18 @@ class Set {
         return $period;
     }
 
+    $interval = new DateInterval('P7D');
     for ($weekOffset = 1; true; $weekOffset++) {
       if ($weekOffset > 52) {
         return null;
       }
 
-      $timeDifference = new DateInterval('P' . 7 * $weekOffset . 'D');
+      foreach ($periods as $period) {
+        $period->getTimeStart()->add($interval);
+        $period->getTimeEnd()->add($interval);
 
-      foreach ($this->periods as $period) {
-        $newPeriod = clone $period;
-        $newPeriod->getTimeStart()->add($timeDifference);
-        $newPeriod->getTimeEnd()->add($timeDifference);
-
-        if ($newPeriod->willBeOpen($this)) {
-          return $newPeriod;
+        if ($period->willBeOpen($this)) {
+          return $period;
         }
       }
     }
