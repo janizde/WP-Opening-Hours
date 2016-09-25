@@ -139,6 +139,18 @@ class IrregularOpening {
   }
 
   /**
+   * Creates a Period representing the Irregular Opening
+   * @return    Period    Period representing Irregular Opening in correct week context
+   */
+  public function createPeriod () {
+    $weekday = (int) $this->timeStart->format('w');
+    $timeStart = $this->timeStart->format('H:i');
+    $timeEnd = $this->timeEnd->format('H:i');
+    $period = new Period($weekday, $timeStart, $timeEnd);
+    return $period->getCopyInDateContext($this->timeStart);
+  }
+
+  /**
    * Sorts Irregular Openings by start-time (ASC)
    *
    * @param     IrregularOpening $io1
