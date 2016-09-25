@@ -287,7 +287,7 @@ class Set {
    *
    * @return    Period    The next open period or null if no period has been found
    */
-  public function getNextOpenPeriod ( DateTime $now = null ) {
+  public function getNextOpenPeriod (DateTime $now = null) {
     /** @var Period[] $periods */
     $periods = new ArrayObject();
     foreach ($this->periods as $period) {
@@ -305,7 +305,7 @@ class Set {
         continue;
 
       if ($period->willBeOpen($this))
-        return $period;
+        return $this->periodOrIrregularOpening($period, $now);
     }
 
     $interval = new DateInterval('P7D');
@@ -319,12 +319,32 @@ class Set {
         $period->getTimeEnd()->add($interval);
 
         if ($period->willBeOpen($this)) {
-          return $period;
+          return $this->periodOrIrregularOpening($period, $now);
         }
       }
     }
 
     return null;
+  }
+
+  /**
+   * Determines whether an Irregular Opening exists which is in the future but happens before the Period.
+   * If so, it will return a Period created from that Irregular Opening, if not, it will pass $period through
+   * @param     Period    $period   The period to check
+   * @param     DateTime  $now      Custom current time
+   * @return    Period
+   */
+  private function periodOrIrregularOpening (Period $period, DateTime $now = null) {
+    if ($now === null)
+      $now = Dates::getNow();
+
+    foreach ($this->irregularOpenings as $irregularOpening) {
+      $ioStart = $irregularOpening->getTimeStart();
+      if ($ioStart >= $now && $ioStart <= $period->getTimeStart())
+        return $irregularOpening->createPeriod();
+    }
+
+    return $period;
   }
 
   /**
@@ -431,6 +451,7 @@ class Set {
    * @return    IrregularOpening
    */
   public function getActiveIrregularOpening ( DateTime $now = null ) {
+    /** @var IrregularOpening $io */
     foreach ($this->irregularOpenings as $io)
       if ($io->isActiveOnDay($now))
         return $io;

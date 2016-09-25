@@ -4,6 +4,7 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
@@ -633,8 +634,10 @@ class SetTest extends OpeningHoursTestCase {
 
     $set = new Set( $post );
 
-    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59')));
-    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
+    $io = new IrregularOpening('IO1', '2016-01-25', '14:00', '19:30');
+    $ioPeriod = $io->createPeriod();
+    $this->assertEquals($ioPeriod, $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59')));
+    $this->assertEquals($ioPeriod, $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
   }
 
 	public function testIsOpen () {
