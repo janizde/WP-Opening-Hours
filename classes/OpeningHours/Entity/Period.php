@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use InvalidArgumentException;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekday;
 
 /**
  * Represents a regular opening period
@@ -121,6 +122,23 @@ class Period {
       return false;
 
     return $this->isOpenStrict($now);
+  }
+
+  /**
+   * Checks whether the specified Period is open in different weekday contexts
+   * @param     Weekday[]   $weekdays   The weekdays to check
+   * @param     Set         $set        The Set containing holidays and irregular openings
+   * @param     DateTime    $now        Custom current time
+   * @return    bool                    Whether the Period is open in the context of any Weekday
+   */
+  public function isOpenOnAny (array $weekdays, Set $set, DateTime $now = null) {
+    foreach ($weekdays as $weekday) {
+      $period = new Period($weekday->getIndex(), $this->timeStart->format(Dates::STD_TIME_FORMAT), $this->timeEnd->format(Dates::STD_TIME_FORMAT));
+      if ($period->isOpen($now, $set))
+        return true;
+    }
+
+    return false;
   }
 
   /**
