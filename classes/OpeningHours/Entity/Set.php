@@ -287,48 +287,64 @@ class Set {
    *
    * @return    Period    The next open period or null if no period has been found
    */
-  public function getNextOpenPeriod ( DateTime $now = null ) {
-    $periods = $this->periods;
-
-    if ($now != null) {
-      $periods = new ArrayObject();
-      foreach ($this->periods as $period) {
-        $periods->append($period->getCopyInDateContext($now));
-      }
+  public function getNextOpenPeriod (DateTime $now = null) {
+    /** @var Period[] $periods */
+    $periods = new ArrayObject();
+    foreach ($this->periods as $period) {
+      $periods->append($now !== null ? $period->getCopyInDateContext($now) : clone $period);
     }
 
     $periods->uasort(array('\OpeningHours\Entity\Period', 'sortStrategy'));
 
-    if (count($periods) < 1)
+    if (count($periods) < 1 && count($this->irregularOpenings) < 1)
       return null;
 
+    // For each period in future: check if it will actually be open
     foreach ($periods as $period) {
       if ($period->compareToDateTime($now) <= 0)
         continue;
 
       if ($period->willBeOpen($this))
-        return $period;
+        return $this->periodOrIrregularOpening($period, $now);
     }
 
+    $interval = new DateInterval('P7D');
     for ($weekOffset = 1; true; $weekOffset++) {
       if ($weekOffset > 52) {
         return null;
       }
 
-      $timeDifference = new DateInterval('P' . 7 * $weekOffset . 'D');
+      foreach ($periods as $period) {
+        $period->getTimeStart()->add($interval);
+        $period->getTimeEnd()->add($interval);
 
-      foreach ($this->periods as $period) {
-        $newPeriod = clone $period;
-        $newPeriod->getTimeStart()->add($timeDifference);
-        $newPeriod->getTimeEnd()->add($timeDifference);
-
-        if ($newPeriod->willBeOpen($this)) {
-          return $newPeriod;
+        if ($period->willBeOpen($this)) {
+          return $this->periodOrIrregularOpening($period, $now);
         }
       }
     }
 
     return null;
+  }
+
+  /**
+   * Determines whether an Irregular Opening exists which is in the future but happens before the Period.
+   * If so, it will return a Period created from that Irregular Opening, if not, it will pass $period through
+   * @param     Period    $period   The period to check
+   * @param     DateTime  $now      Custom current time
+   * @return    Period
+   */
+  private function periodOrIrregularOpening (Period $period, DateTime $now = null) {
+    if ($now === null)
+      $now = Dates::getNow();
+
+    foreach ($this->irregularOpenings as $irregularOpening) {
+      $ioStart = $irregularOpening->getTimeStart();
+      if ($ioStart >= $now && $ioStart <= $period->getTimeStart())
+        return $irregularOpening->createPeriod();
+    }
+
+    return $period;
   }
 
   /**
@@ -435,6 +451,7 @@ class Set {
    * @return    IrregularOpening
    */
   public function getActiveIrregularOpening ( DateTime $now = null ) {
+    /** @var IrregularOpening $io */
     foreach ($this->irregularOpenings as $io)
       if ($io->isActiveOnDay($now))
         return $io;

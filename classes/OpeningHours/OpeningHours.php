@@ -124,7 +124,7 @@ class OpeningHours extends AbstractModule {
 
     Module\Ajax::injectAjaxUrl(self::PREFIX . 'js');
     wp_localize_script(self::PREFIX . 'js', 'openingHoursData', array(
-      'startOfWeek' => (int) ((Dates::getStartOfWeek()+1) % 7),
+      'startOfWeek' => (int) Dates::getStartOfWeek(),
       'weekdays' => Weekdays::getDatePickerTranslations()
     ));
 

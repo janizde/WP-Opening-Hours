@@ -4,6 +4,7 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
@@ -594,7 +595,8 @@ class SetTest extends OpeningHoursTestCase {
       array('weekday' => 3, 'timeStart' => '13:00', 'timeEnd' => '18:00'),
       array('weekday' => 6, 'timeStart' => '13:00', 'timeEnd' => '03:00')
     ), array(
-      array('name' => 'Test Holiday', 'dateStart' => '2016-01-27', 'dateEnd' => '2016-01-28')
+      array('name' => 'Test Holiday', 'dateStart' => '2016-01-27', 'dateEnd' => '2016-01-28'),
+      array('name' => 'Long Holiday', 'dateStart' => '2016-02-06', 'dateEnd' => '2016-09-25')
     ));
 
     $this->commonSetMocks();
@@ -603,6 +605,7 @@ class SetTest extends OpeningHoursTestCase {
 
     $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 12:59')));
     $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 13:00')));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-09-26')), $set->getNextOpenPeriod(new DateTime('2016-02-05 13:00')));
   }
 
   public function testGetNextOpenPeriodIrregularOpenings () {
@@ -631,8 +634,10 @@ class SetTest extends OpeningHoursTestCase {
 
     $set = new Set( $post );
 
-    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59')));
-    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
+    $io = new IrregularOpening('IO1', '2016-01-25', '14:00', '19:30');
+    $ioPeriod = $io->createPeriod();
+    $this->assertEquals($ioPeriod, $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59')));
+    $this->assertEquals($ioPeriod, $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
   }
 
 	public function testIsOpen () {
