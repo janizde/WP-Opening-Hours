@@ -59,11 +59,11 @@ class Set {
   protected $post;
 
   /**
-   * The id of the parent set.
-   * Id of this set if the set does not have a parent
-   *
-   * @var       int
-   */
+ * The id of the parent set.
+ * Id of this set if the set does not have a parent
+ *
+ * @var       int
+ */
   protected $parentId;
 
   /**
@@ -193,21 +193,6 @@ class Set {
   }
 
   /**
-   * Only evaluates standard opening periods
-   *
-   * @param     DateTime $now Custom time
-   *
-   * @return    bool              Whether venue is open due to regular Opening Hours
-   */
-  public function isOpenOpeningHours ( $now = null ) {
-    foreach ($this->periods as $period)
-      if ($period->isOpen($now, $this))
-        return true;
-
-    return false;
-  }
-
-  /**
    * Checks if any holiday in set is currently active
    *
    * @param     DateTime $now Custom time
@@ -260,7 +245,11 @@ class Set {
       return $io->isOpen($now);
     }
 
-    return $this->isOpenOpeningHours($now);
+    foreach ($this->periods as $period)
+      if ($period->isOpen($now, $this))
+        return true;
+
+    return false;
   }
 
   /**
@@ -339,49 +328,6 @@ class Set {
   }
 
   /**
-   * Getter: Periods By Day
-   *
-   * @param     int[]|int $days
-   *
-   * @return    Period[]
-   */
-  public function getPeriodsByDay ( $days ) {
-    if (!is_array($days) and !is_numeric($days))
-      throw new InvalidArgumentException(sprintf('Argument 1 of getPeriodsByDay must be integer or array. %s given.', gettype($days)));
-
-    if (!is_array($days))
-      $days = array($days);
-
-    $periods = array();
-    foreach ($this->periods as $period)
-      if (in_array($period->getWeekday(), $days))
-        $periods[] = $period;
-
-    return $periods;
-  }
-
-  /**
-   * Returns all Periods grouped by day and adds dummy periods if no periods exist for a specific day
-   * @return    array     see return value of Set::getPeriodsGroupedByDay
-   */
-  public function getPeriodsGroupedByDayWithDummy () {
-    $days = Weekdays::getWeekdaysInOrder();
-    $periods = array();
-    foreach ($days as $day) {
-      $thePeriods = $this->getPeriodsByDay($day->getIndex());
-      if (count($thePeriods) < 1)
-        $thePeriods = array(Period::createDummy($day->getIndex()));
-
-      $periods[] = array(
-        'days' => array($day),
-        'periods' => $thePeriods
-      );
-    }
-
-    return $periods;
-  }
-
-  /**
    * Returns first active irregular opening on that day
    * Only evaluates the date of $now and not the time
    *
@@ -396,27 +342,6 @@ class Set {
         return $io;
 
     return null;
-  }
-
-  /**
-   * Checks whether two sets of periods equal
-   * @param     array     $periods1   First set of periods
-   * @param     array     $periods2   Second set of periods
-   * @return    bool                  Whether the sets of periods equal
-   */
-  public function periodsEqual (array $periods1, array $periods2) {
-    if (count($periods1) < 1 and count($periods2) < 1)
-      return true;
-
-    if (count($periods1) !== count($periods2))
-      return false;
-
-    for ($i = 0; $i < count($periods1); $i++) {
-      if (!$periods1[$i]->equals($periods2[$i], true))
-        return false;
-    }
-
-    return true;
   }
 
   /**

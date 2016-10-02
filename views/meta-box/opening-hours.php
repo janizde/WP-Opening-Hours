@@ -12,7 +12,7 @@ MetaBox::getInstance()->nonceField();
 		<tbody>
 		<?php foreach ( $this->data['periods'] as $day ) :
 			/** @var Weekday $weekday */
-			$weekday = $day['days'][0];
+			$weekday = $day['day'];
 			?>
 			<tr class="periods-day">
 				<td class="col-name" valign="top">

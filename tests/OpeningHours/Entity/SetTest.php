@@ -228,105 +228,6 @@ class SetTest extends OpeningHoursTestCase {
     $this->assertFalse($set->postMatchesCriteria($post130));
 	}
 
-	public function testGetPeriodsGroupedByDayWithDummyNoPeriods () {
-		$post = $this->createPost(array('ID' => 64));
-    $this->commonSetMocks();
-
-		$set = new Set( $post );
-    $periods = $set->getPeriodsGroupedByDayWithDummy();
-
-    $this->assertEquals(7, count($periods));
-    foreach ($periods as $day) {
-      $this->assertEquals(1, count($day['days']));
-      $this->assertEquals(1, count($day['periods']));
-      /** @var Period $period */
-      $period = $day['periods'][0];
-      /** @var Weekday $weekday */
-      $weekday = $day['days'][0];
-      $this->assertEquals($weekday->getIndex(), $period->getWeekday());
-      $this->assertEquals('00:00', $period->getTimeStart()->format('H:i'));
-      $this->assertEquals('00:00', $period->getTimeEnd()->format('H:i'));
-    }
-	}
-
-	public function testGetPeriodsGroupedByDayWithDummyHasPeriods () {
-		$post = $this->createPost(array('ID' => 64));
-
-    $this->setUpSetData(64, array(
-      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
-      array('weekday' => 1, 'timeStart' => '18:00', 'timeEnd' => '21:00'),
-      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00')
-    ));
-
-    $this->commonSetMocks();
-
-		$set = new Set( $post );
-    $periods = $set->getPeriodsGroupedByDayWithDummy();
-    $this->assertEquals(7, count($periods));
-
-    $this->assertEquals(1, count($periods[0]['periods']));
-    $this->assertEquals(2, count($periods[1]['periods']));
-    $this->assertEquals(1, count($periods[2]['periods']));
-    $this->assertEquals(1, count($periods[3]['periods']));
-    $this->assertEquals(1, count($periods[4]['periods']));
-    $this->assertEquals(1, count($periods[5]['periods']));
-    $this->assertEquals(1, count($periods[6]['periods']));
-	}
-
-	public function testGetPeriodsByDay () {
-		$post = $this->createPost(array('ID' => 64));
-
-    $this->setUpSetData(64, array(
-      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
-      array('weekday' => 1, 'timeStart' => '18:00', 'timeEnd' => '21:00'),
-      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00')
-    ));
-
-    $this->commonSetMocks();
-
-		$set = new Set( $post );
-		$day1 = $set->getPeriodsByDay( 1 );
-		$this->assertEquals( 2, count( $day1 ) );
-		$this->assertEquals( 1, $day1[0]->getWeekday() );
-		$this->assertEquals( 1, $day1[1]->getWeekday() );
-
-		$day2 = $set->getPeriodsByDay( 2 );
-		$this->assertTrue( is_array( $day2 ) );
-		$this->assertEquals( 1, count( $day2 ) );
-		$this->assertEquals( 2, $day2[0]->getWeekday() );
-
-		$day3 = $set->getPeriodsByDay( 3 );
-		$this->assertTrue( is_array( $day3 ) );
-		$this->assertEquals( 0, count( $day3 ) );
-
-		$days12 = $set->getPeriodsByDay( array(1,2) );
-		$this->assertEquals( 3, count( $days12 ) );
-	}
-
-	public function testIsOpenOpeningHours () {
-    $post = $this->createPost(array('ID' => 64));
-
-    $this->setUpSetData(64, array(
-      array('weekday' => 2, 'timeStart' => '13:00', 'timeEnd' => '17:00'),
-      array('weekday' => 2, 'timeStart' => '18:00', 'timeEnd' => '22:00')
-    ));
-
-    $this->commonSetMocks();
-
-		$set = new Set( $post );
-		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 12:59') ) );
-		$this->assertTrue( $set->isOpenOpeningHours( new DateTime('2016-01-12 13:00') ) );
-		$this->assertTrue( $set->isOpenOpeningHours( new DateTime('2016-01-12 16:00') ) );
-		$this->assertTrue( $set->isOpenOpeningHours( new DateTime('2016-01-12 17:00') ) );
-		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 17:01') ) );
-
-		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 17:59') ) );
-		$this->assertTrue( $set->isOpenOpeningHours( new DateTime('2016-01-12 18:00') ) );
-		$this->assertTrue( $set->isOpenOpeningHours( new DateTime('2016-01-12 20:00') ) );
-		$this->assertTrue( $set->isOpenOpeningHours( new DateTime('2016-01-12 22:00') ) );
-		$this->assertFalse( $set->isOpenOpeningHours( new DateTime('2016-01-12 22:01') ) );
-	}
-
 	public function testIsHolidayActive () {
     $post = $this->createPost(array('ID' => 64));
 
@@ -343,22 +244,6 @@ class SetTest extends OpeningHoursTestCase {
 		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-14 23:59') ) );
 		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-15 00:01') ) );
 	}
-
-	public function testPeriodsEqual () {
-	  $post = $this->createPost(array('ID' => 64));
-    $this->commonSetMocks();
-    $set = new Set($post);
-
-    $p1 = new Period(1, '13:00', '14:00');
-    $p2 = new Period(2, '13:00', '14:00');
-    $p3 = new Period(1, '12:00', '14:00');
-
-    $this->assertTrue($set->periodsEqual(array(), array()));
-    $this->assertTrue($set->periodsEqual(array($p1), array($p2)));
-    $this->assertTrue($set->periodsEqual(array($p1, $p2), array($p2, $p1)));
-    $this->assertFalse($set->periodsEqual(array($p1), array($p1, $p2)));
-    $this->assertFalse($set->periodsEqual(array($p1), array($p3)));
-  }
 
 	public function testGetActiveIrregularOpening () {
     $post = $this->createPost(array('ID' => 64));

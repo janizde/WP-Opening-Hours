@@ -4,8 +4,11 @@ namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Entity\Period;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
+use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\ViewRenderer;
+use OpeningHours\Util\Weekday;
+use OpeningHours\Util\Weekdays;
 use WP_Post;
 
 /**
@@ -26,7 +29,7 @@ class OpeningHours extends AbstractMetaBox {
   /** @inheritdoc */
   public function renderMetaBox ( WP_Post $post ) {
     $set = OpeningHoursModule::getSet($post->ID);
-    $periods = $set->getPeriodsGroupedByDayWithDummy();
+    $periods = $this->groupPeriodsWithDummy($set->getPeriods()->getArrayCopy());
 
     $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array(
       'periods' => $periods,
@@ -75,5 +78,37 @@ class OpeningHours extends AbstractMetaBox {
     }
 
     return $periods;
+  }
+
+  /**
+   * Groups the periods by day and adds dummy periods if no period is set for a specific day
+   * @param     Period[]  $periods  The periods to group
+   * @return    array               Array containing period data. Each element is an associative array consisting of:
+   *                                  day: Weekday instance representing the weekday
+   *                                  periods: Period[] containing the period for day
+   */
+  public function groupPeriodsWithDummy (array $periods) {
+    $days = array_map(function (Weekday $weekday) {
+      return array(
+        'day' => $weekday,
+        'periods' => array()
+      );
+    }, Weekdays::getWeekdays());
+
+    /** @var Period $period */
+    foreach ($periods as $period) {
+      $days[$period->getWeekday()]['periods'][] = $period;
+    }
+
+    foreach ($days as &$day) {
+      if (count($day['periods']) < 1)
+        $day['periods'][] = Period::createDummy($day['day']->getIndex());
+    }
+
+    for ($i = 0; $i < Dates::getStartOfWeek(); ++$i) {
+      $days[] = array_shift($days);
+    }
+
+    return $days;
   }
 }
