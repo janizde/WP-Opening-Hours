@@ -3,6 +3,7 @@
 namespace OpeningHours\Test\Module\Shortcode;
 
 use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Module\Shortcode\OverviewModel;
 use OpeningHours\Test\OpeningHoursTestCase;
@@ -123,5 +124,30 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $this->assertEquals(array(), $data[4]['items']);
     $this->assertEquals($holiday2, $data[5]['items']);
     $this->assertEquals($holiday2, $data[6]['items']);
+  }
+
+  public function testMergeIrregularOpenings () {
+    $dt = new \DateTime('2016-09-28');
+    $model = new OverviewModel(array(), $dt);
+
+    $irregularOpenings = array(
+      new IrregularOpening('IO1', '2016-09-26', '13:00', '14:00'),
+      new IrregularOpening('IO2', '2016-09-27', '15:00', '16:00'),
+      new IrregularOpening('IO3', '2016-09-28', '13:00', '14:00'),
+      new IrregularOpening('IO4', '2016-10-02', '13:00', '14:00'),
+      new IrregularOpening('IO5', '2016-10-03', '13:00', '14:00'),
+      new IrregularOpening('IO6', '2016-10-04', '13:00', '14:00')
+    );
+
+    $model->mergeIrregularOpenings($irregularOpenings);
+    $data = $model->getData();
+
+    $this->assertEquals($irregularOpenings[1], $data[0]['items']);
+    $this->assertEquals($irregularOpenings[2], $data[1]['items']);
+    $this->assertEquals(array(), $data[2]['items']);
+    $this->assertEquals(array(), $data[3]['items']);
+    $this->assertEquals(array(), $data[4]['items']);
+    $this->assertEquals($irregularOpenings[3], $data[5]['items']);
+    $this->assertEquals($irregularOpenings[4], $data[6]['items']);
   }
 }
