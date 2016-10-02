@@ -6,7 +6,7 @@ use OpeningHours\Entity\Set;
 use OpeningHours\Util\Persistence;
 use WP_Mock\Functions;
 
-class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
+abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
 
   protected function setUp () {
     parent::setUp();

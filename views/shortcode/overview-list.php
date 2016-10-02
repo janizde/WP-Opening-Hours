@@ -27,9 +27,6 @@ if ( $title ) {
 }
 
 $description = $set->getDescription();
-$periods = $compress
-  ? $set->getPeriodsGroupedByDayCompressed()
-  : $set->getPeriodsGroupedByDay();
 ?>
 
 <dl class="op-list op-list-overview">
