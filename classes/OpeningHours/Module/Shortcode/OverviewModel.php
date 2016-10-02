@@ -69,7 +69,8 @@ class OverviewModel {
 
     /** @var Period $period */
     foreach ($periods as $period) {
-      $this->data[$period->getWeekday()]['items'][] = $now === null ? clone $period : $period->getCopyInDateContext($now);
+      $idx = ($period->getWeekday() - $this->startOfWeek + 7) % 7;
+      $this->data[$idx]['items'][] = $now === null ? clone $period : $period->getCopyInDateContext($now);
     }
   }
 
@@ -92,7 +93,7 @@ class OverviewModel {
 
       if ($holiday->getDateStart() <= $this->minDate) {
         $interval = $holiday->getDateEnd()->diff($this->minDate);
-        for ($i = 0; $i < $interval->days; ++$i) {
+        for ($i = 0; $i < $interval->days + 1; ++$i) {
           $this->data[$i]['items'] = $holiday;
         }
         continue;
@@ -109,7 +110,7 @@ class OverviewModel {
       $offset = $holiday->getDateStart()->diff($this->minDate);
       $interval = $holiday->getDateEnd()->diff($holiday->getDateStart());
 
-      for ($i = $offset->days; $i < $offset->days + $interval->days; ++$i) {
+      for ($i = $offset->days; $i < $offset->days + $interval->days + 1; ++$i) {
         $this->data[$i]['items'] = $holiday;
       }
     }
@@ -180,5 +181,40 @@ class OverviewModel {
     }
 
     return $items1 === $items2;
+  }
+
+  /**
+   * @return array
+   */
+  public function getData () {
+    return $this->data;
+  }
+
+  /**
+   * @return \DateTime
+   */
+  public function getNow () {
+    return $this->now;
+  }
+
+  /**
+   * @return \DateTime
+   */
+  public function getMinDate () {
+    return $this->minDate;
+  }
+
+  /**
+   * @return \DateTime
+   */
+  public function getMaxDate () {
+    return $this->maxDate;
+  }
+
+  /**
+   * @return int
+   */
+  public function getStartOfWeek () {
+    return $this->startOfWeek;
   }
 }
