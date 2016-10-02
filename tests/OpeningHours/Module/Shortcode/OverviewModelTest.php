@@ -8,6 +8,7 @@ use OpeningHours\Entity\Period;
 use OpeningHours\Module\Shortcode\OverviewModel;
 use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekdays;
 
 class OverviewModelTest extends OpeningHoursTestCase {
 
@@ -149,5 +150,85 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $this->assertEquals(array(), $data[4]['items']);
     $this->assertEquals($irregularOpenings[3], $data[5]['items']);
     $this->assertEquals($irregularOpenings[4], $data[6]['items']);
+  }
+
+  public function testGetDataCompressedPeriods () {
+    $dt = new \DateTime('2016-09-28');
+    /** @var Period[] $periods */
+    $periods = array(
+      new Period(0, '09:00', '10:00'),
+      new Period(1, '09:00', '10:00'),
+      new Period(1, '13:00', '14:00'),
+      new Period(4, '13:00', '14:00'),
+      new Period(6, '13:00', '14:00')
+    );
+
+    $model = new OverviewModel($periods, $dt);
+    $data = $model->getCompressedData();
+
+    $expected = array(
+      array(
+        'days' => array(Weekdays::getWeekday(2), Weekdays::getWeekday(3), Weekdays::getWeekday(5)),
+        'items' => array()
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(4), Weekdays::getWeekday(6)),
+        'items' => array($periods[3]->getCopyInDateContext($dt))
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(0)),
+        'items' => array($periods[0]->getCopyInDateContext($dt))
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(1)),
+        'items' => array($periods[1]->getCopyInDateContext($dt), $periods[2]->getCopyInDateContext($dt))
+      )
+    );
+
+    $this->assertEquals($expected, $data);
+  }
+
+  public function testGetDataCompressed () {
+    $dt = new \DateTime('2016-09-28');
+    /** @var Period[] $periods */
+    $periods = array(
+      new Period(0, '09:00', '10:00'),
+      new Period(1, '09:00', '10:00'),
+      new Period(1, '13:00', '14:00'),
+      new Period(4, '13:00', '14:00'),
+      new Period(6, '13:00', '14:00')
+    );
+
+    $model = new OverviewModel($periods, $dt);
+    $holiday = new Holiday('Holiday', new \DateTime('2016-09-26'), new \DateTime('2016-09-28'));
+    $irregularOpening = new IrregularOpening('Irregular Opening', '2016-10-02', '13:00', '14:00');
+    $model->mergeHolidays(array($holiday));
+    $model->mergeIrregularOpenings(array($irregularOpening));
+    $data = $model->getCompressedData();
+
+    $expected = array(
+      array(
+        'days' => array(Weekdays::getWeekday(2), Weekdays::getWeekday(3)),
+        'items' => $holiday
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(4), Weekdays::getWeekday(6)),
+        'items' => array($periods[3]->getCopyInDateContext($dt))
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(5)),
+        'items' => array()
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(0)),
+        'items' => $irregularOpening
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(1)),
+        'items' => array($periods[1]->getCopyInDateContext($dt), $periods[2]->getCopyInDateContext($dt))
+      )
+    );
+
+    $this->assertEquals($expected, $data);
   }
 }

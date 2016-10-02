@@ -160,7 +160,7 @@ class OverviewModel {
    * @param     mixed     $items2   Second items value
    * @return    bool                Whether the two items values equal
    */
-  public function itemsEqual ($items1, $items2) {
+  protected function itemsEqual ($items1, $items2) {
     if (is_array($items1) xor is_array($items2))
       return false;
 
