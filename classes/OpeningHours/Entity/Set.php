@@ -234,23 +234,6 @@ class Set {
   }
 
   /**
-   * Returns the first active holiday on the specified weekday
-   *
-   * @param     int      $weekday weekday number 0-6
-   * @param     DateTime $now     custom DateTime. The next day of the specified weekday with be used
-   *
-   * @return    Holiday             The first active holiday on the specified weekday
-   */
-  public function getActiveHolidayOnWeekday ( $weekday, DateTime $now = null ) {
-    if ($now == null)
-      $now = Dates::getNow();
-
-    $now = clone $now;
-    $date = Dates::applyWeekContext($now, $weekday, $now);
-    return $this->getActiveHoliday($date);
-  }
-
-  /**
    * Checks whether any irregular opening is currently active (based on the date)
    *
    * @param     DateTime $now Custom time
@@ -378,65 +361,21 @@ class Set {
   }
 
   /**
-   * Returns all Periods grouped by day
-   * @return    array     Sequential array, each element representing a day in the format
-   *                        'days' => Array with containing only the Weekday instance
-   *                        'periods' => Sequential array of Periods for that day
-   */
-  public function getPeriodsGroupedByDay () {
-    $days = Weekdays::getWeekdaysInOrder();
-    $periods = array();
-    foreach ($days as $day) {
-      $periods[] = array(
-        'days' => array($day),
-        'periods' => $this->getPeriodsByDay($day->getIndex())
-      );
-    }
-
-    return $periods;
-  }
-
-  /**
    * Returns all Periods grouped by day and adds dummy periods if no periods exist for a specific day
    * @return    array     see return value of Set::getPeriodsGroupedByDay
    */
   public function getPeriodsGroupedByDayWithDummy () {
-    $periods = $this->getPeriodsGroupedByDay();
-    foreach ($periods as &$day) {
-      if (count($day['periods']) > 0)
-        continue;
-
-      /** @var Weekday $weekday */
-      $weekday = $day['days'][0];
-      $day['periods'][] = Period::createDummy($weekday->getIndex());
-    }
-    return $periods;
-  }
-
-  /**
-   * Returns all Periods grouped by day and groups days with mutual Periods
-   * @return    array     Sequential array, each element representing a day-group
-   *                        'days' => Weekday[] with all weekdays belonging to the group
-   *                        'periods' => Period[] with all Periods belonging to the group
-   */
-  public function getPeriodsGroupedByDayCompressed () {
-    $periodsByDay = $this->getPeriodsGroupedByDay();
+    $days = Weekdays::getWeekdaysInOrder();
     $periods = array();
+    foreach ($days as $day) {
+      $thePeriods = $this->getPeriodsByDay($day->getIndex());
+      if (count($thePeriods) < 1)
+        $thePeriods = array(Period::createDummy($day->getIndex()));
 
-    foreach ($periodsByDay as $dp) {
-      $inserted = false;
-      foreach ($periods as &$dpCompressed) {
-        if ($this->periodsEqual($dp['periods'], $dpCompressed['periods'])) {
-          $dpCompressed['days'][] = $dp['days'][0];
-          $inserted = true;
-          break;
-        }
-      }
-
-      if ($inserted)
-        continue;
-
-      $periods[] = $dp;
+      $periods[] = array(
+        'days' => array($day),
+        'periods' => $thePeriods
+      );
     }
 
     return $periods;
@@ -457,19 +396,6 @@ class Set {
         return $io;
 
     return null;
-  }
-
-  /**
-   * Returns first active irregular opening on a specific weekday
-   *
-   * @param     int      $weekday weekday number, 0-6
-   * @param     DateTime $now     custom time
-   *
-   * @return    IrregularOpening    The first active irregular opening fpr the current weekday
-   */
-  public function getActiveIrregularOpeningOnWeekday ( $weekday, DateTime $now = null ) {
-    $date = Dates::applyWeekContext(new DateTime('now'), $weekday, $now);
-    return $this->getActiveIrregularOpening($date);
   }
 
   /**
