@@ -48,7 +48,7 @@ class OverviewModel {
     $this->now = $now === null ? Dates::getNow() : $now;
 
     $nowWeekday = (int) $this->now->format('w');
-    $this->minDate = clone $now;
+    $this->minDate = clone $this->now;
     $this->minDate->setTime(0,0,0);
     if ($nowWeekday !== $this->startOfWeek) {
       $offset = ($nowWeekday + 7 - $this->startOfWeek) % 7;
