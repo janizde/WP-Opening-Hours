@@ -52,7 +52,7 @@ class IsOpen extends AbstractShortcode {
     if ($setId === null or !is_numeric($setId) or $setId <= 0)
       return;
 
-    $set = OpeningHours::getSet($setId);
+    $set = OpeningHours::getInstance()->getSet($setId);
 
     if (!$set instanceof Set)
       return;

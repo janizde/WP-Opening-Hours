@@ -68,7 +68,7 @@ class Overview extends AbstractShortcode {
     );
 
     $setId = (int)$attributes['set_id'];
-    $set = OpeningHours::getSet($setId);
+    $set = OpeningHours::getInstance()->getSet($setId);
 
     if (!$set instanceof Set)
       return;

@@ -2,9 +2,9 @@
 
 namespace OpeningHours\Module;
 
+use OpeningHours\Entity\PostSetProvider;
 use OpeningHours\Entity\Set;
-use OpeningHours\Entity\Set as SetEntity;
-use OpeningHours\Module\CustomPostType\Set as SetCpt;
+use OpeningHours\Entity\SetProvider;
 use OpeningHours\Util\ArrayObject;
 
 /**
@@ -17,13 +17,20 @@ class OpeningHours extends AbstractModule {
 
   /**
    * Collection of all loaded Sets
-   * @type      ArrayObject
+   * @var      ArrayObject
    */
   protected $sets;
+
+  /**
+   * Array of all available SetProviders
+   * @var       SetProvider[]
+   */
+  protected $setProviders;
 
   /** Constructor */
   public function __construct () {
     $this->sets = new ArrayObject();
+    $this->setProviders = array();
     $this->registerHookCallbacks();
   }
 
@@ -33,20 +40,18 @@ class OpeningHours extends AbstractModule {
       return 'side';
     });
 
-//    add_action('init', array($this, 'init'));
+    $module = $this;
+    add_action('init', function () use ($module) {
+      $module->addSetProvider(new PostSetProvider());
+    });
   }
 
-  /** Initializes all parent posts and loads children */
-  public function init () {
-    // Get all parent op-set posts
-    $posts = get_posts(array(
-      'post_type' => SetCpt::CPT_SLUG,
-      'post_parent' => 0,
-      'numberposts' => -1
-    ));
-
-    foreach ($posts as $singlePost)
-      $this->sets->offsetSet($singlePost->ID, new SetEntity($singlePost));
+  /**
+   * Appends a new SetProvider
+   * @param     SetProvider   $setProvider  The SetProvider to add to the list
+   */
+  public function addSetProvider (SetProvider $setProvider) {
+    $this->setProviders[] = $setProvider;
   }
 
   /**
@@ -58,36 +63,42 @@ class OpeningHours extends AbstractModule {
   }
 
   /**
-   * Returns a numeric array with:
-   *   key:     int with set id
-   *   value:   string with set name
+   * Returns an associative array of available set options with:
+   *  key:    scalar with set id
+   *  value:  string with set name
    *
    * @return    array
    */
-  public static function getSetsOptions () {
-    $sets = array();
-    foreach (self::getInstance()->sets as $set)
-      $sets[$set->getId()] = $set->getPost()->post_title;
-
-    return $sets;
+  public function getSetsOptions () {
+    $options = array();
+    foreach ($this->setProviders as $setProvider) {
+      $sets = $setProvider->getAvailableSetInfo();
+      foreach ($sets as $setInfo) {
+        $options[$setInfo['id']] = $setInfo['name'];
+      }
+    }
+    return $options;
   }
 
   /**
-   * Retrieves a Set
-   * @param     int       $setId    The id of the Set to retrieve
-   * @return    Set|null            The Set with the specified id or null if not foudn
+   * Retrieves a Set by id from the first registered SetProvider offering a Set with the specified id
+   * @param     string|int  $setId  The id of the Set to retrieve
+   * @return    Set|null            The Set with the specified id or null if no set could be retrieved
    */
-  public static function getSet ($setId) {
-    $instance = self::getInstance();
-    if ($instance->sets->offsetExists($setId))
-      return $instance->sets->offsetGet($setId);
+  public function getSet ($setId) {
+    if ($this->sets->offsetExists($setId))
+      return $this->sets->offsetGet($setId);
 
-    try {
-      $set = new Set($setId);
-      $instance->sets->offsetSet($set->getId(), $set);
-      return $set;
-    } catch (\InvalidArgumentException $e) {
-      return null;
+    foreach ($this->setProviders as $setProvider) {
+      foreach ($setProvider->getAvailableSetInfo() as $setInfo) {
+        if ($setInfo['id'] == $setId) {
+          $set = $setProvider->createSet($setId);
+          $this->sets->offsetSet($setId, $set);
+          return $set;
+        }
+      }
     }
+
+    return null;
   }
 }

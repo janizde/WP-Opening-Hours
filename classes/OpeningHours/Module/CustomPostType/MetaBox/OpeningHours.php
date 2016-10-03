@@ -28,7 +28,7 @@ class OpeningHours extends AbstractMetaBox {
 
   /** @inheritdoc */
   public function renderMetaBox ( WP_Post $post ) {
-    $set = OpeningHoursModule::getSet($post->ID);
+    $set = OpeningHoursModule::getInstance()->getSet($post->ID);
     $periods = $this->groupPeriodsWithDummy($set->getPeriods()->getArrayCopy());
 
     $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array(

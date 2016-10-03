@@ -4,29 +4,26 @@ namespace OpeningHours\Entity;
 
 use DateInterval;
 use DateTime;
-use InvalidArgumentException;
-use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
-use OpeningHours\Module\CustomPostType\Set as SetCpt;
 use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
-use OpeningHours\Util\MetaBoxPersistence;
-use OpeningHours\Util\Persistence;
-use OpeningHours\Util\Weekday;
-use OpeningHours\Util\Weekdays;
-use WP_Post;
 
 /**
- * Represents a Set of opening hours
- *
- * @author      Jannik Portz
- * @package     OpeningHours\Entity
+ * Abstraction for a Set
+ * @package OpeningHours\Entity
  */
 class Set {
 
   /**
-   * Constants
+   * The Id of the set
+   * @var       string|int
    */
-  const WP_ACTION_BEFORE_SETUP = 'op_set_before_setup';
+  protected $id;
+
+  /**
+   * The name of the set
+   * @var       string
+   */
+  protected $name;
 
   /**
    * Collection of all Periods in the Set
@@ -47,113 +44,17 @@ class Set {
   protected $irregularOpenings;
 
   /**
-   * The Id of the set
-   * @var       int
-   */
-  protected $id;
-
-  /**
-   * The WP_Post instance representing the set
-   * @var       WP_Post
-   */
-  protected $post;
-
-  /**
    * The set description
    * @var       string
    */
   protected $description;
 
-  /**
-   * Persistence object for set details
-   * @var       MetaBoxPersistence
-   */
-  protected $setDetails;
-
-  /**
-   * Constructs a new Set with a WP_Post
-   *
-   * @param     WP_Post|int $post
-   *
-   * @throws    InvalidArgumentException  If the post is invalid
-   */
-  public function __construct ( $post ) {
+  public function __construct ($id) {
+    $this->id = $id;
+    $this->name = __('Untitled Set', 'wp-opening-hours');
     $this->periods = new ArrayObject();
     $this->holidays = new ArrayObject();
     $this->irregularOpenings = new ArrayObject();
-    $this->setDetails = SetDetails::getInstance()->getPersistence();
-
-    $post = get_post($post);
-
-    if ($post == null)
-      throw new InvalidArgumentException("A set with id $post does not exist.");
-
-    $this->id = $post->ID;
-    $this->post = $post;
-    $this->setUp();
-  }
-
-  /** Sets up the Set instance */
-  public function setUp () {
-    if (!is_admin()) {
-      $childPosts = get_posts(array(
-        'post_type' => SetCpt::CPT_SLUG,
-        'post_parent' => $this->getId()
-      ));
-
-      foreach ($childPosts as $post) {
-        if ($this->postMatchesCriteria($post)) {
-          $this->id = $post->ID;
-          $this->post = $post;
-          break;
-        }
-      }
-    }
-
-    $persistence = new Persistence($this->post);
-    $this->periods = ArrayObject::createFromArray($persistence->loadPeriods());
-    $this->holidays = ArrayObject::createFromArray($persistence->loadHolidays());
-    $this->irregularOpenings = ArrayObject::createFromArray($persistence->loadIrregularOpenings());
-    $this->description = $this->setDetails->getValue('description', $this->id);
-  }
-
-  /**
-   * Checks if the specified post representing a set matches the criteria
-   *
-   * @param     WP_Post $post The child post
-   *
-   * @return    bool              Whether the child post matches the criteria
-   */
-  public function postMatchesCriteria ( WP_Post $post ) {
-    $detailDateStart = $this->setDetails->getValue('dateStart', $post->ID);
-    $detailDateEnd = $this->setDetails->getValue('dateEnd', $post->ID);
-    $detailWeekScheme = $this->setDetails->getValue('weekScheme', $post->ID);
-
-    $detailDateStart = (!empty($detailDateStart)) ? new DateTime($detailDateStart, Dates::getTimezone()) : null;
-    $detailDateEnd = (!empty($detailDateEnd)) ? new DateTime($detailDateEnd, Dates::getTimezone()) : null;
-    if ($detailDateEnd !== null)
-      $detailDateEnd->setTime(23, 59, 59);
-
-    if ($detailDateStart == null && $detailDateEnd == null && ($detailWeekScheme == 'all' || empty($detailWeekScheme)))
-      return false;
-
-    $now = Dates::getNow();
-
-    if ($detailDateStart != null && $now < $detailDateStart)
-      return false;
-
-    if ($detailDateEnd != null && $now > $detailDateEnd)
-      return false;
-
-    $week_number_modulo = (int)$now->format('W') % 2;
-
-    if ($detailWeekScheme == 'even' && $week_number_modulo === 1)
-      return false;
-
-    if ($detailWeekScheme == 'odd' && $week_number_modulo === 0)
-      return false;
-
-    return true;
   }
 
   /**
@@ -284,14 +185,6 @@ class Set {
   }
 
   /**
-   * Getter: Periods
-   * @return    ArrayObject
-   */
-  public function getPeriods () {
-    return $this->periods;
-  }
-
-  /**
    * Returns first active irregular opening on that day
    * Only evaluates the date of $now and not the time
    *
@@ -308,61 +201,51 @@ class Set {
     return null;
   }
 
-  /**
-   * Getter: Holidays
-   * @return    ArrayObject
-   */
-  public function getHolidays () {
-    return $this->holidays;
-  }
-
-  /**
-   * Getter: Irregular Openings
-   * @return    ArrayObject
-   */
-  public function getIrregularOpenings () {
-    return $this->irregularOpenings;
-  }
-
-  /**
-   * Getter: Id
-   * @return    int
-   */
   public function getId () {
     return $this->id;
   }
 
-  /**
-   * Setter: Id
-   *
-   * @param     int $id
-   */
-  public function setId ( $id ) {
+  public function setId ($id) {
     $this->id = $id;
   }
 
-  /**
-   * Getter: Post
-   * @return    WP_Post
-   */
-  public function getPost () {
-    return $this->post;
+  public function getName () {
+    return $this->name;
   }
 
-  /**
-   * Setter: Post
-   *
-   * @param     WP_Post $post
-   */
-  public function setPost ( WP_Post $post ) {
-    $this->post = $post;
+  public function setName ($name) {
+    $this->name = $name;
   }
 
-  /**
-   * Getter: Description
-   * @return    bool
-   */
+  public function getPeriods () {
+    return $this->periods;
+  }
+
+  public function setPeriods (ArrayObject $periods) {
+    $this->periods = $periods;
+  }
+
+  public function getHolidays () {
+    return $this->holidays;
+  }
+
+  public function setHolidays (ArrayObject $holidays) {
+    $this->holidays = $holidays;
+  }
+
+  public function getIrregularOpenings () {
+    return $this->irregularOpenings;
+  }
+
+  public function setIrregularOpenings (ArrayObject $irregularOpenings) {
+    $this->irregularOpenings = $irregularOpenings;
+  }
+
   public function getDescription () {
     return $this->description;
+  }
+
+  public function setDescription ($description) {
+    $this->description = $description;
   }
 }
