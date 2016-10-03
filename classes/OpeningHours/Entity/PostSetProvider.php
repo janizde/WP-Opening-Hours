@@ -17,7 +17,7 @@ class PostSetProvider extends SetProvider {
 
   /**
    * Creates a Set from a post id
-   * @param     int       $id       The id df the post
+   * @param     int       $id       The id of the post
    * @return    Set                 The Set created from the post
    */
   public function createSet ($id) {
@@ -27,7 +27,7 @@ class PostSetProvider extends SetProvider {
 
     $details = SetDetails::getInstance()->getPersistence();
 
-    if (!is_admin()) {
+    if (!$this->isEditScreen()) {
       $children = get_posts(array(
         'post_type' => SetPostType::CPT_SLUG,
         'numberposts' => -1,
@@ -111,7 +111,7 @@ class PostSetProvider extends SetProvider {
       'order' => 'ASC',
     );
 
-    if (!is_admin())
+    if (!$this->isEditScreen())
       $args['post_parent'] = 0;
 
     $posts = get_posts($args);
@@ -122,5 +122,13 @@ class PostSetProvider extends SetProvider {
         'name' => $post->post_title
       );
     }, $posts);
+  }
+
+  protected function isEditScreen () {
+    if (!function_exists('get_current_screen'))
+      return false;
+
+    $screen = get_current_screen();
+    return $screen->base === 'post' && $screen->post_type === SetPostType::CPT_SLUG;
   }
 }
