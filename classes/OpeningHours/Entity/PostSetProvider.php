@@ -104,13 +104,17 @@ class PostSetProvider extends SetProvider {
 
   /** @inheritdoc */
   public function createAvailableSetInfo () {
-    $posts = get_posts(array(
+    $args = array(
       'post_type' => SetPostType::CPT_SLUG,
       'numberposts' => -1,
       'orderby' => 'menu_order',
       'order' => 'ASC',
-      'post_parent' => 0
-    ));
+    );
+
+    if (!is_admin())
+      $args['post_parent'] = 0;
+
+    $posts = get_posts($args);
 
     return array_map(function (\WP_Post $post) {
       return array(

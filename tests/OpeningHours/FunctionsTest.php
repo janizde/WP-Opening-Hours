@@ -2,7 +2,11 @@
 
 namespace OpeningHours\Test;
 
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
+use OpeningHours\Entity\Period;
 use OpeningHours\Module\CustomPostType\Set;
+use OpeningHours\OpeningHours;
 use OpeningHours\Util\Dates;
 
 class FunctionsTest extends OpeningHoursTestCase {
@@ -43,36 +47,17 @@ class FunctionsTest extends OpeningHoursTestCase {
       'return' => array($post)
     ));
 
-    \WP_Mock::wpFunction('get_posts', array(
-      'times' => '0+',
-      'args' => array(array(
-        'post_type' => Set::CPT_SLUG,
-        'post_parent' => 64
-      )),
-      'return' => array()
-    ));
-
-    \WP_Mock::wpFunction('get_post', array(
-      'times' => '1+',
-      'args' => array(64),
-      'return' => $post
-    ));
-
-    \WP_Mock::wpFunction('get_post_meta', array(
-      'args' => array(64, '_op_meta_box_set_details_description', true),
-      'return' => ''
-    ));
-
-    $this->setUpSetData(64, array(
-      array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '15:00')
+    $set = $this->createSet(64, array(
+      new Period(1, '13:00', '15:00')
     ), array(
-      array('name' => 'Holiday', 'dateStart' => '2016-09-22', 'dateEnd' => '2016-09-23')
+      new Holiday('Holiday', new \DateTime('2016-09-22'), new \DateTime('2016-09-23'))
     ), array(
-      array('name' => 'IO', 'date' => '2016-09-24', 'timeStart' => '13:00', 'timeEnd' => '15:00')
+      new IrregularOpening('IO', '2016-09-24', '13:00', '15:00')
     ));
+
+    \OpeningHours\Module\OpeningHours::getSets()->offsetSet(64, $set);
 
     $oldDate = Dates::getNow();
-
     Dates::setNow(new \DateTime('2016-09-19 12:59'));
     $this->assertFalse(is_open());
     Dates::setNow(new \DateTime('2016-09-19 13:00'));

@@ -4,9 +4,12 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
 
@@ -90,15 +93,13 @@ class PeriodTest extends OpeningHoursTestCase {
 		$p1 = new Period( 2, '12:00', '18:00' );
 		$p2 = new Period( 6, '12:00', '18:00' );
 
-    $post = $this->createPost(array('ID' => 64));
-    $this->setUpSetData(64, array(), array(
-      array('name' => 'Holiday 1', 'dateStart' => '2016-01-16', 'dateEnd' => '2016-01-17') // Sat - Sun
-    ), array(
-      array('name' => 'IO1', 'date' => '2016-01-19', 'timeStart' => '13:00', 'timeEnd' => '17:00') // Tue
-    ));
     $this->commonSetMocks();
 
-		$set = new Set( $post );
+		$set = $this->createSet(64, array(), array(
+		  new Holiday('Holiday 1', new DateTime('2016-01-16'), new DateTime('2016-01-17')) // Sat - Sun
+    ), array(
+      new IrregularOpening('IO1', '2016-01-19', '13:00', '17:00') // Tue
+    ));
 
 		$this->assertFalse( $p1->isOpen( new DateTime('2016-01-18 13:00'), $set ) );
 		$this->assertTrue( $p1->isOpen( new DateTime('2016-01-12 13:00'), $set ) );
@@ -116,13 +117,12 @@ class PeriodTest extends OpeningHoursTestCase {
 		$hEnd = clone $hStart;
 		$hEnd->add( new DateInterval('P1D') );
 
-    $post = $this->createPost(array('ID' => 64));
-    $this->setUpSetData(64, array(), array(
-      array('name' => 'Holiday', 'dateStart' => $hStart->format(Dates::STD_DATE_FORMAT), 'dateEnd' => $hEnd->format(Dates::STD_DATE_FORMAT))
-    ));
     $this->commonSetMocks();
 
-		$set = new Set( $post );
+		$set = $this->createSet(64, array(), array(
+		  new Holiday('Holiday', $hStart, $hEnd)
+    ));
+
 		$p1 = new Period( 2, '13:00', '18:00' );
 		$p2 = new Period( 4, '13:00', '18:00' );
 
