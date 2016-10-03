@@ -17,7 +17,6 @@ use WP_Mock\Functions;
 class SetTest extends OpeningHoursTestCase {
 
 	public function testIsHolidayActive () {
-    $this->commonSetMocks();
 		$set = $this->createSet(64, array(), array(
 		  new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14'))
     ));
@@ -30,7 +29,6 @@ class SetTest extends OpeningHoursTestCase {
 	}
 
 	public function testGetActiveIrregularOpening () {
-    $this->commonSetMocks();
     $io = new IrregularOpening('Irregular Opening', '2016-01-13', '13:00', '17:00');
     $set = $this->createSet(64, array(), array(), array($io));
 
@@ -40,8 +38,6 @@ class SetTest extends OpeningHoursTestCase {
 	}
 
 	public function testIsIrregularOpeningActive () {
-    $this->commonSetMocks();
-
 		$set = $this->createSet(64, array(), array(), array(
       new IrregularOpening('Irregular Opening', '2016-01-13', '13:00', '17:00')
     ));
@@ -60,7 +56,6 @@ class SetTest extends OpeningHoursTestCase {
       new Period(6, '13:00', '03:00')
     );
 
-    $this->commonSetMocks();
     $set = $this->createSet(64, array(
       new Period(1, '13:00', '18:00'),
       new Period(1, '19:00', '21:00'),
@@ -95,7 +90,6 @@ class SetTest extends OpeningHoursTestCase {
       new Period(6, '13:00', '03:00')
     );
 
-    $this->commonSetMocks();
     $set = $this->createSet(64, array(
       new Period(1, '13:00', '18:00'),
       new Period(1, '19:00', '21:00'),
@@ -113,7 +107,6 @@ class SetTest extends OpeningHoursTestCase {
   }
 
   public function testGetNextOpenPeriodIrregularOpenings () {
-    $this->commonSetMocks();
     $io = new IrregularOpening('IO1', '2016-01-25', '14:00', '19:30');
     $ioPeriod = $io->createPeriod();
     $set = $this->createSet(64, array(
@@ -131,7 +124,6 @@ class SetTest extends OpeningHoursTestCase {
   }
 
 	public function testIsOpen () {
-    $this->commonSetMocks();
 		$set = $this->createSet(64, array(
 		  new Period(2, '13:00', '18:00'),
 		  new Period(2, '19:00', '21:00'),

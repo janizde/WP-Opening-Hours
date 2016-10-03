@@ -93,8 +93,6 @@ class PeriodTest extends OpeningHoursTestCase {
 		$p1 = new Period( 2, '12:00', '18:00' );
 		$p2 = new Period( 6, '12:00', '18:00' );
 
-    $this->commonSetMocks();
-
 		$set = $this->createSet(64, array(), array(
 		  new Holiday('Holiday 1', new DateTime('2016-01-16'), new DateTime('2016-01-17')) // Sat - Sun
     ), array(
@@ -116,8 +114,6 @@ class PeriodTest extends OpeningHoursTestCase {
 		$hStart = Dates::applyWeekContext( new DateTime('00:00:00'), 2 );
 		$hEnd = clone $hStart;
 		$hEnd->add( new DateInterval('P1D') );
-
-    $this->commonSetMocks();
 
 		$set = $this->createSet(64, array(), array(
 		  new Holiday('Holiday', $hStart, $hEnd)
