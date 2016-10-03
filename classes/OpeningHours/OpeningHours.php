@@ -96,9 +96,6 @@ class OpeningHours extends AbstractModule {
       $widgetClass::registerWidget();
   }
 
-  /**
-   * Enqueues resources
-   */
   public function loadResources () {
     wp_register_script(
       self::PREFIX . 'js',
@@ -125,7 +122,11 @@ class OpeningHours extends AbstractModule {
     Module\Ajax::injectAjaxUrl(self::PREFIX . 'js');
     wp_localize_script(self::PREFIX . 'js', 'openingHoursData', array(
       'startOfWeek' => (int) Dates::getStartOfWeek(),
-      'weekdays' => Weekdays::getDatePickerTranslations()
+      'weekdays' => Weekdays::getDatePickerTranslations(),
+      'translations' => array(
+        'moreSettings' => __('More Settings', 'wp-opening-hours'),
+        'fewerSettings' => __('Fewer Settings', 'wp-opening-hours')
+      )
     ));
 
 

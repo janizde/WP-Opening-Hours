@@ -20,7 +20,7 @@ function is_open ($return_type = false) {
   if (count($posts) < 1)
     return $return_type ? array(false, 'period') : false;
 
-  $set = \OpeningHours\Module\OpeningHours::getSet($posts[0]->ID);
+  $set = \OpeningHours\Module\OpeningHours::getInstance()->getSet($posts[0]->ID);
 
   $type = 'period';
   if ($return_type) {

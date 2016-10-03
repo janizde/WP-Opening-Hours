@@ -2,6 +2,7 @@
 
 namespace OpeningHours\Module\Widget;
 
+use OpeningHours\Module\OpeningHours;
 use OpeningHours\Module\Shortcode\Overview as OverviewShortcode;
 
 /**
@@ -30,7 +31,7 @@ class Overview extends AbstractWidget {
     $this->addField('set_id', array(
       'type' => 'select',
       'caption' => __('Set to show', 'wp-opening-hours'),
-      'options_callback' => array('OpeningHours\Module\OpeningHours', 'getSetsOptions')
+      'options_callback' => array(OpeningHours::getInstance(), 'getSetsOptions')
     ));
 
     $this->addField('highlight', array(

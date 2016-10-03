@@ -13,7 +13,8 @@ use OpeningHours\Util\Persistence;
 class PersistenceTest extends OpeningHoursTestCase {
 
   protected function createPersistence () {
-    $post = $this->createPost(array('ID' => 64));
+    $post = $this->getMockBuilder('WP_Post')->getMock();
+    $post->ID = 64;
     return new Persistence($post);
   }
 
