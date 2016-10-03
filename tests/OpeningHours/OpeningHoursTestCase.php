@@ -4,7 +4,6 @@ namespace OpeningHours\Test;
 
 use OpeningHours\Entity\Set;
 use OpeningHours\Util\ArrayObject;
-use OpeningHours\Util\Persistence;
 use WP_Mock\Functions;
 
 abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
@@ -58,7 +57,7 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
       'args' => array('start_of_week', Functions::type('int'))
     ));
   }
-  
+
   protected function createSet ($id, array $periods = array(), array $holidays = array(), array $irregularOpenings = array()) {
     $set = new Set($id);
     $set->setPeriods(ArrayObject::createFromArray($periods));

@@ -7,11 +7,8 @@ use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
-use OpeningHours\Entity\Set;
 use OpeningHours\Test\OpeningHoursTestCase;
-use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
-use OpeningHours\Util\Weekdays;
 
 class PeriodTest extends OpeningHoursTestCase {
 

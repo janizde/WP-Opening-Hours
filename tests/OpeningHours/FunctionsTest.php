@@ -6,7 +6,6 @@ use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Module\CustomPostType\Set;
-use OpeningHours\OpeningHours;
 use OpeningHours\Util\Dates;
 
 class FunctionsTest extends OpeningHoursTestCase {
