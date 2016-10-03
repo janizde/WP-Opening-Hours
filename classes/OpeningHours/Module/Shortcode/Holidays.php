@@ -41,9 +41,6 @@ class Holidays extends AbstractShortcode {
   public function shortcode ( array $attributes ) {
     $setId = $attributes['set_id'];
 
-    if (!is_numeric($setId))
-      return;
-
     $set = OpeningHours::getInstance()->getSet($setId);
 
     if (!$set instanceof Set)

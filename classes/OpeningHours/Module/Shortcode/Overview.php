@@ -57,7 +57,7 @@ class Overview extends AbstractShortcode {
 
   /** @inheritdoc */
   public function shortcode ( array $attributes ) {
-    if (!isset($attributes['set_id']) or !is_numeric($attributes['set_id']) or $attributes['set_id'] == 0) {
+    if (!isset($attributes['set_id'])) {
       trigger_error("Set id not properly set in Opening Hours Overview shortcode");
       return;
     }
@@ -67,7 +67,7 @@ class Overview extends AbstractShortcode {
       'list' => 'shortcode/overview-list.php'
     );
 
-    $setId = (int)$attributes['set_id'];
+    $setId = $attributes['set_id'];
     $set = OpeningHours::getInstance()->getSet($setId);
 
     if (!$set instanceof Set)
