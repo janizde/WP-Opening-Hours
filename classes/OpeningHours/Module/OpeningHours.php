@@ -15,6 +15,8 @@ use OpeningHours\Util\ArrayObject;
  */
 class OpeningHours extends AbstractModule {
 
+  const WP_FILTER_SET_PROVIDERS = 'op_set_providers';
+
   /**
    * Collection of all loaded Sets
    * @var      ArrayObject
@@ -43,6 +45,7 @@ class OpeningHours extends AbstractModule {
     $module = $this;
     add_action('init', function () use ($module) {
       $module->addSetProvider(new PostSetProvider());
+      $module->setProviders = apply_filters(OpeningHours::WP_FILTER_SET_PROVIDERS, $module->setProviders);
     });
   }
 
