@@ -33,8 +33,7 @@ class OpeningHours extends AbstractModule {
       return 'side';
     });
 
-    add_action('init', array($this, 'init'));
-    add_action('current_screen', array($this, 'initAdmin'));
+//    add_action('init', array($this, 'init'));
   }
 
   /** Initializes all parent posts and loads children */
@@ -48,24 +47,6 @@ class OpeningHours extends AbstractModule {
 
     foreach ($posts as $singlePost)
       $this->sets->offsetSet($singlePost->ID, new SetEntity($singlePost));
-  }
-
-  /**
-   * Initializes all Set posts for post_type op_set admin screen
-   * Overwrites Sets that have been set in init()
-   */
-  public function initAdmin () {
-    $screen = get_current_screen();
-
-    if (!$screen->base == 'post' or !$screen->post_type == SetCpt::CPT_SLUG)
-      return;
-
-    // Redo Child Set mechanism
-    add_action(SetEntity::WP_ACTION_BEFORE_SETUP, function ( SetEntity $set ) {
-      $parentPost = $set->getParentPost();
-      $set->setId($parentPost->ID);
-      $set->setPost($parentPost);
-    });
   }
 
   /**

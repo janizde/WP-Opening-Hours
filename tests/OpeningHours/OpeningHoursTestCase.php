@@ -120,7 +120,6 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
 
     if (!in_array('get_posts', $exclude))
       \WP_Mock::wpFunction('get_posts', array(
-        'times' => 1,
         'args' => array(array(
           'post_type' => \OpeningHours\Module\CustomPostType\Set::CPT_SLUG,
           'post_parent' => 64
@@ -128,7 +127,9 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
         'return' => array()
       ));
 
-    if (!in_array(Set::WP_ACTION_BEFORE_SETUP, $exclude))
-      \WP_Mock::expectAction(Set::WP_ACTION_BEFORE_SETUP, Functions::type('OpeningHours\Entity\Set'));
+    if (!in_array('is_admin', $exclude))
+      \WP_Mock::wpFunction('is_admin', array(
+        'return' => true
+      ));
   }
 }

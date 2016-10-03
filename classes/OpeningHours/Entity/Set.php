@@ -59,22 +59,6 @@ class Set {
   protected $post;
 
   /**
- * The id of the parent set.
- * Id of this set if the set does not have a parent
- *
- * @var       int
- */
-  protected $parentId;
-
-  /**
-   * The WP_Post instance representing the parent set
-   * This Set's post if the set does not have a parent
-   *
-   * @var       WP_Post
-   */
-  protected $parentPost;
-
-  /**
    * The set description
    * @var       string
    */
@@ -101,48 +85,36 @@ class Set {
 
     $post = get_post($post);
 
-    if (!$post instanceof WP_Post)
+    if ($post == null)
       throw new InvalidArgumentException("A set with id $post does not exist.");
 
     $this->id = $post->ID;
     $this->post = $post;
-    $this->parentId = $post->ID;
-    $this->parentPost = $post;
-
     $this->setUp();
   }
 
   /** Sets up the Set instance */
   public function setUp () {
-    $childPosts = get_posts(array(
-      'post_type' => SetCpt::CPT_SLUG,
-      'post_parent' => $this->getId()
-    ));
+    if (!is_admin()) {
+      $childPosts = get_posts(array(
+        'post_type' => SetCpt::CPT_SLUG,
+        'post_parent' => $this->getId()
+      ));
 
-    foreach ($childPosts as $post) {
-      if ($this->postMatchesCriteria($post)) {
-        $this->id = $post->ID;
-        $this->post = $post;
-        break;
+      foreach ($childPosts as $post) {
+        if ($this->postMatchesCriteria($post)) {
+          $this->id = $post->ID;
+          $this->post = $post;
+          break;
+        }
       }
     }
-
-    /** Action: op_set_before_setup */
-    do_action(self::WP_ACTION_BEFORE_SETUP, $this);
 
     $persistence = new Persistence($this->post);
     $this->periods = ArrayObject::createFromArray($persistence->loadPeriods());
     $this->holidays = ArrayObject::createFromArray($persistence->loadHolidays());
     $this->irregularOpenings = ArrayObject::createFromArray($persistence->loadIrregularOpenings());
-
-    $setDescription = $this->setDetails->getValue('description', $this->id);
-    $parentSetDescription = $this->setDetails->getValue('description', $this->parentId);
-
-    if (!empty($setDescription)) {
-      $this->description = $setDescription;
-    } elseif (!empty($parentSetDescription)) {
-      $this->description = $parentSetDescription;
-    }
+    $this->description = $this->setDetails->getValue('description', $this->id);
   }
 
   /**
@@ -182,14 +154,6 @@ class Set {
       return false;
 
     return true;
-  }
-
-  /**
-   * Checks if this set is a parent set
-   * @return    bool      Whether this set is a parent set
-   */
-  public function isParent () {
-    return $this->id === $this->parentId;
   }
 
   /**
@@ -395,36 +359,10 @@ class Set {
   }
 
   /**
-   * Getter: Parent Id
-   * @return    int
-   */
-  public function getParentId () {
-    return $this->parentId;
-  }
-
-  /**
-   * Getter: Parent Post
-   * @return    WP_Post
-   */
-  public function getParentPost () {
-    return (!$this->hasParent() and !$this->parentPost instanceof WP_Post)
-      ? $this->post
-      : $this->parentPost;
-  }
-
-  /**
    * Getter: Description
    * @return    bool
    */
   public function getDescription () {
     return $this->description;
-  }
-
-  /**
-   * Getter: Has Parent
-   * @return    bool
-   */
-  public function hasParent () {
-    return $this->id !== $this->parentId;
   }
 }
