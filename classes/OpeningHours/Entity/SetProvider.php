@@ -3,7 +3,7 @@
 namespace OpeningHours\Entity;
 
 /**
- * Interface for a factory for Sets.
+ * Abstraction for a factory for Sets.
  * A SetProvider may provide no, one or many Sets.
  *
  * @package OpeningHours\Entity
