@@ -46,7 +46,7 @@ class Overview extends AbstractShortcode {
 
     $this->validAttributeValues = array(
       'highlight' => array('nothing', 'period', 'day'),
-      'show_closed_day' => array(false, true),
+      'show_closed_days' => array(false, true),
       'show_description' => array(true, false),
       'include_io' => array(false, true),
       'include_holidays' => array(false, true),
@@ -89,6 +89,9 @@ class Overview extends AbstractShortcode {
 
     $days = array();
     foreach ($data as $row) {
+      if (!$attributes['show_closed_days'] && count($row['items']) < 1)
+        continue;
+
       $dayData = array(
         'highlightedDayClass' => ($attributes['highlight'] === 'day' && Weekdays::containsToday($row['days'])) ? $attributes['highlighted_day_class'] : '',
         'dayCaption' => Weekdays::getDaysCaption($row['days'], $attributes['short'])
