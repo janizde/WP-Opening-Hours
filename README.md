@@ -777,10 +777,15 @@ If you find an issue in the core logic please write one or more unit test which 
 Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours). Advantages of using the central system are:
 
 * Larger translation community
-* Translation can be extracted from the actual development of the Plugin
+* Translation can be separated from the actual development of the Plugin
 * Supports automatic translation updates, so you do not have to wait for the next release to get new translations
 
-However translations at translate.wordpress.org have to be approved by the community so it may take some time until the translations will actually be available as language bundle. Furthermore a translation set (locale) has to be fully translated to be shipped with the language bundle.
+If you want to contribute to translations and there is no Project Translation Editor for your locale, please drop me a message or open an issue with your WordPress.org username and I will request an editorship for your locale.  
+You can find out more about project translation roles [here.](https://make.wordpress.org/polyglots/handbook/about/teams/)  
+
+If you have already translated the Plugin on translate.jannikportz.de, I have transferred all translations to the [translate.wordpress.org project](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours).
+You will then also need to become a Project Translation Editor to approve your translations (I know this is a bit tedious).
+So in this case please also drop me a message or open an issue with your WordPress.org account name.
 
 If you can not translate the whole plugin or don't want to wait until everything is approved you may perform the following steps to immediately use your translations.
 
