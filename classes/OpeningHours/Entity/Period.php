@@ -5,8 +5,8 @@ namespace OpeningHours\Entity;
 use DateInterval;
 use DateTime;
 use InvalidArgumentException;
-use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\Weekday;
 
 /**
  * Represents a regular opening period
@@ -89,9 +89,9 @@ class Period {
     if (!$now instanceof DateTime)
       $now = Dates::getNow();
 
-    $today = (int)$now->format('N') - 1;
+    $today = (int)$now->format('w');
     $startDay = $this->weekday;
-    $endDay = (int)$this->timeEnd->format('N') - 1;
+    $endDay = (int)$this->timeEnd->format('w');
 
     if ($today !== $startDay and $today !== $endDay)
       return false;
@@ -117,14 +117,28 @@ class Period {
    *
    * @return    bool
    */
-  public function isOpen ( $now = null, Set $set = null ) {
-    if ($set == null)
-      $set = OpeningHours::getCurrentSet();
-
+  public function isOpen ($now, Set $set) {
     if ($set->isHolidayActive($now) or $set->isIrregularOpeningActive($now))
       return false;
 
     return $this->isOpenStrict($now);
+  }
+
+  /**
+   * Checks whether the specified Period is open in different weekday contexts
+   * @param     Weekday[]   $weekdays   The weekdays to check
+   * @param     Set         $set        The Set containing holidays and irregular openings
+   * @param     DateTime    $now        Custom current time
+   * @return    bool                    Whether the Period is open in the context of any Weekday
+   */
+  public function isOpenOnAny (array $weekdays, Set $set, DateTime $now = null) {
+    foreach ($weekdays as $weekday) {
+      $period = new Period($weekday->getIndex(), $this->timeStart->format(Dates::STD_TIME_FORMAT), $this->timeEnd->format(Dates::STD_TIME_FORMAT));
+      if ($period->isOpen($now, $set))
+        return true;
+    }
+
+    return false;
   }
 
   /**

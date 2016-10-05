@@ -4,8 +4,9 @@ namespace OpeningHours\Test\Entity;
 
 use DateInterval;
 use DateTime;
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
-use OpeningHours\Entity\Set;
 use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 
@@ -86,18 +87,14 @@ class PeriodTest extends OpeningHoursTestCase {
 	}
 
 	public function testIsOpen () {
-		$p1 = new Period( 1, '12:00', '18:00' );
-		$p2 = new Period( 5, '12:00', '18:00' );
+		$p1 = new Period( 2, '12:00', '18:00' );
+		$p2 = new Period( 6, '12:00', '18:00' );
 
-    $post = $this->createPost(array('ID' => 64));
-    $this->setUpSetData(64, array(), array(
-      array('name' => 'Holiday 1', 'dateStart' => '2016-01-16', 'dateEnd' => '2016-01-17') // Sat - Sun
+		$set = $this->createSet(64, array(), array(
+		  new Holiday('Holiday 1', new DateTime('2016-01-16'), new DateTime('2016-01-17')) // Sat - Sun
     ), array(
-      array('name' => 'IO1', 'date' => '2016-01-19', 'timeStart' => '13:00', 'timeEnd' => '17:00') // Tue
+      new IrregularOpening('IO1', '2016-01-19', '13:00', '17:00') // Tue
     ));
-    $this->commonSetMocks();
-
-		$set = new Set( $post );
 
 		$this->assertFalse( $p1->isOpen( new DateTime('2016-01-18 13:00'), $set ) );
 		$this->assertTrue( $p1->isOpen( new DateTime('2016-01-12 13:00'), $set ) );
@@ -115,13 +112,10 @@ class PeriodTest extends OpeningHoursTestCase {
 		$hEnd = clone $hStart;
 		$hEnd->add( new DateInterval('P1D') );
 
-    $post = $this->createPost(array('ID' => 64));
-    $this->setUpSetData(64, array(), array(
-      array('name' => 'Holiday', 'dateStart' => $hStart->format(Dates::STD_DATE_FORMAT), 'dateEnd' => $hEnd->format(Dates::STD_DATE_FORMAT))
+		$set = $this->createSet(64, array(), array(
+		  new Holiday('Holiday', $hStart, $hEnd)
     ));
-    $this->commonSetMocks();
 
-		$set = new Set( $post );
 		$p1 = new Period( 2, '13:00', '18:00' );
 		$p2 = new Period( 4, '13:00', '18:00' );
 
@@ -148,10 +142,10 @@ class PeriodTest extends OpeningHoursTestCase {
 	}
 
 	public function testGetCopyInDateContext () {
-		$period = new Period( 1, '13:00', '01:00' );
+		$period = new Period( 2, '13:00', '01:00' );
 		$copy = $period->getCopyInDateContext( new DateTime('2016-01-25') );
 
-		$this->assertEquals( 1, $copy->getWeekday() );
+		$this->assertEquals( 2, $copy->getWeekday() );
 		$this->assertEquals( new DateTime('2016-01-26 13:00'), $copy->getTimeStart() );
 		$this->assertEquals( new DateTime('2016-01-27 01:00'), $copy->getTimeEnd() );
 	}

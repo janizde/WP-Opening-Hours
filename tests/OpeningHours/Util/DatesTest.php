@@ -35,49 +35,14 @@ class DatesTest extends OpeningHoursTestCase {
 		$now = new DateTime('2016-01-13'); // Wed
 		$date = new DateTime('2016-03-12');
 
-		$this->assertEquals( new DateTime('2016-01-18'), Dates::applyWeekContext( clone $date, 0, $now ) );
-		$this->assertEquals( new DateTime('2016-01-19'), Dates::applyWeekContext( clone $date, 1, $now ) );
-		$this->assertEquals( new DateTime('2016-01-13'), Dates::applyWeekContext( clone $date, 2, $now ) );
-		$this->assertEquals( new DateTime('2016-01-14'), Dates::applyWeekContext( clone $date, 3, $now ) );
-		$this->assertEquals( new DateTime('2016-01-15'), Dates::applyWeekContext( clone $date, 4, $now ) );
-		$this->assertEquals( new DateTime('2016-01-16'), Dates::applyWeekContext( clone $date, 5, $now ) );
-		$this->assertEquals( new DateTime('2016-01-17'), Dates::applyWeekContext( clone $date, 6, $now ) );
+		$this->assertEquals( new DateTime('2016-01-18'), Dates::applyWeekContext( clone $date, 1, $now ) );
+		$this->assertEquals( new DateTime('2016-01-19'), Dates::applyWeekContext( clone $date, 2, $now ) );
+		$this->assertEquals( new DateTime('2016-01-13'), Dates::applyWeekContext( clone $date, 3, $now ) );
+		$this->assertEquals( new DateTime('2016-01-14'), Dates::applyWeekContext( clone $date, 4, $now ) );
+		$this->assertEquals( new DateTime('2016-01-15'), Dates::applyWeekContext( clone $date, 5, $now ) );
+		$this->assertEquals( new DateTime('2016-01-16'), Dates::applyWeekContext( clone $date, 6, $now ) );
+		$this->assertEquals( new DateTime('2016-01-17'), Dates::applyWeekContext( clone $date, 0, $now ) );
 	}
-
-	public function testIsToday () {
-		$now = new DateTime('now');
-		$today = (int) $now->format('N') - 1;
-		$this->assertTrue( Dates::isToday( $today ) );
-		$this->assertFalse( Dates::isToday( $today + 1 ) );
-	}
-
-	public function testIsTodayMultiple () {
-	  $now = new DateTime('now');
-    $today = $today = (int) $now->format('N') - 1;
-    $days = array((int)$today, 3, 4, 2, 1, 5);
-    $this->assertTrue(Dates::isToday($days));
-
-    foreach ($days as $i => $day) {
-      if ($day === $today)
-        unset($days[$i]);
-    }
-
-    $this->assertFalse(Dates::isToday($days));
-  }
-
-	public function testIsTodayMultipleAsString () {
-	  $now = new DateTime('now');
-    $today = $today = (int) $now->format('N') - 1;
-    $days = array((int)$today, 3, 4, 2, 1, 5);
-    $this->assertTrue(Dates::isToday(implode(',', $days)));
-
-    foreach ($days as $i => $day) {
-      if ($day === $today)
-        unset($days[$i]);
-    }
-
-    $this->assertFalse(Dates::isToday(implode(',',$days)));
-  }
 
 	public function testCompareTime () {
 		$d1 = new DateTime('2016-02-03 12:30');

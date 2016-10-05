@@ -1,12 +1,7 @@
 <?php
 
-use OpeningHours\Entity\Holiday;
-use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\OpeningHours;
-use OpeningHours\Module\Shortcode\Overview as Shortcode;
-use OpeningHours\Util\Dates;
-use OpeningHours\Util\Weekdays;
 
 extract( $this->data['attributes'] );
 
@@ -31,12 +26,7 @@ if ( $title ) {
   echo $before_title . $title . $after_title;
 }
 
-OpeningHours::setCurrentSetId( $set->getId() );
-
 $description = $set->getDescription();
-$periods = $compress
-  ? $set->getPeriodsGroupedByDayCompressed()
-  : $set->getPeriodsGroupedByDay();
 ?>
 
 <dl class="op-list op-list-overview">

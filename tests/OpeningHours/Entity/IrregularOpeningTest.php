@@ -131,4 +131,13 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 		$this->assertEquals( $expectedDate, $io->getTimeStart() );
 		$this->assertTrue( $io->isDummy() );
 	}
+	
+	public function testCreatePeriod () {
+	  $io = new IrregularOpening('IO 1', '2016-09-24', '13:00', '03:00');
+    $period = $io->createPeriod();
+    
+    $this->assertEquals(6, $period->getWeekday());
+    $this->assertEquals(new DateTime('2016-09-24 13:00'), $period->getTimeStart());
+    $this->assertEquals(new DateTime('2016-09-25 03:00'), $period->getTimeEnd());
+  }
 }

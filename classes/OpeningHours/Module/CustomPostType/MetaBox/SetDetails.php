@@ -3,7 +3,6 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Fields\MetaBoxFieldRenderer;
-use OpeningHours\Module\I18n;
 use OpeningHours\Util\MetaBoxPersistence;
 use WP_Post;
 
@@ -34,7 +33,7 @@ class SetDetails extends AbstractMetaBox {
   protected $fieldRenderer;
 
   public function __construct () {
-    parent::__construct('op_meta_box_set_details', __('Set Details', I18n::TEXTDOMAIN), self::CONTEXT_SIDE, self::PRIORITY_HIGH);
+    parent::__construct('op_meta_box_set_details', __('Set Details', 'wp-opening-hours'), self::CONTEXT_SIDE, self::PRIORITY_HIGH);
     $this->fieldRenderer = new MetaBoxFieldRenderer($this->id);
     $this->persistence = new MetaBoxPersistence($this->id);
 
@@ -42,12 +41,12 @@ class SetDetails extends AbstractMetaBox {
       array(
         'type' => 'textarea',
         'name' => 'description',
-        'caption' => __('Description', I18n::TEXTDOMAIN)
+        'caption' => __('Description', 'wp-opening-hours')
       ),
       array(
         'type' => 'text',
         'name' => 'dateStart',
-        'caption' => __('Date Start', I18n::TEXTDOMAIN),
+        'caption' => __('Date Start', 'wp-opening-hours'),
         'show_when' => 'child',
         'attributes' => array(
           'class' => 'op-criteria-date-start op-date-input'
@@ -56,7 +55,7 @@ class SetDetails extends AbstractMetaBox {
       array(
         'type' => 'text',
         'name' => 'dateEnd',
-        'caption' => __('Date End', I18n::TEXTDOMAIN),
+        'caption' => __('Date End', 'wp-opening-hours'),
         'show_when' => 'child',
         'attributes' => array(
           'class' => 'op-criteria-date-end op-date-input'
@@ -65,19 +64,19 @@ class SetDetails extends AbstractMetaBox {
       array(
         'type' => 'select',
         'name' => 'weekScheme',
-        'caption' => __('Week Scheme', I18n::TEXTDOMAIN),
+        'caption' => __('Week Scheme', 'wp-opening-hours'),
         'options' => array(
-          'all' => __('Every week', I18n::TEXTDOMAIN),
-          'even' => __('Even weeks only', I18n::TEXTDOMAIN),
-          'odd' => __('Odd weeks only', I18n::TEXTDOMAIN)
+          'all' => __('Every week', 'wp-opening-hours'),
+          'even' => __('Even weeks only', 'wp-opening-hours'),
+          'odd' => __('Odd weeks only', 'wp-opening-hours')
         ),
         'show_when' => 'child'
       ),
       array(
         'type' => 'heading',
         'name' => 'childSetNotice',
-        'heading' => __('Add a Child-Set', I18n::TEXTDOMAIN),
-        'description' => __('You may add a child set that overwrites the parent Opening Hours in a specific time range. Choose a parent set under "Attributes".', I18n::TEXTDOMAIN),
+        'heading' => __('Add a Child-Set', 'wp-opening-hours'),
+        'description' => __('You may add a child set that overwrites the parent Opening Hours in a specific time range. Choose a parent set under "Attributes".', 'wp-opening-hours'),
         'show_when' => 'parent'
       )
     );

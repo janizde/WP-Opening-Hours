@@ -5,10 +5,10 @@ namespace OpeningHours\Module;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
+use OpeningHours\Module\CustomPostType\Set as SetCPT;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\Weekdays;
-use OpeningHours\Module\CustomPostType\Set as SetCPT;
 
 /**
  * Module importing data from an older version of the Plugin
@@ -83,7 +83,7 @@ class Importer extends AbstractModule {
   }
 
   public function addImportedNotice () {
-    add_notice(__('Your Opening Hours and related widgets have automatically been upgraded to work with the updated version of the Plugin. Please double check your Opening Hours and Widgets.', I18n::TEXTDOMAIN), 'update');
+    add_notice(__('Your Opening Hours and related widgets have automatically been upgraded to work with the updated version of the Plugin. Please double check your Opening Hours and Widgets.', 'wp-opening-hours'), 'update');
   }
 
   /**
@@ -100,7 +100,7 @@ class Importer extends AbstractModule {
 
     $postId = wp_insert_post(array(
       'post_type' => SetCPT::CPT_SLUG,
-      'post_title' => __('Opening Hours', I18n::TEXTDOMAIN),
+      'post_title' => __('Opening Hours', 'wp-opening-hours'),
       'post_status' => 'publish'
     ));
 

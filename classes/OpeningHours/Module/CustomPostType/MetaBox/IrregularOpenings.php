@@ -3,7 +3,6 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Entity\IrregularOpening;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Persistence;
 use OpeningHours\Util\ViewRenderer;
@@ -23,7 +22,7 @@ class IrregularOpenings extends AbstractMetaBox {
   const POST_KEY = 'opening-hours-irregular-openings';
 
   public function __construct () {
-    parent::__construct('op_meta_box_irregular_openings', __('Irregular Openings', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT);
+    parent::__construct('op_meta_box_irregular_openings', __('Irregular Openings', 'wp-opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT);
   }
 
   /** @inheritdoc */
@@ -35,9 +34,8 @@ class IrregularOpenings extends AbstractMetaBox {
   }
 
   /** @inheritdoc */
-  public function renderMetaBox ( WP_Post $post ) {
-    OpeningHoursModule::setCurrentSetId($post->ID);
-    $set = OpeningHoursModule::getCurrentSet();
+  public function renderMetaBox (WP_Post $post) {
+    $set = OpeningHoursModule::getInstance()->getSet($post->ID);
 
     if (count($set->getIrregularOpenings()) < 1)
       $set->getIrregularOpenings()->append(IrregularOpening::createDummy());

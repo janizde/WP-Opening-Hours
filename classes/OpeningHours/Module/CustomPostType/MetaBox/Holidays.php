@@ -4,7 +4,6 @@ namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use DateTime;
 use OpeningHours\Entity\Holiday;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours as OpeningHoursModule;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
@@ -25,7 +24,7 @@ class Holidays extends AbstractMetaBox {
   const POST_KEY = 'opening-hours-holidays';
 
   public function __construct () {
-    parent::__construct('op_meta_box_holidays', __('Holidays', I18n::TEXTDOMAIN), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
+    parent::__construct('op_meta_box_holidays', __('Holidays', 'wp-opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
   }
 
   /** @inheritdoc */
@@ -37,9 +36,8 @@ class Holidays extends AbstractMetaBox {
   }
 
   /** @inheritdoc */
-  public function renderMetaBox ( WP_Post $post ) {
-    OpeningHoursModule::setCurrentSetId($post->ID);
-    $set = OpeningHoursModule::getCurrentSet();
+  public function renderMetaBox (WP_Post $post) {
+    $set = OpeningHoursModule::getInstance()->getSet($post->ID);
 
     if (count($set->getHolidays()) < 1)
       $set->getHolidays()->append(Holiday::createDummyPeriod());

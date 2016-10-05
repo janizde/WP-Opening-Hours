@@ -1,5 +1,4 @@
 <?php
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\CustomPostType\MetaBox\Holidays;
 
 $holidays = Holidays::getInstance();
@@ -10,15 +9,15 @@ $holidays = Holidays::getInstance();
 	<table class="op-holidays" id="op-holidays-table">
 		<thead>
 		<th>
-			<?php _e( 'Name', I18n::TEXTDOMAIN ); ?>
+			<?php _e( 'Name', 'wp-opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Date Start', I18n::TEXTDOMAIN ); ?>
+			<?php _e( 'Date Start', 'wp-opening-hours' ); ?>
 		</th>
 
 		<th>
-			<?php _e( 'Date End', I18n::TEXTDOMAIN ); ?>
+			<?php _e( 'Date End', 'wp-opening-hours' ); ?>
 		</th>
 		</thead>
 
@@ -28,6 +27,6 @@ $holidays = Holidays::getInstance();
 	</table>
 
 	<button class="button button-primary button-add add-holiday">
-		<?php _e( 'Add New Holiday', I18n::TEXTDOMAIN ); ?>
+		<?php _e( 'Add New Holiday', 'wp-opening-hours' ); ?>
 	</button>
 </div>

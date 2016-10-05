@@ -147,7 +147,7 @@ class Holiday {
    * @param     string          $property   The name of the property to set
    * @param     bool            $end_of_day Whether the time should be shifted to the end of the day
    */
-  protected function setDateUniversal ( $date, $property, $end_of_day = false ) {
+  private function setDateUniversal ( $date, $property, $end_of_day = false ) {
     if (is_string($date) and (preg_match(Dates::STD_DATE_FORMAT_REGEX, $date) or preg_match(Dates::STD_DATE_FORMAT_REGEX . ' ' . Dates::STD_TIME_FORMAT_REGEX, $date)))
       $date = new DateTime($date);
 

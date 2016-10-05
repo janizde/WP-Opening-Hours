@@ -4,7 +4,6 @@ namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
@@ -24,10 +23,10 @@ class IsOpen extends AbstractShortcode {
 
     $this->defaultAttributes = array(
       'set_id' => null,
-      'open_text' => __('We\'re currently open.', I18n::TEXTDOMAIN),
-      'closed_text' => __('We\'re currently closed.', I18n::TEXTDOMAIN),
+      'open_text' => __('We\'re currently open.', 'wp-opening-hours'),
+      'closed_text' => __('We\'re currently closed.', 'wp-opening-hours'),
       'show_next' => false,
-      'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', I18n::TEXTDOMAIN),
+      'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', 'wp-opening-hours'),
       'before_widget' => '<div class="op-is-open-shortcode">',
       'after_widget' => '</div>',
       'before_title' => '<h3 class="op-is-open-title">',
@@ -50,10 +49,7 @@ class IsOpen extends AbstractShortcode {
   public function shortcode ( array $attributes ) {
     $setId = $attributes['set_id'];
 
-    if ($setId === null or !is_numeric($setId) or $setId <= 0)
-      return;
-
-    $set = OpeningHours::getSet($setId);
+    $set = OpeningHours::getInstance()->getSet($setId);
 
     if (!$set instanceof Set)
       return;

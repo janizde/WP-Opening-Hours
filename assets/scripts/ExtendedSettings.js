@@ -1,40 +1,29 @@
-/**
- * Opening Hours: JS: Backend: Extended Settings
- */
+(function ($) {
+  $.fn.opExtendedSettings = function () {
+    return this.each(function () {
+      var wrap = $(this);
+      var container = wrap.find('.settings-container');
+      var toggle = wrap.find('.collapse-toggle');
 
-/** Extended Settings */
-jQuery.fn.opExtendedSettings = function () {
+      var hidden = container.hasClass('hidden');
 
-  var wrap = jQuery(this);
-
-  if (wrap.length > 1) {
-    wrap.each(function (index, element) {
-      jQuery(element).opExtendedSettings();
+      toggle.click(function () {
+        hidden = !hidden;
+        if (hidden) {
+          container.addClass('hidden');
+          toggle.html(openingHoursData.translations.moreSettings);
+        } else {
+          container.removeClass('hidden');
+          toggle.html(openingHoursData.translations.fewerSettings);
+        }
+      });
     });
+  };
 
-    return;
-  }
-
-  var container = wrap.find('.settings-container');
-  var toggle = wrap.find('.collapse-toggle');
-
-  toggle.click(function (e) {
-    e.preventDefault();
-
-    container.toggleClass('hidden');
+  $(document).ready(function () {
+    $('.extended-settings').opExtendedSettings();
+    $(document).on('widget-updated widget-added', function (e, widget) {
+      $(widget).find('.extended-settings').opExtendedSettings();
+    });
   });
-
-};
-
-/**
- *  Mapping
- */
-jQuery(document).ready(function () {
-
-  jQuery('.extended-settings').opExtendedSettings();
-
-  jQuery(document).on('widget-updated widget-added', function (e, widget) {
-    jQuery(widget).find('.extended-settings').opExtendedSettings();
-  });
-
-});
+})(jQuery);

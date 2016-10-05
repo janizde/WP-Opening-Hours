@@ -26,8 +26,6 @@ if ( $title ) {
 	echo $before_title . $title . $after_title;
 }
 
-OpeningHours::setCurrentSetId( $set->getId() );
-
 $description = $set->getDescription();
 ?>
 

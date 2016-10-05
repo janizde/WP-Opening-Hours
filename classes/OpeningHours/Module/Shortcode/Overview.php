@@ -4,8 +4,8 @@ namespace OpeningHours\Module\Shortcode;
 
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
+use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\I18n;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
@@ -36,7 +36,7 @@ class Overview extends AbstractShortcode {
       'short' => false,
       'include_io' => false,
       'include_holidays' => false,
-      'caption_closed' => __('Closed', I18n::TEXTDOMAIN),
+      'caption_closed' => __('Closed', 'wp-opening-hours'),
       'highlighted_period_class' => 'highlighted',
       'highlighted_day_class' => 'highlighted',
       'time_format' => Dates::getTimeFormat(),
@@ -46,7 +46,7 @@ class Overview extends AbstractShortcode {
 
     $this->validAttributeValues = array(
       'highlight' => array('nothing', 'period', 'day'),
-      'show_closed_day' => array(false, true),
+      'show_closed_days' => array(false, true),
       'show_description' => array(true, false),
       'include_io' => array(false, true),
       'include_holidays' => array(false, true),
@@ -57,7 +57,7 @@ class Overview extends AbstractShortcode {
 
   /** @inheritdoc */
   public function shortcode ( array $attributes ) {
-    if (!isset($attributes['set_id']) or !is_numeric($attributes['set_id']) or $attributes['set_id'] == 0) {
+    if (!isset($attributes['set_id'])) {
       trigger_error("Set id not properly set in Opening Hours Overview shortcode");
       return;
     }
@@ -67,58 +67,50 @@ class Overview extends AbstractShortcode {
       'list' => 'shortcode/overview-list.php'
     );
 
-    $setId = (int)$attributes['set_id'];
-    $set = OpeningHours::getSet($setId);
+    $setId = $attributes['set_id'];
+    $set = OpeningHours::getInstance()->getSet($setId);
 
     if (!$set instanceof Set)
       return;
 
     $attributes['set'] = $set;
 
-    $periods = $attributes['compress']
-      ? $set->getPeriodsGroupedByDayCompressed()
-      : $set->getPeriodsGroupedByDay();
+    $model = new OverviewModel($set->getPeriods()->getArrayCopy());
+
+    if ($attributes['include_holidays'])
+      $model->mergeHolidays($set->getHolidays()->getArrayCopy());
+
+    if ($attributes['include_io'])
+      $model->mergeIrregularOpenings($set->getIrregularOpenings()->getArrayCopy());
+
+    $data = $attributes['compress']
+      ? $model->getCompressedData()
+      : $model->getData();
 
     $days = array();
-    foreach ($periods as $day => $dayPeriods) {
+    foreach ($data as $row) {
+      if (!$attributes['show_closed_days'] && count($row['items']) < 1)
+        continue;
+
       $dayData = array(
-        'highlightedDayClass' => ($attributes['highlight'] === 'day' && Dates::isToday($day)) ? $attributes['highlighted_day_class'] : '',
-        'dayCaption' => Weekdays::getDaysCaption($day, $attributes['short'])
+        'highlightedDayClass' => ($attributes['highlight'] === 'day' && Weekdays::containsToday($row['days'])) ? $attributes['highlighted_day_class'] : '',
+        'dayCaption' => Weekdays::getDaysCaption($row['days'], $attributes['short'])
       );
 
-      $finished = false;
-      if ($attributes['include_io']) {
-        $io = $set->getActiveIrregularOpeningOnWeekday($day);
-        if ($io instanceof IrregularOpening) {
-          $dayData['periodsMarkup'] = self::renderIrregularOpening($io, $attributes);
-          $finished = true;
+      if ($row['items'] instanceof IrregularOpening) {
+        $dayData['periodsMarkup'] = self::renderIrregularOpening($row['items'], $attributes);
+      } elseif ($row['items'] instanceof Holiday) {
+        $dayData['periodsMarkup'] = self::renderHoliday($row['items']);
+      } elseif (count($row['items']) > 0) {
+        $markup = '';
+        /** @var Period $period */
+        foreach ($row['items'] as $period) {
+          $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpenOnAny($row['days'], $set) ) ? $attributes['highlighted_period_class'] : '';
+          $markup .= sprintf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($attributes['time_format']));
         }
-      }
-
-      if (!$finished && $attributes['include_holidays']) {
-        $holiday = $set->getActiveHolidayOnWeekday($day);
-        if ($holiday instanceof Holiday) {
-          $dayData['periodsMarkup'] = self::renderHoliday($holiday);
-          $finished = true;
-        }
-      }
-
-      if (!$finished && count($dayPeriods) < 1) {
-        if (!$attributes['show_closed'])
-          continue;
-
+        $dayData['periodsMarkup'] = $markup;
+      } else {
         $dayData['periodsMarkup'] = '<span class="op-closed">'.$attributes['caption_closed'].'</span>';
-        $finished = true;
-      }
-
-      if (!$finished) {
-        $dayData['periodsMarkup'] = '';
-
-        /** @var \OpeningHours\Entity\Period $period */
-        foreach ($dayPeriods as $period) {
-          $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpen() ) ? $attributes['highlighted_period_class'] : '';
-          $dayData['periodsMarkup'] .= sprintf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($attributes['time_format']));
-        }
       }
 
       $days[] = $dayData;
