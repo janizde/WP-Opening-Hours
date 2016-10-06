@@ -83,8 +83,10 @@ class SetDetails extends AbstractMetaBox {
   }
 
   /** @inheritdoc */
-  public function renderMetaBox ( WP_Post $post ) {
+  public function renderMetaBox (WP_Post $post) {
     $this->nonceField();
+
+    echo '<p><h3>'.__('Set Id', 'wp-opening-hours').': <code>'.$post->ID.'</code></h3></p>';
 
     $type = $post->post_parent == 0 ? 'parent' : 'child';
 
