@@ -2,8 +2,10 @@
 
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
+use OpeningHours\Entity\Set;
+use OpeningHours\Module\CustomPostType\Set as SetPostType;
 use OpeningHours\Module\AbstractModule;
-use OpeningHours\Module\CustomPostType\Set;
+use OpeningHours\Module\OpeningHours;
 use WP_Post;
 
 /**
@@ -17,7 +19,7 @@ abstract class AbstractMetaBox extends AbstractModule {
   const WP_ACTION_ADD_META_BOXES = 'add_meta_boxes';
   const WP_ACTION_SAVE_POST = 'save_post';
 
-  const POST_TYPE = Set::CPT_SLUG;
+  const POST_TYPE = SetPostType::CPT_SLUG;
 
   const PRIORITY_DEFAULT = 'default';
   const PRIORITY_HIGH = 'high';
@@ -126,6 +128,19 @@ abstract class AbstractMetaBox extends AbstractModule {
       $this->context,
       $this->priority
     );
+  }
+
+  /**
+   * Retrieves the Set with the specified id or creates a new empty one
+   * @param     string|int  $setId    The id of the set
+   * @return    Set                   The Set instance
+   */
+  protected function getSet ($setId) {
+    $set = OpeningHours::getInstance()->getSet($setId);
+    if ($set instanceof Set)
+      return $set;
+
+    return new Set($setId);
   }
 
   /**
