@@ -126,19 +126,6 @@ class IrregularOpening {
   }
 
   /**
-   * Generates a config array representing this IO
-   * @return    array   Associative config array representing this IO
-   */
-  public function toArray () {
-    return array(
-      'name' => $this->name,
-      'timeStart' => $this->timeStart->format(Dates::STD_TIME_FORMAT),
-      'timeEnd' => $this->timeEnd->format(Dates::STD_TIME_FORMAT),
-      'date' => $this->getDate()->format(Dates::STD_DATE_FORMAT)
-    );
-  }
-
-  /**
    * Creates a Period representing the Irregular Opening
    * @return    Period    Period representing Irregular Opening in correct week context
    */
@@ -214,6 +201,8 @@ class IrregularOpening {
    * @return    DateTime
    */
   public function getDate () {
-    return new DateTime($this->getTimeStart()->format(Dates::STD_DATE_FORMAT), Dates::getTimezone());
+    $date = clone $this->timeStart;
+    $date->setTime(0,0,0);
+    return $date;
   }
 }

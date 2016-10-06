@@ -94,18 +94,6 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 		$this->assertEquals( '01:00 // 13:00', $io->getFormattedTimeRange( null, '%2$s // %1$s' ) );
 	}
 
-	public function testToArray () {
-		$io = new IrregularOpening( 'Test', '2016-02-03', '13:00', '01:00' );
-		$expected = array(
-			'name' => 'Test',
-			'date' => '2016-02-03',
-			'timeStart' => '13:00',
-			'timeEnd' => '01:00'
-		);
-
-		$this->assertEquals( $expected, $io->toArray() );
-	}
-
 	public function testSortStrategy () {
 		$io1 = new IrregularOpening( 'Test', '2016-02-03', '13:00', '01:00' );
 		$io2 = new IrregularOpening( 'Test', '2016-01-03', '14:00', '01:00' );
