@@ -35,7 +35,7 @@ class IrregularOpenings extends AbstractMetaBox {
 
   /** @inheritdoc */
   public function renderMetaBox (WP_Post $post) {
-    $set = OpeningHoursModule::getInstance()->getSet($post->ID);
+    $set = $this->getSet($post->ID);
 
     if (count($set->getIrregularOpenings()) < 1)
       $set->getIrregularOpenings()->append(IrregularOpening::createDummy());
