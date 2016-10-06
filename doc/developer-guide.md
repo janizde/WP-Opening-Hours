@@ -2,6 +2,8 @@
 This document is intended for theme / plugin developers who want to access the Opening Hours data programatically
 to develop extension plugins or special functionality like custom widgets or shortcodes in their own themes.
 
+The document contains textual description and code samples showing the basic functionality of the components. For detailed documentation please have a look at the method documentation in the respective source files.
+
 ## In this document
 * [OpeningHours module](#opening-hours-module)
 * [Sets](#sets)
@@ -14,106 +16,162 @@ to develop extension plugins or special functionality like custom widgets or sho
 * [SetProviders](./set-providers.md) - to implement custom sources of OpeningHours data
 
 ## <a name="opening-hours-module"></a> OpeningHours module
-Class `OpeningHours\Module\OpeningHours`
+Class [`OpeningHours\Module\OpeningHours`](./../classes/OpeningHours/Module/OpeningHours.php)
 
-The OpeningHours module Singleton instance is the entry point of the Plugin. You can retrieve it via the static `getInstance` method
+The OpeningHours module Singleton instance is the entry point of the Plugin. You can retrieve it via the static `getInstance` method.  
+You will probably want to use it to retrieve a specific Set to get its Periods, Holidays and Irregular OpeningHours
+
 ```php
 use OpeningHours\Module\OpeningHours;
 
 $module = OpeningHours::getInstance();
 ```
 
-### Methods
+You can retrieve a single Set by its id. Any of the registered [`SetProviders`](./set-providers.md) must offer a Set with the specified id, otherwise you will be returned `null`.
 
-#### `public function getSet ($setId) : Set`
-Retrieves an instance of [Set](#sets) by the specified `$setId`.
-You will probably want to use this method to retrieve a Set to get the associated Periods, Holidays or Irregular Openings
+```php
+use OpeningHours\Module\OpeningHours;
+use OpeningHours\Entity\Set;
 
-##### Parameters
-* `$setId` (`int|string`): The id of the Set to retrieve
+$openingHours = OpeningHours::getInstance();
 
-##### Return value
-`OpeningHours\Entity\Set|null` The Set returned by the first [`SetProvider`](./set-providers.md) which offers a Set with the specified id.
-Returns null if no registered `SetProvider` offers a Set with `$setId` or was unable to retrieve the Set.
+// Retrieve Set with id 'my-set'
+$set = $openingHours->getSet('my-set'); // $set instanceof Set
 
-#### `public function getSetOptions () : array`
-Retrieves all available Sets and returns an associative array containing their IDs and names.  
-This method is intended to serve data for the widget select field.
+// Trying to retrieve non-existing Set
+$anotherSet = $openingHours->getSet('non-existing-set'); // $set == null
 
-##### Return value
-`array`: Associative array with ID as key and name as value
+// Retrieve all loaded Sets
+$loadedSets = $openingHours->getSets(); // $loadedSets instanceof ArrayObject; Only contains already initialized Sets
+```
 
-## <a name="sets">Sets</a>
-Class `OpeningHours\Entity\Set`
+You also have to use the OpeningHours module to add new SetProviders. [(read more)](./set-providers.md)
 
-Sets contain Periods, Holidays and Irregular Openings
+## <a name="sets"></a> Sets
+Class [`OpeningHours\Entity\Set`](./../classes/OpeningHours/Entity/Set.php)
 
-### Methods
+Sets contain Periods, Holidays and IrregularOpenings and offser methods to determine the opening status or the next open Period.
 
-#### `public function getId () : int|string`
-##### Return Value
-`int|string`: The Set id
+```php
+use OpeningHours\Util\ArrayObject;
 
-#### `public function getName () : string`
-##### Return Value
-`string`: The Set name
+// Check whether Set is open
+// Checks for Periods, Holidays and Irregular Openings
+$set->isOpen(); // Is the Set currently open?
+$set->isOpen(new \DateTime('2016-10-09 13:59:59')); // Will the Set be open on 2016-10-09 at 13:59:59?
 
-#### `public function getPeriods () : ArrayObject`
-##### Return value
-`OpeningHours\Util\ArrayObject`: ArrayObject containing all Periods in the Set numerically
+// Find the next open Period
+// Also takes Holidays and IrregularOpenings into consideration
+// Does not include currently running Periods
+$period = $set->getNextOpenPeriod();
+$period = $set->getNextOpenPeriod(new \DateTime('2016-10-09'));
 
-#### `public function getHolidays () : ArrayObject`
-##### Return value
-`OpeningHours\Util\ArrayObject`: ArrayObject containing all Holidays in the Set numerically
+$id = $set->getId();
+$name = $set->getName();
+$description = $set->getDescription();
 
-#### `public function getPeriods () : ArrayObject`
-##### Return value
-`OpeningHours\Util\ArrayObject`: ArrayObject containing all IrregularOpenings in the Set numerically
+$periods = $set->getPeriods();
+$holidays = $set->getHolidays();
+$irregularOpenings = $set->getIrregularOpenings();
+// $periods, $holidays, $irregularOpenings instanceof ArrayObject
+```
 
-#### `public function isOpen (\DateTime $now) : bool`
-Checks whether the Set is currently open or not taking Periods, Holidays and Irregular Openings into consideration.
-##### Parameters
-* `$now` (`\DateTime`, optional): Date and time to check for, default is current time
-##### Return Value
-`bool`: Whether the Set is currently open or not
+## <a name="periods"></a> Periods
+Class [`OpeningHours\Entity\Periods`](./../classes/OpeningHours/Entity/Period.php)
 
-#### `public function getNextOpenPeriod (\DateTime $now) : Period`
-Determines the next open Period
-##### Parameters
-* `$now` (`\DateTime`, optional): Date and time to check for, default is current time
-##### Return Value
-`OpeningHours\Entity\Periods`: The next open period. It will not be a currently running Period but the following one. 
-Irregular Openings are converted to a Period when they appear before the next regular opening.
+Periods consist of a weekday, a start time and and end time. Start time and end time are \DateTime objects
+whose date is by default the date in the current week-context.
+Week-context is aware your `start_of_week` WordPress setting.
 
-#### `public function getActiveIrregularOpening (\DateTime $now) : IrregularOpening`
-Determines the currently active Irregular Opening on the specified day. It does not check whether the IrregularOpening is open but if it's scheduled on the specified day,
-so it will always return the IrregularOpening for the whole day.
-##### Parameters
-* `$now` (`\DateTime`, optional): Date and time to check for, default is current time
-##### Return Value
-`OpeningHours\Entity\IrregularOpening|null`: The IrregularOpening active at `$now` or null if none is active.
+```php
+use OpeningHours\Entity\Period;
 
-#### `public function isIrregularOpeningActive (\DateTime $now) : bool`
-Checks whether any Irregular Opening is active on the specified day. It does not check whether the IrregularOpening is open but if it's scheduled on the specified day,
-so it will always return the IrregularOpening for the whole day.
-##### Parameters
-* `$now` (`\DateTime`, optional): Date and time to check for, default is current time
-##### Return Value
-`bool`: Whether any IrregularOpening is active ar `$now`
+// Now is 2016-10-06 12:00:00
+// Start of Week is Monday
+$now = new DateTime('2016-10-06 12:00:00');
 
-#### `public function getActiveHoliday (\DateTime $now) : Holiday`
-Determines the currently active Holiday on the specified day.
-##### Parameters
-* `$now` (`\DateTime`, optional): Date and time to check for, default is current time
-##### Return Value
-`OpeningHours\Entity\Holiday|null`: The Holiday active at `$now` or null if none is active.
+$period = new Period(1, '13:00', '17:00');
+$period->getWeekday(); // 1 (Monday)
+$period->getTimeStart(); // DateTime('2016-10-02 13:00:00')
+$period->getTimeEnd(); // DateTime('2016-01-02 17:00:00')
 
-#### `public function isHolidayActive (\DateTime $now) : bool`
-Checks whether any Holiday is active on the specified day.
-##### Parameters
-* `$now` (`\DateTime`, optional): Date and time to check for, default is current time
-##### Return Value
-`bool`: Whether any Holiday is active ar `$now`
+$periodFri = new Period(5, '13:00', '17:00');
+$periodFri->getWeekday(); // 5 (Friday)
+$periodFri->getTimeStart(); // DateTime('2016-10-07 13:00:00')
+$periodFri->getTimeEnd(); // DateTime('2016-01-07 17:00:00')
+
+// Get copy for next week
+$nextWeek = (clone $now)->add(new \DateInterval('P1W')); // DateTime('2016-10-13 12:00:00')
+$nwPeriod = $period->getCopyInDateContext($nextWeek);
+$nwPeriod->getWeekday(); // 1 (Monday)
+$nwPeriod->getTimeStart(); // DateTime('2016-10-10 13:00:00')
+$nwPeriod->getTimeEnd(); // DateTime('2016-01-10 17:00:00')
+
+// Is this specific Period open in the context of $set?
+$period->isOpen($now, $set); // bool
+
+$period->compareToDateTime(new \DateTime('2016-10-06 17:00:01')); // -1; period is in past
+$period->compareToDateTime(new \DateTime('2016-10-06 15:00:00')); // 0; period is currently running
+$period->compareToDateTime(new \DateTime('2016-10-06 12:59:59')); // 1; period in in future
+
+// Will the Period be open to the scheduled time or overridden by Holiday or IrregularOpening in $set?
+$period->willBeOpen($set);
+
+// Compare Periods without date context
+$period->equals($nwPeriod); // true
+$p1 = new Period(1, '13:00', '17:00');
+$p2 = new Period(5, '13:00', '17:00');
+$p1->equals($p2); // false
+// Ignore Weekday (second parameter)
+$p1->equals($p2, true); // true
+```
+
+## <a name="holidays"></a> Holidays
+Class [`OpeningHours\Entity\Holidays`](./../classes/OpeningHours/Entity/Holiday.php)
+
+```php
+use OpeningHours\Entity\Holiday;
+
+$holiday = new Holiday('My Holidays', new \DateTime('2016-10-02'), new \DateTime('2016-10-07'));
+$holiday->getName(); // 'My Holidays'
+$holiday->getDateStart(); // DateTime('2016-10-02 00:00:00')
+$holiday->getDateEnd(); // DateTime('2016-10-06 23:59:59')
+
+$holiday->isActive(); // true
+$holiday->isActive(new \DateTime('2016-10-03 13:04:00')); // true
+$holiday->isActive(new \DateTime('2016-10-08')); // false
+```
+
+## <a name="irregular-openings"></a> Irregular Openings
+Class [`OpeningHours\Entity\IrregularOpening`](./../classes/OpeningHours/Entity/IrregularOpening.php)
+
+```php
+use OpeningHours\Entity\IrregularOpening;
+
+$irregularOpening = new IrregularOpening('IO', '2016-10-03', '13:00', '17:00');
+$irregularOpening->getName(); // 'IO'
+$irregularOpening->getTimeStart(); // DateTime('2016-10-03 13:00:00')
+$irregularOpening->getTimeEnd(); // DateTime('2016-10-03 17:00:00')
+$irregularOpening->getDate(); // DateTime('2016-10-03 00:00:00')
+
+// Check if Irregular Opening is active on a specific day
+$irregularOpening->isActiveOnDay(new DateTime('2016-10-02 23:59:59')); // false
+$irregularOpening->isActiveOnDay(new DateTime('2016-10-03 00:00:00')); // true
+$irregularOpening->isActiveOnDay(new DateTime('2016-10-03 23:59:59')); // true
+$irregularOpening->isActiveOnDay(new DateTime('2016-10-04 00:00:00')); // false
+
+// Check whether Irregular Opening is open
+$irregularOpening->isOpen(new DateTime('2016-10-03 12:59:59')); // false
+$irregularOpening->isOpen(new DateTime('2016-10-03 13:00:00')); // true
+$irregularOpening->isOpen(new DateTime('2016-10-03 17:00:00')); // true
+$irregularOpening->isOpen(new DateTime('2016-10-03 00:00:01')); // false
+
+// Create Period from IrregularOpening
+$period = $irregularOpening->createPeriod();
+$period->getWeekday(); // 2 (Tuesday)
+$period->getTimeStart(); // DateTime('2016-10-03 13:00:00')
+$period->getTimeEnd(); // DateTime('2016-10-03 17:00:00')
+```
 
 [Table of contents](./../README.md)
 
