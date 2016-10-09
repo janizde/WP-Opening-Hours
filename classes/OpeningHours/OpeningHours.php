@@ -49,7 +49,8 @@ class OpeningHours extends AbstractModule {
       'Shortcode\IsOpen' => Module\Shortcode\IsOpen::getInstance(),
       'Shortcode\Overview' => Module\Shortcode\Overview::getInstance(),
       'Shortcode\Holidays' => Module\Shortcode\Holidays::getInstance(),
-      'Shortcode\IrregularOpenings' => Module\Shortcode\IrregularOpenings::getInstance()
+      'Shortcode\IrregularOpenings' => Module\Shortcode\IrregularOpenings::getInstance(),
+      'ShortcodeBuilder' => Module\ShortcodeBuilder::getInstance()
     );
 
     $this->widgets = array(
