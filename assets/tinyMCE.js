@@ -15,13 +15,15 @@ tinyMCECurrentEditor = null;
     this.fields = fields;
     this.editor = editor;
     this.url = url;
+
+    var $this = this;
+    this.editor.addCommand(this.shortcodeTag + '_popup', function (ui, args) {
+      $this.onCommandPopup(ui, args);
+    });
   };
 
   ShortcodeBuilder.prototype.handleButtonClick = function () {
-    var $this = this;
-    this.editor.execCommand(this.shortcodeTag + '_popup', function (ui, args) {
-      $this.onCommandPopup(ui, args);
-    });
+    this.editor.execCommand(this.shortcodeTag + '_popup', {});
   };
 
   ShortcodeBuilder.prototype.onCommandPopup = function (ui, args) {
