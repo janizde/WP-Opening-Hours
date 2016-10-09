@@ -1,20 +1,27 @@
 /**
  * Opening Hours TinyMCE extension
  * for Shortcode builder
+ *
+ * @author      Jannik Portz <hello@jannikportz.de>
  */
-
-tinyMCECurrentEditor = null;
 
 (function ($, tinyMCE, shortcodeBuilders) {
   if (!tinyMCE)
     return;
 
-  var ShortcodeBuilder = function (editor, url, shortcodeTag, name, fields) {
+  /**
+   * ShortcodeBuilder constructor
+   * @param     editor        The tinyMCE editor
+   * @param     shortcodeTag  The shortcode tag
+   * @param     name          The shortcode display name
+   * @param     fields        Available fields for the ShortcodeBuilder
+   * @constructor
+   */
+  var ShortcodeBuilder = function (editor, shortcodeTag, name, fields) {
     this.shortcodeTag = shortcodeTag;
     this.name = name;
     this.fields = fields;
     this.editor = editor;
-    this.url = url;
 
     var $this = this;
     this.editor.addCommand(this.shortcodeTag + '_popup', function (ui, args) {
@@ -22,16 +29,22 @@ tinyMCECurrentEditor = null;
     });
   };
 
+  /**
+   * Callback for menu item click in ShortcodeBuilders menu
+   */
   ShortcodeBuilder.prototype.handleButtonClick = function () {
     this.editor.execCommand(this.shortcodeTag + '_popup', {});
   };
 
+  /**
+   * Callback for ShortcodeBuilder popup
+   * @param     ui          The ui object
+   * @param     args        Data passed to the popup
+   */
   ShortcodeBuilder.prototype.onCommandPopup = function (ui, args) {
     var $this = this;
-    console.log('editor', this.editor.selection);
-    tinyMCECurrentEditor = $this.editor;
     this.editor.windowManager.open({
-      title: 'Opening Hours Shortcode Builder',
+      title: this.name,
       body: this.fields,
       onsubmit: function (e) {
         var shortcode = $this.generateShortcode(e.data);
@@ -41,6 +54,11 @@ tinyMCECurrentEditor = null;
     });
   };
 
+  /**
+   * Generates a shortcode string from the specified args
+   * @param     {object}    args    Key/value hash containing shortcode args
+   * @returns   {string}            Formatted shortcode string
+   */
   ShortcodeBuilder.prototype.generateShortcode = function (args) {
     var tag = '[' + this.shortcodeTag;
     for (var key in args) {
@@ -57,9 +75,13 @@ tinyMCECurrentEditor = null;
     return tag;
   };
 
-  tinyMCE.PluginManager.add('op_shortcode_builder', function (editor, ui) {
+  /**
+   * Initialize tinyMCE plugin
+   * Loads all available ShortcodeBuilders and creates dropdown menu
+   */
+  tinyMCE.PluginManager.add('op_shortcode_builder', function (editor) {
     var builders = shortcodeBuilders.map(function (scb) {
-      return new ShortcodeBuilder(editor, ui, scb.shortcodeTag, scb.shortcodeName, scb.fields);
+      return new ShortcodeBuilder(editor, scb.shortcodeTag, scb.shortcodeName, scb.fields);
     });
 
     editor.addButton('op_shortcode_builder', {
