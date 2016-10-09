@@ -27,6 +27,10 @@
     this.editor.addCommand(this.shortcodeTag + '_popup', function (ui, args) {
       $this.onCommandPopup(ui, args);
     });
+
+    this.editor.on('BeforeSetcontent', function (event) { console.log(event);
+      event.content = $this.replaceShortcodes(event.content);
+    });
   };
 
   /**
@@ -73,6 +77,47 @@
     }
     tag += ']';
     return tag;
+  };
+
+  /**
+   * Replaces all occurrences of the shortcode with a visual representation
+   * @param     {string}  content   The content string with shortcodes
+   * @returns   {string}            The content string with replaced shortcodes
+   */
+  ShortcodeBuilder.prototype.replaceShortcodes = function (content) {
+    var $this = this;
+    var regex = new RegExp('(\\['+ this.shortcodeTag +'[^\\]]*\\])');
+    return content.replace(regex, function (shortcode) {
+      var attributes = $this.parseShortcodeAttributes(shortcode);
+      var element = $('<div>');
+      element.html('Shortcode: ' + $this.name);
+      element.addClass('shortcode-' + $this.shortcodeTag);
+      for (var key in attributes) {
+        if (!attributes.hasOwnProperty(key))
+          continue;
+
+        element.attr('data-' + key, attributes[key]);
+      }
+      return element.prop('outerHTML');
+    });
+  };
+
+  /**
+   * Parses a shortcode string to an attributes object
+   * @param     {string}  shortcode The shortcode
+   * @returns   {object}            key/value hash with shortcode attributes
+   */
+  ShortcodeBuilder.prototype.parseShortcodeAttributes = function (shortcode) {
+    var regex = new RegExp('([a-zA-Z0-9-_]+)=(?:\"([^\"]*)\")', 'g');
+    var attributes = {};
+    do {
+      var result = regex.exec(shortcode);
+      if (!result)
+        continue;
+
+      attributes[result[1]] = result[2];
+    } while (result);
+    return attributes;
   };
 
   /**
