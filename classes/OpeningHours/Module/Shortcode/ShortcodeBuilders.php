@@ -27,7 +27,7 @@ class ShortcodeBuilders extends AbstractModule {
     });
 
     $shortcodeBuilders = array(
-      new ShortcodeBuilder('op-overview', new OverviewForm())
+      new ShortcodeBuilder('op-overview', __('Overview', 'wp-opening-hours'), new OverviewForm())
     );
 
     $scbData = array_map(function (ShortcodeBuilder $scb) {

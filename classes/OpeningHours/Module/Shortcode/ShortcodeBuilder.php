@@ -19,13 +19,20 @@ class ShortcodeBuilder {
   protected $shortcodeTag;
 
   /**
+   * Display name of shortcode
+   * @var       string
+   */
+  protected $name;
+
+  /**
    * The form containing all fields for the Shortcode
    * @var       Form
    */
   protected $form;
 
-  public function __construct ($shortcodeTag, Form $form) {
+  public function __construct ($shortcodeTag, $name, Form $form) {
     $this->shortcodeTag = $shortcodeTag;
+    $this->name = $name;
     $this->form = $form;
   }
 
@@ -35,7 +42,8 @@ class ShortcodeBuilder {
    */
   public function getShortcodeBuilderData () {
     $data = array(
-      'shortcodeTag' => $this->shortcodeTag
+      'shortcodeTag' => $this->shortcodeTag,
+      'shortcodeName' => $this->name
     );
 
     $fields = array();

@@ -9,25 +9,17 @@ tinyMCECurrentEditor = null;
   if (!tinyMCE)
     return;
 
-  var ShortcodeBuilder = function (editor, url, shortcodeTag, fields) {
-    var $this = this;
-    this.pluginName = 'op_shortcode_builder';
+  var ShortcodeBuilder = function (editor, url, shortcodeTag, name, fields) {
     this.shortcodeTag = shortcodeTag;
+    this.name = name;
     this.fields = fields;
     this.editor = editor;
     this.url = url;
+  };
 
-    editor.addButton(this.pluginName, {
-      icon: 'clock',
-      tooltip: 'Opening Hours',
-      onclick: function (e) { console.log('event', e);
-        editor.execCommand($this.pluginName + '_popup', '', {
-          foo: 'bar'
-        });
-      }
-    });
-
-    editor.addCommand(this.pluginName + '_popup', function (ui, args) {
+  ShortcodeBuilder.prototype.handleButtonClick = function () {
+    var $this = this;
+    this.editor.execCommand(this.shortcodeTag + '_popup', function (ui, args) {
       $this.onCommandPopup(ui, args);
     });
   };
@@ -64,9 +56,22 @@ tinyMCECurrentEditor = null;
   };
 
   tinyMCE.PluginManager.add('op_shortcode_builder', function (editor, ui) {
-    for (var i = 0; i < shortcodeBuilders.length; ++i) {
-      new ShortcodeBuilder(editor, ui, shortcodeBuilders[i].shortcodeTag, shortcodeBuilders[i].fields);
-    }
+    var builders = shortcodeBuilders.map(function (scb) {
+      return new ShortcodeBuilder(editor, ui, scb.shortcodeTag, scb.shortcodeName, scb.fields);
+    });
+
+    editor.addButton('op_shortcode_builder', {
+      type: 'menubutton',
+      icon: 'clock',
+      menu: builders.map(function (scb) {
+        return {
+          text: scb.name,
+          onclick: function () {
+            scb.handleButtonClick();
+          }
+        };
+      })
+    });
   });
 
 })(jQuery, tinyMCE, openingHoursShortcodeBuilders);
