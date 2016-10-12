@@ -28,7 +28,9 @@
     "load-grunt-tasks": "~1.0.0",
     "run-sequence": "^1.1.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "merge-stream": "^1.0.0"
+  },
   "scripts": {},
   "repository": {
     "type": "git",

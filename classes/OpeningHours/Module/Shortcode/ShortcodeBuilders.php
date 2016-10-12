@@ -17,8 +17,8 @@ class ShortcodeBuilders extends AbstractModule {
       return;
 
     add_filter('mce_external_plugins', function ($plugins) {
-      $plugins['op_shortcode_builder'] = plugins_url('assets/tinyMCE.js', op_bootstrap_file());
-      $plugins['noneditable'] = plugins_url('assets/noneditable.js', op_bootstrap_file());
+      $plugins['op_shortcode_builder'] = plugins_url('dist/scripts/tinyMCE.js', op_bootstrap_file());
+      $plugins['noneditable'] = plugins_url('dist/scripts/noneditable.js', op_bootstrap_file());
       return $plugins;
     });
 
@@ -41,7 +41,7 @@ class ShortcodeBuilders extends AbstractModule {
       if (!empty($urls))
         $urls .= ',';
 
-      $urls .= plugins_url('assets/tiny-mce.css', op_bootstrap_file());
+      $urls .= plugins_url('dist/styles/tiny-mce.css', op_bootstrap_file());
       return $urls;
     });
   }

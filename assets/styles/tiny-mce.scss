@@ -1,0 +1,14 @@
+.op-shortcode {
+  background-color: rgb(245, 245, 245);
+  border: 1px solid #ccc;
+  padding: .5em .7em;
+  box-sizing: border-box;
+  margin: .5em 0;
+  cursor: pointer;
+  font-family: sans-serif;
+
+  &[data-mce-selected] {
+    border-color: #999;
+    box-shadow: 0 0 5px -2px #999;
+  }
+}

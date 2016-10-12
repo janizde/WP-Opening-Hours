@@ -9,17 +9,24 @@ var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var gulpZip = require('gulp-zip');
 var gulpIf = require('gulp-if');
+var merge = require('merge-stream');
 var runSequence = require('run-sequence');
 
 var paths = {
   src: {
-    scripts: [
-      './includes/jquery-ui-timepicker/jquery.ui.timepicker.js',
-      './assets/scripts/**/*.js'
-    ],
+    scripts: {
+      main: [
+        './includes/jquery-ui-timepicker/jquery.ui.timepicker.js',
+        './assets/scripts/**/_*.js'
+      ],
+      others: [
+        './assets/scripts/tinyMCE.js',
+        './assets/scripts/noneditable.js'
+      ]
+    },
     styles: [
       './assets/styles/main.scss',
-      './includes/jquery-ui-timepicker/jquery.ui.timepicker.css'
+      './assets/styles/tiny-mce.scss'
     ]
   },
   dest: {
@@ -29,20 +36,28 @@ var paths = {
 };
 
 gulp.task( 'scripts', [], function () {
-  return gulp.src( paths.src.scripts )
+  var main = gulp.src( paths.src.scripts.main )
     .pipe( jshint() )
     .pipe( sourcemaps.init() )
     .pipe( concat( 'main.js' ) )
     .pipe( uglify() )
     .pipe( sourcemaps.write('.') )
     .pipe( gulp.dest( paths.dest.scripts ) );
+
+  var others = gulp.src(paths.src.scripts.others)
+    .pipe(jshint())
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.dest.scripts));
+
+  return merge(main, others);
 } );
 
 gulp.task( 'styles', [], function () {
   return gulp.src( paths.src.styles )
     .pipe( sourcemaps.init() )
     .pipe( gulpIf('*.scss', sass()) )
-    .pipe( concat('main.css') )
     .pipe( autoprefixer() )
     .pipe( cssmin() )
     .pipe( sourcemaps.write('.') )
@@ -86,7 +101,8 @@ gulp.task( 'export', ['build'], function () {
     '!tests',
     '!./doc/**/*',
     '!doc',
-    '!.travis.yml'
+    '!.travis.yml',
+    '!./dist/**/*.map'
   ];
 
   return gulp.src( files )
