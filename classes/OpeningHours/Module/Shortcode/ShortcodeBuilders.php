@@ -18,6 +18,7 @@ class ShortcodeBuilders extends AbstractModule {
 
     add_filter('mce_external_plugins', function ($plugins) {
       $plugins['op_shortcode_builder'] = plugins_url('assets/tinyMCE.js', op_bootstrap_file());
+      $plugins['noneditable'] = plugins_url('assets/noneditable.js', op_bootstrap_file());
       return $plugins;
     });
 
@@ -35,5 +36,13 @@ class ShortcodeBuilders extends AbstractModule {
     }, $shortcodeBuilders);
 
     wp_localize_script(OpeningHours::PREFIX . 'js', 'openingHoursShortcodeBuilders', $scbData);
+
+    add_filter('mce_css', function ($urls) {
+      if (!empty($urls))
+        $urls .= ',';
+
+      $urls .= plugins_url('assets/tiny-mce.css', op_bootstrap_file());
+      return $urls;
+    });
   }
 }
