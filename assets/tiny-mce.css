@@ -1,10 +1,11 @@
 .op-shortcode {
-    background-color: #efefef;
+    background-color: rgb(245, 245, 245);
     border: 1px solid #ccc;
     padding: .5em .7em;
     box-sizing: border-box;
     margin: .5em 0;
     cursor: pointer;
+    font-family: sans-serif;
 }
 
 .op-shortcode[data-mce-selected] {
