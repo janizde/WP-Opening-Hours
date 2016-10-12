@@ -22,14 +22,21 @@
     this.name = name;
     this.fields = fields;
     this.editor = editor;
+    this.placeholderClassName = 'shortcode-' + this.shortcodeTag;
 
     var $this = this;
     this.editor.addCommand(this.shortcodeTag + '_popup', function (ui, args) {
       $this.onCommandPopup(ui, args);
     });
 
-    this.editor.on('BeforeSetcontent', function (event) { console.log(event);
+    this.editor.on('BeforeSetcontent', function (event) {
       event.content = $this.replaceShortcodes(event.content);
+    });
+
+    this.editor.on('GetContent', function (event) {
+      console.log('before', event.content);
+      event.content = $this.restoreShortcodes(event.content);
+      console.log('after', event.content);
     });
   };
 
@@ -91,7 +98,11 @@
       var attributes = $this.parseShortcodeAttributes(shortcode);
       var element = $('<div>');
       element.html('Shortcode: ' + $this.name);
-      element.addClass('shortcode-' + $this.shortcodeTag);
+      element.addClass('op-shortcode mceNonEditable');
+      element.addClass($this.placeholderClassName);
+      element.attr({
+        spellcheck: true
+      });
       for (var key in attributes) {
         if (!attributes.hasOwnProperty(key))
           continue;
@@ -99,6 +110,21 @@
         element.attr('data-' + key, attributes[key]);
       }
       return element.prop('outerHTML');
+    });
+  };
+
+  /**
+   * Replaces shortcode placeholders in content with real shortcodes
+   * @param     {string}  content   Content containing placeholder markup
+   * @returns   {string}            Content containing shortcodes
+   */
+  ShortcodeBuilder.prototype.restoreShortcodes = function (content) {
+    var $this = this;
+    var regex = new RegExp('<div\\s(.*\s)?class="(?:.*?\\s)?'+ this.placeholderClassName +'(?:\\s.*?)?"[^<>]*?>.*?<\/div>', 'g');
+    return content.replace(regex, function (element) {
+      element = $(element);
+      var attributes = $this.extractAttributes(element);
+      return $this.generateShortcode(attributes);
     });
   };
 
@@ -117,6 +143,21 @@
 
       attributes[result[1]] = result[2];
     } while (result);
+    return attributes;
+  };
+
+  /**
+   * Extracts shortcode attributes from a placeholder jQuery element
+   * @param     {jQuery}  element   jQuery element containing the attributes
+   */
+  ShortcodeBuilder.prototype.extractAttributes = function (element) {
+    var attributes = {};
+    for (var i = 0; i < this.fields.length; ++i) {
+      var field = this.fields[i];
+      var value = element.data(field.name);
+      if (value !== undefined)
+        attributes[field.name] = element.data(field.name);
+    }
     return attributes;
   };
 
@@ -142,5 +183,5 @@
       })
     });
   });
-
+  
 })(jQuery, tinyMCE, openingHoursShortcodeBuilders);
