@@ -34,9 +34,7 @@
     });
 
     this.editor.on('GetContent', function (event) {
-      console.log('before', event.content);
       event.content = $this.restoreShortcodes(event.content);
-      console.log('after', event.content);
     });
   };
 
@@ -183,5 +181,5 @@
       })
     });
   });
-  
+
 })(jQuery, tinyMCE, openingHoursShortcodeBuilders);
