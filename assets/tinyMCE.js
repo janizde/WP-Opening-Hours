@@ -36,6 +36,10 @@
     this.editor.on('GetContent', function (event) {
       event.content = $this.restoreShortcodes(event.content);
     });
+
+    this.editor.on('DblClick', function (event) {
+      $this.handleDoubleClick(event);
+    });
   };
 
   /**
@@ -47,20 +51,44 @@
 
   /**
    * Callback for ShortcodeBuilder popup
-   * @param     ui          The ui object
-   * @param     args        Data passed to the popup
+   * @param     {object}    ui              The ui object
+   * @param     {object}    attributes      The attributes to populate the inputs with
    */
-  ShortcodeBuilder.prototype.onCommandPopup = function (ui, args) {
+  ShortcodeBuilder.prototype.onCommandPopup = function (ui, attributes) {
     var $this = this;
     this.editor.windowManager.open({
       title: this.name,
-      body: this.fields,
+      body: this.mergeAttributes(attributes),
       onsubmit: function (e) {
         var shortcode = $this.generateShortcode(e.data);
-        console.log(shortcode);
         $this.editor.insertContent(shortcode);
       }
     });
+  };
+
+  /**
+   * Merges the attributes into the fields array as values
+   * @param     {object}      attributes    Associative attributes object
+   * @returns   {Array}                     Array of fields with values set
+   */
+  ShortcodeBuilder.prototype.mergeAttributes = function (attributes) {
+    if (!attributes)
+      return this.fields;
+
+    var fields = [];
+    for (var i = 0; i < this.fields.length; ++i) {
+      var field = this.fields[i];
+
+      if (attributes.hasOwnProperty(field.name) && attributes[field.name] !== undefined) {
+        field = $.extend({}, field);
+        field[field.type === 'checkbox' ? 'checked' : 'value'] = attributes[field.name];
+      }
+
+      fields.push(field);
+    }
+
+    console.log(fields);
+    return fields;
   };
 
   /**
@@ -99,7 +127,7 @@
       element.addClass('op-shortcode mceNonEditable');
       element.addClass($this.placeholderClassName);
       element.attr({
-        spellcheck: true
+        spellcheck: false
       });
       for (var key in attributes) {
         if (!attributes.hasOwnProperty(key))
@@ -157,6 +185,20 @@
         attributes[field.name] = element.data(field.name);
     }
     return attributes;
+  };
+
+  /**
+   * Opens the edit modal if the double click happened on a placeholder
+   * @param     {Event}   event     The click event
+   */
+  ShortcodeBuilder.prototype.handleDoubleClick = function (event) {
+    if (event.target.className.indexOf(this.placeholderClassName) < 0)
+      return;
+
+    var target = $(event.target);
+    var attributes = this.extractAttributes(target);
+    console.log(target, attributes);
+    this.editor.execCommand(this.shortcodeTag + '_popup', '', attributes);
   };
 
   /**
