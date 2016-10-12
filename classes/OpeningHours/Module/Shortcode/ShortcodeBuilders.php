@@ -13,9 +13,10 @@ class ShortcodeBuilders extends AbstractModule {
   }
 
   public function registerHookCallbacks () {
-    if (!is_admin())
+    if (!is_admin() || get_user_option('rich_editing') !== 'true')
       return;
 
+    // Register external plugins
     add_filter('mce_external_plugins', function ($plugins) {
       $plugins['op_shortcode_builder'] = plugins_url('dist/scripts/tinyMCE.js', op_bootstrap_file());
       $plugins['noneditable'] = plugins_url('dist/scripts/noneditable.js', op_bootstrap_file());
