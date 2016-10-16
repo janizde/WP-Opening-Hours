@@ -794,9 +794,7 @@ If you can not translate the whole plugin or don't want to wait until everything
 1. Scroll to the bottom.
 1. In the line below the legend, select `all current` as `Machine Object Message (.mo)` and click `Export`.
 1. Rename the file to `wp-opening-hours-{locale}.mo` (replace `{locale}` with the actual locale of the translation, e.g. `de_DE` for German).
-1. Move the file to `/path/to/wordpress/wp-content/plugins/wp-opening-hours/language`
-
-**Be aware that when you update the Plugin and your translations are not yet included, your translation file will be lost, so before updating better check whether the translation is available in the language bundle.**
+1. Move the file to `/path/to/wordpress/wp-content/languages/plugins`
 
 ##### Pull Request on GitHub
 Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at the central WordPress translation system. Please refer to [the section on the Central WordPress Translation System](#central-translation-system)
