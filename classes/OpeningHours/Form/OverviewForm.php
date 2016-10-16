@@ -5,10 +5,17 @@ namespace OpeningHours\Form;
 use OpeningHours\Module\Widget\AbstractWidget;
 use OpeningHours\Module\OpeningHours;
 
+/**
+ * Widget form for Overview widget / shortcode
+ *
+ * @author    Jannik Portz <hello@jannikportz.de>
+ * @package   OpeningHours\Form
+ */
 class OverviewForm extends Form {
 
   public function __construct () {
     parent::__construct();
+
     $this->addField('title', array(
       'type' => 'text',
       'caption' => __('Title', 'wp-opening-hours')

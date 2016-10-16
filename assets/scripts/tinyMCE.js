@@ -87,7 +87,6 @@
       fields.push(field);
     }
 
-    console.log(fields);
     return fields;
   };
 
@@ -197,7 +196,6 @@
 
     var target = $(event.target);
     var attributes = this.extractAttributes(target);
-    console.log(target, attributes);
     this.editor.execCommand(this.shortcodeTag + '_popup', '', attributes);
   };
 
