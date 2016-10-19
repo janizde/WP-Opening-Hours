@@ -16,6 +16,8 @@ use OpeningHours\Util\Weekdays;
  */
 class OpeningHours extends AbstractModule {
 
+  const FILTER_USE_FRONT_END_STYLES = 'op_use_front_end_styles';
+
   /**
    * Collection of all plugin modules
    * @var       AbstractModule[]
@@ -129,9 +131,11 @@ class OpeningHours extends AbstractModule {
       )
     ));
 
+    $useFrontEndStyles = apply_filters(self::FILTER_USE_FRONT_END_STYLES, true);
 
     // Frontend Styles and Scripts
-    wp_enqueue_style(self::PREFIX . 'css');
+    if (is_admin() || $useFrontEndStyles)
+      wp_enqueue_style(self::PREFIX . 'css');
 
     if (is_admin())
       wp_enqueue_script(self::PREFIX . 'js');
