@@ -2,6 +2,8 @@ span.op-period-time {
   display: block;
 }
 
+tr.op-row-day.highlighted td,
+tr.op-row-day.highlighted th,
 .op-list-overview .highlighted {
   color: $color-green;
 }
