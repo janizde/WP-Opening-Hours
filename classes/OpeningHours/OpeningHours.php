@@ -69,9 +69,6 @@ class OpeningHours extends AbstractModule {
 
     add_action('widgets_init', array($this, 'registerWidgets'));
     add_action('plugins_loaded', array($this, 'maybeUpdate'));
-
-    register_activation_hook(op_bootstrap_file(), array($this, 'activate'));
-    register_deactivation_hook(op_bootstrap_file(), array($this, 'deactivate'));
   }
 
   public function maybeUpdate () {
@@ -141,13 +138,5 @@ class OpeningHours extends AbstractModule {
       wp_enqueue_script(self::PREFIX . 'js');
 
     wp_localize_script(self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations());
-  }
-
-  public function activate () {
-    // Silence is golden
-  }
-
-  public function deactivate () {
-    // Silence is golden
   }
 }
