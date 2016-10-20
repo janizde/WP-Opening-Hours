@@ -4,6 +4,7 @@ namespace OpeningHours\Module\Widget;
 
 use OpeningHours\Fields\FieldRenderer;
 use OpeningHours\Fields\WidgetFieldRenderer;
+use OpeningHours\Form\Form;
 use OpeningHours\Module\Shortcode\AbstractShortcode as Shortcode;
 use WP_Widget;
 
@@ -40,13 +41,10 @@ abstract class AbstractWidget extends WP_Widget {
   protected $shortcode;
 
   /**
-   * Associative array with:
-   *  key:    string with field name
-   *  value:  associative array w/ field options
-   *
-   * @var       array
+   * The Form containing all fields for the Widget
+   * @var       Form
    */
-  protected $fields;
+  protected $form;
 
   /**
    * The FieldRenderer used to render the form fields
@@ -61,15 +59,15 @@ abstract class AbstractWidget extends WP_Widget {
    * @param     string    $title       The widget title
    * @param     array     $description The widget description
    * @param     Shortcode $shortcode   The shortcode singleton instance
+   * @param     Form      $form        The Form containing all fields
    */
-  public function __construct ( $id, $title, $description, Shortcode $shortcode ) {
+  public function __construct ($id, $title, $description, Shortcode $shortcode, Form $form) {
     $this->id = $id;
     $this->title = $title;
     $this->description = $description;
     $this->shortcode = $shortcode;
-    $this->fields = array();
+    $this->form = $form;
     $this->fieldRenderer = new WidgetFieldRenderer($this);
-    $this->registerFields();
 
     parent::__construct($id, $title, $description);
   }
@@ -112,7 +110,7 @@ abstract class AbstractWidget extends WP_Widget {
 
     ob_start();
 
-    foreach ($this->fields as $field) {
+    foreach ($this->form->getFields() as $field) {
       if (!array_key_exists('extended', $field) || $field['extended'] !== true) {
         echo $this->renderField($field, $instance);
       } else {
@@ -144,9 +142,6 @@ abstract class AbstractWidget extends WP_Widget {
   public static function registerWidget () {
     register_widget(get_called_class());
   }
-
-  /** Adds all fields for this Widget */
-  abstract protected function registerFields ();
 
   /**
    * Prints the widget content
@@ -188,27 +183,5 @@ abstract class AbstractWidget extends WP_Widget {
    */
   public function getShortcode () {
     return $this->shortcode;
-  }
-
-  /**
-   * Adds a field to the collection
-   *
-   * @param     string $name    The field name
-   * @param     array  $options The field options
-   */
-  public function addField ( $name, array $options ) {
-    $options['name'] = $name;
-    $this->fields[$name] = $options;
-  }
-
-  /**
-   * Getter: (single) Field
-   *
-   * @param     string $name The name to search for
-   *
-   * @return    array               The field options
-   */
-  public function getField ( $name ) {
-    return $this->fields[$name];
   }
 }
