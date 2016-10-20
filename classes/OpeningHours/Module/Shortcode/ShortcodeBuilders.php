@@ -2,6 +2,8 @@
 
 namespace OpeningHours\Module\Shortcode;
 
+use OpeningHours\Form\HolidaysForm;
+use OpeningHours\Form\IrregularOpeningsForm;
 use OpeningHours\Form\IsOpenForm;
 use OpeningHours\Form\OverviewForm;
 use OpeningHours\Module\AbstractModule;
@@ -31,7 +33,9 @@ class ShortcodeBuilders extends AbstractModule {
 
     $shortcodeBuilders = array(
       new ShortcodeBuilder('op-overview', __('Overview', 'wp-opening-hours'), new OverviewForm()),
-      new ShortcodeBuilder('op-is-open', __('Is Open', 'wp-opening-hours'), new IsOpenForm())
+      new ShortcodeBuilder('op-is-open', __('Is Open', 'wp-opening-hours'), new IsOpenForm()),
+      new ShortcodeBuilder('op-holidays', __('Holiday', 'wp-opening-hours'), new HolidaysForm()),
+      new ShortcodeBuilder('op-irregular-openings', __('Irregular Openings', 'wp-opening-hours'), new IrregularOpeningsForm())
     );
 
     $scbData = array_map(function (ShortcodeBuilder $scb) {
