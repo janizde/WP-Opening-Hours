@@ -68,7 +68,7 @@ gulp.task( 'watch', [], function () {
   gulp.start( 'scripts' );
   gulp.start( 'styles' );
 
-  watch( paths.src.scripts, function () {
+  watch( './assets/scripts/**/*.js', function () {
     gulp.start( 'scripts' );
   } );
 
