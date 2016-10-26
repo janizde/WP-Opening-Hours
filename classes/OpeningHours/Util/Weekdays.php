@@ -20,16 +20,14 @@ class Weekdays extends AbstractModule {
 
   /** Sets up all weekday instances */
   protected function __construct () {
-    $domain = 'wp-opening-hours';
-
     $this->weekdays = array(
-      new Weekday(0, 'sunday', __('Sunday', $domain), __('Sun.', $domain)),
-      new Weekday(1, 'monday', __('Monday', $domain), __('Mon.', $domain)),
-      new Weekday(2, 'tuesday', __('Tuesday', $domain), __('Tue.', $domain)),
-      new Weekday(3, 'wednesday', __('Wednesday', $domain), __('Wed.', $domain)),
-      new Weekday(4, 'thursday', __('Thursday', $domain), __('Thu.', $domain)),
-      new Weekday(5, 'friday', __('Friday', $domain), __('Fri.', $domain)),
-      new Weekday(6, 'saturday', __('Saturday', $domain), __('Sat.', $domain))
+      new Weekday(0, 'sunday', __('Sunday'), __('Sun') . '.'),
+      new Weekday(1, 'monday', __('Monday'), __('Mon') . '.'),
+      new Weekday(2, 'tuesday', __('Tuesday'), __('Tue') . '.'),
+      new Weekday(3, 'wednesday', __('Wednesday'), __('Wed') . '.'),
+      new Weekday(4, 'thursday', __('Thursday'), __('Thu') . '.'),
+      new Weekday(5, 'friday', __('Friday'), __('Fri') . '.'),
+      new Weekday(6, 'saturday', __('Saturday'), __('Sat') . '.')
     );
   }
 
