@@ -112,4 +112,4 @@ Offers Developer APIs to easily integrate your custom sources.
 == Upgrade Notice ==
 
 = 2.0 =
-The plugin has been rewritten from scratch and a lot has changed. Old data should be converted automatically but a lot of the CSS classes have changed so please take some time to update it and maybe test it in a development environment to make sure it works as expected.
+The plugin has been rewritten from scratch and a lot has changed. Old data should be converted automatically but a lot of the CSS classes have changed. Take some time to update it and maybe test it in a development environment to make sure it works as expected. Requires PHP >= 5.3, WordPress >= 4
