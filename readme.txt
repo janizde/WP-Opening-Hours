@@ -106,4 +106,10 @@ http://www.jannikportz.de/2014/01/19/update-1-2-for-opening-hours-plugin/
 
 = 2.0 =
 Completely new version of the Opening Hours plugin.
-Note that this version requires at least PHP 5.3. Please also note that some data might possibly get lost and old shortcodes won't work.
+Supports multiple Sets of Opening Hours and adds more flexibility to the Widgets and Shortcodes.
+Offers Developer APIs to easily integrate your custom sources.
+
+== Upgrade Notice ==
+
+= 2.0 =
+The plugin has been rewritten from scratch and a lot has changed. Old data should be converted automatically but a lot of the CSS classes have changed so please take some time to update it and maybe test it in a development environment to make sure it works as expected.
