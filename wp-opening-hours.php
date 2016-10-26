@@ -39,12 +39,12 @@ function op_requirements_met () {
 	global $wp_version;
 
 	if ( version_compare( PHP_VERSION, OP_REQUIRED_PHP_VERSION, '<' ) ) {
-		add_action( 'init', 'op_admin_notice_php' );
+		add_action('admin_init', 'op_admin_notice_php');
 		return false;
 	}
 
 	if ( version_compare( $wp_version, OP_REQUIRED_WP_VERSION, '<' ) ) {
-		add_action( 'init', 'op_admin_notice_wp' );
+		add_action('admin_init', 'op_admin_notice_wp');
 		return false;
 	}
 
