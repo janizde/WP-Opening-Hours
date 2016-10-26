@@ -774,8 +774,14 @@ If you find an issue in the core logic please write one or more unit test which 
 
 ### <a name="contributing-to-translations"></a>Contribute to Translations
 
-#### <a name="central-translation-system"></a>[Central WordPress Translation System](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours)
-Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours). Advantages of using the central system are:
+(Plugin) translation files (`.po` and `.mo`) files contain translations for all strings that are included in the plugin source code, e.g. labels for the widget edit inputs. In this plugin this are mostly strings that occur in the WordPress admin.  
+This means you can customize every string presented on your WordPress Front-End site using Widget and/or Shortcode options. If the Plugin has not yet been translated to your language and you are fine with English in your WordPress admin you do not have to submit your own translations but can cutomize the Widget/Shortcode strings to match the language of your site.
+However, you can still submit your translations to [Polyglots](#polyglots) so other Plugin users can benefit from it.
+
+The translations of weekdays are not included in the Plugin translations but are loaded from the WordPress core translations. This serves the purpose, that these are always translated to the language that your WordPress installation runs on independently of the Plugin translation progress.
+
+#### <a name="polyglots"></a>[WordPress Polyglots](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours)
+Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours) (also known as WordPress Polyglots). Advantages of using Polyglots:
 
 * Larger translation community
 * Translation can be separated from the actual development of the Plugin
@@ -796,11 +802,11 @@ If you can not translate the whole plugin or don't want to wait until everything
 1. Rename the file to `wp-opening-hours-{locale}.mo` (replace `{locale}` with the actual locale of the translation, e.g. `de_DE` for German).
 1. Move the file to `/path/to/wordpress/wp-content/languages/plugins`
 
-##### Pull Request on GitHub
-Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at the central WordPress translation system. Please refer to [the section on the Central WordPress Translation System](#central-translation-system)
+#### Pull Request on GitHub
+Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
 #### [translate.jannikportz.de](http://translate.jannikportz.de)
-translate.jannikportz.de has been shut down in favor of the central WordPress translation system. Please refer to [the section on the Central WordPress Translation System](#central-translation-system)
+translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
 [↑ Table of Contents](#contents)
 
