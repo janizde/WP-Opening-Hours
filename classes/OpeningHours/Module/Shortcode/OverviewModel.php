@@ -104,6 +104,7 @@ class OverviewModel {
         for ($i = 7 - $interval->days; $i < 7; ++$i) {
           $this->data[$i]['items'] = $holiday;
         }
+        continue;
       }
 
       // Holiday is in between boundaries

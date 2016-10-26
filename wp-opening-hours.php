@@ -1,10 +1,10 @@
 <?php
 /*
  * Plugin Name: Opening Hours
- * Plugin URI: http://www.jannikportz.de/wp-opening-hours-plugin/
- * Description: Manage your venue's Opening Hours in WordPress
+ * Plugin URI: https://github.com/janizde/WP-Opening-Hours
+ * Description: Manage your venue's Opening Hours, Holidays and Irregular Openings in WordPress and display them in many different Widgets and Shortcodes
  * Version: 2.0
- * Author: Jannik Portz (@janizde)
+ * Author: Jannik Portz
  * Author URI: http://jannikportz.de
  * Text Domain: wp-opening-hours
  * Domain Path: /language
@@ -39,12 +39,12 @@ function op_requirements_met () {
 	global $wp_version;
 
 	if ( version_compare( PHP_VERSION, OP_REQUIRED_PHP_VERSION, '<' ) ) {
-		add_action( 'init', 'op_admin_notice_php' );
+		add_action('admin_init', 'op_admin_notice_php');
 		return false;
 	}
 
 	if ( version_compare( $wp_version, OP_REQUIRED_WP_VERSION, '<' ) ) {
-		add_action( 'init', 'op_admin_notice_wp' );
+		add_action('admin_init', 'op_admin_notice_wp');
 		return false;
 	}
 

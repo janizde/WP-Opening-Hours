@@ -30,7 +30,7 @@ class Overview extends AbstractShortcode {
       'set_id' => 0,
       'title' => null,
       'show_closed_days' => false,
-      'show_description' => true,
+      'show_description' => false,
       'highlight' => 'nothing',
       'compress' => false,
       'short' => false,
@@ -47,7 +47,7 @@ class Overview extends AbstractShortcode {
     $this->validAttributeValues = array(
       'highlight' => array('nothing', 'period', 'day'),
       'show_closed_days' => array(false, true),
-      'show_description' => array(true, false),
+      'show_description' => array(false, true),
       'include_io' => array(false, true),
       'include_holidays' => array(false, true),
       'hide_io_date' => array(false, true),
@@ -158,6 +158,6 @@ class Overview extends AbstractShortcode {
    * @return    string              The holiday markup
    */
   public static function renderHoliday ( Holiday $holiday ) {
-    return '<span class="op-period-time holiday">' . $holiday->getName() . '</span>';
+    return '<span class="op-period-time op-closed holiday">' . $holiday->getName() . '</span>';
   }
 }

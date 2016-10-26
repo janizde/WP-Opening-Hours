@@ -2,6 +2,18 @@
 The Widget offers some Filters you can hook into in your custom theme or plugin.
 Mind that every Widget internally uses the corresponding Shortcode **so these filters will work for both Widgets and Shortcodes.**
 
+## `op_use_front_end_styles`
+With the `op_use_front_end_styles` filter you can control whether the default plugin front end styles shall be registered.  
+Use this filter if you want to completely use your own styles to disable the registration of the plugin styles.css
+
+```php
+add_filter('op_use_front_end_styles', function ($useFrontEndStyles) {
+  return false;
+});
+```
+
+**Note:** You custom filter must be hooked before the `wp_enqueue_scripts` resp. `admin_enqueue_scripts` actions are executed.
+
 ## `op_shortcode_attributes`
 With the `op_shortcode_attributes` filter you can filter the associative array containing all Shortcode attributes.
 
