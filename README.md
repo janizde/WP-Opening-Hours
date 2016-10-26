@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/janizde/WP-Opening-Hours.svg?branch=develop)](https://travis-ci.org/janizde/WP-Opening-Hours)
 [![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8FYGR6EJSN8S8)
 
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
 
@@ -31,6 +32,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 	* [Contributing to Code](#contributing-to-code)
 	* [Contributing to Translations](#contributing-to-translations)
 * [Changelog](#changelog)
+* [Donate](#donate)
 * [License](#license)
 
 ## Further Reading
@@ -817,6 +819,15 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 Completely new Plugin. When Updating you will have to set up your Opening Hours and Widgets / Shortcodes again!
 
 [↑ Table of Contents](#contents)
+
+## <a name="donate"></a> Donate
+I'd be very pleased if you donated a small amount if you like the plugin as I put much effort and much of my free time into the development
+of this plugin.  
+You can donate via:
+
+GitCheese: [![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)  
+flattr: [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)  
+PayPal: [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8FYGR6EJSN8S8)
 
 ## <a name="license"></a>License
 Copyright &copy; 2016 Jannik Portz
