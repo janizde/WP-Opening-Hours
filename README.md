@@ -781,7 +781,9 @@ However, you can still submit your translations to [Polyglots](#polyglots) so ot
 The translations of weekdays are not included in the Plugin translations but are loaded from the WordPress core translations. This serves the purpose, that these are always translated to the language that your WordPress installation runs on independently of the Plugin translation progress.
 
 #### <a name="polyglots"></a>[WordPress Polyglots](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours)
-Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours) (also known as WordPress Polyglots). Advantages of using Polyglots:
+Polyglots is the name of the community of volunteers translating WordPress resources like Themes, Plugins and also the WordPress core. It has become a central place for WordPress translation and is tightly coupled with the WordPress Theme/Plugin repositories.
+
+Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours). Advantages of using Polyglots:
 
 * Larger translation community
 * Translation can be separated from the actual development of the Plugin
