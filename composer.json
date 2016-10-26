@@ -1,7 +1,7 @@
 {
   "name": "janizde/wp-opening-hours",
   "description": "WordPress Plugin for Opening Hours management",
-  "type": "plugin",
+  "type": "wordpress-plugin",
   "authors": [
     {
       "name": "Jannik Portz",
