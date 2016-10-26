@@ -1,10 +1,10 @@
 <?php
 /*
  * Plugin Name: Opening Hours
- * Plugin URI: http://www.jannikportz.de/wp-opening-hours-plugin/
- * Description: Manage your venue's Opening Hours in WordPress
+ * Plugin URI: https://github.com/janizde/WP-Opening-Hours
+ * Description: Manage your venue's Opening Hours, Holidays and Irregular Openings in WordPress and display them in many different Widgets and Shortcodes
  * Version: 2.0
- * Author: Jannik Portz (@janizde)
+ * Author: Jannik Portz
  * Author URI: http://jannikportz.de
  * Text Domain: wp-opening-hours
  * Domain Path: /language
