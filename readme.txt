@@ -2,7 +2,7 @@
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
 Tested up to: 4.5.3
-Stable tag: 1.2
+Stable tag: 2.0
 Requires at least: 4.0.0
 Donate link: https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create
 License: GPLv2 or later
