@@ -68,7 +68,7 @@ class OpeningHours extends AbstractModule {
     add_action('admin_enqueue_scripts', array($this, 'loadResources'));
 
     add_action('widgets_init', array($this, 'registerWidgets'));
-    add_action('plugins_loaded', array($this, 'maybeUpdate'));
+    add_action('wp_loaded', array($this, 'maybeUpdate'));
   }
 
   public function maybeUpdate () {
