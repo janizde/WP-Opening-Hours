@@ -124,8 +124,7 @@ class Ajax extends AbstractModule {
    * @param     string   $hook     The ajax callback hook without the WordPress specific prefix
    * @param     callable $callback The ajax callback to run
    */
-  protected static function addAction ( $hook, callable $callback ) {
+  protected static function addAction ( $hook, $callback ) {
     self::$actions[$hook] = $callback;
   }
-
 }
