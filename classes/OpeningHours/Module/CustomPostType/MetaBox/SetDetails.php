@@ -73,6 +73,13 @@ class SetDetails extends AbstractMetaBox {
         'show_when' => 'child'
       ),
       array(
+        'type' => 'text',
+        'name' => 'alias',
+        'caption' => __('Set Alias', 'wp-opening-hours'),
+        'description' => __('Use an alias instead of the Set ID in shortcodes', 'wp-opening-hours'),
+        'show_when' => 'parent'
+      ),
+      array(
         'type' => 'heading',
         'name' => 'childSetNotice',
         'heading' => __('Add a Child-Set', 'wp-opening-hours'),
