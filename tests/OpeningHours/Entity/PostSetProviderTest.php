@@ -40,6 +40,10 @@ class PostSetProviderTest extends OpeningHoursTestCase {
       'return' => array($post, $childPost)
     ));
 
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'return' => false
+    ));
+
     $provider = new PostSetProvider();
     $expected = array(
       array(
@@ -81,6 +85,10 @@ class PostSetProviderTest extends OpeningHoursTestCase {
         'post_parent' => 0
       )),
       'return' => array($post)
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'return' => ''
     ));
 
     $provider = new PostSetProvider();
