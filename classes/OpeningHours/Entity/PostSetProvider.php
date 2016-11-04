@@ -51,7 +51,7 @@ class PostSetProvider extends SetProvider {
       }
     }
 
-    $set = new Set($id);
+    $set = new Set($post->ID);
     $set->setName($post->post_title);
 
     $persistence = new Persistence($post);
