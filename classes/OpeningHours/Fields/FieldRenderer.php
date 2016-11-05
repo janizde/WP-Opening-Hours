@@ -31,6 +31,9 @@ class FieldRenderer {
     if (array_key_exists('options_callback', $field) && is_callable($field['options_callback']))
       $field['options'] = call_user_func($field['options_callback']);
 
+    if (array_key_exists('datalist', $field) && is_callable($field['datalist']))
+      $field['datalist'] = call_user_func($field['datalist']);
+
     return $field;
   }
 
@@ -63,8 +66,18 @@ class FieldRenderer {
       case FieldTypes::TIME:
       case FieldTypes::EMAIL:
       case FieldTypes::URL:
+        if (array_key_exists('datalist', $field) && is_array($field['datalist'])) {
+          $attributes['list'] = $id . '_datalist';
+          $datalistOptions = array_map(function ($item) {
+            return sprintf('<option value="%s">', $item);
+          }, $field['datalist']);
+        }
+
         $attrString = $this->generateAttributesString($attributes);
         printf('<input type="%s" id="%s" name="%s" value="%s" %s />', $type, $id, $name, $value, $attrString);
+        if (isset($datalistOptions)) {
+          printf('<datalist id="%s">%s</datalist>', $id . '_datalist', implode(PHP_EOL, $datalistOptions));
+        }
         break;
 
       case FieldTypes::TEXTAREA:
