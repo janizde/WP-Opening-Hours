@@ -132,7 +132,7 @@ add_filter('op_shortcode_markup', function ($markup, $shortcode) {
 With the `op_set_providers` filter you can modify the registered SetProviders of the OpeningHours Module, i.e. adding new SetProviders and removing previously registered ones.  
 [Further reading on SetProviders](./set-providers.md)
 
-## `op_set_alias_presets`
+## <a name="op_set_alias_presets"></a>`op_set_alias_presets`
 With the `op_set_alias_presets` filter you can change the list of set aliases suggested to the user on the Set Alias input in the Set details.
 You can add set alias presets in your theme or custom plugin to make entering the correct set alias easier for the users.  
 E.g. if you use the set alias `main-set` in your theme you may add a preset for this one.

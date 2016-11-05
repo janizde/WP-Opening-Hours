@@ -137,11 +137,17 @@ When clicking the "Add New Irregular Opening" you can add more Irregular Opening
 
 ![Specify Irregular Openings](./doc/screenshots/irregular-openings.png)
 
-**Step 6:** In the Set Details Section you can give your Set a description. This is optional but the description can be displayed in the Overview Widget/Shortcode.
+**Step 6 (optional):** In the Set Details Section you can give your Set a description. This is optional but the description can be displayed in the Overview Widget/Shortcode.
 
 ![Specify Set name](./doc/screenshots/set-description.png)
 
-**Step 7:** Save the data by clicking the "Save"/"Publish"-Button. **Any changes will not be saved without saving the whole Set!**
+<a name="getting-started-specify-set-alias"></a>
+**Step 7 (optional):** In the Set Details section you can also set your custom Set Alias [which you can use instead of the Set Id in Shortcodes.](#common-attributes) If you specify a specific Set Alias for more than one Set all Shortcodes will use the Set with the least value for `menu_order`.  
+Your Theme or a 3rd party Plugin [may also specify Set Alias presets](./doc/filters.md#op_set_alias_presets) to make it easier for yor to enter the right one. Please note that Set Alias presets only work in browsers supporting HTML5 `datalist`.
+
+![Specify Set Alias](./doc/screenshots/set-alias-presets.png)
+
+**Step 8:** Save the data by clicking the "Save"/"Publish"-Button. **Any changes will not be saved without saving the whole Set!**
 
 ### <a name="child-sets"></a>Child Sets
 
@@ -460,9 +466,9 @@ Shortcodes have exactly the same options as Widgets because every Widget is basi
 	<tbody>
 		<tr>
 			<td><code>set_id</code></td>
-			<td><code>int</code></td>
+			<td><code>int|string</code></td>
 			<td>–</td>
-			<td><strong>(required)</strong> The id of the set whose data you want to show</td>
+			<td><strong>(required)</strong> The id of the set whose data you want to show. For regular Sets you may also use <a href="#getting-started-specify-set-alias">your custom Set Alias here</a></td>
 		</tr>
 		<tr>
 			<td><code>title</code></td>
