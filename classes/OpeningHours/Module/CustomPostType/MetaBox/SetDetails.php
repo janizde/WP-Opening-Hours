@@ -14,7 +14,7 @@ use WP_Post;
  */
 class SetDetails extends AbstractMetaBox {
 
-  const FILTER_ALIAS_PRESETS = 'op_alias_presets';
+  const FILTER_ALIAS_PRESETS = 'op_set_alias_presets';
 
   /**
    * Array of field configuration arrays
