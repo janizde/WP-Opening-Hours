@@ -23,6 +23,7 @@ class MetaBoxFieldRenderer extends FieldRenderer {
   /** @inheritdoc */
   public function filterField ( array $field ) {
     $field = parent::filterField($field);
+    $field['id'] = sprintf('%s_%s', $this->namespace, $field['name']);
     $field['name'] = sprintf('%s[%s]', $this->namespace, $field['name']);
 
     return $field;

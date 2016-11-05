@@ -81,6 +81,9 @@ class OpeningHours extends AbstractModule {
     foreach ($this->setProviders as $setProvider) {
       $sets = $setProvider->getAvailableSetInfo();
       foreach ($sets as $setInfo) {
+        if (array_key_exists('hidden', $setInfo) && $setInfo['hidden'] == true)
+          continue;
+
         $options[$setInfo['id']] = $setInfo['name'];
       }
     }
