@@ -823,10 +823,12 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 ## <a name="changelog"></a>Changelog
 
 ### v2.0.1
-Minor fixes including:
-* Fixed mixed content error (@foomep)
-* Fixed auto convert issue
-* Fixed PHP 5.3 incompatibility issues
+
+* Added SetAlias functionality
+* Minor fixes including:
+    * Fixed mixed content error (@foomep)
+    * Fixed auto convert issue
+    * Fixed PHP 5.3 incompatibility issues
 
 ### v2.0.0
 Completely new Plugin. When Updating you will have to set up your Opening Hours and Widgets / Shortcodes again!
