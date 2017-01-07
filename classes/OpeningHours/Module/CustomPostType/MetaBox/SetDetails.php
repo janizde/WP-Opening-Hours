@@ -14,6 +14,8 @@ use WP_Post;
  */
 class SetDetails extends AbstractMetaBox {
 
+  const FILTER_ALIAS_PRESETS = 'op_set_alias_presets';
+
   /**
    * Array of field configuration arrays
    * @var       array[]
@@ -36,6 +38,8 @@ class SetDetails extends AbstractMetaBox {
     parent::__construct('op_meta_box_set_details', __('Set Details', 'wp-opening-hours'), self::CONTEXT_SIDE, self::PRIORITY_HIGH);
     $this->fieldRenderer = new MetaBoxFieldRenderer($this->id);
     $this->persistence = new MetaBoxPersistence($this->id);
+
+    $filterAliasPrefix = self::FILTER_ALIAS_PRESETS;
 
     $this->fields = array(
       array(
@@ -71,6 +75,16 @@ class SetDetails extends AbstractMetaBox {
           'odd' => __('Odd weeks only', 'wp-opening-hours')
         ),
         'show_when' => 'child'
+      ),
+      array(
+        'type' => 'text',
+        'name' => 'alias',
+        'caption' => __('Set Alias', 'wp-opening-hours'),
+        'description' => __('Use an alias instead of the Set ID in shortcodes', 'wp-opening-hours'),
+        'datalist' => function () use ($filterAliasPrefix) {
+          return (array) apply_filters($filterAliasPrefix, array());
+        },
+        'show_when' => 'parent'
       ),
       array(
         'type' => 'heading',
