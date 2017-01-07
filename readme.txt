@@ -110,11 +110,12 @@ Supports multiple Sets of Opening Hours and adds more flexibility to the Widgets
 Offers Developer APIs to easily integrate your custom sources.
 
 = 2.0.1 =
-Minor fixes including:
 
-* Fixed mixed content error (@foomep)
-* Fixed auto convert issue
-* Fixed PHP 5.3 incompatibility issues
+* Added SetAlias functionality
+* Minor fixes including:
+    * Fixed mixed content error (@foomep)
+    * Fixed auto convert issue
+    * Fixed PHP 5.3 incompatibility issues
 
 == Upgrade Notice ==
 
