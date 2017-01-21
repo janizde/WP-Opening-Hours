@@ -117,6 +117,20 @@ class SetTest extends OpeningHoursTestCase {
     $this->assertEquals($ioPeriod, $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
   }
 
+  public function testGetNextOpenPeriodOnlyIrregularOpenings () {
+    $ios = array(
+      new IrregularOpening('IO1', '2016-01-20', '13:00', '14:00'),
+      new IrregularOpening('IO2', '2016-01-22', '14:00', '17:00')
+    );
+
+    $set = $this->createSet(64, array(), array(), $ios);
+
+    $this->assertEquals($ios[0]->createPeriod(), $set->getNextOpenPeriod(new DateTime('2016-01-20 12:59:59')));
+    $this->assertEquals($ios[1]->createPeriod(), $set->getNextOpenPeriod(new DateTime('2016-01-20 13:00:00')));
+    $this->assertEquals($ios[1]->createPeriod(), $set->getNextOpenPeriod(new DateTime('2016-01-22 13:59:59')));
+    $this->assertNull($set->getNextOpenPeriod(new DateTime('2016-01-22 14:00:00')));
+  }
+
 	public function testIsOpen () {
 		$set = $this->createSet(64, array(
 		  new Period(2, '13:00', '18:00'),
