@@ -117,6 +117,10 @@ Offers Developer APIs to easily integrate your custom sources.
     * Fixed auto convert issue
     * Fixed PHP 5.3 incompatibility issues
 
+= 2.0.2 =
+
+* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
+
 == Upgrade Notice ==
 
 = 2.0 =
