@@ -1,8 +1,8 @@
 === Opening Hours ===
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
-Tested up to: 4.6.1
-Stable tag: 2.0.1
+Tested up to: 4.7.1
+Stable tag: 2.0.2
 Requires at least: 4.0.0
 Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
@@ -116,6 +116,10 @@ Offers Developer APIs to easily integrate your custom sources.
     * Fixed mixed content error (@foomep)
     * Fixed auto convert issue
     * Fixed PHP 5.3 incompatibility issues
+
+= 2.0.2 =
+
+* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
 
 == Upgrade Notice ==
 
