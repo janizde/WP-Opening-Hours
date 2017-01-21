@@ -31,7 +31,7 @@ class OpeningHours extends AbstractModule {
   protected $widgets;
 
   /** The plugin version */
-  const VERSION = '2.0.1';
+  const VERSION = '2.0.2';
 
   /** The Plugin DB version */
   const DB_VERSION = 2;

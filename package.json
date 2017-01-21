@@ -1,6 +1,6 @@
 {
   "name": "wp-opening-hours",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "WordPress Plugin for managing Opening Hours and Holidays",
   "main": "bootstrap.php",
   "dependencies": {
