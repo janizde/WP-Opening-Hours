@@ -16,6 +16,8 @@ use OpeningHours\Util\Weekdays;
  */
 class OpeningHours extends AbstractModule {
 
+  const FILTER_USE_FRONT_END_STYLES = 'op_use_front_end_styles';
+
   /**
    * Collection of all plugin modules
    * @var       AbstractModule[]
@@ -29,7 +31,7 @@ class OpeningHours extends AbstractModule {
   protected $widgets;
 
   /** The plugin version */
-  const VERSION = '2.0';
+  const VERSION = '2.0.2';
 
   /** The Plugin DB version */
   const DB_VERSION = 2;
@@ -67,10 +69,7 @@ class OpeningHours extends AbstractModule {
     add_action('admin_enqueue_scripts', array($this, 'loadResources'));
 
     add_action('widgets_init', array($this, 'registerWidgets'));
-    add_action('plugins_loaded', array($this, 'maybeUpdate'));
-
-    register_activation_hook(op_bootstrap_file(), array($this, 'activate'));
-    register_deactivation_hook(op_bootstrap_file(), array($this, 'deactivate'));
+    add_action('wp_loaded', array($this, 'maybeUpdate'));
   }
 
   public function maybeUpdate () {
@@ -116,7 +115,7 @@ class OpeningHours extends AbstractModule {
 
 
     if (!wp_script_is('jquery-ui')) :
-      wp_register_script('jquery-ui', 'http://code.jquery.com/ui/1.11.4/jquery-ui.min.js', array('jquery'));
+      wp_register_script('jquery-ui', '//code.jquery.com/ui/1.11.4/jquery-ui.min.js', array('jquery'));
       wp_enqueue_script('jquery-ui');
     endif;
 
@@ -130,21 +129,15 @@ class OpeningHours extends AbstractModule {
       )
     ));
 
+    $useFrontEndStyles = apply_filters(self::FILTER_USE_FRONT_END_STYLES, true);
 
     // Frontend Styles and Scripts
-    wp_enqueue_style(self::PREFIX . 'css');
+    if (is_admin() || $useFrontEndStyles)
+      wp_enqueue_style(self::PREFIX . 'css');
 
     if (is_admin())
       wp_enqueue_script(self::PREFIX . 'js');
 
     wp_localize_script(self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations());
-  }
-
-  public function activate () {
-    // Silence is golden
-  }
-
-  public function deactivate () {
-    // Silence is golden
   }
 }

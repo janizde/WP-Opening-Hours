@@ -1,10 +1,10 @@
 === Opening Hours ===
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
-Tested up to: 4.5.3
-Stable tag: 1.2
+Tested up to: 4.7.1
+Stable tag: 2.0.2
 Requires at least: 4.0.0
-Donate link: https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create
+Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,4 +106,22 @@ http://www.jannikportz.de/2014/01/19/update-1-2-for-opening-hours-plugin/
 
 = 2.0 =
 Completely new version of the Opening Hours plugin.
-Note that this version requires at least PHP 5.3. Please also note that some data might possibly get lost and old shortcodes won't work.
+Supports multiple Sets of Opening Hours and adds more flexibility to the Widgets and Shortcodes.
+Offers Developer APIs to easily integrate your custom sources.
+
+= 2.0.1 =
+
+* Added SetAlias functionality
+* Minor fixes including:
+    * Fixed mixed content error (@foomep)
+    * Fixed auto convert issue
+    * Fixed PHP 5.3 incompatibility issues
+
+= 2.0.2 =
+
+* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
+
+== Upgrade Notice ==
+
+= 2.0 =
+The plugin has been rewritten from scratch and a lot has changed. Old data should be converted automatically but a lot of the CSS classes have changed. Take some time to update it and maybe test it in a development environment to make sure it works as expected. Requires PHP >= 5.3, WordPress >= 4

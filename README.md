@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/janizde/WP-Opening-Hours.svg?branch=develop)](https://travis-ci.org/janizde/WP-Opening-Hours)
 [![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8FYGR6EJSN8S8)
 
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
 
@@ -31,6 +32,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 	* [Contributing to Code](#contributing-to-code)
 	* [Contributing to Translations](#contributing-to-translations)
 * [Changelog](#changelog)
+* [Donate](#donate)
 * [License](#license)
 
 ## Further Reading
@@ -135,11 +137,17 @@ When clicking the "Add New Irregular Opening" you can add more Irregular Opening
 
 ![Specify Irregular Openings](./doc/screenshots/irregular-openings.png)
 
-**Step 6:** In the Set Details Section you can give your Set a description. This is optional but the description can be displayed in the Overview Widget/Shortcode.
+**Step 6 (optional):** In the Set Details Section you can give your Set a description. This is optional but the description can be displayed in the Overview Widget/Shortcode.
 
 ![Specify Set name](./doc/screenshots/set-description.png)
 
-**Step 7:** Save the data by clicking the "Save"/"Publish"-Button. **Any changes will not be saved without saving the whole Set!**
+<a name="getting-started-specify-set-alias"></a>
+**Step 7 (optional):** In the Set Details section you can also set your custom Set Alias [which you can use instead of the Set Id in Shortcodes.](#common-attributes) If you specify a specific Set Alias for more than one Set all Shortcodes will use the Set with the least value for `menu_order`.  
+Your Theme or a 3rd party Plugin [may also specify Set Alias presets](./doc/filters.md#op_set_alias_presets) to make it easier for yor to enter the right one. Please note that Set Alias presets only work in browsers supporting HTML5 `datalist`.
+
+![Specify Set Alias](./doc/screenshots/set-alias-presets.png)
+
+**Step 8:** Save the data by clicking the "Save"/"Publish"-Button. **Any changes will not be saved without saving the whole Set!**
 
 ### <a name="child-sets"></a>Child Sets
 
@@ -458,9 +466,9 @@ Shortcodes have exactly the same options as Widgets because every Widget is basi
 	<tbody>
 		<tr>
 			<td><code>set_id</code></td>
-			<td><code>int</code></td>
+			<td><code>int|string</code></td>
 			<td>–</td>
-			<td><strong>(required)</strong> The id of the set whose data you want to show</td>
+			<td><strong>(required)</strong> The id of the set whose data you want to show. For regular Sets you may also use <a href="#getting-started-specify-set-alias">your custom Set Alias here</a></td>
 		</tr>
 		<tr>
 			<td><code>title</code></td>
@@ -774,8 +782,16 @@ If you find an issue in the core logic please write one or more unit test which 
 
 ### <a name="contributing-to-translations"></a>Contribute to Translations
 
-#### <a name="central-translation-system"></a>[Central WordPress Translation System](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours)
-Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours). Advantages of using the central system are:
+(Plugin) translation files (`.po` and `.mo`) files contain translations for all strings that are included in the plugin source code, e.g. labels for the widget edit inputs. In this plugin this are mostly strings that occur in the WordPress admin.  
+This means you can customize every string presented on your WordPress Front-End site using Widget and/or Shortcode options. If the Plugin has not yet been translated to your language and you are fine with English in your WordPress admin you do not have to submit your own translations but can cutomize the Widget/Shortcode strings to match the language of your site.
+However, you can still submit your translations to [Polyglots](#polyglots) so other Plugin users can benefit from it.
+
+The translations of weekdays are not included in the Plugin translations but are loaded from the WordPress core translations. This serves the purpose, that these are always translated to the language that your WordPress installation runs on independently of the Plugin translation progress.
+
+#### <a name="polyglots"></a>[WordPress Polyglots](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours)
+Polyglots is the name of the community of volunteers translating WordPress resources like Themes, Plugins and also the WordPress core. It has become a central place for WordPress translation and is tightly coupled with the WordPress Theme/Plugin repositories.
+
+Since version 2.0 the translation of the Opening Hours Plugin takes place at [translate.wordpress.org](https://translate.wordpress.org/projects/wp-plugins/wp-opening-hours). Advantages of using Polyglots:
 
 * Larger translation community
 * Translation can be separated from the actual development of the Plugin
@@ -794,23 +810,43 @@ If you can not translate the whole plugin or don't want to wait until everything
 1. Scroll to the bottom.
 1. In the line below the legend, select `all current` as `Machine Object Message (.mo)` and click `Export`.
 1. Rename the file to `wp-opening-hours-{locale}.mo` (replace `{locale}` with the actual locale of the translation, e.g. `de_DE` for German).
-1. Move the file to `/path/to/wordpress/wp-content/plugins/wp-opening-hours/language`
+1. Move the file to `/path/to/wordpress/wp-content/languages/plugins`
 
-**Be aware that when you update the Plugin and your translations are not yet included, your translation file will be lost, so before updating better check whether the translation is available in the language bundle.**
-
-##### Pull Request on GitHub
-Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at the central WordPress translation system. Please refer to [the section on the Central WordPress Translation System](#central-translation-system)
+#### Pull Request on GitHub
+Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
 #### [translate.jannikportz.de](http://translate.jannikportz.de)
-translate.jannikportz.de has been shut down in favor of the central WordPress translation system. Please refer to [the section on the Central WordPress Translation System](#central-translation-system)
+translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
 [↑ Table of Contents](#contents)
 
 ## <a name="changelog"></a>Changelog
+
+### v2.0.2
+
+* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
+
+### v2.0.1
+
+* Added SetAlias functionality
+* Minor fixes including:
+    * Fixed mixed content error (@foomep)
+    * Fixed auto convert issue
+    * Fixed PHP 5.3 incompatibility issues
+
 ### v2.0.0
 Completely new Plugin. When Updating you will have to set up your Opening Hours and Widgets / Shortcodes again!
 
 [↑ Table of Contents](#contents)
+
+## <a name="donate"></a> Donate
+I'd be very pleased if you donated a small amount if you like the plugin as I put much effort and much of my free time into the development
+of this plugin.  
+You can donate via:
+
+GitCheese: [![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)  
+flattr: [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)  
+PayPal: [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8FYGR6EJSN8S8)
 
 ## <a name="license"></a>License
 Copyright &copy; 2016 Jannik Portz

@@ -42,11 +42,15 @@ class OpeningHours extends AbstractModule {
       return 'side';
     });
 
-    $module = $this;
-    add_action('init', function () use ($module) {
-      $module->addSetProvider(new PostSetProvider());
-      $module->setProviders = apply_filters(OpeningHours::WP_FILTER_SET_PROVIDERS, $module->setProviders);
-    });
+    add_action('init', array($this, 'registerDefaultSetProviders'));
+  }
+
+  /**
+   * Registers the default SetProviders and triggers op_set_providers filter
+   */
+  public function registerDefaultSetProviders () {
+    $this->addSetProvider(new PostSetProvider());
+    $this->setProviders = apply_filters(self::WP_FILTER_SET_PROVIDERS, $this->setProviders);
   }
 
   /**
@@ -77,6 +81,9 @@ class OpeningHours extends AbstractModule {
     foreach ($this->setProviders as $setProvider) {
       $sets = $setProvider->getAvailableSetInfo();
       foreach ($sets as $setInfo) {
+        if (array_key_exists('hidden', $setInfo) && $setInfo['hidden'] == true)
+          continue;
+
         $options[$setInfo['id']] = $setInfo['name'];
       }
     }

@@ -2,6 +2,18 @@
 The Widget offers some Filters you can hook into in your custom theme or plugin.
 Mind that every Widget internally uses the corresponding Shortcode **so these filters will work for both Widgets and Shortcodes.**
 
+## `op_use_front_end_styles`
+With the `op_use_front_end_styles` filter you can control whether the default plugin front end styles shall be registered.  
+Use this filter if you want to completely use your own styles to disable the registration of the plugin styles.css
+
+```php
+add_filter('op_use_front_end_styles', function ($useFrontEndStyles) {
+  return false;
+});
+```
+
+**Note:** You custom filter must be hooked before the `wp_enqueue_scripts` resp. `admin_enqueue_scripts` actions are executed.
+
 ## `op_shortcode_attributes`
 With the `op_shortcode_attributes` filter you can filter the associative array containing all Shortcode attributes.
 
@@ -119,6 +131,33 @@ add_filter('op_shortcode_markup', function ($markup, $shortcode) {
 ## `op_set_providers`
 With the `op_set_providers` filter you can modify the registered SetProviders of the OpeningHours Module, i.e. adding new SetProviders and removing previously registered ones.  
 [Further reading on SetProviders](./set-providers.md)
+
+## <a name="op_set_alias_presets"></a>`op_set_alias_presets`
+With the `op_set_alias_presets` filter you can change the list of set aliases suggested to the user on the Set Alias input in the Set details.
+You can add set alias presets in your theme or custom plugin to make entering the correct set alias easier for the users.  
+E.g. if you use the set alias `main-set` in your theme you may add a preset for this one.
+
+Parameters passed to the callback:
+
+|Name|Type|Description|
+|---|---|---|
+|`$presets`|`array`|Current value of alias presets (usually empty array)|
+
+### Example: Adding new presets
+
+~~~php
+add_filter('op_set_alias_presets', function (array $presets) {
+	$presets[] = 'set-alias-1';
+	$presets[] = 'set-alias-2';
+	$presets[] = 'set-alias-3';
+	return $presets;
+});
+~~~
+
+**Note:** Set alias presets make use of HTML5 `datalist` which is currently not supported on all browsers (i.e. it won't work on Safari and iOS Safari).  
+The below screenshot shows the above example in Chrome:
+
+![Set Alias presets in Chrome](./screenshots/set-alias-presets.png)
 
 ## Need another filter?
 Filters are a great way to give developers more control over the behavior of an external Plugin and are very easy to integrate.  

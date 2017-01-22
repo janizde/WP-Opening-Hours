@@ -149,4 +149,8 @@ add_action('init', function () {
 ```
 The Static Set should now be available in the Widget form. You can then also use your custom id in a Shortcode e.g. `[op-overview set-id="static-set"]`
 
+## Set Alias funcionality of default `PostSetProvider`
+The `PostSetProvider`, the `SetProvider` responsible for all Sets set up via the default WP Admin UI offers the possibility to specify a custom Set Alias to be used in Shortcodes instead of the Set Id.  
+[As a Theme or Plugin developer you can also add your own presets to these Set Aliases.](./filters.md#op_set_alias_presets)
+
 [Table of Contents](../README.md#contents)

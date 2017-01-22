@@ -40,6 +40,10 @@ class PostSetProviderTest extends OpeningHoursTestCase {
       'return' => array($post, $childPost)
     ));
 
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'return' => false
+    ));
+
     $provider = new PostSetProvider();
     $expected = array(
       array(
@@ -81,6 +85,10 @@ class PostSetProviderTest extends OpeningHoursTestCase {
         'post_parent' => 0
       )),
       'return' => array($post)
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'return' => ''
     ));
 
     $provider = new PostSetProvider();
@@ -177,5 +185,107 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $this->assertEquals(new Period(1, '13:00', '14:00'), $set->getPeriods()->offsetGet(0));
     $this->assertEquals(new Holiday('Holiday', new \DateTime('2016-10-02'), new \DateTime('2016-10-03')), $set->getHolidays()->offsetGet(0));
     $this->assertEquals(new IrregularOpening('Irregular Opening', '2016-10-03', '13:00', '14:00'), $set->getIrregularOpenings()->offsetGet(0));
+  }
+
+  public function testSetAlias () {
+    $screen = $this->getMockBuilder('WP_Screen')->getMock();
+    $screen->base = 'post';
+    $screen->post_type = 'post';
+
+    \WP_Mock::wpFunction('get_current_screen', array(
+      'times' => 1,
+      'return' => $screen
+    ));
+
+    $post64 = $this->getMockBuilder('WP_Post')->getMock();
+    $post64->ID = 64;
+    $post64->post_title = 'Post 64';
+
+    $post128 = $this->getMockBuilder('WP_Post')->getMock();
+    $post128->ID = 128;
+    $post128->post_title = 'Post 128';
+
+    \WP_Mock::wpFunction('get_posts', array(
+      'return' => array($post64, $post128)
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'times' => 1,
+      'args' => array(64, '_op_meta_box_set_details_alias', true),
+      'return' => ''
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'times' => 1,
+      'args' => array(128, '_op_meta_box_set_details_alias', true),
+      'return' => 'custom-set'
+    ));
+
+    $setProvider = new PostSetProvider();
+
+    $setInfo = $setProvider->getAvailableSetInfo();
+    $this->assertEquals(array(
+      array(
+        'id' => 64,
+        'name' => 'Post 64'
+      ),
+      array(
+        'id' => 128,
+        'name' => 'Post 128'
+      ),
+      array(
+        'id' => 'custom-set',
+        'name' => 'Post 128',
+        'hidden' => true
+      )
+    ), $setInfo);
+  }
+
+  public function testSetAliasCreateSet () {
+    $screen = $this->getMockBuilder('WP_Screen')->getMock();
+    $screen->base = 'post';
+    $screen->post_type = 'post';
+
+    \WP_Mock::wpFunction('get_current_screen', array(
+      'times' => 1,
+      'return' => $screen
+    ));
+
+    $post = $this->getMockBuilder('WP_Post')->getMock();
+    $post->ID = 64;
+    $post->post_title = 'Post 64';
+
+    \WP_Mock::wpFunction('get_posts', array(
+      'times' => 1,
+      'args' => array(array(
+        'post_type' => Set::CPT_SLUG,
+        'numberposts' => -1,
+        'meta_key' => '_op_meta_box_set_details_alias',
+        'meta_value' => 'custom-set'
+      )),
+      'return' => array($post)
+    ));
+
+    \WP_Mock::wpFunction('get_posts', array(
+      'times' => 1,
+      'args' => array(array(
+        'post_type' => Set::CPT_SLUG,
+        'numberposts' => -1,
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+        'post_parent' => 64
+      )),
+      'return' => array()
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'return' => false
+    ));
+
+    $setProvider = new PostSetProvider();
+    $set = $setProvider->createSet('custom-set');
+
+    $this->assertEquals(64, $set->getId());
+    $this->assertEquals('Post 64', $set->getName());
   }
 }
