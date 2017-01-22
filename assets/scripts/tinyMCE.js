@@ -118,7 +118,7 @@
    */
   ShortcodeBuilder.prototype.replaceShortcodes = function (content) {
     var $this = this;
-    var regex = new RegExp('(\\['+ this.shortcodeTag +'[^\\]]*\\])');
+    var regex = new RegExp('(\\['+ this.shortcodeTag +'[^\\]]*\\])', 'g');
     return content.replace(regex, function (shortcode) {
       var attributes = $this.parseShortcodeAttributes(shortcode);
       var element = $('<div>');
@@ -209,6 +209,7 @@
     });
 
     editor.addButton('op_shortcode_builder', {
+      title: translations.shortcodeBuilderButtonTitle,
       type: 'menubutton',
       icon: 'clock',
       menu: builders.map(function (scb) {

@@ -42,8 +42,9 @@ class I18n extends AbstractModule {
    */
   public static function getJavascriptTranslations () {
     return array(
-      'tp_hour' => __('Hour', self::TEXTDOMAIN),
-      'tp_minute' => __('Minute', self::TEXTDOMAIN)
+      'tp_hour' => __('Hour', 'opening-hours'),
+      'tp_minute' => __('Minute', 'opening-hours'),
+      'shortcodeBuilderButtonTitle' => __('Opening Hours Shortcode', 'opening-hours')
     );
   }
 }
