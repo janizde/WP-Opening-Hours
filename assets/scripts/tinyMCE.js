@@ -58,7 +58,10 @@
     var $this = this;
     this.editor.windowManager.open({
       title: this.name,
+      width: Math.min(600, window.innerWidth),
+      height: Math.min(500, window.innerHeight),
       body: this.mergeAttributes(attributes),
+      classes: 'op-shortcode-builder-window',
       onsubmit: function (e) {
         var shortcode = $this.generateShortcode(e.data);
         $this.editor.insertContent(shortcode);

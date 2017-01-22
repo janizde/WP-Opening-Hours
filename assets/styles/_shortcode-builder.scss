@@ -2,3 +2,33 @@ i.mce-i-clock:before {
   font-family: "dashicons";
   content: "\f469";
 }
+
+.mce-window.mce-op-shortcode-builder-window {
+  .mce-container-body.mce-abs-layout {
+    overflow-y: scroll;
+  }
+
+  .mce-foot {
+    position: relative;
+
+    &:before {
+      $shadow-height: 15px;
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: $shadow-height;
+
+      opacity: 0.7;
+      left: 0;
+      top: -$shadow-height;
+      pointer-events: none;
+
+      background: transparent; /* Old browsers */
+      background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    }
+  }
+}
