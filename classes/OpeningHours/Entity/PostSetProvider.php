@@ -128,8 +128,7 @@ class PostSetProvider extends SetProvider {
       if (!empty($alias)) {
         $setInfo[] = array(
           'id' => $alias,
-          'name' => $post->post_title,
-          'hidden' => true
+          'name' => sprintf('%s (%s)', $alias, $post->post_title),
         );
       }
     }
