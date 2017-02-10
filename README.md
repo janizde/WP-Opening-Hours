@@ -822,6 +822,10 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
+### v2.0.3
+
+* Fixed timezone bug in WordPress 4.7
+
 ### v2.0.2
 
 * Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
