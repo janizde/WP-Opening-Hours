@@ -83,7 +83,6 @@ class Dates extends AbstractModule {
       $timezoneString = date_default_timezone_get();
 
     $this->timezone = new DateTimeZone($timezoneString);
-    date_default_timezone_set($timezoneString);
   }
 
   /**
