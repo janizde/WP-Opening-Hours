@@ -49,12 +49,14 @@ class PeriodTest extends OpeningHoursTestCase {
 
 	public function testConstruct () {
 		$p = new Period( 2, '17:00', '01:00' );
-		$date = Dates::applyWeekContext( new DateTime( '00:00' ), 2 );
+		$date = Dates::applyWeekContext( new DateTime('00:00', Dates::getTimezone()), 2 );
 		$expectedStart = clone $date;
 		$expectedStart->setTime(17, 0);
+    $expectedStart->setTimezone(Dates::getTimezone());
 		$expectedEnd = clone $date;
 		$expectedEnd->setTime(1, 0);
 		$expectedEnd->add( new DateInterval('P1D') );
+    $expectedEnd->setTimezone(Dates::getTimezone());
 
 		$this->assertEquals( 2, $p->getWeekday() );
 		$this->assertEquals( $expectedStart, $p->getTimeStart() );
@@ -146,8 +148,8 @@ class PeriodTest extends OpeningHoursTestCase {
 		$copy = $period->getCopyInDateContext( new DateTime('2016-01-25') );
 
 		$this->assertEquals( 2, $copy->getWeekday() );
-		$this->assertEquals( new DateTime('2016-01-26 13:00'), $copy->getTimeStart() );
-		$this->assertEquals( new DateTime('2016-01-27 01:00'), $copy->getTimeEnd() );
+		$this->assertEquals( new DateTime('2016-01-26 13:00', Dates::getTimezone()), $copy->getTimeStart() );
+		$this->assertEquals( new DateTime('2016-01-27 01:00', Dates::getTimezone()), $copy->getTimeEnd() );
 	}
 
 	public function testEquals () {
@@ -164,7 +166,7 @@ class PeriodTest extends OpeningHoursTestCase {
 
 	public function testCreateDummy () {
 		$p = Period::createDummy();
-		$expectedStart = Dates::applyWeekContext( new DateTime('now'), 0 );
+		$expectedStart = Dates::applyWeekContext( new DateTime('now', Dates::getTimezone()), 0 );
 		$expectedStart->setTime(0,0,0);
 
 		$this->assertEquals( 0, $p->getWeekday() );

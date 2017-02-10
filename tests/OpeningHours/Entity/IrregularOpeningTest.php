@@ -5,6 +5,7 @@ namespace OpeningHours\Test\Entity;
 use DateTime;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\Dates;
 
 class IrregularOpeningTest extends OpeningHoursTestCase{
 
@@ -125,7 +126,7 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
     $period = $io->createPeriod();
     
     $this->assertEquals(6, $period->getWeekday());
-    $this->assertEquals(new DateTime('2016-09-24 13:00'), $period->getTimeStart());
-    $this->assertEquals(new DateTime('2016-09-25 03:00'), $period->getTimeEnd());
+    $this->assertEquals(new DateTime('2016-09-24 13:00', Dates::getTimezone()), $period->getTimeStart());
+    $this->assertEquals(new DateTime('2016-09-25 03:00', Dates::getTimezone()), $period->getTimeEnd());
   }
 }
