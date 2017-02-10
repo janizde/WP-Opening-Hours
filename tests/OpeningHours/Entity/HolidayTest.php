@@ -5,6 +5,7 @@ namespace OpeningHours\Test\Entity;
 use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\Dates;
 
 class HolidayTest extends OpeningHoursTestCase {
 
@@ -58,6 +59,6 @@ class HolidayTest extends OpeningHoursTestCase {
 		$holiday = new Holiday( 'Test Holiday', new DateTime('2016-01-02'), new DateTime('2016-01-03') );
 
 		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getDateStart() );
-		$this->assertEquals( new DateTime('2016-01-03 23:59:59'), $holiday->getDateEnd() );
+		$this->assertEquals( new DateTime('2016-01-03 23:59:59', Dates::getTimezone()), $holiday->getDateEnd() );
 	}
 }

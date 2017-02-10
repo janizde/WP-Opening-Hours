@@ -143,11 +143,11 @@ class PersistenceTest extends OpeningHoursTestCase {
 
     $this->assertEquals( 'Holiday1', $h1->getName() );
     $this->assertEquals( new DateTime('2016-02-03'), $h1->getDateStart() );
-    $this->assertEquals( new DateTime('2016-02-07 23:59:59'), $h1->getDateEnd() );
+    $this->assertEquals( new DateTime('2016-02-07 23:59:59', Dates::getTimezone()), $h1->getDateEnd() );
 
     $this->assertEquals( 'Holiday2', $h2->getName() );
     $this->assertEquals( new DateTime('2016-03-03'), $h2->getDateStart() );
-    $this->assertEquals( new DateTime('2016-03-07 23:59:59'), $h2->getDateEnd() );
+    $this->assertEquals( new DateTime('2016-03-07 23:59:59', Dates::getTimezone()), $h2->getDateEnd() );
   }
 
   public function testSaveIrregularOpenings () {

@@ -7,19 +7,20 @@ use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\Dates;
 
 class SetTest extends OpeningHoursTestCase {
 
 	public function testIsHolidayActive () {
 		$set = $this->createSet(64, array(), array(
-		  new Holiday('Holiday 1', new DateTime('2016-01-12'), new DateTime('2016-01-14'))
+		  new Holiday('Holiday 1', new DateTime('2016-01-12', Dates::getTimezone()), new DateTime('2016-01-14', Dates::getTimezone()))
     ));
 
-		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-11 23:59') ) );
-		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-12') ) );
-		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-13') ) );
-		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-14 23:59') ) );
-		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-15 00:01') ) );
+		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-11 23:59', Dates::getTimezone())) );
+		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-12', Dates::getTimezone())) );
+		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-13', Dates::getTimezone())) );
+		$this->assertTrue( $set->isHolidayActive( new DateTime('2016-01-14 23:59', Dates::getTimezone()) ) );
+		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-15 00:01', Dates::getTimezone())) );
 	}
 
 	public function testGetActiveIrregularOpening () {
@@ -58,20 +59,20 @@ class SetTest extends OpeningHoursTestCase {
       new Period(6, '13:00', '03:00')
     ));
 
-    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59')));
-    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00')));
-    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:00')));
-    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:01')));
-    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:59')));
-    $this->assertEquals($periods[2]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 19:00')));
-    $this->assertEquals($periods[2]->getCopyInDateContext(new DateTime('2016-01-25')), $set->getNextOpenPeriod(new DateTime('2016-01-25 19:59')));
-    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-25 20:00')));
-    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27')), $set->getNextOpenPeriod(new DateTime('2016-01-27 12:59')));
-    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-27 13:00')));
-    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30')), $set->getNextOpenPeriod(new DateTime('2016-01-30 12:59')));
-    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31')), $set->getNextOpenPeriod(new DateTime('2016-01-30 13:00')));
-    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31')), $set->getNextOpenPeriod(new DateTime('2016-01-31 03:00')));
-    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31')), $set->getNextOpenPeriod(new DateTime('2016-01-31 03:01')));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-25', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 12:59', Dates::getTimezone())));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 13:00', Dates::getTimezone())));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:00', Dates::getTimezone())));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:01', Dates::getTimezone())));
+    $this->assertEquals($periods[1]->getCopyInDateContext(new DateTime('2016-01-25', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 18:59', Dates::getTimezone())));
+    $this->assertEquals($periods[2]->getCopyInDateContext(new DateTime('2016-01-25', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 19:00', Dates::getTimezone())));
+    $this->assertEquals($periods[2]->getCopyInDateContext(new DateTime('2016-01-25', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 19:59', Dates::getTimezone())));
+    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-25 20:00', Dates::getTimezone())));
+    $this->assertEquals($periods[3]->getCopyInDateContext(new DateTime('2016-01-27', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-27 12:59', Dates::getTimezone())));
+    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-27 13:00', Dates::getTimezone())));
+    $this->assertEquals($periods[4]->getCopyInDateContext(new DateTime('2016-01-30', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-30 12:59', Dates::getTimezone())));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-30 13:00', Dates::getTimezone())));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-31 03:00', Dates::getTimezone())));
+    $this->assertEquals($periods[0]->getCopyInDateContext(new DateTime('2016-01-31', Dates::getTimezone())), $set->getNextOpenPeriod(new DateTime('2016-01-31 03:01', Dates::getTimezone())));
   }
 
   public function testGetNextOpenPeriodHolidays () {
