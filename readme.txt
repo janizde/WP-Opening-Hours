@@ -85,6 +85,10 @@ If you found a bug you would like to fix feel free to [contribute to the project
 
 == Changelog ==
 
+= 2.0.4 =
+
+* Added support for UTC offset timezones
+
 = 2.0.3 =
 
 * Fixed timezone bug in WordPress 4.7

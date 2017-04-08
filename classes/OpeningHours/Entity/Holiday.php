@@ -95,7 +95,7 @@ class Holiday {
    * @return    Holiday
    */
   public static function createDummyPeriod () {
-    return new Holiday('', new DateTime('now'), new DateTime('now'), true);
+    return new Holiday('', Dates::getNow(), Dates::getNow(), true);
   }
 
   /**
