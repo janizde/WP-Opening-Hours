@@ -85,29 +85,17 @@ If you found a bug you would like to fix feel free to [contribute to the project
 
 == Changelog ==
 
-= 1.0 =
-initial version
+= 2.0.4 =
 
-= 1.0.1 =
-fixed a bug that displayed saturday instead of friday
-ATTENTION: REINSTALL NECESSARY!
+* Added support for UTC offset timezones
 
-= 1.1 =
-Read this article:
-http://www.jannikportz.de/2013/11/03/opening-hours-update-version-1-2/
+= 2.0.3 =
 
-= 1.1.1 =
-Read this article:
-http://www.jannikportz.de/2013/12/04/opening-hours-update-1-1-1/
+* Fixed timezone bug in WordPress 4.7
 
-= 1.2 =
-Read this article:
-http://www.jannikportz.de/2014/01/19/update-1-2-for-opening-hours-plugin/
+= 2.0.2 =
 
-= 2.0 =
-Completely new version of the Opening Hours plugin.
-Supports multiple Sets of Opening Hours and adds more flexibility to the Widgets and Shortcodes.
-Offers Developer APIs to easily integrate your custom sources.
+* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
 
 = 2.0.1 =
 
@@ -117,13 +105,31 @@ Offers Developer APIs to easily integrate your custom sources.
     * Fixed auto convert issue
     * Fixed PHP 5.3 incompatibility issues
 
-= 2.0.2 =
+= 2.0 =
+Completely new version of the Opening Hours plugin.
+Supports multiple Sets of Opening Hours and adds more flexibility to the Widgets and Shortcodes.
+Offers Developer APIs to easily integrate your custom sources.
 
-* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
 
-= 2.0.3 =
+= 1.2 =
+Read this article:
+http://www.jannikportz.de/2014/01/19/update-1-2-for-opening-hours-plugin/
 
-* Fixed timezone bug in WordPress 4.7
+= 1.1.1 =
+Read this article:
+http://www.jannikportz.de/2013/12/04/opening-hours-update-1-1-1/
+
+
+= 1.1 =
+Read this article:
+http://www.jannikportz.de/2013/11/03/opening-hours-update-version-1-2/
+
+= 1.0.1 =
+fixed a bug that displayed saturday instead of friday
+ATTENTION: REINSTALL NECESSARY!
+
+= 1.0 =
+initial version
 
 == Upgrade Notice ==
 
