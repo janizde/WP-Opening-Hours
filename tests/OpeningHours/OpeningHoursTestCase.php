@@ -15,9 +15,7 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     $defaultOptions = array(
       'date_format' => 'Y-m-d',
       'time_format' => 'H:i',
-      'start_of_week' => 0,
-      'timezone_string' => 'Europe/Berlin',
-      'gmt_offset' => ''
+      'start_of_week' => 0
     );
 
     $this->applyOptionsMap($defaultOptions);
@@ -26,6 +24,11 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     \WP_Mock::wpPassthruFunction('_e');
     \WP_Mock::wpPassthruFunction('_x');
     \WP_Mock::wpPassthruFunction('_n');
+    \WP_Mock::wpFunction('current_time', array(
+      'times' => '0+',
+      'args' => array('Y-m-d H:i:s'),
+      'return' => date('Y-m-d H:i:s', time())
+    ));
   }
 
   protected function tearDown () {
