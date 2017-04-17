@@ -822,7 +822,11 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
-### v2.9.4
+### v2.0.5
+
+* fixed bug concerning child set initialization. thanks to @nikomuse
+
+### v2.0.4
 
 * Added support for UTC offset timezones
 
