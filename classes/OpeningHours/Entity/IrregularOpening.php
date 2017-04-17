@@ -12,9 +12,8 @@ use OpeningHours\Util\Dates;
  *
  * @author      Jannik Portz
  * @package     OpeningHours\Entity
- * @todo        add interface to combine Period and IrregularOpening
  */
-class IrregularOpening {
+class IrregularOpening implements DateTimeRange {
 
   /**
    * The name of the IO
@@ -172,20 +171,30 @@ class IrregularOpening {
     return $this->name;
   }
 
-  /**
-   * Getter: Time Start
-   * @return    DateTime
-   */
-  public function getTimeStart () {
+  /** @inheritdoc */
+  public function getStart () {
     return $this->timeStart;
   }
 
-  /**
-   * Getter: Time End
-   * @return    DateTime
-   */
-  public function getTimeEnd () {
+  /** @inheritdoc */
+  public function getEnd () {
     return $this->timeEnd;
+  }
+
+  /**
+   * @deprecated  Use getStart instead
+   * @return      DateTime
+   */
+  public function getTimeStart() {
+    return $this->getStart();
+  }
+
+  /**
+   * @deprecated  Use getEnd instead
+   * @return      DateTime
+   */
+  public function getTimeEnd() {
+    return $this->getEnd();
   }
 
   /**

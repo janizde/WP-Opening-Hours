@@ -41,15 +41,15 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 		$io = new IrregularOpening( 'Test', '2016-02-03', '12:15', '23:20' );
 		$this->assertEquals( 'Test', $io->getName() );
 		$this->assertEquals( new DateTime( '2016-02-03 00:00:00' ), $io->getDate() );
-		$this->assertEquals( new DateTime( '2016-02-03 12:15' ), $io->getTimeStart() );
-		$this->assertEquals( new DateTime( '2016-02-03 23:20' ), $io->getTimeEnd() );
+		$this->assertEquals( new DateTime( '2016-02-03 12:15' ), $io->getStart() );
+		$this->assertEquals( new DateTime( '2016-02-03 23:20' ), $io->getEnd() );
 		$this->assertFalse( $io->isDummy() );
 	}
 
 	public function testTimeEndNextDay () {
 		$io = new IrregularOpening( 'Test', '2016-02-03', '13:00', '01:00' );
-		$this->assertEquals( new DateTime('2016-02-03 13:00'), $io->getTimeStart() );
-		$this->assertEquals( new DateTime('2016-02-04 01:00'), $io->getTimeEnd() );
+		$this->assertEquals( new DateTime('2016-02-03 13:00'), $io->getStart() );
+		$this->assertEquals( new DateTime('2016-02-04 01:00'), $io->getEnd() );
 	}
 	
 	public function testIsActiveOnDay () {
@@ -116,8 +116,8 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 
 		$this->assertEquals( '', $io->getName() );
 		$this->assertEquals( $expectedDate, $io->getDate() );
-		$this->assertEquals( $expectedDate, $io->getTimeStart() );
-		$this->assertEquals( $expectedDate, $io->getTimeStart() );
+		$this->assertEquals( $expectedDate, $io->getStart() );
+		$this->assertEquals( $expectedDate, $io->getStart() );
 		$this->assertTrue( $io->isDummy() );
 	}
 	

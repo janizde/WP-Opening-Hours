@@ -50,15 +50,15 @@ class HolidayTest extends OpeningHoursTestCase {
 		$format = 'Y-m-d';
 
 		$this->assertEquals( '', $holiday->getName() );
-		$this->assertEquals( $now->format($format), $holiday->getDateStart()->format($format) );
-		$this->assertEquals( $now->format($format), $holiday->getDateEnd()->format($format) );
+		$this->assertEquals( $now->format($format), $holiday->getStart()->format($format) );
+		$this->assertEquals( $now->format($format), $holiday->getEnd()->format($format) );
 		$this->assertTrue( $holiday->isDummy() );
 	}
 
 	public function testDateSetters () {
 		$holiday = new Holiday( 'Test Holiday', new DateTime('2016-01-02'), new DateTime('2016-01-03') );
 
-		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getDateStart() );
-		$this->assertEquals( new DateTime('2016-01-03 23:59:59', Dates::getTimezone()), $holiday->getDateEnd() );
+		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getStart() );
+		$this->assertEquals( new DateTime('2016-01-03 23:59:59', Dates::getTimezone()), $holiday->getEnd() );
 	}
 }
