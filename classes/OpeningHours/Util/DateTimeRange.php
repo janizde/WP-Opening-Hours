@@ -29,7 +29,7 @@ class DateTimeRange {
         return -1;
       }
 
-      if ($a->getStart() > $b->getEnd()) {
+      if ($a->getStart() > $b->getStart()) {
         return 1;
       }
 

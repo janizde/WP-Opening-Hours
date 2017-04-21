@@ -21,7 +21,7 @@ class DateTimeRangeTest extends OpeningHoursTestCase  {
 
     $this->assertEquals('H3', $sorted[0]->getName());
     $this->assertEquals('H1', $sorted[1]->getName());
-    $this->assertEquals('H4', $sorted[1]->getName());
-    $this->assertEquals('H2', $sorted[1]->getName());
+    $this->assertEquals('H4', $sorted[2]->getName());
+    $this->assertEquals('H2', $sorted[3]->getName());
   }
 }
