@@ -37,7 +37,7 @@ class DateTimeRangeTest extends OpeningHoursTestCase  {
     $sorted = DateTimeRange::sortObjects($holidays, true, new \DateTime('2014-04-20'));
     $this->assertEquals(4, count($sorted));
 
-    $sorted = DateTimeRange::sortObjects($holidays, true, new \DateTime('2014-04-20 00:00:01'));
-    $this->assertEquals(2, count($sorted));
+    $sorted = DateTimeRange::sortObjects($holidays, true, new \DateTime('2017-04-20 00:00:01'));
+    $this->assertEquals(1, count($sorted));
   }
 }
