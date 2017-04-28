@@ -48,6 +48,11 @@ class Holidays extends AbstractWidget {
       )
     ));
 
+    $this->addField('include_past', array(
+      'type' => 'checkbox',
+      'caption' => __('Include past holidays', 'wp-opening-hours')
+    ));
+
     // Extended Fields
     $this->addField('class_holiday', array(
       'type' => 'text',
