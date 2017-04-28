@@ -81,26 +81,26 @@ class OverviewModel {
   public function mergeHolidays (array $holidays) {
     /** @var Holiday $holiday */
     foreach ($holidays as $holiday) {
-      if ($holiday->getDateEnd() < $this->minDate || $holiday->getDateStart() > $this->maxDate)
+      if ($holiday->getEnd() < $this->minDate || $holiday->getStart() > $this->maxDate)
         continue;
 
-      if ($holiday->getDateStart() <= $this->minDate && $holiday->getDateEnd() >= $this->maxDate) {
+      if ($holiday->getStart() <= $this->minDate && $holiday->getEnd() >= $this->maxDate) {
         foreach ($this->data as &$day) {
           $day['items'] = $holiday;
         }
         continue;
       }
 
-      if ($holiday->getDateStart() <= $this->minDate) {
-        $interval = $holiday->getDateEnd()->diff($this->minDate);
+      if ($holiday->getStart() <= $this->minDate) {
+        $interval = $holiday->getEnd()->diff($this->minDate);
         for ($i = 0; $i < $interval->days + 1; ++$i) {
           $this->data[$i]['items'] = $holiday;
         }
         continue;
       }
 
-      if ($holiday->getDateEnd() >= $this->maxDate) {
-        $interval = $this->maxDate->diff($holiday->getDateStart());
+      if ($holiday->getEnd() >= $this->maxDate) {
+        $interval = $this->maxDate->diff($holiday->getStart());
         for ($i = 7 - $interval->days; $i < 7; ++$i) {
           $this->data[$i]['items'] = $holiday;
         }
@@ -108,8 +108,8 @@ class OverviewModel {
       }
 
       // Holiday is in between boundaries
-      $offset = $holiday->getDateStart()->diff($this->minDate);
-      $interval = $holiday->getDateEnd()->diff($holiday->getDateStart());
+      $offset = $holiday->getStart()->diff($this->minDate);
+      $interval = $holiday->getEnd()->diff($holiday->getStart());
 
       for ($i = $offset->days; $i < $offset->days + $interval->days + 1; ++$i) {
         $this->data[$i]['items'] = $holiday;
@@ -124,7 +124,7 @@ class OverviewModel {
   public function mergeIrregularOpenings (array $irregularOpenings) {
     /** @var IrregularOpening $irregularOpening */
     foreach ($irregularOpenings as $irregularOpening) {
-      if ($irregularOpening->getTimeEnd() < $this->minDate || $irregularOpening->getTimeStart() > $this->maxDate)
+      if ($irregularOpening->getEnd() < $this->minDate || $irregularOpening->getStart() > $this->maxDate)
         continue;
 
       $offset = $irregularOpening->getDate()->diff($this->minDate);

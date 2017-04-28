@@ -90,8 +90,8 @@ class Persistence {
     foreach ($holidays as $holiday) {
       $meta[] = array(
         'name' => $holiday->getName(),
-        'dateStart' => $holiday->getDateStart()->format(Dates::STD_DATE_FORMAT),
-        'dateEnd' => $holiday->getDateEnd()->format(Dates::STD_DATE_FORMAT)
+        'dateStart' => $holiday->getStart()->format(Dates::STD_DATE_FORMAT),
+        'dateEnd' => $holiday->getEnd()->format(Dates::STD_DATE_FORMAT)
       );
     }
     update_post_meta($this->post->ID, self::HOLIDAYS_META_KEY, $meta);
@@ -133,8 +133,8 @@ class Persistence {
       $meta[] = array(
         'name' => $io->getName(),
         'date' => $io->getDate()->format(Dates::STD_DATE_FORMAT),
-        'timeStart' => $io->getTimeStart()->format(Dates::STD_TIME_FORMAT),
-        'timeEnd' => $io->getTimeEnd()->format(Dates::STD_TIME_FORMAT)
+        'timeStart' => $io->getStart()->format(Dates::STD_TIME_FORMAT),
+        'timeEnd' => $io->getEnd()->format(Dates::STD_TIME_FORMAT)
       );
     }
     update_post_meta($this->post->ID, self::IRREGULAR_OPENINGS_META_KEY, $meta);

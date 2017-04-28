@@ -130,22 +130,22 @@ class Overview extends AbstractShortcode {
    */
   public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
     $name = $io->getName();
-    $date = Dates::format(Dates::getDateFormat(), $io->getTimeStart());
+    $date = Dates::format(Dates::getDateFormat(), $io->getStart());
     $markup = '';
 
     $heading = ($attributes['hide_io_date']) ? $name : sprintf('%s (%s)', $name, $date);
 
     $now = Dates::getNow();
     $highlighted = ($attributes['highlight'] == 'period'
-      && $io->getTimeStart() <= $now
-      && $now <= $io->getTimeEnd())
+      && $io->getStart() <= $now
+      && $now <= $io->getEnd())
       ? $attributes['highlighted_period_class']
       : null;
 
     $markup .= sprintf('<span class="op-period-time irregular-opening %s">%s</span>', $highlighted, $heading);
 
-    $time_start = $io->getTimeStart()->format($attributes['time_format']);
-    $time_end = $io->getTimeEnd()->format($attributes['time_format']);
+    $time_start = $io->getStart()->format($attributes['time_format']);
+    $time_end = $io->getEnd()->format($attributes['time_format']);
 
     $markup .= sprintf('<span class="op-period-time %s">%s – %s</span>', $highlighted, $time_start, $time_end);
     return $markup;
