@@ -461,6 +461,22 @@ There are the following options:
 [↑ Table of Contents](#contents)
 
 ## <a name="shortcodes"></a>Shortcodes
+
+### General
+
+Shortcodes are a WordPress core component, which give you the ability to add rich components to your posts' and pages' content. You can insert a Shortcode in the default WordPress TinyMCE editor.
+
+The basic format of a shortcode is:
+
+```
+[shortcode-tag an_attribute="attr_value" another_attribute="another_attr_value"]
+```
+
+> **Heads up**  
+> Shortcode attributes of type `bool` can either be `true` (meaning "yes") or `false` (meaning "no").
+
+You can read more about Shortcodes in the [WordPress documentation.](https://codex.wordpress.org/Shortcode)
+
 Shortcodes have exactly the same options as Widgets because every Widget is basically a representation of the corresponding Shortcode with a GUI for the Widget edit section.  
 **The only required attribute for all Shortcodes is `set_id`. All other attributes are optional!**
 
