@@ -48,6 +48,11 @@ class IrregularOpenings extends AbstractWidget {
       )
     ));
 
+    $this->addField('include_past', array(
+      'type' => 'checkbox',
+      'caption' => __('Include past irregular openings', 'wp-opening-hours')
+    ));
+
     // Extended Fields
     $this->addField('class_highlighted', array(
       'type' => 'text',
