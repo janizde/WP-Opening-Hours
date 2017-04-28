@@ -20,7 +20,7 @@ class DateTimeRange {
       }
 
       $objects = array_filter($objects, function (DateTimeRangeInterface $o) use ($now) {
-        return $o->getEnd() >= $now;
+        return !$o->isPast($now);
       });
     }
 

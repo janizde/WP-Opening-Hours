@@ -98,6 +98,11 @@ class Holiday implements DateTimeRange {
     return new Holiday('', Dates::getNow(), Dates::getNow(), true);
   }
 
+  /* @inheritdoc */
+  public function isPast(\DateTime $reference) {
+    return $this->dateEnd < $reference;
+  }
+
   /**
    * Getter: Name
    * @return          string

@@ -61,4 +61,14 @@ class HolidayTest extends OpeningHoursTestCase {
 		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getStart() );
 		$this->assertEquals( new DateTime('2016-01-03 23:59:59', Dates::getTimezone()), $holiday->getEnd() );
 	}
+
+	public function testIsPast () {
+	  $holiday = new Holiday('Test Holiday', new DateTime('2017-04-28'), new DateTime('2017-04-29'));
+
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-27 23:59:59')));
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-28 00:00:00')));
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-29 23:59:59')));
+	  $this->assertTrue($holiday->isPast(new DateTime('2017-04-30 00:00:00')));
+	  $this->assertTrue($holiday->isPast(new DateTime('2017-05-01 00:00:00')));
+  }
 }

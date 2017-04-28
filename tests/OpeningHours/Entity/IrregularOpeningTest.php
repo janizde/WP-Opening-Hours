@@ -129,4 +129,17 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
     $this->assertEquals(new DateTime('2016-09-24 13:00', Dates::getTimezone()), $period->getTimeStart());
     $this->assertEquals(new DateTime('2016-09-25 03:00', Dates::getTimezone()), $period->getTimeEnd());
   }
+
+  public function testIsPast() {
+	  $io = new IrregularOpening('IO 1', '2017-04-28', '13:00', '19:00');
+
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-27 23:59:59')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 00:00:00')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 13:00:00')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 19:00:01')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 19:00:01')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 23:59:59')));
+	  $this->assertTrue($io->isPast(new DateTime('2017-04-29 00:00:00')));
+	  $this->assertTrue($io->isPast(new DateTime('2017-04-30 00:00:00')));
+  }
 }

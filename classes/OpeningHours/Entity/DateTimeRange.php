@@ -16,4 +16,11 @@ interface DateTimeRange {
    */
   public function getEnd();
 
+  /**
+   * Checks whether the entity is in past
+   * @param     \DateTime   $reference    Reference date to check against
+   * @return    bool                      Whether the entity is in past as compared to $reference
+   */
+  public function isPast(\DateTime $reference);
+
 }

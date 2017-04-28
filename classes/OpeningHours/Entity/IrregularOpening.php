@@ -154,6 +154,13 @@ class IrregularOpening implements DateTimeRange {
     endif;
   }
 
+  /* @inheritdoc */
+  public function isPast(\DateTime $reference) {
+    $end = clone $this->timeEnd;
+    $end->setTime(23, 59, 59);
+    return $end < $reference;
+  }
+
   /**
    * Factory for dummy IO
    * @return    IrregularOpening  An IO dummy
