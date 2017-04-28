@@ -13,7 +13,7 @@ use OpeningHours\Util\Dates;
  * @author      Jannik Portz
  * @package     OpeningHours\Entity
  */
-class IrregularOpening implements DateTimeRange {
+class IrregularOpening implements TimeContextEntity, DateTimeRange {
 
   /**
    * The name of the IO
@@ -159,6 +159,11 @@ class IrregularOpening implements DateTimeRange {
     $end = clone $this->timeEnd;
     $end->setTime(23, 59, 59);
     return $end < $reference;
+  }
+
+  /** @inheritdoc */
+  public function happensOnDate(\DateTime $date) {
+    return $this->timeStart->format(Dates::STD_DATE_FORMAT) === $date->format(Dates::STD_DATE_FORMAT);
   }
 
   /**

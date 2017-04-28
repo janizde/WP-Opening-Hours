@@ -11,7 +11,7 @@ use OpeningHours\Util\Dates;
  * @author      Jannik Portz
  * @package     OpeningHours\Entity
  */
-class Holiday implements DateTimeRange {
+class Holiday implements TimeContextEntity, DateTimeRange {
 
   /**
    * The holiday's name
@@ -101,6 +101,15 @@ class Holiday implements DateTimeRange {
   /* @inheritdoc */
   public function isPast(\DateTime $reference) {
     return $this->dateEnd < $reference;
+  }
+
+  /**
+   * Checks whether the period is active on that day.
+   * Does not check for irregular opening or holidays overriding this period
+   * @inheritdoc
+   */
+  public function happensOnDate(\DateTime $date) {
+    return $this->dateStart <= $date && $this->dateEnd >= $date;
   }
 
   /**

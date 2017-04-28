@@ -181,4 +181,18 @@ class PeriodTest extends OpeningHoursTestCase {
 		$this->assertEquals( '13:00 - 17:00', $p->getFormattedTimeRange() );
 		$this->assertEquals( '0013 - 0017', $p->getFormattedTimeRange('iH') );
 	}
+
+	public function testHappensOnDate() {
+	  $p = new Period(2, '13:00', '17:00');
+
+	  $this->assertFalse($p->happensOnDate(new DateTime('2017-04-23'))); // sunday
+	  $this->assertFalse($p->happensOnDate(new DateTime('2017-04-24'))); // monday
+	  $this->assertTrue($p->happensOnDate(new DateTime('2017-04-25'))); // tuesday
+	  $this->assertTrue($p->happensOnDate(new DateTime('2017-04-25 00:00:00'))); // tuesday
+	  $this->assertTrue($p->happensOnDate(new DateTime('2017-04-25 23:59:59'))); // tuesday
+	  $this->assertFalse($p->happensOnDate(new DateTime('2017-04-26'))); // wednesday
+	  $this->assertFalse($p->happensOnDate(new DateTime('2017-04-27'))); // thursday
+	  $this->assertFalse($p->happensOnDate(new DateTime('2017-04-28'))); // friday
+	  $this->assertFalse($p->happensOnDate(new DateTime('2017-04-29'))); // saturday
+  }
 }
