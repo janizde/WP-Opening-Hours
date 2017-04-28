@@ -346,7 +346,7 @@ There are the folliwing options:
 ![Is Open Widget Options](./doc/screenshots/widget-is-open-options.png)
 
 ### <a name="holidays-widget"></a>Holidays Widget
-The holiday widget displays all holidays in the specified set in a table or list.  
+The holiday widget displays all holidays in the specified set in a table or list. Holidays are always sorted ascedingly by their start dates.  
 There are the following options:
 
 <table>
@@ -370,6 +370,10 @@ There are the following options:
 		<tr>
 			<td>Template</td>
 			<td>You can choose among two templates: Table and List. The list template will display all data in a vertical list. This is useful for narrow sidebars.</td>
+		</tr>
+		<tr>
+			<td>Include past holidays</td>
+			<td>Whether to show past holidays in the widget</td>
 		</tr>
 	</tbody>
 	<thead>
@@ -398,7 +402,8 @@ There are the following options:
 
 ### <a name="irregular-openings-widget"></a>Irregular Openings Widget
 
-The Irregular Openings Widget displays all Irregular Openings in the specified Set in a table or list.  
+The Irregular Openings Widget displays all Irregular Openings in the specified Set in a table or list. Irregular Openings are always sorted ascendingly by their start dates and times.  
+An Irregular Opening is reagarded as being in the past, when the full day, when the Irregular Opening takes place, has ended.  
 There are the following options:
 
 <table>
@@ -422,6 +427,10 @@ There are the following options:
 		<tr>
 			<td>Template</td>
 			<td>You can choose among two templates: Table and List. The list template will display all data in a vertical list. This is useful for narrow sidebars.</td>
+		</tr>
+		<tr>
+			<td>Include past irregular openings</td>
+			<td>Whether to show past irregular openings in the widget</td>
 		</tr>
 	</tbody>
 	<thead>
@@ -682,6 +691,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td>Whether to highlight currently active holidays</td>
 		</tr>
 		<tr>
+			<td><code>include_past</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>Whether to include past holidays</td>
+		</tr>
+		<tr>
 			<td><code>class_holiday</code></td>
 			<td><code>string</code></td>
 			<td><code>op-holiday</code></td>
@@ -726,6 +741,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td><code>bool</code></td>
 			<td><code>false</code></td>
 			<td>Whether to highlight currently active irregular openings.</td>
+		</tr>
+		<tr>
+			<td><code>include_past</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>Whether to include past irregular openings</td>
 		</tr>
 		<tr>
 			<td><code>class_highlighted</code></td>
