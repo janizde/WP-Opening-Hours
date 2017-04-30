@@ -207,6 +207,29 @@ class Set {
     return null;
   }
 
+  /**
+   * Retrieves all data for the specified date
+   * @param     DateTime    $now
+   * @return    array       Associative array containing arrays of data for the keys 'periods', 'holidays', 'irregularOpenings'
+   */
+  public function getDataForDate (DateTime $now = null) {
+    if ($now === null) {
+      $now = Dates::getNow();
+    }
+
+    $getForDay = function (ArrayObject $objects) use ($now) {
+      return array_values(array_filter((array) $objects, function (TimeContextEntity $o) use ($now) {
+        return $o->happensOnDate($now);
+      }));
+    };
+
+    return array(
+      'periods' => $getForDay($this->periods),
+      'holidays' => $getForDay($this->holidays),
+      'irregularOpenings' => $getForDay($this->irregularOpenings),
+    );
+  }
+
   public function getId () {
     return $this->id;
   }

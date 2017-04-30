@@ -71,4 +71,16 @@ class HolidayTest extends OpeningHoursTestCase {
 	  $this->assertTrue($holiday->isPast(new DateTime('2017-04-30 00:00:00')));
 	  $this->assertTrue($holiday->isPast(new DateTime('2017-05-01 00:00:00')));
   }
+
+  public function testHappensOnDate() {
+	  $holiday = new Holiday('Test Holiday', new DateTime('2017-04-27'), new DateTime('2017-04-29'));
+
+	  $this->assertFalse($holiday->happensOnDate(new DateTime('2017-04-26')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-27 00:00:00')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-27')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-28')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-29')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-29 23:59:59')));
+	  $this->assertFalse($holiday->happensOnDate(new DateTime('2017-04-30')));
+  }
 }

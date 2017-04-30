@@ -233,7 +233,7 @@ class OverviewModelTest extends OpeningHoursTestCase {
   }
 
   public function testNoData() {
-    $model = new OverviewModel([]);
+    $model = new OverviewModel(array());
 
     $expected = array(
       array(

@@ -15,7 +15,7 @@ use OpeningHours\Util\Weekday;
  * @package     OpeningHours\Entity
  * @todo        add interface to combine Period and IrregularOpening
  */
-class Period {
+class Period implements TimeContextEntity  {
 
   /**
    * weekdays represented by integer. Monday: 0 - Sunday: 7
@@ -213,6 +213,11 @@ class Period {
       return false;
 
     return true;
+  }
+
+  /** @inheritdoc */
+  public function happensOnDate(\DateTime $date) {
+    return (int) $date->format('w') === $this->weekday;
   }
 
   /**
