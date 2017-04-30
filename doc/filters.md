@@ -54,7 +54,6 @@ add_filter('op_shortcode_attributes', function (array $attributes, $shortcode) {
 	return $attributes;
 });
 ~~~
-
 ## `op_shortcode_template`
 With the `op_shortcode_template` filter you can specify your own shortcode template.
 
@@ -127,6 +126,71 @@ add_filter('op_shortcode_markup', function ($markup, $shortcode) {
 ~~~
 
 **Note:** You can also achieve this by using the `op_shortcode_attributes` filter and modifying the attributes `before_widget` and `after_widget`.
+
+## `op_is_open_format_next`
+With this filter you can change the format of the next open period message within the op-is-open shortcode or widget. You can use this filter if the `next_format` shortcode attribute does not fit your needs.
+
+> **Heads up**  
+> This filter will only be applied when the `show_next` shortcode attribute / widget option is set to `true`.
+
+Parameters passed to the filter callback:
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="25%">Type</th>
+		<th width="50%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>$string</code></td>
+			<td><code>string</code></td>
+			<td>The string formatted by the plugin. May be the formatted period string according to shortcode / widget settings or `null` if no next open period could be found.</td>
+		</tr>
+		<tr>
+			<td><code>$nextPeriod</code></td>
+			<td><code>Period|null</code></td>
+			<td>The next open `Period` object or `null` if no next open period could be found.</td>
+		</tr>
+		<tr>
+			<td><code>$attributes</code></td>
+			<td><code>array</code></td>
+			<td>Associtative array containing all shortcode attributes / widget options.</td>
+		</tr>
+	</tbody>
+</table>
+
+
+## `op_is_open_format_today`
+With this filter you can change the format of today's opening hours message within the op-is-open shortcode / widget. You can use this filter if the `today_format` shortcode attribute does not fit your needs.
+
+> **Heads up**  
+> This filter will only be applied when the `show_today` shortcode attribute / widget option is set to `true`.
+
+Parameters passed to the filter callback:
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="25%">Type</th>
+		<th width="50%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>$string</code></td>
+			<td><code>string</code></td>
+			<td>The string formatted by the plugin. May be the formatted opening hours string according to the shortcode attributes or null if there are no periods for that day.</td>
+		</tr>
+		<tr>
+			<td><code>$periods</code></td>
+			<td><code>Period[]</code></td>
+			<td>Array of today's periods. </td>
+		</tr>
+		<tr>
+			<td><code>$attributes</code></td>
+			<td><code>array</code></td>
+			<td>Associtative array containing all shortcode attributes / widget options.</td>
+		</tr>
+	</tbody>
+</table>
 
 ## `op_set_providers`
 With the `op_set_providers` filter you can modify the registered SetProviders of the OpeningHours Module, i.e. adding new SetProviders and removing previously registered ones.  
