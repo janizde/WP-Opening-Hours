@@ -52,7 +52,7 @@ add_filter('op_shortcode_attributes', function (array $attributes, $shortcode) {
 	}
 	
 	return $attributes;
-});
+}, 10, 2);
 ~~~
 ## `op_shortcode_template`
 With the `op_shortcode_template` filter you can specify your own shortcode template.
@@ -89,7 +89,7 @@ add_filter('op_shortcode_template', function ($template, $shortcode) {
 	
 	// If it is any other type of Shortcode keep $template unchanged
 	return $template;
-});
+}, 10, 2);
 ~~~
 
 ## `op_shortcode_markup`
@@ -122,7 +122,7 @@ Parameters passed to the filter callback:
 add_filter('op_shortcode_markup', function ($markup, $shortcode) {
 	// We don't need $shortcode here
 	return '<section class="my-section">'.$markup.'</section>';
-});
+}, 10, 2);
 ~~~
 
 **Note:** You can also achieve this by using the `op_shortcode_attributes` filter and modifying the attributes `before_widget` and `after_widget`.
@@ -188,7 +188,7 @@ add_filter('op_is_open_format_next', function ($str, $period, $attributes, $toda
 		$period->getTimeStart()->format($attributes['time_format']),
 		$period->getTimeEnd()->format($attributes['time_format'])
 	);
-});
+}, 10, 4);
 ~~~
 
 
