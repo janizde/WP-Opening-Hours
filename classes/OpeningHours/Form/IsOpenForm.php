@@ -77,10 +77,10 @@ class IsOpenForm extends Form {
       'extended' => true,
       'default_placeholder' => true,
       'description' => sprintf('%s: %s<br />%s: %s<br />%s: %s<br />%s: %s',
-        '%1$s', __('Formatted Date', 'wp-opening-hours'),
-        '%2$s', __('Weekday', 'wp-opening-hours'),
-        '%3$s', __('Formatted Start Time', 'wp-opening-hours'),
-        '%4$s', __('Formatted End Time', 'wp-opening-hours')
+        '<code>%1$s</code>', __('Formatted Date', 'wp-opening-hours'),
+        '<code>%2$s</code>', __('Weekday', 'wp-opening-hours'),
+        '<code>%3$s</code>', __('Formatted Start Time', 'wp-opening-hours'),
+        '<code>%4$s</code>', __('Formatted End Time', 'wp-opening-hours')
       )
     ));
 

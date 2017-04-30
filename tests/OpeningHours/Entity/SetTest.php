@@ -162,4 +162,46 @@ class SetTest extends OpeningHoursTestCase {
 		$this->assertTrue( $set->isOpen( new DateTime('2016-02-01 03:00') ) );
 		$this->assertFalse( $set->isOpen( new DateTime('2016-02-01 03:01') ) );
 	}
+
+	public function testGetDataForDate() {
+	  $periods = array(
+      new Period(2, '13:00', '18:00'),
+      new Period(2, '19:00', '21:00'),
+      new Period(2, '20:00', '22:00'),
+      new Period(4, '13:00', '18:00'),
+      new Period(0, '13:00', '03:00')
+    );
+
+	  $holidays = array(
+      new Holiday('Test Holiday 1', new DateTime('2017-04-24'), new DateTime('2017-04-25')),
+      new Holiday('Test Holiday 2', new DateTime('2017-04-24'), new DateTime('2017-04-24')),
+      new Holiday('Test Holiday 3', new DateTime('2017-04-26'), new DateTime('2017-04-27'))
+    );
+
+	  $irregularOpenings = array(
+      new IrregularOpening('IO 1', '2017-04-24', '13:00', '17:00'),
+      new IrregularOpening('IO 2', '2017-04-25', '13:00', '17:00'),
+      new IrregularOpening('IO 3', '2017-04-26', '13:00', '17:00')
+    );
+
+	  $set = $this->createSet(64, $periods, $holidays, $irregularOpenings);
+
+	  $expected = array(
+	    'periods' => array(
+	      $periods[0],
+	      $periods[1],
+	      $periods[2]
+      ),
+      'holidays' => array(
+        $holidays[0]
+      ),
+      'irregularOpenings' => array(
+        $irregularOpenings[1]
+      )
+    );
+
+	  $result = $set->getDataForDate(new DateTime('2017-04-25 18:00:00'));
+
+	  $this->assertEquals($expected, $result);
+  }
 }

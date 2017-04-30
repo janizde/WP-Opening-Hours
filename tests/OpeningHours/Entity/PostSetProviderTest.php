@@ -235,8 +235,7 @@ class PostSetProviderTest extends OpeningHoursTestCase {
       ),
       array(
         'id' => 'custom-set',
-        'name' => 'Post 128',
-        'hidden' => true
+        'name' => 'Post 128'
       )
     ), $setInfo);
   }

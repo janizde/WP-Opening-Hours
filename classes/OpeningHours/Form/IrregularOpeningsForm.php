@@ -11,7 +11,7 @@ use OpeningHours\Module\Widget\AbstractWidget;
  * @author    Jannik Portz <hello@jannikportz.de>
  * @package   OpeningHours\Form
  */
-class IrregularOpeningssForm extends Form {
+class IrregularOpeningsForm extends Form {
 
   public function __construct () {
     parent::__construct();

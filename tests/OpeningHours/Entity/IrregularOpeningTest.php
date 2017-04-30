@@ -142,4 +142,14 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 	  $this->assertTrue($io->isPast(new DateTime('2017-04-29 00:00:00')));
 	  $this->assertTrue($io->isPast(new DateTime('2017-04-30 00:00:00')));
   }
+
+  public function testHappensOnDate() {
+	  $io = new IrregularOpening('IO 1', '2017-04-28', '13:00', '19:00');
+
+	  $this->assertFalse($io->happensOnDate(new DateTime('2017-04-27')));
+	  $this->assertTrue($io->happensOnDate(new DateTime('2017-04-28')));
+	  $this->assertTrue($io->happensOnDate(new DateTime('2017-04-28 00:00:00')));
+	  $this->assertTrue($io->happensOnDate(new DateTime('2017-04-28 23:59:59')));
+	  $this->assertFalse($io->happensOnDate(new DateTime('2017-04-29')));
+  }
 }
