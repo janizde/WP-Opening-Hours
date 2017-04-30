@@ -31,4 +31,8 @@ if ( !$is_open && isset($next_string) && is_string($next_string) ) {
 	echo '<span class="op-next-period ' . $next_period_classes . '">' . $next_string . '</span>';
 }
 
+if (isset($today_string) && is_string($today_string) && strlen($today_string) > 0) {
+  echo '<span class="op-today">'. $today_string .'</span>';
+}
+
 echo $after_widget;
