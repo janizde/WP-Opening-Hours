@@ -161,13 +161,13 @@ Parameters passed to the filter callback:
 			<td><code>array</code></td>
 			<td>
 				Associative array of arrays containing all data for today. The array has the following structure:
-				```
-				[
-					'periods' => Period[],  
-					'holidays' => Holiday[],  
-					'irregularOpenings' => IrregularOpening[]
-				]
-				```
+<pre>
+[
+	'periods' => Period[],
+	'holidays' => Holiday[],
+	'irregularOpenings' => IrregularOpening[]
+]
+</pre>
 			</td>
 		</tr>
 	</tbody>
@@ -226,13 +226,13 @@ Parameters passed to the filter callback:
 			<td><code>array</code></td>
 			<td>
 				Associative array of arrays containing all data for today. The array has the following structure:
-				```
-				[
-					'periods' => Period[],  
-					'holidays' => Holiday[],  
-					'irregularOpenings' => IrregularOpening[]
-				]
-				```
+<pre>
+[
+	'periods' => Period[],
+	'holidays' => Holiday[],
+	'irregularOpenings' => IrregularOpening[]
+]
+</pre>
 			</td>
 		</tr>
 	</tbody>
