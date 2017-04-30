@@ -156,8 +156,40 @@ Parameters passed to the filter callback:
 			<td><code>array</code></td>
 			<td>Associtative array containing all shortcode attributes / widget options.</td>
 		</tr>
+		<tr>
+			<td><code>$todayData</code></td>
+			<td><code>array</code></td>
+			<td>
+				Associative array of arrays containing all data for today. The array has the following structure:
+				~~~php
+				[
+					'periods' => Period[],  
+					'holidays' => Holiday[],  
+					'irregularOpenings' => IrregularOpening[]
+				]
+				~~~
+			</td>
+		</tr>
 	</tbody>
 </table>
+
+### Exmaple: showing current holiday name
+
+~~~php
+add_filter('op_is_open_format_next', function ($str, $period, $attributes, $todayData) => {
+	// If there's no holiday in effect, return default message
+	if (count($todayData['holidays']) < 1) {
+		return $str;
+	}
+	
+	return sprintf(
+		'We\'re currently on %s but will be back on the %s from %s to %s',
+		$todayData['holidays'][0]->getName(),
+		$period->getTimeStart()->format($attributes['time_format']),
+		$period->getTimeEnd()->format($attributes['time_format'])
+	);
+});
+~~~
 
 
 ## `op_is_open_format_today`
@@ -182,12 +214,26 @@ Parameters passed to the filter callback:
 		<tr>
 			<td><code>$periods</code></td>
 			<td><code>Period[]</code></td>
-			<td>Array of today's periods. </td>
+			<td>Array of today's periods. If an irregular opening is in effect it will be converted to a period with the correct weekday and passed as the one and only element of the array.</td>
 		</tr>
 		<tr>
 			<td><code>$attributes</code></td>
 			<td><code>array</code></td>
 			<td>Associtative array containing all shortcode attributes / widget options.</td>
+		</tr>
+		<tr>
+			<td><code>$todayData</code></td>
+			<td><code>array</code></td>
+			<td>
+				Associative array of arrays containing all data for today. The array has the following structure:
+				~~~php
+				[
+					'periods' => Period[],  
+					'holidays' => Holiday[],  
+					'irregularOpenings' => IrregularOpening[]
+				]
+				~~~
+			</td>
 		</tr>
 	</tbody>
 </table>

@@ -62,27 +62,26 @@ class IsOpen extends AbstractShortcode {
       return;
 
     $isOpen = $set->isOpen();
-    $nextPeriod = $set->getNextOpenPeriod();
+    $todayData = $set->getDataForDate(Dates::getNow());
 
     if ($attributes['show_next']) {
-      $attributes['next_period'] = $nextPeriod;
-      $attributes['next_string'] = $this->formatNext($nextPeriod, $attributes);
+      $nextPeriod = $set->getNextOpenPeriod();
+      $attributes['next_period'] = $set->getNextOpenPeriod();;
+      $attributes['next_string'] = apply_filters(self::FILTER_FORMAT_NEXT, $this->formatNext($nextPeriod, $attributes), $nextPeriod, $attributes, $todayData);
     }
 
     if (
       $attributes['show_today'] === 'always'
       || $attributes['show_today'] === 'open' && $isOpen
     ) {
-      $todayData = $set->getDataForDate(Dates::getNow());
       $todayPeriods = $this->getTodaysPeriods($todayData);
       $attributes['today_periods'] = $todayPeriods;
-      $attributes['today_string'] = $this->formatToday($todayPeriods, $attributes);
+      $attributes['today_string'] = apply_filters(self::FILTER_FORMAT_TODAY, $this->formatToday($todayPeriods, $attributes), $todayPeriods, $attributes, $todayData);
     }
 
     $attributes['is_open'] = $isOpen;
     $attributes['classes'] .= ($isOpen) ? $attributes['open_class'] : $attributes['closed_class'];
     $attributes['text'] = ($isOpen) ? $attributes['open_text'] : $attributes['closed_text'];
-    $attributes['next_period'] = $set->getNextOpenPeriod();
 
     echo $this->renderShortcodeTemplate($attributes, 'shortcode/is-open.php');
   }
@@ -112,56 +111,52 @@ class IsOpen extends AbstractShortcode {
    * Formats the todays opening hours message according to shortcode attributes
    * @param     Period[]    $periods    Array of period on that day
    * @param     array       $attributes Shortcode attributes
-   * @return    string                  Formatted today message (after filter 'op_is_open_format_today')
+   * @return    string|null             Formatted today message (after filter 'op_is_open_format_today')
    */
   public function formatToday(array $periods, array $attributes) {
     if (count($periods) < 1) {
-      $str = null;
-    } else {
-      $timeFormat = $attributes['time_format'];
-      $periodStrings = array_map(function (Period $p) use ($timeFormat) {
-        return $p->getFormattedTimeRange($timeFormat);
-      }, $periods);
-
-      $periodString = implode(', ', $periodStrings);
-
-      $periodsStart = $periods[0]->getTimeStart()->format($timeFormat);
-      $periodsEnd = $periods[count($periods) - 1]->getTimeEnd()->format($timeFormat);
-
-      $str = sprintf($attributes['today_format'], $periodString, $periodsStart, $periodsEnd);
+      return null;
     }
 
-    return apply_filters(self::FILTER_FORMAT_TODAY, $str, $periods, $attributes);
+    $timeFormat = $attributes['time_format'];
+    $periodStrings = array_map(function (Period $p) use ($timeFormat) {
+      return $p->getFormattedTimeRange($timeFormat);
+    }, $periods);
+
+    $periodString = implode(', ', $periodStrings);
+
+    $periodsStart = $periods[0]->getTimeStart()->format($timeFormat);
+    $periodsEnd = $periods[count($periods) - 1]->getTimeEnd()->format($timeFormat);
+
+    return sprintf($attributes['today_format'], $periodString, $periodsStart, $periodsEnd);
   }
 
   /**
    * Formats the next open period message according to shortcode attributes
    * @param     Period    $nextPeriod   The next open period or null if it doesnt exist
    * @param     array     $attributes   Shortcode attributes
-   * @return    string                  Formatted next period message (after filter 'op_is_open_format_next')
+   * @return    string|null             Formatted next period message (after filter 'op_is_open_format_next')
    */
   public function formatNext(Period $nextPeriod = null, array $attributes) {
     if (!$nextPeriod instanceof Period) {
-      $str = null;
-    } else {
-      $str = sprintf(
-        // Format String
-        $attributes['next_format'],
-
-        // 1$: Formatted Date
-        Dates::format($attributes['date_format'], $nextPeriod->getTimeStart()),
-
-        // 2$: Translated Weekday
-        Weekdays::getWeekday($nextPeriod->getWeekday())->getName(),
-
-        // 3%: Formatted Start Time
-        $nextPeriod->getTimeStart()->format($attributes['time_format']),
-
-        // 4%: Formatted End Time
-        $nextPeriod->getTimeEnd()->format($attributes['time_format'])
-      );
+      return null;
     }
 
-    return apply_filters(self::FILTER_FORMAT_NEXT, $str, $nextPeriod, $attributes);
+    return sprintf(
+      // Format String
+      $attributes['next_format'],
+
+      // 1$: Formatted Date
+      Dates::format($attributes['date_format'], $nextPeriod->getTimeStart()),
+
+      // 2$: Translated Weekday
+      Weekdays::getWeekday($nextPeriod->getWeekday())->getName(),
+
+      // 3%: Formatted Start Time
+      $nextPeriod->getTimeStart()->format($attributes['time_format']),
+
+      // 4%: Formatted End Time
+      $nextPeriod->getTimeEnd()->format($attributes['time_format'])
+    );
   }
 }
