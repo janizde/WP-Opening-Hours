@@ -292,7 +292,11 @@ There are the folliwing options:
 		</tr>
 		<tr>
 			<td>Show next open period</td>
-			<td>When select, a message telling the next open period will be displayed if the venue (set) is currently closed.</td>
+			<td>When checked, a message telling the next open period will be displayed if the venue (set) is currently closed.</td>
+		</tr>
+		<tr>
+			<td>Show today's opening hours</td>
+			<td>Specify in which cases today's opening hours shall be displayed in the widget</td>
 		</tr>
 	</tbody>
 	<thead>
@@ -304,7 +308,7 @@ There are the folliwing options:
 			<td>Custom caption to show when the venue is open</td>
 		</tr>
 		<tr>
-			<td>Cpation if closed</td>
+			<td>Caption if closed</td>
 			<td>Custom caption to show when the venue is closed</td>
 		</tr>
 		<tr>
@@ -326,6 +330,18 @@ There are the folliwing options:
 				<li><code>%4$s</code> The formatted end time of the next open period</li>
 			</ul>
 			Example: <code>We're open again on %2$s (%1$s) from %3$s to %4$s</code>
+			</td>
+		</tr>
+		<tr>
+			<td>Today' opening hours string format</td>
+			<td>A custom string format for the today's opening hours message.<br />
+			You can populate the string with the following placeholders:
+			<ul>
+				<li><code>%1$s</code> The formatted time ranges of all periods</li>
+				<li><code>%2$s</code> The formatted start time of the first period</li>
+				<li><code>%3$s</code> The formatted end time of the last period</li>
+			</ul>
+			Example: <code>We're open today from %2$s to %3$s.</code>
 			</td>
 		</tr>
 		<tr>
@@ -632,6 +648,20 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td>When <code>true</code>, a message telling the next open period will be displayed if the venue (set) is currently closed.</td>
 		</tr>
 		<tr>
+			<td><code>show_today</code></td>
+			<td><code>string (enum)</code></td>
+			<td><code>never</code></td>
+			<td>
+				When to show today's opening hours<br />
+				The following values are valid:
+				<ul>
+					<li><code>never</code></li>
+					<li><code>open</code></li>
+					<li><code>always</code></li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
 			<td><code>next_format</code></td>
 			<td><code>string</code></td>
 			<td>We're open again on <code>%2$s</code> (<code>%1$s</code>) from <code>%3$s</code> to <code>%4$s</code></td>
@@ -642,6 +672,18 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 				<li><code>%2$s</code> The name of the weekday of the next open period (translated)</li>
 				<li><code>%3$s</code> The formatted start time of the next open period</li>
 				<li><code>%4$s</code> The formatted end time of the next open period</li>
+			</ul></td>
+		</tr>
+		<tr>
+			<td><code>today_format</code></td>
+			<td><code>string</code></td>
+			<td>Opening Hours today: <code>%1$s</code></td>
+			<td>A custom string format for the today's opening hours message.<br />
+			You can populate the string with the following placeholders:
+			<ul>
+				<li><code>%1$s</code> The formatted time ranges of all periods</li>
+				<li><code>%2$s</code> The formatted start time of the first period</li>
+				<li><code>%3$s</code> The formatted end time of the last period</li>
 			</ul></td>
 		</tr>
 		<tr>
