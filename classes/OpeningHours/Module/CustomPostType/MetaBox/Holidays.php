@@ -58,8 +58,8 @@ class Holidays extends AbstractMetaBox {
   public function renderSingleHoliday ( Holiday $holiday ) {
     $data = array(
       'name' => $holiday->getName(),
-      'dateStart' => $holiday->isDummy() ? '' : $holiday->getDateStart()->format(Dates::STD_DATE_FORMAT),
-      'dateEnd' => $holiday->isDummy() ? '' : $holiday->getDateEnd()->format(Dates::STD_DATE_FORMAT)
+      'dateStart' => $holiday->isDummy() ? '' : $holiday->getStart()->format(Dates::STD_DATE_FORMAT),
+      'dateEnd' => $holiday->isDummy() ? '' : $holiday->getEnd()->format(Dates::STD_DATE_FORMAT)
     );
 
     $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH_SINGLE), $data);

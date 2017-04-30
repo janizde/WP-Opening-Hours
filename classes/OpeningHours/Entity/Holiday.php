@@ -11,7 +11,7 @@ use OpeningHours\Util\Dates;
  * @author      Jannik Portz
  * @package     OpeningHours\Entity
  */
-class Holiday {
+class Holiday implements DateTimeRange {
 
   /**
    * The holiday's name
@@ -50,8 +50,8 @@ class Holiday {
       throw new \InvalidArgumentException("\$name must not be empty when holiday is no dummy.");
 
     $this->name = $name;
-    $this->setDateStart($dateStart);
-    $this->setDateEnd($dateEnd);
+    $this->setStart($dateStart);
+    $this->setEnd($dateEnd);
     $this->dummy = $dummy;
   }
 
@@ -95,7 +95,12 @@ class Holiday {
    * @return    Holiday
    */
   public static function createDummyPeriod () {
-    return new Holiday('', new DateTime('now'), new DateTime('now'), true);
+    return new Holiday('', Dates::getNow(), Dates::getNow(), true);
+  }
+
+  /* @inheritdoc */
+  public function isPast(\DateTime $reference) {
+    return $this->dateEnd < $reference;
   }
 
   /**
@@ -106,11 +111,8 @@ class Holiday {
     return $this->name;
   }
 
-  /**
-   * Getter: Date Start
-   * @return          DateTime
-   */
-  public function getDateStart () {
+  /** @inheritdoc */
+  public function getStart () {
     return $this->dateStart;
   }
 
@@ -119,15 +121,12 @@ class Holiday {
    *
    * @param           DateTime|string $dateStart
    */
-  protected function setDateStart ( $dateStart ) {
+  protected function setStart ($dateStart) {
     $this->setDateUniversal($dateStart, 'dateStart');
   }
 
-  /**
-   * Getter: Date End
-   * @return          DateTime
-   */
-  public function getDateEnd () {
+  /** @inheritdoc */
+  public function getEnd () {
     return $this->dateEnd;
   }
 
@@ -136,8 +135,40 @@ class Holiday {
    *
    * @param           DateTime|string $dateEnd
    */
-  protected function setDateEnd ( $dateEnd ) {
+  protected function setEnd ($dateEnd) {
     $this->setDateUniversal($dateEnd, 'dateEnd', true);
+  }
+
+  /**
+   * @deprecated  Use getStart instead
+   * @return      DateTime
+   */
+  public function getDateStart() {
+    return $this->getStart();
+  }
+
+  /**
+   * @deprecated  Use getEnd instead
+   * @return      DateTime
+   */
+  public function getDateEnd() {
+    return $this->getEnd();
+  }
+
+  /**
+   * @deprecated  Use setStart instead
+   * @return      DateTime
+   */
+  protected function setDateStart($dateStart) {
+    return $this->setStart($dateStart);
+  }
+
+  /**
+   * @deprecated  Use setEnd instead
+   * @return      DateTime
+   */
+  protected function setDateEnd($dateEnd) {
+    return $this->setEnd($dateEnd);
   }
 
   /**

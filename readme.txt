@@ -2,7 +2,7 @@
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
 Tested up to: 4.7.1
-Stable tag: 2.0.2
+Stable tag: 2.0.5
 Requires at least: 4.0.0
 Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
@@ -85,29 +85,21 @@ If you found a bug you would like to fix feel free to [contribute to the project
 
 == Changelog ==
 
-= 1.0 =
-initial version
+= 2.0.5 =
 
-= 1.0.1 =
-fixed a bug that displayed saturday instead of friday
-ATTENTION: REINSTALL NECESSARY!
+* fixed bug concerning child set initialization. thanks to @nikomuse
 
-= 1.1 =
-Read this article:
-http://www.jannikportz.de/2013/11/03/opening-hours-update-version-1-2/
+= 2.0.4 =
 
-= 1.1.1 =
-Read this article:
-http://www.jannikportz.de/2013/12/04/opening-hours-update-1-1-1/
+* Added support for UTC offset timezones
 
-= 1.2 =
-Read this article:
-http://www.jannikportz.de/2014/01/19/update-1-2-for-opening-hours-plugin/
+= 2.0.3 =
 
-= 2.0 =
-Completely new version of the Opening Hours plugin.
-Supports multiple Sets of Opening Hours and adds more flexibility to the Widgets and Shortcodes.
-Offers Developer APIs to easily integrate your custom sources.
+* Fixed timezone bug in WordPress 4.7
+
+= 2.0.2 =
+
+* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
 
 = 2.0.1 =
 
@@ -117,9 +109,29 @@ Offers Developer APIs to easily integrate your custom sources.
     * Fixed auto convert issue
     * Fixed PHP 5.3 incompatibility issues
 
-= 2.0.2 =
+= 2.0 =
+Completely new version of the Opening Hours plugin.
+Supports multiple Sets of Opening Hours and adds more flexibility to the Widgets and Shortcodes.
+Offers Developer APIs to easily integrate your custom sources.
 
-* Fixed a bug that didn't show next open Period when there are no regular Periods but Irregular Openings in the current Set
+= 1.2 =
+Read this article:
+http://www.jannikportz.de/2014/01/19/update-1-2-for-opening-hours-plugin/
+
+= 1.1.1 =
+Read this article:
+http://www.jannikportz.de/2013/12/04/opening-hours-update-1-1-1/
+
+= 1.1 =
+Read this article:
+http://www.jannikportz.de/2013/11/03/opening-hours-update-version-1-2/
+
+= 1.0.1 =
+fixed a bug that displayed saturday instead of friday
+ATTENTION: REINSTALL NECESSARY!
+
+= 1.0 =
+initial version
 
 == Upgrade Notice ==
 

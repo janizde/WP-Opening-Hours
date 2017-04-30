@@ -134,11 +134,11 @@ class Set {
 
     foreach ($this->irregularOpenings as $io) {
       /** @var IrregularOpening $io */
-      if ($io->getTimeStart() <= $now) {
+      if ($io->getStart() <= $now) {
         continue;
       }
 
-      if ($closestPeriod === null || $io->getTimeStart() < $closestPeriod->getTimeStart()) {
+      if ($closestPeriod === null || $io->getStart() < $closestPeriod->getTimeStart()) {
         $closestPeriod = $io->createPeriod();
       }
     }

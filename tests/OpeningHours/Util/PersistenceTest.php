@@ -142,12 +142,12 @@ class PersistenceTest extends OpeningHoursTestCase {
     $h2 = $holidays[1];
 
     $this->assertEquals( 'Holiday1', $h1->getName() );
-    $this->assertEquals( new DateTime('2016-02-03'), $h1->getDateStart() );
-    $this->assertEquals( new DateTime('2016-02-07 23:59:59'), $h1->getDateEnd() );
+    $this->assertEquals( new DateTime('2016-02-03'), $h1->getStart() );
+    $this->assertEquals( new DateTime('2016-02-07 23:59:59', Dates::getTimezone()), $h1->getEnd() );
 
     $this->assertEquals( 'Holiday2', $h2->getName() );
-    $this->assertEquals( new DateTime('2016-03-03'), $h2->getDateStart() );
-    $this->assertEquals( new DateTime('2016-03-07 23:59:59'), $h2->getDateEnd() );
+    $this->assertEquals( new DateTime('2016-03-03'), $h2->getStart() );
+    $this->assertEquals( new DateTime('2016-03-07 23:59:59', Dates::getTimezone()), $h2->getEnd() );
   }
 
   public function testSaveIrregularOpenings () {
@@ -212,12 +212,12 @@ class PersistenceTest extends OpeningHoursTestCase {
 
     $this->assertEquals( 'IO1', $io1->getName() );
     $this->assertEquals( new DateTime('2016-02-03'), $io1->getDate() );
-    $this->assertEquals( new DateTime('2016-02-03 13:00'), $io1->getTimeStart() );
-    $this->assertEquals( new DateTime('2016-02-03 17:00'), $io1->getTimeEnd() );
+    $this->assertEquals( new DateTime('2016-02-03 13:00'), $io1->getStart() );
+    $this->assertEquals( new DateTime('2016-02-03 17:00'), $io1->getEnd() );
 
     $this->assertEquals( 'IO2', $io2->getName() );
     $this->assertEquals( new DateTime('2016-03-03'), $io2->getDate() );
-    $this->assertEquals( new DateTime('2016-03-03 16:30'), $io2->getTimeStart() );
-    $this->assertEquals( new DateTime('2016-03-03 19:00'), $io2->getTimeEnd() );
+    $this->assertEquals( new DateTime('2016-03-03 16:30'), $io2->getStart() );
+    $this->assertEquals( new DateTime('2016-03-03 19:00'), $io2->getEnd() );
   }
 }

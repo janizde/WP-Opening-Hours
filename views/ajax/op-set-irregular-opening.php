@@ -9,8 +9,8 @@ $io = $this->data['io'];
 /** @var \OpeningHours\Entity\IrregularOpening $io */
 $name = $io->getName();
 $date = ( $io->isDummy() ) ? null : $io->getDate()->format( Dates::STD_DATE_FORMAT );
-$timeStart = ( $io->isDummy() ) ? null : $io->getTimeStart()->format( Dates::STD_TIME_FORMAT );
-$timeEnd = ( $io->isDummy() ) ? null : $io->getTimeEnd()->format( Dates::STD_TIME_FORMAT );
+$timeStart = ( $io->isDummy() ) ? null : $io->getStart()->format( Dates::STD_TIME_FORMAT );
+$timeEnd = ( $io->isDummy() ) ? null : $io->getEnd()->format( Dates::STD_TIME_FORMAT );
 ?>
 
 <tr class="op-irregular-opening">

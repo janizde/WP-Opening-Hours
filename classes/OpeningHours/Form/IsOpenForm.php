@@ -32,6 +32,16 @@ class IsOpenForm extends Form {
       'caption' => __('Show next open Period', 'wp-opening-hours')
     ));
 
+    $this->addField('show_today', array(
+      'type' => 'select',
+      'caption' => __('Show todays opening hours', 'wp-opening-hours'),
+      'options' => array(
+        'never' => __('Never', 'wp-opening-hours'),
+        'open' => __('When open', 'wp-opening-hours'),
+        'always' => __('Always', 'wp-opening-hours'),
+      )
+    ));
+
     // Extended Fields
     $this->addField('open_text', array(
       'type' => 'text',
@@ -71,6 +81,18 @@ class IsOpenForm extends Form {
         '%2$s', __('Weekday', 'wp-opening-hours'),
         '%3$s', __('Formatted Start Time', 'wp-opening-hours'),
         '%4$s', __('Formatted End Time', 'wp-opening-hours')
+      )
+    ));
+
+    $this->addField('today_format', array(
+      'type' => 'text',
+      'caption' => __('Todays opening hours format', 'wp-opening-hours'),
+      'extended' => true,
+      'default_placeholder' => true,
+      'description' => sprintf('%s: %s<br />%s: %s<br />%s: %s',
+        '<code>%1$s</code>', __('Formatted time range of all periods', 'wp-opening-hours'),
+        '<code>%2$s</code>', __('Formatted start time of first period on that day', 'wp-opening-hours'),
+        '<code>%3$s</code>', __('Formatted end time of last period on that day', 'wp-opening-hours')
       )
     ));
 

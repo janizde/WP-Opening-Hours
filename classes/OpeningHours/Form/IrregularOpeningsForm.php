@@ -11,7 +11,7 @@ use OpeningHours\Module\Widget\AbstractWidget;
  * @author    Jannik Portz <hello@jannikportz.de>
  * @package   OpeningHours\Form
  */
-class IrregularOpeningsForm extends Form {
+class IrregularOpeningssForm extends Form {
 
   public function __construct () {
     parent::__construct();
@@ -40,6 +40,11 @@ class IrregularOpeningsForm extends Form {
         'table' => __('Table', 'wp-opening-hours'),
         'list' => __('List', 'wp-opening-hours')
       )
+    ));
+
+    $this->addField('include_past', array(
+      'type' => 'checkbox',
+      'caption' => __('Include past irregular openings', 'wp-opening-hours')
     ));
 
     // Extended Fields

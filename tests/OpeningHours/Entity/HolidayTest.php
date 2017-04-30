@@ -5,6 +5,7 @@ namespace OpeningHours\Test\Entity;
 use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\Dates;
 
 class HolidayTest extends OpeningHoursTestCase {
 
@@ -49,15 +50,25 @@ class HolidayTest extends OpeningHoursTestCase {
 		$format = 'Y-m-d';
 
 		$this->assertEquals( '', $holiday->getName() );
-		$this->assertEquals( $now->format($format), $holiday->getDateStart()->format($format) );
-		$this->assertEquals( $now->format($format), $holiday->getDateEnd()->format($format) );
+		$this->assertEquals( $now->format($format), $holiday->getStart()->format($format) );
+		$this->assertEquals( $now->format($format), $holiday->getEnd()->format($format) );
 		$this->assertTrue( $holiday->isDummy() );
 	}
 
 	public function testDateSetters () {
 		$holiday = new Holiday( 'Test Holiday', new DateTime('2016-01-02'), new DateTime('2016-01-03') );
 
-		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getDateStart() );
-		$this->assertEquals( new DateTime('2016-01-03 23:59:59'), $holiday->getDateEnd() );
+		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getStart() );
+		$this->assertEquals( new DateTime('2016-01-03 23:59:59', Dates::getTimezone()), $holiday->getEnd() );
 	}
+
+	public function testIsPast () {
+	  $holiday = new Holiday('Test Holiday', new DateTime('2017-04-28'), new DateTime('2017-04-29'));
+
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-27 23:59:59')));
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-28 00:00:00')));
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-29 23:59:59')));
+	  $this->assertTrue($holiday->isPast(new DateTime('2017-04-30 00:00:00')));
+	  $this->assertTrue($holiday->isPast(new DateTime('2017-05-01 00:00:00')));
+  }
 }

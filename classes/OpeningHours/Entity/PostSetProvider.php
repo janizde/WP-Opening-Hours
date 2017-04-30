@@ -43,7 +43,7 @@ class PostSetProvider extends SetProvider {
         $dateEnd = empty($dateEnd) ? null : new \DateTime($dateEnd);
 
         if ($this->childSetCriteriaMatches($dateStart, $dateEnd, $weekScheme)) {
-          $childSet = $this->createSet($childPost);
+          $childSet = $this->createSet($childPost->ID);
           $childSet->setId($post->ID);
           $childSet->setName($post->post_title);
           return $childSet;

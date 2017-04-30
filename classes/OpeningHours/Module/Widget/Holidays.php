@@ -2,8 +2,8 @@
 
 namespace OpeningHours\Module\Widget;
 
-use OpeningHours\Form\HolidaysForm;
 use OpeningHours\Module\Shortcode\Holidays as HolidaysShortcode;
+use OpeningHours\Form\HolidaysForm;
 
 /**
  * Widget for Holiday Shortcode
