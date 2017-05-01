@@ -113,6 +113,20 @@ class Holiday implements TimeContextEntity, DateTimeRange {
   }
 
   /**
+   * Formats the date range of the holiday
+   * @param     string    $dateFormat     The PHP date format to format every DateTime with
+   * @param     string    $rangeFormat    printf template string combining dateStart (%1$s) and dateEnd (%2$2)
+   * @return    string                    The formatted date range
+   */
+  public function getFormattedDateRange($dateFormat, $rangeFormat = '%s - %s') {
+    if (Dates::compareDate($this->dateStart, $this->dateEnd) === 0) {
+      return $this->dateStart->format($dateFormat);
+    }
+
+    return sprintf($rangeFormat, $this->dateStart->format($dateFormat), $this->dateEnd->format($dateFormat));
+  }
+
+  /**
    * Getter: Name
    * @return          string
    */

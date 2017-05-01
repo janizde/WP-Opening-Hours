@@ -43,8 +43,13 @@ if ( ! empty( $title ) ) {
     ?>
     <tr class="<?php echo $class_holiday; ?> <?php echo $highlighted; ?>">
       <td class="col-name"><?php echo $holiday->getName(); ?></td>
-      <td class="col-date-start"><?php echo Dates::format($date_format, $holiday->getStart()); ?></td>
-      <td class="col-date-end"><?php echo Dates::format($date_format, $holiday->getEnd()); ?></td>
+
+      <?php if (Dates::compareDate($holiday->getStart(), $holiday->getEnd()) === 0) : ?>
+        <td class="col-date" colspan="2"><?php echo $holiday->getStart()->format($date_format); ?></td>
+      <?php else: ?>
+        <td class="col-date-start"><?php echo Dates::format($date_format, $holiday->getStart()); ?></td>
+        <td class="col-date-end"><?php echo Dates::format($date_format, $holiday->getEnd()); ?></td>
+      <?php endif; ?>
     </tr>
     <?php endforeach; ?>
   </tbody>
