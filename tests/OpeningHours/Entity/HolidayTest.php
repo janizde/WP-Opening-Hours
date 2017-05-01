@@ -83,4 +83,17 @@ class HolidayTest extends OpeningHoursTestCase {
 	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-29 23:59:59')));
 	  $this->assertFalse($holiday->happensOnDate(new DateTime('2017-04-30')));
   }
-}
+
+  public function testGetFormattedDateRange() {
+	  $holiday = new Holiday('Holiday', new DateTime('2017-05-01'), new DateTime('2017-05-02'));
+	  $expected = '2017-05-01;2017-05-02';
+	  $result = $holiday->getFormattedDateRange(Dates::STD_DATE_FORMAT, '%s;%s');
+	  $this->assertEquals($expected, $result);
+  }
+
+  public function testGetFormattedDateRangeSingleDate() {
+    $holiday = new Holiday('Holiday', new DateTime('2017-05-01'), new DateTime('2017-05-01'));
+    $expected = '2017-05-01';
+    $result = $holiday->getFormattedDateRange(Dates::STD_DATE_FORMAT, '%s;%s');
+    $this->assertEquals($expected, $result);
+  }}
