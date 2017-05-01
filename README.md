@@ -907,7 +907,7 @@ If you can not translate the whole plugin or don't want to wait until everything
 #### Pull Request on GitHub
 Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
-#### [translate.jannikportz.de](http://translate.jannikportz.de)
+#### translate.jannikportz.de
 translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
 [↑ Table of Contents](#contents)
