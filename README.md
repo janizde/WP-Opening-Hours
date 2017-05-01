@@ -260,6 +260,10 @@ There are the following options:
 			<td>Hide date of irregular openings</td>
 			<td>Whether to hide the date of irregular openings if they are in the table.</td>
 		</tr>
+		<tr>
+			<td>Week offset</td>
+			<td>Number of weeks the shortcode data shall be offset. Might be a positive or negative integer.</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -628,6 +632,15 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td><code>string</code></td>
 			<td><code>table</code></td>
 			<td>Identifier for the template to use. Possible values are <code>table</code> and <code>list</code></td>
+		</tr>
+		<tr>
+			<td><code>week_offset</code></td>
+			<td><code>int</code></td>
+			<td><code>0</code></td>
+			<td>
+				Number of weeks the shortcode data shall be offset. Might be a positive or negative integer.<br />
+				<strong>Example:</strong> <code>1</code>: Show data of next week
+			</td>
 		</tr>
 	</tbody>
 </table>
