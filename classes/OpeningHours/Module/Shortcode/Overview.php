@@ -43,7 +43,8 @@ class Overview extends AbstractShortcode {
       'highlighted_day_class' => 'highlighted',
       'time_format' => Dates::getTimeFormat(),
       'hide_io_date' => false,
-      'template' => 'table'
+      'template' => 'table',
+      'week_offset' => 0,
     );
 
     $this->validAttributeValues = array(
@@ -80,7 +81,20 @@ class Overview extends AbstractShortcode {
     $model = apply_filters(self::FILTER_OVERVIEW_MODEL, null, $set, $attributes);
 
     if (!$model instanceof OverviewModel) {
-      $model = new OverviewModel($set->getPeriods()->getArrayCopy());
+      $now = clone Dates::getNow();
+
+      if (is_numeric($attributes['week_offset']) && $attributes['week_offset'] != 0) {
+        $weekOffset = (int) $attributes['week_offset'];
+        $interval = new \DateInterval(sprintf('P%dW', (int) abs($attributes['week_offset'])));
+
+        if ($weekOffset > 0) {
+          $now->add($interval);
+        } else {
+          $now->sub($interval);
+        }
+      }
+
+      $model = new OverviewModel($set->getPeriods()->getArrayCopy(), $now);
 
       if ($attributes['include_holidays']) {
         $model->mergeHolidays($set->getHolidays()->getArrayCopy());

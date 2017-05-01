@@ -11,6 +11,7 @@ namespace OpeningHours\Fields;
 class FieldTypes {
 
   const TEXT = 'text';
+  const NUMBER = 'number';
   const DATE = 'date';
   const TIME = 'time';
   const EMAIL = 'email';
