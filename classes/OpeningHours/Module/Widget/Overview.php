@@ -118,5 +118,18 @@ class Overview extends AbstractWidget {
       'caption' => __('Hide date of Irregular Openings', 'wp-opening-hours'),
       'extended' => true
     ));
+
+    $this->addField('week_offset', array(
+      'type' => 'number',
+      'caption' => __('Week offset', 'wp-opening-hours'),
+      'description' => __('Number of weeks the overview contents shall be offset. Might be a positive or negative integer.', 'wp-opening-hours'),
+      'default_placeholder' => true,
+      'extended' => true,
+      'attributes' => array(
+        'step' => 1,
+        'min' => -52,
+        'max' => 52
+      )
+    ));
   }
 }

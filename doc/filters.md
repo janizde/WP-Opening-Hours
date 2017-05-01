@@ -238,6 +238,75 @@ Parameters passed to the filter callback:
 	</tbody>
 </table>
 
+## `op_overview_model`
+
+With this filter you can filter the `OverviewModel` for the overview shortcode / widget.  
+The `OverviewModel` constructor takes two parameters:
+
+* `$periods`: `Period[]` of periods to use for the `OverviewModel`
+* `$now`: `\DateTime` containing the current date context (The date context will translate to the week to show in the `OverviewModel`)
+
+> **Heads up**
+> 
+> * For performance reason the filter callback is not initially populated with `null` instead of the `OverviewModel` created by the plugin.
+> * Holidays and Irregular Openings are not merged into your custom `OverviewModel` according to the shortcode attributes. When using this filter, you will have to merge Holidays and Irregular Openings manually using the `mergeHolidays(Holiday[])` resp. `mergeIrregularOpenings(IrregularOpening[])` methods. You may take the shortcode attributes `include_holidays` and `include_irregular_openings` into consideration.
+
+Parameters passed to the filter callback:
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="25%">Type</th>
+		<th width="50%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>$model</code></td>
+			<td><code>OverviewModel|null</code></td>
+			<td>The <code>OverviewModel</code> returned by the previous filter or <code>null</code> if no previous filter has been run.</td>
+		</tr>
+		<tr>
+			<td><code>$set</code></td>
+			<td><code>Set</code></td>
+			<td>The current set the shortcode uses</td>
+		</tr>
+		<tr>
+			<td><code>$attributes</code></td>
+			<td><code>array</code></td>
+			<td>Associtative array containing all shortcode attributes / widget options.</td>
+		</tr>
+	</tbody>
+</table>
+
+**Return value**  
+The filter may return an instance of the `OverviewModel` or any derived class or `null`.
+
+### Example: Showing shortcode contents for one week in future
+
+~~~php
+use OpenignHours\Module\Shortcode\OverviewModel;
+use OpeningHours\Util\Dates;
+
+add_filter('op_overview_model', function ($model, $set, $attributes) {
+	// Create \DateTime object 1 week in future
+	$then = Dates::getNow();
+	$then->add(new \DateInterval('P1W'));
+	
+	// Create new OverviewModel with custom date
+	$model = new OverviewModel($set->getPeriods()->getArrayCopy(), $then);
+	
+	// Merge Holidays and Irregular Openings according to shortcode attributes
+	if ($attributes['include_holidays']) {
+		$model->mergeHolidays($set->getHolidays()->getArrayCopy());
+	}
+	
+	if ($attributes['include_irregular_openings']) {
+		$model->mergeIrregularOpenings($set->getIrregularOpenings()->getArrayCopy());
+	}
+	
+	return $model;
+}, 10, 3);
+~~~
+
 ## `op_set_providers`
 With the `op_set_providers` filter you can modify the registered SetProviders of the OpeningHours Module, i.e. adding new SetProviders and removing previously registered ones.  
 [Further reading on SetProviders](./set-providers.md)

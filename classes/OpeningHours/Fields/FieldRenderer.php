@@ -63,6 +63,7 @@ class FieldRenderer {
 
     switch ($type) {
       case FieldTypes::TEXT:
+      case FieldTypes::NUMBER;
       case FieldTypes::TIME:
       case FieldTypes::EMAIL:
       case FieldTypes::URL:
