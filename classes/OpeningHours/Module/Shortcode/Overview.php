@@ -18,6 +18,8 @@ use OpeningHours\Util\Weekdays;
  */
 class Overview extends AbstractShortcode {
 
+  const FILTER_OVERVIEW_MODEL = 'op_overview_model';
+
   /** @inheritdoc */
   protected function init () {
     $this->setShortcodeTag('op-overview');
@@ -75,7 +77,11 @@ class Overview extends AbstractShortcode {
 
     $attributes['set'] = $set;
 
-    $model = new OverviewModel($set->getPeriods()->getArrayCopy());
+    $model = apply_filters(self::FILTER_OVERVIEW_MODEL, null, $set, $attributes);
+
+    if (!$model instanceof OverviewModel) {
+      $model = new OverviewModel($set->getPeriods()->getArrayCopy());
+    }
 
     if ($attributes['include_holidays'])
       $model->mergeHolidays($set->getHolidays()->getArrayCopy());
