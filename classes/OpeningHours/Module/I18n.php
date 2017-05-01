@@ -31,17 +31,13 @@ class I18n extends AbstractModule {
 
   /** Registers Plugin Textdomain */
   public function registerTextdomain () {
-    global $wp_version;
+    $locale = apply_filters('plugin_locale', get_locale(), self::TEXTDOMAIN);
+    $customPath = sprintf("%s/plugins/%s-%s.mo", WP_LANG_DIR, self::TEXTDOMAIN, $locale);
 
-    load_plugin_textdomain(self::TEXTDOMAIN, false, 'wp-opening-hours' . self::LANGUAGE_PATH);
-
-    // Manually load translation files in wp-content/languages/plugins for WordPress version < 4.6
-    if (version_compare($wp_version, "4.6") < 0) {
-      $locale = apply_filters('plugin_locale', get_locale(), self::TEXTDOMAIN);
-      $path = sprintf("%s/plugins/%s-%s.mo", WP_LANG_DIR, self::TEXTDOMAIN, $locale);
-      if (file_exists($path)) {
-        load_textdomain(self::TEXTDOMAIN, $path);
-      }
+    if (file_exists($customPath)) {
+      load_textdomain(self::TEXTDOMAIN, $customPath);
+    } else {
+      load_plugin_textdomain(self::TEXTDOMAIN, false, 'wp-opening-hours' . self::LANGUAGE_PATH);
     }
   }
 
