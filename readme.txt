@@ -85,6 +85,20 @@ If you found a bug you would like to fix feel free to [contribute to the project
 
 == Changelog ==
 
+= 2.1 =
+
+* Added today's opening hours in Is Open shortcode / widget
+* Automatically hide past Holidays and Irregular Openings in the respective shortcodes / widgets
+* Sort Holidays and Irregular Openings ascendingly by start date
+* Use WordPress shipped version of jquery-ui to prevent conflicts with other plugins
+* Merge dates of Holidays if they only span one day
+* Added offset option to Overview shortcode / widget
+* Added filters
+	* `op_is_open_format_next`
+	* `op_is_open_format_today`
+	* `op_overview_model`
+* Various bug fixes
+
 = 2.0.5 =
 
 * fixed bug concerning child set initialization. thanks to @nikomuse
