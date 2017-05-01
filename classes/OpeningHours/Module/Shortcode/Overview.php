@@ -81,13 +81,15 @@ class Overview extends AbstractShortcode {
 
     if (!$model instanceof OverviewModel) {
       $model = new OverviewModel($set->getPeriods()->getArrayCopy());
+
+      if ($attributes['include_holidays']) {
+        $model->mergeHolidays($set->getHolidays()->getArrayCopy());
+      }
+
+      if ($attributes['include_io']) {
+        $model->mergeIrregularOpenings($set->getIrregularOpenings()->getArrayCopy());
+      }
     }
-
-    if ($attributes['include_holidays'])
-      $model->mergeHolidays($set->getHolidays()->getArrayCopy());
-
-    if ($attributes['include_io'])
-      $model->mergeIrregularOpenings($set->getIrregularOpenings()->getArrayCopy());
 
     $data = $attributes['compress']
       ? $model->getCompressedData()
