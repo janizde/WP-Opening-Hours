@@ -45,7 +45,7 @@ if ( ! empty( $title ) ) {
       <td class="col-name"><?php echo $holiday->getName(); ?></td>
 
       <?php if (Dates::compareDate($holiday->getStart(), $holiday->getEnd()) === 0) : ?>
-        <td class="col-date" colspan="2"><?php echo $holiday->getStart()->format($date_format); ?></td>
+        <td class="col-date" colspan="2"><?php echo Dates::format($date_format, $holiday->getStart()); ?></td>
       <?php else: ?>
         <td class="col-date-start"><?php echo Dates::format($date_format, $holiday->getStart()); ?></td>
         <td class="col-date-end"><?php echo Dates::format($date_format, $holiday->getEnd()); ?></td>

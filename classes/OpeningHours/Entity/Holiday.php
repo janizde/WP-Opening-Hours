@@ -120,10 +120,10 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    */
   public function getFormattedDateRange($dateFormat, $rangeFormat = '%s - %s') {
     if (Dates::compareDate($this->dateStart, $this->dateEnd) === 0) {
-      return $this->dateStart->format($dateFormat);
+      return Dates::format($dateFormat, $this->dateStart);
     }
 
-    return sprintf($rangeFormat, $this->dateStart->format($dateFormat), $this->dateEnd->format($dateFormat));
+    return sprintf($rangeFormat, Dates::format($dateFormat, $this->dateStart), Dates::format($dateFormat, $this->dateEnd));
   }
 
   /**
