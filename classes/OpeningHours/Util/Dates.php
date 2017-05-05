@@ -217,7 +217,8 @@ class Dates extends AbstractModule {
    * @return    DateTimeZone
    */
   public static function getTimezone () {
-    return self::getInstance()->timezone;
+    $timezone = self::getInstance()->timezone;
+    return clone $timezone;
   }
 
   /**
@@ -225,7 +226,8 @@ class Dates extends AbstractModule {
    * @return    DateTime
    */
   public static function getNow () {
-    return self::getInstance()->now;
+    $now = self::getInstance()->now;
+    return clone $now;
   }
 
   /**

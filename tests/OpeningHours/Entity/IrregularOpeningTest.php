@@ -41,15 +41,15 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 		$io = new IrregularOpening( 'Test', '2016-02-03', '12:15', '23:20' );
 		$this->assertEquals( 'Test', $io->getName() );
 		$this->assertEquals( new DateTime( '2016-02-03 00:00:00' ), $io->getDate() );
-		$this->assertEquals( new DateTime( '2016-02-03 12:15' ), $io->getTimeStart() );
-		$this->assertEquals( new DateTime( '2016-02-03 23:20' ), $io->getTimeEnd() );
+		$this->assertEquals( new DateTime( '2016-02-03 12:15' ), $io->getStart() );
+		$this->assertEquals( new DateTime( '2016-02-03 23:20' ), $io->getEnd() );
 		$this->assertFalse( $io->isDummy() );
 	}
 
 	public function testTimeEndNextDay () {
 		$io = new IrregularOpening( 'Test', '2016-02-03', '13:00', '01:00' );
-		$this->assertEquals( new DateTime('2016-02-03 13:00'), $io->getTimeStart() );
-		$this->assertEquals( new DateTime('2016-02-04 01:00'), $io->getTimeEnd() );
+		$this->assertEquals( new DateTime('2016-02-03 13:00'), $io->getStart() );
+		$this->assertEquals( new DateTime('2016-02-04 01:00'), $io->getEnd() );
 	}
 	
 	public function testIsActiveOnDay () {
@@ -116,8 +116,8 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 
 		$this->assertEquals( '', $io->getName() );
 		$this->assertEquals( $expectedDate, $io->getDate() );
-		$this->assertEquals( $expectedDate, $io->getTimeStart() );
-		$this->assertEquals( $expectedDate, $io->getTimeStart() );
+		$this->assertEquals( $expectedDate, $io->getStart() );
+		$this->assertEquals( $expectedDate, $io->getStart() );
 		$this->assertTrue( $io->isDummy() );
 	}
 	
@@ -128,5 +128,28 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
     $this->assertEquals(6, $period->getWeekday());
     $this->assertEquals(new DateTime('2016-09-24 13:00', Dates::getTimezone()), $period->getTimeStart());
     $this->assertEquals(new DateTime('2016-09-25 03:00', Dates::getTimezone()), $period->getTimeEnd());
+  }
+
+  public function testIsPast() {
+	  $io = new IrregularOpening('IO 1', '2017-04-28', '13:00', '19:00');
+
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-27 23:59:59')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 00:00:00')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 13:00:00')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 19:00:01')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 19:00:01')));
+	  $this->assertFalse($io->isPast(new DateTime('2017-04-28 23:59:59')));
+	  $this->assertTrue($io->isPast(new DateTime('2017-04-29 00:00:00')));
+	  $this->assertTrue($io->isPast(new DateTime('2017-04-30 00:00:00')));
+  }
+
+  public function testHappensOnDate() {
+	  $io = new IrregularOpening('IO 1', '2017-04-28', '13:00', '19:00');
+
+	  $this->assertFalse($io->happensOnDate(new DateTime('2017-04-27')));
+	  $this->assertTrue($io->happensOnDate(new DateTime('2017-04-28')));
+	  $this->assertTrue($io->happensOnDate(new DateTime('2017-04-28 00:00:00')));
+	  $this->assertTrue($io->happensOnDate(new DateTime('2017-04-28 23:59:59')));
+	  $this->assertFalse($io->happensOnDate(new DateTime('2017-04-29')));
   }
 }

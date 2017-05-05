@@ -51,8 +51,6 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 
 ## <a name="installation"></a>Installation
 
-**Please Note: The Opening Hours Plugin is currently in beta. If you want to use the beta version, you will have to [clone the repository](#clone-repository) or download the .zip file and install it manually**
-
 ### <a name="wordpress-plugin-installer"></a>WordPress Plugin Installer
 1. Go to your WordPress dashboard
 1. Navigate to "Plugins"
@@ -260,6 +258,10 @@ There are the following options:
 			<td>Hide date of irregular openings</td>
 			<td>Whether to hide the date of irregular openings if they are in the table.</td>
 		</tr>
+		<tr>
+			<td>Week offset</td>
+			<td>Number of weeks the shortcode data shall be offset. Might be a positive or negative integer.</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -292,7 +294,11 @@ There are the folliwing options:
 		</tr>
 		<tr>
 			<td>Show next open period</td>
-			<td>When select, a message telling the next open period will be displayed if the venue (set) is currently closed.</td>
+			<td>When checked, a message telling the next open period will be displayed if the venue (set) is currently closed.</td>
+		</tr>
+		<tr>
+			<td>Show today's opening hours</td>
+			<td>Specify in which cases today's opening hours shall be displayed in the widget</td>
 		</tr>
 	</tbody>
 	<thead>
@@ -304,7 +310,7 @@ There are the folliwing options:
 			<td>Custom caption to show when the venue is open</td>
 		</tr>
 		<tr>
-			<td>Cpation if closed</td>
+			<td>Caption if closed</td>
 			<td>Custom caption to show when the venue is closed</td>
 		</tr>
 		<tr>
@@ -329,6 +335,18 @@ There are the folliwing options:
 			</td>
 		</tr>
 		<tr>
+			<td>Today' opening hours string format</td>
+			<td>A custom string format for the today's opening hours message.<br />
+			You can populate the string with the following placeholders:
+			<ul>
+				<li><code>%1$s</code> The formatted time ranges of all periods</li>
+				<li><code>%2$s</code> The formatted start time of the first period</li>
+				<li><code>%3$s</code> The formatted end time of the last period</li>
+			</ul>
+			Example: <code>We're open today from %2$s to %3$s.</code>
+			</td>
+		</tr>
+		<tr>
 			<td>PHP Date Format</td>
 			<td>Custom PHP date format for the date of the next open period. The default is your standard WordPress setting. <a href="http://bit.ly/16Wsegh" target="_blank">More on PHP date and time formats</a></td>
 		</tr>
@@ -346,7 +364,7 @@ There are the folliwing options:
 ![Is Open Widget Options](./doc/screenshots/widget-is-open-options.png)
 
 ### <a name="holidays-widget"></a>Holidays Widget
-The holiday widget displays all holidays in the specified set in a table or list.  
+The holiday widget displays all holidays in the specified set in a table or list. Holidays are always sorted ascedingly by their start dates.  
 There are the following options:
 
 <table>
@@ -370,6 +388,10 @@ There are the following options:
 		<tr>
 			<td>Template</td>
 			<td>You can choose among two templates: Table and List. The list template will display all data in a vertical list. This is useful for narrow sidebars.</td>
+		</tr>
+		<tr>
+			<td>Include past holidays</td>
+			<td>Whether to show past holidays in the widget</td>
 		</tr>
 	</tbody>
 	<thead>
@@ -398,7 +420,8 @@ There are the following options:
 
 ### <a name="irregular-openings-widget"></a>Irregular Openings Widget
 
-The Irregular Openings Widget displays all Irregular Openings in the specified Set in a table or list.  
+The Irregular Openings Widget displays all Irregular Openings in the specified Set in a table or list. Irregular Openings are always sorted ascendingly by their start dates and times.  
+An Irregular Opening is reagarded as being in the past, when the full day, when the Irregular Opening takes place, has ended.  
 There are the following options:
 
 <table>
@@ -422,6 +445,10 @@ There are the following options:
 		<tr>
 			<td>Template</td>
 			<td>You can choose among two templates: Table and List. The list template will display all data in a vertical list. This is useful for narrow sidebars.</td>
+		</tr>
+		<tr>
+			<td>Include past irregular openings</td>
+			<td>Whether to show past irregular openings in the widget</td>
 		</tr>
 	</tbody>
 	<thead>
@@ -452,6 +479,22 @@ There are the following options:
 [↑ Table of Contents](#contents)
 
 ## <a name="shortcodes"></a>Shortcodes
+
+### General
+
+Shortcodes are a WordPress core component, which give you the ability to add rich components to your posts' and pages' content. You can insert a Shortcode in the default WordPress TinyMCE editor.
+
+The basic format of a shortcode is:
+
+```
+[shortcode-tag an_attribute="attr_value" another_attribute="another_attr_value"]
+```
+
+> **Heads up**  
+> Shortcode attributes of type `bool` can either be `true` (meaning "yes") or `false` (meaning "no").
+
+You can read more about Shortcodes in the [WordPress documentation.](https://codex.wordpress.org/Shortcode)
+
 Shortcodes have exactly the same options as Widgets because every Widget is basically a representation of the corresponding Shortcode with a GUI for the Widget edit section.  
 **The only required attribute for all Shortcodes is `set_id`. All other attributes are optional!**
 
@@ -588,6 +631,15 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td><code>table</code></td>
 			<td>Identifier for the template to use. Possible values are <code>table</code> and <code>list</code></td>
 		</tr>
+		<tr>
+			<td><code>week_offset</code></td>
+			<td><code>int</code></td>
+			<td><code>0</code></td>
+			<td>
+				Number of weeks the shortcode data shall be offset. Might be a positive or negative integer.<br />
+				<strong>Example:</strong> <code>1</code>: Show data of next week
+			</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -623,6 +675,20 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td>When <code>true</code>, a message telling the next open period will be displayed if the venue (set) is currently closed.</td>
 		</tr>
 		<tr>
+			<td><code>show_today</code></td>
+			<td><code>string (enum)</code></td>
+			<td><code>never</code></td>
+			<td>
+				When to show today's opening hours<br />
+				The following values are valid:
+				<ul>
+					<li><code>never</code></li>
+					<li><code>open</code></li>
+					<li><code>always</code></li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
 			<td><code>next_format</code></td>
 			<td><code>string</code></td>
 			<td>We're open again on <code>%2$s</code> (<code>%1$s</code>) from <code>%3$s</code> to <code>%4$s</code></td>
@@ -633,6 +699,18 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 				<li><code>%2$s</code> The name of the weekday of the next open period (translated)</li>
 				<li><code>%3$s</code> The formatted start time of the next open period</li>
 				<li><code>%4$s</code> The formatted end time of the next open period</li>
+			</ul></td>
+		</tr>
+		<tr>
+			<td><code>today_format</code></td>
+			<td><code>string</code></td>
+			<td>Opening Hours today: <code>%1$s</code></td>
+			<td>A custom string format for the today's opening hours message.<br />
+			You can populate the string with the following placeholders:
+			<ul>
+				<li><code>%1$s</code> The formatted time ranges of all periods</li>
+				<li><code>%2$s</code> The formatted start time of the first period</li>
+				<li><code>%3$s</code> The formatted end time of the last period</li>
 			</ul></td>
 		</tr>
 		<tr>
@@ -682,6 +760,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td>Whether to highlight currently active holidays</td>
 		</tr>
 		<tr>
+			<td><code>include_past</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>Whether to include past holidays</td>
+		</tr>
+		<tr>
 			<td><code>class_holiday</code></td>
 			<td><code>string</code></td>
 			<td><code>op-holiday</code></td>
@@ -726,6 +810,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td><code>bool</code></td>
 			<td><code>false</code></td>
 			<td>Whether to highlight currently active irregular openings.</td>
+		</tr>
+		<tr>
+			<td><code>include_past</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>Whether to include past irregular openings</td>
 		</tr>
 		<tr>
 			<td><code>class_highlighted</code></td>
@@ -815,12 +905,26 @@ If you can not translate the whole plugin or don't want to wait until everything
 #### Pull Request on GitHub
 Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
-#### [translate.jannikportz.de](http://translate.jannikportz.de)
+#### translate.jannikportz.de
 translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
 [↑ Table of Contents](#contents)
 
 ## <a name="changelog"></a>Changelog
+
+### v2.1
+
+* Added today's opening hours in Is Open shortcode / widget
+* Automatically hide past Holidays and Irregular Openings in the respective shortcodes / widgets
+* Sort Holidays and Irregular Openings ascendingly by start date
+* Use WordPress shipped version of jquery-ui to prevent conflicts with other plugins
+* Merge dates of Holidays if they only span one day
+* Added offset option to Overview shortcode / widget
+* Added filters
+	* `op_is_open_format_next`
+	* `op_is_open_format_today`
+	* `op_overview_model`
+* Various bug fixes
 
 ### v2.0.5
 

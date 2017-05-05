@@ -15,7 +15,11 @@ class HolidayTest extends OpeningHoursTestCase {
 		'dateEnd' => '2016-01-23'
 	);
 
-	public function testIsActive () {
+  protected function setUp() {
+    parent::setUp();
+  }
+
+  public function testIsActive () {
 		$before = new DateTime('2016-01-06');
 		$first = new DateTime('2016-01-07');
 		$mid = new DateTime('2016-01-15');
@@ -50,15 +54,74 @@ class HolidayTest extends OpeningHoursTestCase {
 		$format = 'Y-m-d';
 
 		$this->assertEquals( '', $holiday->getName() );
-		$this->assertEquals( $now->format($format), $holiday->getDateStart()->format($format) );
-		$this->assertEquals( $now->format($format), $holiday->getDateEnd()->format($format) );
+		$this->assertEquals( $now->format($format), $holiday->getStart()->format($format) );
+		$this->assertEquals( $now->format($format), $holiday->getEnd()->format($format) );
 		$this->assertTrue( $holiday->isDummy() );
 	}
 
 	public function testDateSetters () {
 		$holiday = new Holiday( 'Test Holiday', new DateTime('2016-01-02'), new DateTime('2016-01-03') );
 
-		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getDateStart() );
-		$this->assertEquals( new DateTime('2016-01-03 23:59:59', Dates::getTimezone()), $holiday->getDateEnd() );
+		$this->assertEquals( new DateTime('2016-01-02 00:00:00'), $holiday->getStart() );
+		$this->assertEquals( new DateTime('2016-01-03 23:59:59', Dates::getTimezone()), $holiday->getEnd() );
 	}
+
+	public function testIsPast () {
+	  $holiday = new Holiday('Test Holiday', new DateTime('2017-04-28'), new DateTime('2017-04-29'));
+
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-27 23:59:59')));
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-28 00:00:00')));
+	  $this->assertFalse($holiday->isPast(new DateTime('2017-04-29 23:59:59')));
+	  $this->assertTrue($holiday->isPast(new DateTime('2017-04-30 00:00:00')));
+	  $this->assertTrue($holiday->isPast(new DateTime('2017-05-01 00:00:00')));
+  }
+
+  public function testHappensOnDate() {
+	  $holiday = new Holiday('Test Holiday', new DateTime('2017-04-27'), new DateTime('2017-04-29'));
+
+	  $this->assertFalse($holiday->happensOnDate(new DateTime('2017-04-26')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-27 00:00:00')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-27')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-28')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-29')));
+	  $this->assertTrue($holiday->happensOnDate(new DateTime('2017-04-29 23:59:59')));
+	  $this->assertFalse($holiday->happensOnDate(new DateTime('2017-04-30')));
+  }
+
+  public function testGetFormattedDateRange() {
+    $start = new DateTime('2017-05-01');
+    $end = new DateTime('2017-05-02');
+	  $holiday = new Holiday('Holiday', $start, $end);
+	  $expected = '2017-05-01;2017-05-02';
+
+	  \WP_Mock::wpFunction('date_i18n', array(
+	    'times' => 1,
+      'args' => array(Dates::STD_DATE_FORMAT, (int) $start->format('U')),
+      'return' => '2017-05-01',
+    ));
+
+	  \WP_Mock::wpFunction('date_i18n', array(
+	    'times' => 1,
+      'args' => array(Dates::STD_DATE_FORMAT, (int) $end->format('U')),
+      'return' => '2017-05-02',
+    ));
+
+	  $result = $holiday->getFormattedDateRange(Dates::STD_DATE_FORMAT, '%s;%s');
+	  $this->assertEquals($expected, $result);
+  }
+
+  public function testGetFormattedDateRangeSingleDate() {
+    $start = new DateTime('2017-05-01');
+    $holiday = new Holiday('Holiday', $start, $start);
+    $expected = '2017-05-01';
+
+    \WP_Mock::wpFunction('date_i18n', array(
+      'times' => 1,
+      'args' => array(Dates::STD_DATE_FORMAT, (int) $start->format('U')),
+      'return' => '2017-05-01',
+    ));
+
+    $result = $holiday->getFormattedDateRange(Dates::STD_DATE_FORMAT, '%s;%s');
+    $this->assertEquals($expected, $result);
+  }
 }

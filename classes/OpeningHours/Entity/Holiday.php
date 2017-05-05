@@ -11,7 +11,7 @@ use OpeningHours\Util\Dates;
  * @author      Jannik Portz
  * @package     OpeningHours\Entity
  */
-class Holiday {
+class Holiday implements TimeContextEntity, DateTimeRange {
 
   /**
    * The holiday's name
@@ -50,8 +50,8 @@ class Holiday {
       throw new \InvalidArgumentException("\$name must not be empty when holiday is no dummy.");
 
     $this->name = $name;
-    $this->setDateStart($dateStart);
-    $this->setDateEnd($dateEnd);
+    $this->setStart($dateStart);
+    $this->setEnd($dateEnd);
     $this->dummy = $dummy;
   }
 
@@ -98,6 +98,34 @@ class Holiday {
     return new Holiday('', Dates::getNow(), Dates::getNow(), true);
   }
 
+  /* @inheritdoc */
+  public function isPast(\DateTime $reference) {
+    return $this->dateEnd < $reference;
+  }
+
+  /**
+   * Checks whether the period is active on that day.
+   * Does not check for irregular opening or holidays overriding this period
+   * @inheritdoc
+   */
+  public function happensOnDate(\DateTime $date) {
+    return $this->dateStart <= $date && $this->dateEnd >= $date;
+  }
+
+  /**
+   * Formats the date range of the holiday
+   * @param     string    $dateFormat     The PHP date format to format every DateTime with
+   * @param     string    $rangeFormat    printf template string combining dateStart (%1$s) and dateEnd (%2$2)
+   * @return    string                    The formatted date range
+   */
+  public function getFormattedDateRange($dateFormat, $rangeFormat = '%s - %s') {
+    if (Dates::compareDate($this->dateStart, $this->dateEnd) === 0) {
+      return Dates::format($dateFormat, $this->dateStart);
+    }
+
+    return sprintf($rangeFormat, Dates::format($dateFormat, $this->dateStart), Dates::format($dateFormat, $this->dateEnd));
+  }
+
   /**
    * Getter: Name
    * @return          string
@@ -106,11 +134,8 @@ class Holiday {
     return $this->name;
   }
 
-  /**
-   * Getter: Date Start
-   * @return          DateTime
-   */
-  public function getDateStart () {
+  /** @inheritdoc */
+  public function getStart () {
     return $this->dateStart;
   }
 
@@ -119,15 +144,12 @@ class Holiday {
    *
    * @param           DateTime|string $dateStart
    */
-  protected function setDateStart ( $dateStart ) {
+  protected function setStart ($dateStart) {
     $this->setDateUniversal($dateStart, 'dateStart');
   }
 
-  /**
-   * Getter: Date End
-   * @return          DateTime
-   */
-  public function getDateEnd () {
+  /** @inheritdoc */
+  public function getEnd () {
     return $this->dateEnd;
   }
 
@@ -136,8 +158,40 @@ class Holiday {
    *
    * @param           DateTime|string $dateEnd
    */
-  protected function setDateEnd ( $dateEnd ) {
+  protected function setEnd ($dateEnd) {
     $this->setDateUniversal($dateEnd, 'dateEnd', true);
+  }
+
+  /**
+   * @deprecated  Use getStart instead
+   * @return      DateTime
+   */
+  public function getDateStart() {
+    return $this->getStart();
+  }
+
+  /**
+   * @deprecated  Use getEnd instead
+   * @return      DateTime
+   */
+  public function getDateEnd() {
+    return $this->getEnd();
+  }
+
+  /**
+   * @deprecated  Use setStart instead
+   * @return      DateTime
+   */
+  protected function setDateStart($dateStart) {
+    return $this->setStart($dateStart);
+  }
+
+  /**
+   * @deprecated  Use setEnd instead
+   * @return      DateTime
+   */
+  protected function setDateEnd($dateEnd) {
+    return $this->setEnd($dateEnd);
   }
 
   /**

@@ -5,6 +5,7 @@ namespace OpeningHours\Module\Shortcode;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
+use OpeningHours\Util\DateTimeRange;
 
 /**
  * Shortcode implementation for a list of Holidays
@@ -29,11 +30,13 @@ class Holidays extends AbstractShortcode {
       'class_holiday' => 'op-holiday',
       'class_highlighted' => 'highlighted',
       'date_format' => Dates::getDateFormat(),
-      'template' => 'table'
+      'template' => 'table',
+      'include_past' => false,
     );
 
     $this->validAttributeValues = array(
-      'template' => array('table', 'list')
+      'template' => array('table', 'list'),
+      'include_past' => array(false, true),
     );
   }
 
@@ -51,8 +54,11 @@ class Holidays extends AbstractShortcode {
       'list' => 'shortcode/holidays-list.php'
     );
 
+    $holidays = $set->getHolidays()->getArrayCopy();
+    $holidays = DateTimeRange::sortObjects($holidays, !$attributes['include_past']);
+
     $attributes['set'] = $set;
-    $attributes['holidays'] = $set->getHolidays();
+    $attributes['holidays'] = $holidays;
     echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }
 

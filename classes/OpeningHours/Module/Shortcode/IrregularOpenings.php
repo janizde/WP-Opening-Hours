@@ -2,6 +2,7 @@
 
 namespace OpeningHours\Module\Shortcode;
 
+use OpeningHours\Util\DateTimeRange;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\OpeningHours;
 use OpeningHours\Util\Dates;
@@ -30,12 +31,14 @@ class IrregularOpenings extends AbstractShortcode {
       'class_highlighted' => 'highlighted',
       'date_format' => Dates::getDateFormat(),
       'time_format' => Dates::getTimeFormat(),
-      'template' => 'table'
+      'template' => 'table',
+      'include_past' => false,
     );
 
     $this->validAttributeValues = array(
       'highlight' => array(false, true),
-      'template' => array('table', 'list')
+      'template' => array('table', 'list'),
+      'include_past' => array(false, true),
     );
   }
 
@@ -53,8 +56,11 @@ class IrregularOpenings extends AbstractShortcode {
       'list' => 'shortcode/irregular-openings-list.php'
     );
 
+    $ios = $set->getIrregularOpenings()->getArrayCopy();
+    $ios = DateTimeRange::sortObjects($ios, !$attributes['include_past']);
+
     $attributes['set'] = $set;
-    $attributes['irregular_openings'] = $set->getIrregularOpenings();
+    $attributes['irregular_openings'] = $ios;
 
     echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }

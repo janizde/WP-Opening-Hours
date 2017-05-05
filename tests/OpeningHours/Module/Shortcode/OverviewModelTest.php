@@ -231,4 +231,58 @@ class OverviewModelTest extends OpeningHoursTestCase {
 
     $this->assertEquals($expected, $data);
   }
+
+  public function testNoData() {
+    $model = new OverviewModel(array());
+
+    $expected = array(
+      array(
+        'days' => array(Weekdays::getWeekday(2)),
+        'items' => array(),
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(3)),
+        'items' => array(),
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(4)),
+        'items' => array(),
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(5)),
+        'items' => array(),
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(6)),
+        'items' => array(),
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(0)),
+        'items' => array(),
+      ),
+      array(
+        'days' => array(Weekdays::getWeekday(1)),
+        'items' => array(),
+      )
+    );
+
+    $this->assertEquals($expected, $model->getData());
+
+    $expectedCompressed = array(
+      array(
+        'days' => array(
+          Weekdays::getWeekday(2),
+          Weekdays::getWeekday(3),
+          Weekdays::getWeekday(4),
+          Weekdays::getWeekday(5),
+          Weekdays::getWeekday(6),
+          Weekdays::getWeekday(0),
+          Weekdays::getWeekday(1),
+        ),
+        'items' => array(),
+      )
+    );
+
+    $this->assertEquals($expectedCompressed, $model->getCompressedData());
+  }
 }
