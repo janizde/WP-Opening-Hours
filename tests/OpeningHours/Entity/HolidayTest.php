@@ -15,7 +15,11 @@ class HolidayTest extends OpeningHoursTestCase {
 		'dateEnd' => '2016-01-23'
 	);
 
-	public function testIsActive () {
+  protected function setUp() {
+    parent::setUp();
+  }
+
+  public function testIsActive () {
 		$before = new DateTime('2016-01-06');
 		$first = new DateTime('2016-01-07');
 		$mid = new DateTime('2016-01-15');
@@ -85,15 +89,39 @@ class HolidayTest extends OpeningHoursTestCase {
   }
 
   public function testGetFormattedDateRange() {
-	  $holiday = new Holiday('Holiday', new DateTime('2017-05-01'), new DateTime('2017-05-02'));
+    $start = new DateTime('2017-05-01');
+    $end = new DateTime('2017-05-02');
+	  $holiday = new Holiday('Holiday', $start, $end);
 	  $expected = '2017-05-01;2017-05-02';
+
+	  \WP_Mock::wpFunction('date_i18n', array(
+	    'times' => 1,
+      'args' => array(Dates::STD_DATE_FORMAT, (int) $start->format('U')),
+      'return' => '2017-05-01',
+    ));
+
+	  \WP_Mock::wpFunction('date_i18n', array(
+	    'times' => 1,
+      'args' => array(Dates::STD_DATE_FORMAT, (int) $end->format('U')),
+      'return' => '2017-05-02',
+    ));
+
 	  $result = $holiday->getFormattedDateRange(Dates::STD_DATE_FORMAT, '%s;%s');
 	  $this->assertEquals($expected, $result);
   }
 
   public function testGetFormattedDateRangeSingleDate() {
-    $holiday = new Holiday('Holiday', new DateTime('2017-05-01'), new DateTime('2017-05-01'));
+    $start = new DateTime('2017-05-01');
+    $holiday = new Holiday('Holiday', $start, $start);
     $expected = '2017-05-01';
+
+    \WP_Mock::wpFunction('date_i18n', array(
+      'times' => 1,
+      'args' => array(Dates::STD_DATE_FORMAT, (int) $start->format('U')),
+      'return' => '2017-05-01',
+    ));
+
     $result = $holiday->getFormattedDateRange(Dates::STD_DATE_FORMAT, '%s;%s');
     $this->assertEquals($expected, $result);
-  }}
+  }
+}

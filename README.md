@@ -51,8 +51,6 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 
 ## <a name="installation"></a>Installation
 
-**Please Note: The Opening Hours Plugin is currently in beta. If you want to use the beta version, you will have to [clone the repository](#clone-repository) or download the .zip file and install it manually**
-
 ### <a name="wordpress-plugin-installer"></a>WordPress Plugin Installer
 1. Go to your WordPress dashboard
 1. Navigate to "Plugins"
@@ -907,12 +905,26 @@ If you can not translate the whole plugin or don't want to wait until everything
 #### Pull Request on GitHub
 Translations via Pull Request on GitHub are no longer supported and won't be merged in the future, as translation now takes place at WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
-#### [translate.jannikportz.de](http://translate.jannikportz.de)
+#### translate.jannikportz.de
 translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Please refer to [the section on WordPress Polyglots](#polyglots)
 
 [↑ Table of Contents](#contents)
 
 ## <a name="changelog"></a>Changelog
+
+### v2.1
+
+* Added today's opening hours in Is Open shortcode / widget
+* Automatically hide past Holidays and Irregular Openings in the respective shortcodes / widgets
+* Sort Holidays and Irregular Openings ascendingly by start date
+* Use WordPress shipped version of jquery-ui to prevent conflicts with other plugins
+* Merge dates of Holidays if they only span one day
+* Added offset option to Overview shortcode / widget
+* Added filters
+	* `op_is_open_format_next`
+	* `op_is_open_format_today`
+	* `op_overview_model`
+* Various bug fixes
 
 ### v2.0.5
 
