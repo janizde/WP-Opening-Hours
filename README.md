@@ -51,8 +51,6 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 
 ## <a name="installation"></a>Installation
 
-**Please Note: The Opening Hours Plugin is currently in beta. If you want to use the beta version, you will have to [clone the repository](#clone-repository) or download the .zip file and install it manually**
-
 ### <a name="wordpress-plugin-installer"></a>WordPress Plugin Installer
 1. Go to your WordPress dashboard
 1. Navigate to "Plugins"
