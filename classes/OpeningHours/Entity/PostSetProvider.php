@@ -23,11 +23,11 @@ class PostSetProvider extends SetProvider {
    * @throws    \InvalidArgumentException If no Set could be created from id
    */
   public function createSet ($id, $rootId = null) {
-    if ($rootId === null) {
-      $rootId = (int) $id;
-    }
-
     $post = $this->findPost($id);
+
+    if ($rootId === null) {
+      $rootId = $post->ID;
+    }
 
     $details = SetDetails::getInstance()->getPersistence();
 
@@ -61,7 +61,7 @@ class PostSetProvider extends SetProvider {
     $rootPost = $post;
     $rootPersistence = $persistence;
 
-    if ($rootId !== $id) {
+    if ($rootId !== $post->ID) {
       $rootPost = get_post($rootId);
       $rootPersistence = new Persistence($rootPost);
     }
@@ -165,7 +165,12 @@ class PostSetProvider extends SetProvider {
       return false;
 
     $screen = get_current_screen();
-    return $screen->base === 'post' && $screen->post_type === SetPostType::CPT_SLUG;
+
+    return (
+      $screen !== null
+      && $screen->base === 'post'
+      && $screen->post_type === SetPostType::CPT_SLUG
+    );
   }
 
   /**

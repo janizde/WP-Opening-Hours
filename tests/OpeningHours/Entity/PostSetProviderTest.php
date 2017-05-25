@@ -19,7 +19,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = Set::CPT_SLUG;
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -69,7 +68,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = 'post';
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -129,7 +127,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = Set::CPT_SLUG;
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -317,7 +314,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = 'post';
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -371,7 +367,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = 'post';
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
