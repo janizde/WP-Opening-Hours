@@ -8,6 +8,7 @@ use OpeningHours\Entity\Period;
 use OpeningHours\Entity\PostSetProvider;
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 use OpeningHours\Module\CustomPostType\Set;
+use OpeningHours\OpeningHours;
 use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 
@@ -295,17 +296,37 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $provider = new PostSetProvider();
     $set = $provider->createSet(64);
 
-    $this->assertNotNull($set);
-    $this->assertEquals(64, $set->getId());
-    $this->assertEquals('Parent', $set->getName());
+    $self = $this;
+    $makeAssertions = function (\OpeningHours\Entity\Set $set) use ($self) {
+      $self->assertNotNull($set);
+      $self->assertEquals(64, $set->getId());
+      $self->assertEquals('Parent', $set->getName());
 
-    $this->assertEquals(1, $set->getPeriods()->count());
-    $this->assertEquals(1, $set->getHolidays()->count());
-    $this->assertEquals(1, $set->getIrregularOpenings()->count());
+      $self->assertEquals(1, $set->getPeriods()->count());
+      $self->assertEquals(1, $set->getHolidays()->count());
+      $self->assertEquals(1, $set->getIrregularOpenings()->count());
 
-    $this->assertEquals(new Period(2, '15:00', '18:00'), $set->getPeriods()->offsetGet(0));
-    $this->assertEquals(new Holiday('Holiday', new \DateTime('2016-10-02'), new \DateTime('2016-10-03')), $set->getHolidays()->offsetGet(0));
-    $this->assertEquals(new IrregularOpening('Irregular Opening', '2016-10-03', '13:00', '14:00'), $set->getIrregularOpenings()->offsetGet(0));
+      $self->assertEquals(new Period(2, '15:00', '18:00'), $set->getPeriods()->offsetGet(0));
+      $self->assertEquals(new Holiday('Holiday', new \DateTime('2016-10-02'), new \DateTime('2016-10-03')), $set->getHolidays()->offsetGet(0));
+      $self->assertEquals(new IrregularOpening('Irregular Opening', '2016-10-03', '13:00', '14:00'), $set->getIrregularOpenings()->offsetGet(0));
+    };
+
+    $makeAssertions($set);
+
+    // Alias
+    \WP_Mock::wpFunction('get_posts', array(
+      'args' => array(array(
+        'post_type' => Set::CPT_SLUG,
+        'numberposts' => -1,
+        'meta_key' => $details->getPersistence()->generateMetaKey('alias'),
+        'meta_value' => 'parent-set-alias',
+      )),
+      'return' => array($parentPost),
+    ));
+
+    $aliasedSet = $provider->createSet('parent-set-alias');
+
+    $makeAssertions($aliasedSet);
   }
 
   public function testSetAlias () {
