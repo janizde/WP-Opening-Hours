@@ -18,10 +18,15 @@ class PostSetProvider extends SetProvider {
   /**
    * Creates a Set from a post id
    * @param     int|string  $id     Post id or Set alias
+   * @param     int         $rootId The id of the top-level set being initially requested
    * @return    Set                 The Set created from the post
    * @throws    \InvalidArgumentException If no Set could be created from id
    */
-  public function createSet ($id) {
+  public function createSet ($id, $rootId = null) {
+    if ($rootId === null) {
+      $rootId = (int) $id;
+    }
+
     $post = $this->findPost($id);
 
     $details = SetDetails::getInstance()->getPersistence();
@@ -43,7 +48,7 @@ class PostSetProvider extends SetProvider {
         $dateEnd = empty($dateEnd) ? null : new \DateTime($dateEnd);
 
         if ($this->childSetCriteriaMatches($dateStart, $dateEnd, $weekScheme)) {
-          $childSet = $this->createSet($childPost->ID);
+          $childSet = $this->createSet($childPost->ID, $rootId);
           $childSet->setId($post->ID);
           $childSet->setName($post->post_title);
           return $childSet;
@@ -51,15 +56,30 @@ class PostSetProvider extends SetProvider {
       }
     }
 
-    $set = new Set($post->ID);
-    $set->setName($post->post_title);
-
     $persistence = new Persistence($post);
-    $set->setPeriods(ArrayObject::createFromArray($persistence->loadPeriods()));
-    $set->setHolidays(ArrayObject::createFromArray($persistence->loadHolidays()));
-    $set->setIrregularOpenings(ArrayObject::createFromArray($persistence->loadIrregularOpenings()));
 
-    $set->setDescription($details->getValue('description', $post->ID));
+    $rootPost = $post;
+    $rootPersistence = $persistence;
+
+    if ($rootId !== $id) {
+      $rootPost = get_post($rootId);
+      $rootPersistence = new Persistence($rootPost);
+    }
+
+    $set = new Set($rootPost->ID);
+    $set->setName($rootPost->post_title);
+
+    $set->setPeriods(ArrayObject::createFromArray($persistence->loadPeriods()));
+    $set->setHolidays(ArrayObject::createFromArray($rootPersistence->loadHolidays()));
+    $set->setIrregularOpenings(ArrayObject::createFromArray($rootPersistence->loadIrregularOpenings()));
+
+    $description = $details->getValue('description', $post->ID);
+
+    if (empty($description)) {
+      $description = $details->getValue('description', $rootPost->ID);
+    }
+
+    $set->setDescription($description);
     return $set;
   }
 
