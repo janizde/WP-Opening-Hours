@@ -118,7 +118,7 @@ class Period implements TimeContextEntity  {
    * @return    bool
    */
   public function isOpen ($now, Set $set) {
-    if ($set->isHolidayActive($now) or $set->isIrregularOpeningActive($now))
+    if ($set->isHolidayActive($now) or $set->isIrregularOpeningInEffect($now))
       return false;
 
     return $this->isOpenStrict($now);

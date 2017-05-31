@@ -74,22 +74,39 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
   }
 
   /**
-   * Checks whether this IrregularOpening is active on the given date.
-   *
-   * @param     DateTime $now         The DateTime to compare against. Default is the current time.
-   * @param     bool     $excludeNext Whether to exclude the next day if timeEnd is less or equal that timeStart
-   *
-   * @return    bool                    Whether this IO is active on the given date
+   * @deprecated  Legacy method for old isActiveOnDay implementation.
+   *              Use isInEffect instead.
    */
-  public function isActiveOnDay ( DateTime $now = null, $excludeNext = false ) {
-    if ($now == null)
-      $now = Dates::getNow();
+  public function isActiveOnDay (DateTime $now = null) {
+    return $this->isInEffect($now);
+  }
 
-    if ($excludeNext) {
-      return $this->getDate()->format(Dates::STD_DATE_FORMAT) == $now->format(Dates::STD_DATE_FORMAT);
-    } else {
-      return Dates::compareDate($this->timeStart, $now) <= 0 and Dates::compareDate($this->timeEnd, $now) >= 0;
+  /**
+   * Checks whether the Irregular Opening is effect in the context of $now
+   * An irregular opening is in effect when:
+   *  - The day of the irregular opening is equal to $now's day
+   *  - The end of the irregular opening is after midnight and $now is inside the portion from midnight to the irregular opening's end time
+   *
+   * @param     DateTime|null $now    The DateTime to compare against. Default is the current time
+   * @return    bool                  Whether irregular opening is in effect
+   */
+  public function isInEffect (DateTime $now = null) {
+    if ($now === null) {
+      $now = Dates::getNow();
     }
+
+    if (Dates::compareDate($this->getStart(), $now) === 0) {
+      return true;
+    }
+
+    $startOfDay = clone $this->getEnd();
+    $startOfDay->setTime(0, 0, 0);
+
+    return (
+      Dates::compareDate($this->getStart(), $this->getEnd()) < 0
+      && $now >= $startOfDay
+      && $now <= $this->getEnd()
+    );
   }
 
   /**
@@ -103,7 +120,7 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
     if ($now == null)
       $now = Dates::getNow();
 
-    if (!$this->isActiveOnDay($now))
+    if (!$this->isInEffect($now))
       return false;
 
     return ($this->timeStart <= $now and $this->timeEnd >= $now);

@@ -6,7 +6,9 @@ use DateTime;
 use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
+use OpeningHours\Entity\Set;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\ArrayObject;
 use OpeningHours\Util\Dates;
 
 class SetTest extends OpeningHoursTestCase {
@@ -23,22 +25,23 @@ class SetTest extends OpeningHoursTestCase {
 		$this->assertFalse( $set->isHolidayActive( new DateTime('2016-01-15 00:01', Dates::getTimezone())) );
 	}
 
-	public function testGetActiveIrregularOpening () {
+	public function testGetIrregularOpeningInEffect () {
     $io = new IrregularOpening('Irregular Opening', '2016-01-13', '13:00', '17:00');
     $set = $this->createSet(64, array(), array(), array($io));
 
-		$this->assertNull($set->getActiveIrregularOpening(new DateTime('2016-01-12')));
-		$this->assertEquals($io, $set->getActiveIrregularOpening(new DateTime('2016-01-13')));
-		$this->assertNull($set->getActiveIrregularOpening( new DateTime('2016-01-14')));
+		$this->assertNull($set->getIrregularOpeningInEffect(new DateTime('2016-01-12')));
+		$this->assertEquals($io, $set->getIrregularOpeningInEffect(new DateTime('2016-01-13')));
+		$this->assertNull($set->getIrregularOpeningInEffect( new DateTime('2016-01-14')));
 	}
 
-	public function testIsIrregularOpeningActive () {
+	public function testIsIrregularOpeningInEffect () {
 		$set = $this->createSet(64, array(), array(), array(
       new IrregularOpening('Irregular Opening', '2016-01-13', '13:00', '17:00')
     ));
-		$this->assertFalse( $set->isIrregularOpeningActive( new DateTime('2016-01-12') ) );
-		$this->assertTrue( $set->isIrregularOpeningActive( new DateTime('2016-01-13') ) );
-		$this->assertFalse( $set->isIrregularOpeningActive( new DateTime('2016-01-14') ) );
+
+		$this->assertFalse($set->isIrregularOpeningInEffect(new DateTime('2016-01-12')));
+		$this->assertTrue($set->isIrregularOpeningInEffect(new DateTime('2016-01-13')));
+		$this->assertFalse($set->isIrregularOpeningInEffect(new DateTime('2016-01-14')));
 	}
 
 	public function testGetNextOpenPeriodOnlyPeriods () {
@@ -203,5 +206,35 @@ class SetTest extends OpeningHoursTestCase {
 	  $result = $set->getDataForDate(new DateTime('2017-04-25 18:00:00'));
 
 	  $this->assertEquals($expected, $result);
+  }
+
+  /**
+   * Test satisfying requirements for issue #72 in GitHub
+   * https://github.com/janizde/WP-Opening-Hours/issues/72
+   */
+  public function testIsOpenIOGitHub72 () {
+	  $irregularOpenings = new ArrayObject();
+	  $irregularOpenings->append(new IrregularOpening('My IO', '2017-05-29', '12:00', '00:00'));
+
+	  $periods = new ArrayObject();
+	  $periods->append(new Period(2, '07:30', '00:00'));
+
+	  $set = new Set(64);
+	  $set->setIrregularOpenings($irregularOpenings);
+	  $set->setPeriods($periods);
+
+	  $this->assertFalse($set->isOpen(new DateTime('2017-05-29 00:00:00')));
+	  $this->assertFalse($set->isOpen(new DateTime('2017-05-29 11:59:59')));
+	  $this->assertTrue($set->isOpen(new DateTime('2017-05-29 12:00:00')));
+	  $this->assertTrue($set->isOpen(new DateTime('2017-05-29 23:59:59')));
+	  $this->assertTrue($set->isOpen(new DateTime('2017-05-30 00:00:00')));
+	  $this->assertFalse($set->isOpen(new DateTime('2017-05-30 00:00:01')));
+
+	  $this->assertFalse($set->isOpen(new DateTime('2017-05-30 07:29:59')));
+	  $this->assertTrue($set->isOpen(new DateTime('2017-05-30 07:30:00')));
+	  $this->assertTrue($set->isOpen(new DateTime('2017-05-30 12:00:00')));
+	  $this->assertTrue($set->isOpen(new DateTime('2017-05-30 23:59:59')));
+	  $this->assertTrue($set->isOpen(new DateTime('2017-05-31 00:00:00')));
+	  $this->assertFalse($set->isOpen(new DateTime('2017-05-31 00:01:00')));
   }
 }

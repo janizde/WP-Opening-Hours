@@ -159,7 +159,6 @@ class Weekdays extends AbstractModule {
     return $days;
   }
 
-
   /**
    * Checks whether any of the provided weekdays represents today's weekday
    * @param     Weekday[] $weekdays The weekdays to check

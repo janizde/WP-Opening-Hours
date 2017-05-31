@@ -912,6 +912,11 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
+### v2.1.1
+
+* Fixed a bug that did not load the parent set's irregular openings and holidays in active child sets.
+* Fixed a bug that blocked irregular openings and periods on the days after irregular openings that go beyond midnight.
+
 ### v2.1
 
 * Added today's opening hours in Is Open shortcode / widget

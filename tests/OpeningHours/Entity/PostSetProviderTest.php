@@ -6,8 +6,11 @@ use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\PostSetProvider;
+use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 use OpeningHours\Module\CustomPostType\Set;
+use OpeningHours\OpeningHours;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\Dates;
 
 class PostSetProviderTest extends OpeningHoursTestCase {
 
@@ -17,7 +20,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = Set::CPT_SLUG;
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -67,7 +69,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = 'post';
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -127,7 +128,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = Set::CPT_SLUG;
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -187,13 +187,154 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $this->assertEquals(new IrregularOpening('Irregular Opening', '2016-10-03', '13:00', '14:00'), $set->getIrregularOpenings()->offsetGet(0));
   }
 
+  public function testCreateChildSet() {
+    $parentPost = $this->getMockBuilder('WP_Post')->getMock();
+    $parentPost->ID = 64;
+    $parentPost->post_title = 'Parent';
+
+    $childPost = $this->getMockBuilder('WP_Post')->getMock();
+    $childPost->ID = 128;
+    $childPost->post_parent = 64;
+    $childPost->post_title = 'Child';
+
+    // get_post
+    \WP_Mock::wpFunction('get_post', array(
+      'args' => array(64),
+      'return' => $parentPost,
+    ));
+
+    \WP_Mock::wpFunction('get_post', array(
+      'args' => array(128),
+      'return' => $childPost,
+    ));
+
+    \WP_Mock::wpFunction('get_posts', array(
+      'args' => array(array(
+        'post_type' => Set::CPT_SLUG,
+        'numberposts' => -1,
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+        'post_parent' => 64,
+      )),
+      'return' => array($childPost)
+    ));
+
+    \WP_Mock::wpFunction('get_posts', array(
+      'args' => array(array(
+        'post_type' => Set::CPT_SLUG,
+        'numberposts' => -1,
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+        'post_parent' => 128,
+      )),
+      'return' => array()
+    ));
+
+    // Parent post meta
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(64, '_op_set_periods', true),
+      'return' => array(
+        array('weekday' => 1, 'timeStart' => '13:00', 'timeEnd' => '14:00')
+      )
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(64, '_op_set_holidays', true),
+      'return' => array(
+        array('name' => 'Holiday', 'dateStart' => '2016-10-02', 'dateEnd' => '2016-10-03')
+      )
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(64, '_op_set_irregular_openings', true),
+      'return' => array(
+        array('name' => 'Irregular Opening', 'date' => '2016-10-03', 'timeStart' => '13:00', 'timeEnd' => '14:00')
+      )
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(64, '_op_meta_box_set_details_description', true),
+      'return' => 'Set Description'
+    ));
+
+    // Child post meta
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(128, '_op_set_periods', true),
+      'return' => array(
+        array('weekday' => 2, 'timeStart' => '15:00', 'timeEnd' => '18:00')
+      )
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(128, '_op_meta_box_set_details_description', true),
+      'return' => 'Set Description'
+    ));
+
+    $details = SetDetails::getInstance();
+    $now = Dates::getNow();
+    $childStart = clone $now;
+    $childStart->sub(new \DateInterval('P7D'));
+    $childEnd = clone $now;
+    $childEnd->add(new \DateInterval('P7D'));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(128, $details->getPersistence()->generateMetaKey('dateStart'), true),
+      'return' => $childStart->format(Dates::STD_DATE_FORMAT),
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(128, $details->getPersistence()->generateMetaKey('dateEnd'), true),
+      'return' => $childEnd->format(Dates::STD_DATE_FORMAT)
+    ));
+
+    \WP_Mock::wpFunction('get_post_meta', array(
+      'args' => array(128, $details->getPersistence()->generateMetaKey('weekScheme'), true),
+      'return' => 'all'
+    ));
+
+    // Create set
+    $provider = new PostSetProvider();
+    $set = $provider->createSet(64);
+
+    $self = $this;
+    $makeAssertions = function (\OpeningHours\Entity\Set $set) use ($self) {
+      $self->assertNotNull($set);
+      $self->assertEquals(64, $set->getId());
+      $self->assertEquals('Parent', $set->getName());
+
+      $self->assertEquals(1, $set->getPeriods()->count());
+      $self->assertEquals(1, $set->getHolidays()->count());
+      $self->assertEquals(1, $set->getIrregularOpenings()->count());
+
+      $self->assertEquals(new Period(2, '15:00', '18:00'), $set->getPeriods()->offsetGet(0));
+      $self->assertEquals(new Holiday('Holiday', new \DateTime('2016-10-02'), new \DateTime('2016-10-03')), $set->getHolidays()->offsetGet(0));
+      $self->assertEquals(new IrregularOpening('Irregular Opening', '2016-10-03', '13:00', '14:00'), $set->getIrregularOpenings()->offsetGet(0));
+    };
+
+    $makeAssertions($set);
+
+    // Alias
+    \WP_Mock::wpFunction('get_posts', array(
+      'args' => array(array(
+        'post_type' => Set::CPT_SLUG,
+        'numberposts' => -1,
+        'meta_key' => $details->getPersistence()->generateMetaKey('alias'),
+        'meta_value' => 'parent-set-alias',
+      )),
+      'return' => array($parentPost),
+    ));
+
+    $aliasedSet = $provider->createSet('parent-set-alias');
+
+    $makeAssertions($aliasedSet);
+  }
+
   public function testSetAlias () {
     $screen = $this->getMockBuilder('WP_Screen')->getMock();
     $screen->base = 'post';
     $screen->post_type = 'post';
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
@@ -247,7 +388,6 @@ class PostSetProviderTest extends OpeningHoursTestCase {
     $screen->post_type = 'post';
 
     \WP_Mock::wpFunction('get_current_screen', array(
-      'times' => 1,
       'return' => $screen
     ));
 
