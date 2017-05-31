@@ -24,7 +24,7 @@ function is_open ($return_type = false) {
 
   $type = 'period';
   if ($return_type) {
-    if ($set->isIrregularOpeningActive())
+    if ($set->isIrregularOpeningInEffect())
       $type = 'special_opening';
     elseif ($set->isHolidayActive())
       $type = 'holiday';

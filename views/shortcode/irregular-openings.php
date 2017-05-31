@@ -39,7 +39,7 @@ if ( ! empty( $title ) ) {
   <?php
   /** @var IrregularOpening $io */
   foreach ($irregular_openings as $io) :
-    $highlighted = ($highlight && $io->isActiveOnDay()) ? $class_highlighted : '';
+    $highlighted = ($highlight && $io->isInEffect()) ? $class_highlighted : '';
   ?>
     <tr class="op-irregular-opening <?php echo $highlighted; ?>">
       <td class="col-name"><?php echo $io->getName(); ?></td>

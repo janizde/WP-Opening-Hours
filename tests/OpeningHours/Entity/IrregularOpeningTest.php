@@ -51,26 +51,35 @@ class IrregularOpeningTest extends OpeningHoursTestCase{
 		$this->assertEquals( new DateTime('2016-02-03 13:00'), $io->getStart() );
 		$this->assertEquals( new DateTime('2016-02-04 01:00'), $io->getEnd() );
 	}
-	
-	public function testIsActiveOnDay () {
-		$io = new IrregularOpening( 'Test', '2016-02-03', '13:00', '01:00' );
-		$d1 = new DateTime('2016-02-02 13:00');
-		$d2 = new DateTime('2016-02-03 13:00');
-		$d3 = new DateTime('2016-02-04 13:00');
-		$d4 = new DateTime('2016-02-05 13:00');
 
-		$this->assertFalse( $io->isActiveOnDay( $d1 ) );
-		$this->assertFalse( $io->isActiveOnDay( $d1, true ) );
+	public function testIsInEffect() {
+	  $io = new IrregularOpening('Test', '2017-05-30', '07:30', '19:00');
 
-		$this->assertTrue( $io->isActiveOnDay( $d2 ) );
-		$this->assertTrue( $io->isActiveOnDay( $d2, true ) );
+	  $this->assertFalse($io->isInEffect(new DateTime('2017-05-29 23:59:59')));
+	  $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 00:00:00')));
+	  $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 07:29:59')));
+	  $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 07:30:00')));
+	  $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 18:59:59')));
+	  $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 19:00:00')));
+	  $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 23:59:59')));
+	  $this->assertFalse($io->isInEffect(new DateTime('2017-05-31 00:00:00')));
+  }
 
-		$this->assertTrue( $io->isActiveOnDay( $d3 ) );
-		$this->assertFalse( $io->isActiveOnDay( $d3, true ) );
+  public function testIsInEffectNextDay() {
+	  $io = new IrregularOpening('Test', '2017-05-30', '12:00', '01:00');
 
-		$this->assertFalse( $io->isActiveOnDay( $d4 ) );
-		$this->assertFalse( $io->isActiveOnDay( $d4, true ) );
-	}
+    $this->assertFalse($io->isInEffect(new DateTime('2017-05-29 23:59:59')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 00:00:00')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 07:29:59')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 07:30:00')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 18:59:59')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 19:00:00')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-30 23:59:59')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-31 00:00:00')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-31 00:59:59')));
+    $this->assertTrue($io->isInEffect(new DateTime('2017-05-31 01:00:00')));
+    $this->assertFalse($io->isInEffect(new DateTime('2017-05-31 01:00:01')));
+  }
 
 	public function testIsOpen () {
 		$io = new IrregularOpening( 'Test', '2016-02-03', '13:00', '01:00' );
