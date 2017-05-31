@@ -2,7 +2,7 @@
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
 Tested up to: 4.7.1
-Stable tag: 2.1
+Stable tag: 2.1.1
 Requires at least: 4.0.0
 Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
@@ -84,6 +84,11 @@ Please read the section on [contributing to translations](https://github.com/jan
 If you found a bug you would like to fix feel free to [contribute to the project on GitHub](https://github.com/janizde/WP-Opening-Hours#contributing-to-code).
 
 == Changelog ==
+
+= 2.1.1 =
+
+* Fixed a bug that did not load the parent set's irregular openings and holidays in active child sets.
+* Fixed a bug that blocked irregular openings and periods on the days after irregular openings that go beyond midnight.
 
 = 2.1 =
 
