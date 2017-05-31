@@ -38,7 +38,7 @@ if ( ! empty( $title ) ) {
   <?php
   /** @var IrregularOpening $io */
   foreach ($irregular_openings as $io) :
-    $highlighted = ($highlight && $io->isActiveOnDay()) ? $class_highlighted : '';
+    $highlighted = ($highlight && $io->isInEffect()) ? $class_highlighted : '';
   ?>
     <dt class="col-name <?php echo $highlighted; ?>"><?php echo $io->getName(); ?></dt>
     <dd class="col-date col-time <?php echo $highlighted; ?>"><?php echo Dates::format($date_format, $io->getDate()); ?><br /><?php echo $io->getFormattedTimeRange($time_format); ?></dd>

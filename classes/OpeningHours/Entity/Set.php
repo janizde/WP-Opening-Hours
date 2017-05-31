@@ -84,14 +84,21 @@ class Set {
   }
 
   /**
+   * @deprecated    Use isIrregularOpeningInEffect instead.
+   */
+  public function isIrregularOpeningActive (DateTime $now = null) {
+    return $this->isIrregularOpeningInEffect($now);
+  }
+
+  /**
    * Checks whether any irregular opening is currently active (based on the date)
    *
    * @param     DateTime $now Custom time
    *
    * @return    bool                whether any irregular opening is currently active
    */
-  public function isIrregularOpeningActive ( DateTime $now = null ) {
-    return $this->getActiveIrregularOpening($now) instanceof IrregularOpening;
+  public function isIrregularOpeningInEffect (DateTime $now = null ) {
+    return $this->getIrregularOpeningInEffect($now) instanceof IrregularOpening;
   }
 
   /**
@@ -105,8 +112,8 @@ class Set {
     if ($this->isHolidayActive($now))
       return false;
 
-    if ($this->isIrregularOpeningActive($now)) {
-      $io = $this->getActiveIrregularOpening($now);
+    if ($this->isIrregularOpeningInEffect($now)) {
+      $io = $this->getIrregularOpeningInEffect($now);
       return $io->isOpen($now);
     }
 
@@ -191,18 +198,26 @@ class Set {
   }
 
   /**
-   * Returns first active irregular opening on that day
-   * Only evaluates the date of $now and not the time
-   *
-   * @param     DateTime $now Custom time
-   *
-   * @return    IrregularOpening
+   * @deprecated    Use getIrregularOpeningInEffect instead.
    */
-  public function getActiveIrregularOpening ( DateTime $now = null ) {
+  public function getActiveIrregularOpening (DateTime $now = null) {
+    return $this->getIrregularOpeningInEffect($now);
+  }
+
+  /**
+   * Returns the first irregular opening that is in effect in the context of $now
+   * or null if no irregular opening is currently in effect.
+   *
+   * @param     DateTime    $now      Custom time. Default is the current time.
+   * @return    IrregularOpening|null The first irregular opening in effect or null
+   */
+  public function getIrregularOpeningInEffect (DateTime $now = null) {
     /** @var IrregularOpening $io */
-    foreach ($this->irregularOpenings as $io)
-      if ($io->isActiveOnDay($now))
+    foreach ($this->irregularOpenings as $io) {
+      if ($io->isInEffect(($now))) {
         return $io;
+      }
+    }
 
     return null;
   }
