@@ -912,6 +912,10 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
+### v2.1.2
+
+* Fixed JavaScript conflicts with other plugins
+
 ### v2.1.1
 
 * Fixed a bug that did not load the parent set's irregular openings and holidays in active child sets.
