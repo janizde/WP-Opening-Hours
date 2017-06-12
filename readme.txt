@@ -85,6 +85,10 @@ If you found a bug you would like to fix feel free to [contribute to the project
 
 == Changelog ==
 
+= 2.1.2 =
+
+* Fixed JavaScript conflicts with other plugins
+
 = 2.1.1 =
 
 * Fixed a bug that did not load the parent set's irregular openings and holidays in active child sets.
