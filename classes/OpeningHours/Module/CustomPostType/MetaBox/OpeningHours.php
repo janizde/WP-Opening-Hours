@@ -65,6 +65,9 @@ class OpeningHours extends AbstractMetaBox {
         if (empty($dayConfig['start'][$i]) or empty($dayConfig['end'][$i]))
           continue;
 
+        $dayConfig['start'][$i] = date('H:i', strtotime($dayConfig['start'][$i]));
+        $dayConfig['end'][$i]   = date('H:i', strtotime($dayConfig['end'][$i]));
+
         if ($dayConfig['start'][$i] === '00:00' and $dayConfig['end'][$i] === '00:00')
           continue;
 
