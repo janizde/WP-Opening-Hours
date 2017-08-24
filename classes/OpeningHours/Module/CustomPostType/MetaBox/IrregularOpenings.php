@@ -50,8 +50,8 @@ class IrregularOpenings extends AbstractMetaBox {
 
   /** @inheritdoc */
   protected function saveData ( $post_id, WP_Post $post, $update ) {
-    $ios = (array_key_exists(self::POST_KEY, $_POST) && is_array($postData = $_POST[self::POST_KEY]))
-      ? $this->getIrregularOpeningsFromPostData($postData)
+    $ios = (array_key_exists(self::POST_KEY, $_POST) && is_array($_POST[self::POST_KEY]))
+      ? $this->getIrregularOpeningsFromPostData($_POST[self::POST_KEY])
       : array();
 
     $persistence = new Persistence($post);
@@ -69,6 +69,9 @@ class IrregularOpenings extends AbstractMetaBox {
     $ios = array();
     for ($i = 0; $i < count($data['name']); $i++) {
       try {
+        $data['timeStart'][$i] = date('H:i', strtotime($data['timeStart'][$i]));
+        $data['timeEnd'][$i]   = date('H:i', strtotime($data['timeEnd'][$i]));
+
         $io = new IrregularOpening($data['name'][$i], $data['date'][$i], $data['timeStart'][$i], $data['timeEnd'][$i]);
         $ios[] = $io;
       } catch (\InvalidArgumentException $e) {
