@@ -31,7 +31,7 @@ class OpeningHours extends AbstractModule {
   protected $widgets;
 
   /** The plugin version */
-  const VERSION = '2.1.1';
+  const VERSION = '2.1.2';
 
   /** The Plugin DB version */
   const DB_VERSION = 2;
@@ -96,40 +96,50 @@ class OpeningHours extends AbstractModule {
   }
 
   public function loadResources () {
-    wp_register_script(
-      self::PREFIX . 'js',
-      plugins_url('dist/scripts/main.js', op_bootstrap_file()),
-      array('jquery', 'jquery-ui-core', 'jquery-ui-datepicker'),
-      self::VERSION,
-      true
-    );
-
     wp_register_style(
       self::PREFIX . 'css',
       plugins_url('dist/styles/main.css', op_bootstrap_file())
     );
 
-    Module\Ajax::injectAjaxUrl(self::PREFIX . 'js');
-    wp_localize_script(self::PREFIX . 'js', 'openingHoursData', array(
-      'startOfWeek' => (int) Dates::getStartOfWeek(),
-      'weekdays' => Weekdays::getDatePickerTranslations(),
-      'translations' => array(
-        'moreSettings' => __('More Settings', 'wp-opening-hours'),
-        'fewerSettings' => __('Fewer Settings', 'wp-opening-hours')
-      )
-    ));
-
     $useFrontEndStyles = apply_filters(self::FILTER_USE_FRONT_END_STYLES, true);
 
-    // Frontend Styles and Scripts
     if (is_admin() || $useFrontEndStyles) {
       wp_enqueue_style(self::PREFIX . 'css');
     }
 
-    if (is_admin()) {
-      wp_enqueue_script(self::PREFIX . 'js');
-    }
+    if (is_admin() && function_exists('get_current_screen')) {
+      $screen = get_current_screen();
 
-    wp_localize_script(self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations());
+      if (
+        $screen
+        && (
+          $screen->base === 'post' && $screen->post_type === Module\CustomPostType\Set::CPT_SLUG
+          || $screen->base === 'edit' && $screen->post_type === Module\CustomPostType\Set::CPT_SLUG
+          || $screen->base === 'widgets'
+        )
+      ) {
+        wp_register_script(
+          self::PREFIX . 'js',
+          plugins_url('dist/scripts/main.js', op_bootstrap_file()),
+          array('jquery', 'jquery-ui-core', 'jquery-ui-datepicker'),
+          self::VERSION,
+          true
+        );
+
+        Module\Ajax::injectAjaxUrl(self::PREFIX . 'js');
+        wp_localize_script(self::PREFIX . 'js', 'openingHoursData', array(
+          'startOfWeek' => (int) Dates::getStartOfWeek(),
+          'weekdays' => Weekdays::getDatePickerTranslations(),
+          'translations' => array(
+            'moreSettings' => __('More Settings', 'wp-opening-hours'),
+            'fewerSettings' => __('Fewer Settings', 'wp-opening-hours')
+          )
+        ));
+
+        wp_localize_script(self::PREFIX . 'js', 'translations', Module\I18n::getJavascriptTranslations());
+
+        wp_enqueue_script(self::PREFIX . 'js');
+      }
+    }
   }
 }
