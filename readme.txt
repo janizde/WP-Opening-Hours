@@ -85,6 +85,10 @@ If you found a bug you would like to fix feel free to [contribute to the project
 
 == Changelog ==
 
+= 2.1.3 =
+
+* Fix concerning time formats of Irregular Openings and Periods when saving by @Braunson
+
 = 2.1.2 =
 
 * Fixed JavaScript conflicts with other plugins
