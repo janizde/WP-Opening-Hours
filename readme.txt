@@ -2,7 +2,7 @@
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
 Tested up to: 4.7.1
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 Requires at least: 4.0.0
 Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
