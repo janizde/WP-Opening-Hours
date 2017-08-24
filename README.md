@@ -912,6 +912,10 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
+### v2.1.3
+
+* Fix concerning time formats of Irregular Openings and Periods when saving by @Braunson
+
 ### v2.1.2
 
 * Fixed JavaScript conflicts with other plugins
