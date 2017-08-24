@@ -566,6 +566,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td>Whether to display a row for closed days with a "Closed"-caption</td>
 		</tr>
 		<tr>
+			<td><code>caption_closed</code></td>
+			<td><code>string</code></td>
+			<td><code>Closed</code></td>
+			<td>Change the text of the closed caption</td>
+		</tr>
+		<tr>
 			<td><code>show_description</code></td>
 			<td><code>bool</code></td>
 			<td><code>false</code></td>
