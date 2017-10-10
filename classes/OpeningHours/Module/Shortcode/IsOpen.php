@@ -29,6 +29,7 @@ class IsOpen extends AbstractShortcode {
       'set_id' => null,
       'open_text' => __('We\'re currently open.', 'wp-opening-hours'),
       'closed_text' => __('We\'re currently closed.', 'wp-opening-hours'),
+      'closed_holiday_text' => __('We\'re currently closed for %1$s.', 'wp-opening-hours'),
       'show_next' => false,
       'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', 'wp-opening-hours'),
       'show_today' => 'never',
@@ -81,9 +82,41 @@ class IsOpen extends AbstractShortcode {
 
     $attributes['is_open'] = $isOpen;
     $attributes['classes'] .= ($isOpen) ? $attributes['open_class'] : $attributes['closed_class'];
-    $attributes['text'] = ($isOpen) ? $attributes['open_text'] : $attributes['closed_text'];
+
+    // If the attribute show_holiday is enabled
+    $closedText = $attributes['closed_text'];
+        $holidaysList = $this->getTodaysHolidaysCommaSeperated($todayData);
+
+        $closedText = sprintf(
+            $holidaysList ? $attributes['closed_holiday_text'] : $closedText,
+            $holidaysList
+        );
+    }
+
+    $attributes['text'] = ($isOpen) ? $attributes['open_text'] : $closedText;
 
     echo $this->renderShortcodeTemplate($attributes, 'shortcode/is-open.php');
+  }
+
+  /**
+   * Retrieves holiday names for today
+   * @param  array $todayData   Data for today
+   * @return string            Extracted holiday name(s)
+   */
+  public function getTodaysHolidaysCommaSeperated($todayData) {
+      if (count($todayData['holidays']) > 0) {
+          $holidayNames = array();
+
+        foreach ($todayData['holidays'] as $holiday) {
+            array_push($holidayNames, $holiday->getName());
+        }
+
+        $names = implode(', ', $holidayNames);
+
+        return trim(rtrim($names, ','));
+    }
+
+    return false;
   }
 
   /**

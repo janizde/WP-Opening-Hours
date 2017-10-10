@@ -675,6 +675,15 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td>Caption to show when the venue is closed</td>
 		</tr>
 		<tr>
+			<td><code>closed_holiday_text</code></td>
+			<td><code>string</code></td>
+			<td>We\'re currently closed for <code>%1$s</code>. (translated)</td>
+			<td>Caption to show when the venue is closed and if there is one or more holidays, show them in a comma separated list<br><strong>Note:</strong> <code>show_closed_holidays</code> must been set to <code>true</code> for this to be displayed.<br>
+			<ul>
+				<li><code>%1$s</code> A comma separated formatted string of todays holiday(s)</li>
+			</ul></td>
+		</tr>
+		<tr>
 			<td><code>show_next</code></td>
 			<td><code>bool</code></td>
 			<td><code>false</code></td>
@@ -693,6 +702,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 					<li><code>always</code></li>
 				</ul>
 			</td>
+		</tr>
+		<tr>
+			<td><code>show_closed_holidays</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>Show when closed, today's holiday name(s)</td>
 		</tr>
 		<tr>
 			<td><code>next_format</code></td>
@@ -868,7 +883,7 @@ The calculation of the Is Open status depends on the Timezone setting in WordPre
 The development of the Opening Hours Plugin takes place at [GitHub](https://github.com/janizde/WP-Opening-Hours).  
 If you want to contribute feel free to fork the repository and send pull requests.
 
-##### <a name="git-flow"></a>GitFlow 
+##### <a name="git-flow"></a>GitFlow
 The project uses GitFlow. You can get more information on GitFlow on the [GitFlow Cheat Sheet](http://danielkummer.github.io/git-flow-cheatsheet/).  
 When forking the repository for contributions please fork from the `develop` branch. If the pull request will be accepted it will be released to the `master` branch for a new version of the Plugin.
 

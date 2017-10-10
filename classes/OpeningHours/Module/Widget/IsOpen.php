@@ -49,6 +49,11 @@ class IsOpen extends AbstractWidget {
       )
     ));
 
+    $this->addField('show_closed_holiday', array(
+      'type' => 'checkbox',
+      'caption' => __('Show Holiday name(s) when closed', 'wp-opening-hours')
+    ));
+
     // Extended Fields
     $this->addField('open_text', array(
       'type' => 'text',
@@ -62,6 +67,16 @@ class IsOpen extends AbstractWidget {
       'caption' => __('Caption if closed', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true
+    ));
+
+    $this->addField('closed_holiday_text', array(
+      'type' => 'text',
+      'caption' => __('Caption if closed and day has holiday(s)', 'wp-opening-hours'),
+      'extended' => true,
+      'default_placeholder' => true,
+      'description' => sprintf('%s: %s',
+        '<code>%1$s</code>', __('Formatted Holiday Names String', 'wp-opening-hours')
+      )
     ));
 
     $this->addField('open_class', array(
