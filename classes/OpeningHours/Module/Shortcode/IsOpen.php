@@ -33,6 +33,7 @@ class IsOpen extends AbstractShortcode {
       'show_next' => false,
       'next_format' => __('We\'re open again on %2$s (%1$s) from %3$s to %4$s', 'wp-opening-hours'),
       'show_today' => 'never',
+      'show_closed_holidays' => false,
       'today_format' => __('Opening Hours today: %1$s', 'wp-opening-hours'),
       'before_widget' => '<div class="op-is-open-shortcode">',
       'after_widget' => '</div>',
@@ -85,6 +86,7 @@ class IsOpen extends AbstractShortcode {
 
     // If the attribute show_holiday is enabled
     $closedText = $attributes['closed_text'];
+    if ($attributes['show_closed_holidays']) {
         $holidaysList = $this->getTodaysHolidaysCommaSeperated($todayData);
 
         $closedText = sprintf(
