@@ -68,7 +68,7 @@ class IsOpen extends AbstractShortcode {
 
     if ($attributes['show_next']) {
       $nextPeriod = $set->getNextOpenPeriod();
-      $attributes['next_period'] = $set->getNextOpenPeriod();;
+      $attributes['next_period'] = $set->getNextOpenPeriod();
       $attributes['next_string'] = apply_filters(self::FILTER_FORMAT_NEXT, $this->formatNext($nextPeriod, $attributes), $nextPeriod, $attributes, $todayData);
     }
 
@@ -84,15 +84,12 @@ class IsOpen extends AbstractShortcode {
     $attributes['is_open'] = $isOpen;
     $attributes['classes'] .= ($isOpen) ? $attributes['open_class'] : $attributes['closed_class'];
 
-    // If the attribute show_holiday is enabled
-    $closedText = $attributes['closed_text'];
+    // If the attribute show_closed_holidays is enabled
     if ($attributes['show_closed_holidays']) {
         $holidaysList = $this->getTodaysHolidaysCommaSeperated($todayData);
-
-        $closedText = sprintf(
-            $holidaysList ? $attributes['closed_holiday_text'] : $closedText,
-            $holidaysList
-        );
+        $closedText = $holidaysList ? sprintf($attributes['closed_holiday_text'], $holidaysList) : $attributes['closed_text'];
+    } else {
+        $closedText = $attributes['closed_text'];
     }
 
     $attributes['text'] = ($isOpen) ? $attributes['open_text'] : $closedText;
@@ -107,18 +104,16 @@ class IsOpen extends AbstractShortcode {
    */
   public function getTodaysHolidaysCommaSeperated($todayData) {
       if (count($todayData['holidays']) > 0) {
-          $holidayNames = array();
+        $holidayNames = '';
 
         foreach ($todayData['holidays'] as $holiday) {
-            array_push($holidayNames, $holiday->getName());
+            $holidayNames .= $holiday->getName() . ', ';
         }
 
-        $names = implode(', ', $holidayNames);
-
-        return trim(rtrim($names, ','));
+        return trim(rtrim($holidayNames, ','));
     }
 
-    return false;
+    return null;
   }
 
   /**
