@@ -104,13 +104,13 @@ class IsOpen extends AbstractShortcode {
    */
   public function getTodaysHolidaysCommaSeperated($todayData) {
       if (count($todayData['holidays']) > 0) {
-        $holidayNames = '';
+        $holidayNames = array();
 
         foreach ($todayData['holidays'] as $holiday) {
-            $holidayNames .= $holiday->getName() . ', ';
+            array_push($holidayNames, $holiday->getName());
         }
 
-        return trim(rtrim($holidayNames, ','));
+        return implode(', ', $holidayNames);
     }
 
     return null;
