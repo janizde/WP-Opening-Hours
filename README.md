@@ -678,7 +678,7 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td><code>closed_holiday_text</code></td>
 			<td><code>string</code></td>
 			<td>We\'re currently closed for <code>%1$s</code>. (translated)</td>
-			<td>Caption to show when the venue is closed and if there is one or more holidays, show them in a comma separated list<br><strong>Note:</strong> <code>show_closed_holidays</code> must been set to <code>true</code> for this to be displayed.<br>
+			<td>Caption to show when the venue is closed and if there is one or more holidays, show them in a comma separated list<br><strong>Note:</strong> <code>show_closed_holidays</code> must be set to <code>true</code> for this to be displayed.<br>
 			<ul>
 				<li><code>%1$s</code> A comma separated formatted string of todays holiday(s)</li>
 			</ul></td>
@@ -707,7 +707,7 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td><code>show_closed_holidays</code></td>
 			<td><code>bool</code></td>
 			<td><code>false</code></td>
-			<td>Show when closed, today's holiday name(s)</td>
+			<td>Show today's holiday name(s) when closed</td>
 		</tr>
 		<tr>
 			<td><code>next_format</code></td>
