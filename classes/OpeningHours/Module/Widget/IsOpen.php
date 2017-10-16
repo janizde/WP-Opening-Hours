@@ -49,7 +49,7 @@ class IsOpen extends AbstractWidget {
       )
     ));
 
-    $this->addField('show_closed_holiday', array(
+    $this->addField('show_closed_holidays', array(
       'type' => 'checkbox',
       'caption' => __('Show Holiday name(s) when closed', 'wp-opening-hours')
     ));
