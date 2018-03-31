@@ -187,6 +187,19 @@ class Dates extends AbstractModule {
   }
 
   /**
+   * Returns a new instance of `DateTime` with the same date as `$date`
+   * but the time component set to 23:59:59.
+   *
+   * @param     DateTime    $date
+   * @return    DateTime
+   */
+  public static function endOfDay(DateTime $date) {
+    $date = clone $date;
+    $date->setTime(23, 59, 59);
+    return $date;
+  }
+
+  /**
    * Formats a DateTime object to a date string using the date_i18n function to translate months
    * @param     string    $format   The PHP date format
    * @param     DateTime  $date     The DateTime object to format
