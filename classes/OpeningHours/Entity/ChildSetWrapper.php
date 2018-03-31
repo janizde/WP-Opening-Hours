@@ -3,7 +3,6 @@
 namespace OpeningHours\Entity;
 
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
-use OpeningHours\Util\Dates;
 
 /**
  * Wrapper class around a child set containing validity criteria
@@ -34,8 +33,8 @@ class ChildSetWrapper implements DateTimeRange {
 
   public function __construct(Set $set, \DateTime $dateStart = null, \DateTime $dateEnd = null, $weekScheme = null) {
     $this->set = $set;
-    $this->dateStart = $set;
-    $this->dateEnd = $set;
+    $this->dateStart = $dateStart;
+    $this->dateEnd = $dateEnd;
     $this->weekScheme = $weekScheme;
   }
 
@@ -53,7 +52,7 @@ class ChildSetWrapper implements DateTimeRange {
     $dateStart = $details->getValue('dateStart', $set->getId());
     $dateStart = empty($dateStart) ? null : new \DateTime($dateStart);
     $dateEnd = $details->getValue('dateEnd', $set->getId());
-    $dateEnd = empty($dateEnd) ? null : Dates::endOfDay(new \DateTime($dateEnd));
+    $dateEnd = empty($dateEnd) ? null : new \DateTime($dateEnd);
     return new ChildSetWrapper($set, $dateStart, $dateEnd, $weekScheme);
   }
 
