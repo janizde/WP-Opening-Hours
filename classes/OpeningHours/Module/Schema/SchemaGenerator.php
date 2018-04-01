@@ -24,9 +24,26 @@ class SchemaGenerator {
   }
 
   /**
-   * Creates an array containing the all available validity periods
+   * Creates a sequential array containing the all available validity periods.
+   * A set validity period is an associative array containing `set`, `start` and `end`
+   * and represents that `set` is the set serving the regular periods during the date interval
    *
-   * @return      array       Set validity
+   * Gaps between child sets will be filled with validity periods of the parent set.
+   * The first item's `start` date is always the current date (or `$referenceNow`).
+   * The last item's `end` date is the last child set's `dateEnd`
+   * but at least `$referenceNow` plus one year.
+   *
+   * `set`    contains the `Set` instance that serves the regular opening hours during the validity period
+   * `start`  contains a `DateTime` representing the start of the first day the validity period is in effect e.g. `2018-04-01T00:00:00`
+   * `end`    contains a `DateTime` representing the start of the last day the validity period is in effect e.g. `2018-04-01T00:00:00`
+   *          though the `DateTime`'s time component is always 00:00:00 it represents that the validity period is valid through the end of that day
+   *
+   * @param       \DateTime       $referenceNow   Reference date time representing the current time
+   *                                              Will be the first item's `start` value
+   *
+   * @return      array[array[string]mixed]       Set validity
+   *
+   * @throws      \Exception                      If the `interval_spec` of a \DateInterval is invalid
    */
   public function createSetValidityOrder(\DateTime $referenceNow = null) {
     $now = $referenceNow === null ? Dates::getNow() : $referenceNow;
