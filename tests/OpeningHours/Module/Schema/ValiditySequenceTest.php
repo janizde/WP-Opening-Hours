@@ -31,7 +31,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   }
 
   /**
-   * - `restrictToDateRange` keeps `ValidityPeriods` that are fully inside the date range
+   * - `restrictedToDateRange` keeps `ValidityPeriods` that are fully inside the date range
    */
   public function testRestrictToDateRangeOneFullyInside() {
     $set = new Set(0);
@@ -39,36 +39,36 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
     ));
 
-    $vs->restrictToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
+    $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
 
     $expected = array(
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
     );
 
-    $this->assertEquals($expected, $vs->getPeriods());
+    $this->assertEquals($expected, $restricted->getPeriods());
   }
 
   /**
-   * - `restrictToDateRange` restricts elements that exceed the data range in either direction
+   * - `restrictedToDateRange` restricts elements that exceed the data range in either direction
    */
-  public function testRestrictToDateRangeOneExceeds() {
+  public function testRestrictedToDateRangeOneExceeds() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-31'), new \DateTime('2018-05-01')),
     ));
 
-    $vs->restrictToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
+    $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
 
     $expected = array(
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
     );
 
-    $this->assertEquals($expected, $vs->getPeriods());
+    $this->assertEquals($expected, $restricted->getPeriods());
   }
 
   /**
-   * - `restrictToDateRange` removes `ValidityPeriods` that are fully outside the date range
-   *   and updates the array indices of `$periods`
+   * - `restrictedToDateRange` removes `ValidityPeriods` that are fully outside the date range
+   *   and re-indexes the `$periods` array
    */
   public function testRestrictToDateRangeOutside() {
     $set = new Set(0);
@@ -78,12 +78,12 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
     ));
 
-    $vs->restrictToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
+    $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
 
     $expected = array(
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
     );
 
-    $this->assertEquals($expected, $vs->getPeriods());
+    $this->assertEquals($expected, $restricted->getPeriods());
   }
 }
