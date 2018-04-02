@@ -86,4 +86,88 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
+
+  /**
+   * - `coveredWith` returns a sequence equal to the foreground sequence if the background sequence is empty
+   */
+  public function testCoveredWith_EmptyBackgroundSequence() {
+    $set = new Set(0);
+    $fg = new ValiditySequence(array(
+      new ValidityPeriod($set, new \DateTime('2018-03-30'), new \DateTime('2018-03-30')),
+      new ValidityPeriod($set, new \DateTime('2018-05-01'), new \DateTime('2018-05-01')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+    ));
+    $bg = new ValiditySequence(array());
+
+    $result = $bg->coveredWith($fg);
+    $this->assertEquals($fg, $result);
+  }
+
+  /**
+   * - `coveredWith` returns a sequence equal to the background sequence if the foreground sequence is empty
+   */
+  public function testCoveredWith_EmptyForegroundSequence() {
+    $set = new Set(0);
+    $fg = new ValiditySequence(array());
+    $bg = new ValiditySequence(array(
+      new ValidityPeriod($set, new \DateTime('2018-03-30'), new \DateTime('2018-03-30')),
+      new ValidityPeriod($set, new \DateTime('2018-05-01'), new \DateTime('2018-05-01')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+    ));
+
+    $result = $bg->coveredWith($fg);
+    $this->assertEquals($bg, $result);
+  }
+
+  /**
+   * - `coveredWith` takes background periods at the start and end that do not intersect with the background
+   * - `coveredWith` fills the gaps between background range and foreground range with partial background periods
+   * - `coveredWith` takes all periods of the foreground sequence as is
+   * - `coveredWith` fills gaps between foreground periods with full or partial periods of the background sequence
+   */
+  public function testCoveredWith_Total() {
+    $sets = array(
+      new Set(0),
+      new Set(1),
+      new Set(2),
+      new Set(3),
+      new Set(4),
+      new Set(5),
+      new Set(6),
+      new Set(7),
+      new Set(8),
+    );
+
+    $setBg = new Set('background');
+    $setFg = new Set('foreground');
+    $fg = new ValiditySequence(array(
+      new ValidityPeriod($sets[0], new \DateTime('2018-04-01'), new \DateTime('2018-04-13')),
+      new ValidityPeriod($sets[1], new \DateTime('2018-04-15'), new \DateTime('2018-04-15')),
+      new ValidityPeriod($sets[2], new \DateTime('2018-04-19'), new \DateTime('2018-04-20')),
+    ));
+
+    $bg = new ValiditySequence(array(
+      new ValidityPeriod($sets[3], new \DateTime('2018-03-28'), new \DateTime('2018-03-28')),
+      new ValidityPeriod($sets[4], new \DateTime('2018-03-29'), new \DateTime('2018-04-02')),
+      new ValidityPeriod($sets[5], new \DateTime('2018-04-14'), new \DateTime('2018-04-14')),
+      new ValidityPeriod($sets[6], new \DateTime('2018-04-15'), new \DateTime('2018-04-16')),
+      new ValidityPeriod($sets[7], new \DateTime('2018-04-20'), new \DateTime('2018-04-22')),
+      new ValidityPeriod($sets[8], new \DateTime('2018-04-23'), new \DateTime('2018-04-25')),
+    ));
+
+    $expected = new ValiditySequence(array(
+      new ValidityPeriod($sets[3], new \DateTime('2018-03-28'), new \DateTime('2018-03-28')),
+      new ValidityPeriod($sets[4], new \DateTime('2018-03-29'), new \DateTime('2018-03-31')),
+      new ValidityPeriod($sets[0], new \DateTime('2018-04-01'), new \DateTime('2018-04-13')),
+      new ValidityPeriod($sets[5], new \DateTime('2018-04-14'), new \DateTime('2018-04-14')),
+      new ValidityPeriod($sets[1], new \DateTime('2018-04-15'), new \DateTime('2018-04-15')),
+      new ValidityPeriod($sets[6], new \DateTime('2018-04-16'), new \DateTime('2018-04-16')),
+      new ValidityPeriod($sets[2], new \DateTime('2018-04-19'), new \DateTime('2018-04-20')),
+      new ValidityPeriod($sets[7], new \DateTime('2018-04-21'), new \DateTime('2018-04-22')),
+      new ValidityPeriod($sets[8], new \DateTime('2018-04-23'), new \DateTime('2018-04-25')),
+    ));
+
+    $result = $bg->coveredWith($fg);
+    $this->assertEquals($expected, $result);
+  }
 }
