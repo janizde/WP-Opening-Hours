@@ -6,6 +6,7 @@ notifications:
     on_failure: change
 
 php:
+  - 5.3
   - 5.4
   - 5.5
   - 5.6
@@ -15,4 +16,9 @@ php:
 install:
   - composer install
 
-script: phpunit
+# `precise` must be used until the plugin drops support for PHP 5.3
+# as `trusty` does not support this version
+sudo: required
+dist: precise
+
+script: vendor/bin/phpunit
