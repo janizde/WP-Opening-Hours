@@ -95,7 +95,7 @@ class ValiditySequence {
       $gapEnd->sub(new \DateInterval('P1D'));
 
       $startSequence = $this->restrictedToDateRange($gapStart, $gapEnd);
-      $totalSequence += $startSequence->getPeriods();
+      $totalSequence = array_merge($totalSequence, $startSequence->getPeriods());
     }
 
     // For each period of the foreground sequence

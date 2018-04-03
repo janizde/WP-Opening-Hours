@@ -9,6 +9,7 @@ use OpeningHours\Util\Dates;
 /**
  * Generator for schema.org `OpeningHoursSpec` objects from Opening Hours `Set`s
  *
+ * @author  Jannik Portz <hello@jannikportz.de>
  * @package OpeningHours\Module\Schema
  */
 class SchemaGenerator {
@@ -99,14 +100,6 @@ class SchemaGenerator {
     $childSets = array_filter($this->childSets, function (ChildSetWrapper $child) use ($now) {
       return !$child->isPast($now);
     });
-
-    if (count($childSets) < 1) {
-      $end = clone $maxEnd;
-      $end->sub(new \DateInterval('P1D'));
-      return new ValiditySequence(array(
-        new ValidityPeriod($this->mainSet, $now, $end),
-      ));
-    }
 
     $latestDefault = clone $maxEnd;
     $latestDefault->sub(new \DateInterval('P1D'));
