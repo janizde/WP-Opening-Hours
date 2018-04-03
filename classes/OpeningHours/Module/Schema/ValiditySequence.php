@@ -30,6 +30,9 @@ class ValiditySequence {
    * Returns a new `ValiditySequence` whose `$periods` correnspong to those of this `ValiditySequence`
    * but restricted to the date range specified by `$min` and `$max`
    *
+   * If `$min` or `$max` is not specified the new `ValiditySequence` will not be restricted
+   * in the respective direction
+   *
    * `ValidityPeriod`s that are fully out of the date range are removed
    * and those who reach out of the date range are restricted
    *
@@ -37,13 +40,22 @@ class ValiditySequence {
    * @param     \DateTime         $max                maximum validity period end
    * @return    ValiditySequence                      sequence with restricted `ValidityPeriod`s
    */
-  public function restrictedToDateRange(\DateTime $min, \DateTime $max) {
+  public function restrictedToDateRange(\DateTime $min = null, \DateTime $max = null) {
     $periodsInRange = array_filter($this->periods, function (ValidityPeriod $period) use ($min, $max) {
-      return !($period->getEnd() < $min || $period->getStart() > $max);
+      return !(
+        // `$min` is set and period is before `$min`
+        ($min !== null && $period->getEnd() < $min)
+        // `$max` ist set and period is after `$max`
+        || ($max !== null && $period->getStart() > $max)
+      );
     });
 
     $restrictedPeriods = array_map(function (ValidityPeriod $period) use ($min, $max) {
-      return new ValidityPeriod($period->getSet(), max($period->getStart(), $min), min($period->getEnd(), $max));
+      return new ValidityPeriod(
+        $period->getSet(),
+        $min !== null ? max($period->getStart(), $min) : $period->getStart(),
+        $max !== null ? min($period->getEnd(), $max) : $period->getEnd()
+      );
     }, $periodsInRange);
 
     return new ValiditySequence(array_values($restrictedPeriods));

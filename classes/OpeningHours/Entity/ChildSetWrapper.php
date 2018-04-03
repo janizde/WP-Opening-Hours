@@ -6,6 +6,7 @@ use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 
 /**
  * Wrapper class around a child set containing validity criteria
+ * and further children
  *
  * @package OpeningHours\Entity
  */
@@ -17,25 +18,35 @@ class ChildSetWrapper implements DateTimeRange {
   protected $set;
 
   /**
-   * @var     \DateTime | null   The start of the child set range
+   * The start of the child set range
+   * @var     \DateTime | null
    */
   protected $dateStart;
 
   /**
-   * @var     \DateTime | null   The end of the child set range
+   * The end of the child set range
+   * @var     \DateTime | null
    */
   protected $dateEnd;
 
   /**
-   * @var     string | null     The week scheme (even / odd)
+   * The week scheme (even / odd)
+   * @var     string | null
    */
   protected $weekScheme;
 
-  public function __construct(Set $set, \DateTime $dateStart = null, \DateTime $dateEnd = null, $weekScheme = null) {
+  /**
+   * All children of this child
+   * @var     ChildSetWrapper[]
+   */
+  protected $children;
+
+  public function __construct(Set $set, \DateTime $dateStart = null, \DateTime $dateEnd = null, $weekScheme = null, $children = array()) {
     $this->set = $set;
     $this->dateStart = $dateStart;
     $this->dateEnd = $dateEnd;
     $this->weekScheme = $weekScheme;
+    $this->children = $children;
   }
 
   /**
@@ -77,14 +88,14 @@ class ChildSetWrapper implements DateTimeRange {
   }
 
   /**
-   * @return Set
+   * @return \DateTime
    */
   public function getStart() {
     return $this->dateStart;
   }
 
   /**
-   * @return Set
+   * @return \DateTime
    */
   public function getEnd() {
     return $this->dateEnd;
@@ -95,5 +106,12 @@ class ChildSetWrapper implements DateTimeRange {
    */
   public function getWeekScheme() {
     return $this->weekScheme;
+  }
+
+  /**
+   * @return ChildSetWrapper[]
+   */
+  public function getChildren() {
+    return $this->children;
   }
 }

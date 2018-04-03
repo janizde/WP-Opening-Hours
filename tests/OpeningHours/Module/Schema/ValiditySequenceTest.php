@@ -88,6 +88,52 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   }
 
   /**
+   * - `restrictedToDateRange` does not remove `ValidityPeriod`s in the past when `$min` is `null`
+   *   and re-indexes the `$periods` array
+   */
+  public function testRestrictToDateRangeOutsideMinNull() {
+    $set = new Set(0);
+    $vs = new ValiditySequence(array(
+      new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
+      new ValidityPeriod($set, new \DateTime('2018-03-29'), new \DateTime('2018-04-02')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+    ));
+
+    $restricted = $vs->restrictedToDateRange(null, new \DateTime('2018-04-29'));
+
+    $expected = array(
+      new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
+      new ValidityPeriod($set, new \DateTime('2018-03-29'), new \DateTime('2018-04-02')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-29'))
+    );
+
+    $this->assertEquals($expected, $restricted->getPeriods());
+  }
+
+  /**
+   * - `restrictedToDateRange` does not remove `ValidityPeriod`s in the past when `$min` is `null`
+   *   and re-indexes the `$periods` array
+   */
+  public function testRestrictToDateRangeOutsideMaxNull() {
+    $set = new Set(0);
+    $vs = new ValiditySequence(array(
+      new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
+      new ValidityPeriod($set, new \DateTime('2018-03-29'), new \DateTime('2018-04-02')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+    ));
+
+    $restricted = $vs->restrictedToDateRange(null, new \DateTime('2018-04-29'));
+
+    $expected = array(
+      new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
+      new ValidityPeriod($set, new \DateTime('2018-03-29'), new \DateTime('2018-04-02')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-29'))
+    );
+
+    $this->assertEquals($expected, $restricted->getPeriods());
+  }
+
+  /**
    * - `coveredWith` returns a sequence equal to the foreground sequence if the background sequence is empty
    */
   public function testCoveredWith_EmptyBackgroundSequence() {
