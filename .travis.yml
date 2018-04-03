@@ -21,4 +21,4 @@ install:
 sudo: required
 dist: precise
 
-script: phpunit
+script: vendor/bin/phpunit
