@@ -14,6 +14,9 @@ use OpeningHours\Test\OpeningHoursTestCase;
  */
 class ValidityPeriodTest extends OpeningHoursTestCase {
 
+  /**
+   * - `__construct` sets `$set`, `$start` and `$end` properly
+   */
   public function test__construct() {
     $set = new Set(0);
     $dateStart = new \DateTime('2018-04-01');
@@ -25,6 +28,20 @@ class ValidityPeriodTest extends OpeningHoursTestCase {
     $this->assertEquals($dateEnd, $vp->getEnd());
   }
 
+  /**
+   * - `__construct` accepts `null` for `$start` and `$end`
+   */
+  public function test__construct_AcceptsNullDates() {
+    $set = new Set(0);
+    $vp = new ValidityPeriod($set, null, null);
+    $this->assertNull($vp->getStart());
+    $this->assertNull($vp->getEnd());
+  }
+
+  /**
+   * - `__construct` throws `InvalidArgumentException` when `$start` and `$end` are both set
+   *   and `$start` is greater than `$end`
+   */
   public function test__constructTrowsInvalidArgumentException() {
     $set = new Set(0);
     $dateStart = new \DateTime('2018-04-02');

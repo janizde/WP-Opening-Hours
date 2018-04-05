@@ -23,14 +23,16 @@ class ValidityPeriod {
   /**
    * The first date at which `$set` serves the regular opening hours
    * The time component must always be 00:00:00
-   * @var     \DateTime
+   *
+   * @var     \DateTime|null
    */
   protected $start;
 
   /**
    * The last date at which `$set` serves the regular opening hours.
    * The time component must always be 00:00:00
-   * @var     \DateTime
+   *
+   * @var     \DateTime|null
    */
   protected $end;
 
@@ -43,8 +45,8 @@ class ValidityPeriod {
    *
    * @throws    \InvalidArgumentException   if `$start` is after `$end`
    */
-  public function __construct(Set $set, \DateTime $start, \DateTime $end) {
-    if ($end < $start) {
+  public function __construct(Set $set, \DateTime $start = null, \DateTime $end = null) {
+    if ($start !== null && $end !== null && $end < $start) {
       throw new \InvalidArgumentException('$start must be before $end');
     }
 
@@ -61,14 +63,14 @@ class ValidityPeriod {
   }
 
   /**
-   * @return \DateTime
+   * @return \DateTime|null
    */
   public function getStart() {
     return $this->start;
   }
 
   /**
-   * @return \DateTime
+   * @return \DateTime|null
    */
   public function getEnd() {
     return $this->end;
