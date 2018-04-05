@@ -44,17 +44,59 @@ class ValiditySequence {
     $periodsInRange = array_filter($this->periods, function (ValidityPeriod $period) use ($min, $max) {
       return !(
         // `$min` is set and period is before `$min`
-        ($min !== null && $period->getEnd() < $min)
+        ($min !== null && $period->getEnd() !== null && $period->getEnd() < $min)
         // `$max` ist set and period is after `$max`
-        || ($max !== null && $period->getStart() > $max)
+        || ($max !== null && $period->getStart() !== null && $period->getStart() > $max)
       );
     });
 
-    $restrictedPeriods = array_map(function (ValidityPeriod $period) use ($min, $max) {
+    /**
+     * Determines the start date of a restricted `ValidityPeriod`
+     * @param     ValidityPeriod    $period
+     * @return    \DateTime|null
+     */
+    $getPeriodStart = function (ValidityPeriod $period) use ($min) {
+      if ($period->getStart() === null && $min === null) {
+        return null;
+      }
+
+      if ($period->getStart() === null) {
+        return $min;
+      }
+
+      if ($min === null) {
+        return $period->getStart();
+      }
+
+      return max($min, $period->getStart());
+    };
+
+    /**
+     * Determines the end date of a restricted `ValidityPeriod`
+     * @param     ValidityPeriod    $period
+     * @return    \DateTime|null
+     */
+    $getPeriodEnd = function (ValidityPeriod $period) use ($max) {
+      if ($period->getEnd() === null && $max === null) {
+        return null;
+      }
+
+      if ($period->getEnd() === null) {
+        return $max;
+      }
+
+      if ($max === null) {
+        return $period->getEnd();
+      }
+
+      return min($max, $period->getEnd());
+    };
+
+    $restrictedPeriods = array_map(function (ValidityPeriod $period) use ($getPeriodStart, $getPeriodEnd) {
       return new ValidityPeriod(
         $period->getSet(),
-        $min !== null ? max($period->getStart(), $min) : $period->getStart(),
-        $max !== null ? min($period->getEnd(), $max) : $period->getEnd()
+        $getPeriodStart($period),
+        $getPeriodEnd($period)
       );
     }, $periodsInRange);
 
