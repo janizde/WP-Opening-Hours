@@ -164,6 +164,34 @@ class Dates extends AbstractModule {
   }
 
   /**
+   * Compares $date1 and $date2 and determines the difference in seconds.
+   * Also if $date1 or $date2 is not finite i.e. either INF or -INF then an infinite difference will be returned.
+   * If you can be sure $date1 or $date2 are not `INF` or `-INF` use the overloaded comparison operators for
+   * instances of `\DateTime` for better readability.
+   *
+   * @param       \DateTime|float     $date1      The first date as `DateTime`, `INF` or `-INF`
+   * @param       \DateTime|float     $date2      The second date as `DateTime`, `INF` or `-INF`
+   * @return      float                           Difference of $date1 and $date2 in seconds (concerning the day)
+   *                                              or `INF` / `-INF`
+   */
+  public static function compareDateTime($date1, $date2) {
+    if ($date1 instanceof DateTime) {
+      $date1 = $date1->getTimestamp();
+    }
+
+    if ($date2 instanceof DateTime) {
+      $date2 = $date2->getTimestamp();
+    }
+
+    // Manual workaround because INF - INF evaluates to NAN
+    if (is_infinite($date1) && is_infinite($date2) && $date1 === $date2) {
+      return 0;
+    }
+
+    return $date1 - $date2;
+  }
+
+  /**
    * Compares only the date in year, month and day of two DateTime objects
    *
    * @param     DateTime $date1 The first DateTime object

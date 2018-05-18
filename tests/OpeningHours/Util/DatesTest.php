@@ -44,6 +44,22 @@ class DatesTest extends OpeningHoursTestCase {
 		$this->assertEquals( new DateTime('2016-01-17'), Dates::applyWeekContext( clone $date, 0, $now ) );
 	}
 
+  public function testCompareDateTime() {
+    $this->assertEquals(0, Dates::compareDateTime(new DateTime('2018-05-18'), new DateTime('2018-05-18')));
+    $this->assertEquals(-1, Dates::compareDateTime(new DateTime('2018-05-18 00:00:00'), new DateTime('2018-05-18 00:00:01')));
+    $this->assertEquals(1, Dates::compareDateTime(new DateTime('2018-05-18 00:00:01'), new DateTime('2018-05-18 00:00:00')));
+
+    $this->assertEquals(0, Dates::compareDateTime(INF, INF));
+    $this->assertEquals(0, Dates::compareDateTime(-INF, -INF));
+    $this->assertEquals(INF, Dates::compareDateTime(INF, -INF));
+    $this->assertEquals(-INF, Dates::compareDateTime(-INF, INF));
+
+    $this->assertEquals(-INF, Dates::compareDateTime(new DateTime('now'), INF));
+    $this->assertEquals(INF, Dates::compareDateTime(new DateTime('now'), -INF));
+    $this->assertEquals(INF, Dates::compareDateTime(INF, new DateTime('now')));
+    $this->assertEquals(-INF, Dates::compareDateTime(-INF, new DateTime('now')));
+  }
+
 	public function testCompareTime () {
 		$d1 = new DateTime('2016-02-03 12:30');
 		$d2 = new DateTime('2016-12-23 01:45');
