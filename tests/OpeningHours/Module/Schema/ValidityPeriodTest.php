@@ -29,13 +29,13 @@ class ValidityPeriodTest extends OpeningHoursTestCase {
   }
 
   /**
-   * - `__construct` accepts `null` for `$start` and `$end`
+   * - `__construct` accepts `-INF` for `$start` and `INF` for `$end`
    */
-  public function test__construct_AcceptsNullDates() {
+  public function test__construct_AcceptsInfiniteDates() {
     $set = new Set(0);
-    $vp = new ValidityPeriod($set, null, null);
-    $this->assertNull($vp->getStart());
-    $this->assertNull($vp->getEnd());
+    $vp = new ValidityPeriod($set, -INF, INF);
+    $this->assertEquals(-INF, $vp->getStart());
+    $this->assertEquals(INF, $vp->getEnd());
   }
 
   /**
@@ -44,11 +44,30 @@ class ValidityPeriodTest extends OpeningHoursTestCase {
    */
   public function test__constructTrowsInvalidArgumentException() {
     $set = new Set(0);
-    $dateStart = new \DateTime('2018-04-02');
-    $dateEnd = new \DateTime('2018-04-01');
 
     try {
-      new ValidityPeriod($set, $dateStart, $dateEnd);
+      new ValidityPeriod($set, new \DateTime('2018-04-02'), new \DateTime('2018-04-01'));
+      $this->fail('Expected \InvalidArgumentException to be thrown');
+    } catch (\Exception $e) {
+      $this->assertEquals('InvalidArgumentException', get_class($e));
+    }
+
+    try {
+      new ValidityPeriod($set, new \DateTime('2018-04-02'), '2018-04-01');
+      $this->fail('Expected \InvalidArgumentException to be thrown');
+    } catch (\Exception $e) {
+      $this->assertEquals('InvalidArgumentException', get_class($e));
+    }
+
+    try {
+      new ValidityPeriod($set, '2018-04-02', new \DateTime('2018-04-01'));
+      $this->fail('Expected \InvalidArgumentException to be thrown');
+    } catch (\Exception $e) {
+      $this->assertEquals('InvalidArgumentException', get_class($e));
+    }
+
+    try {
+      new ValidityPeriod($set, INF, -INF);
       $this->fail('Expected \InvalidArgumentException to be thrown');
     } catch (\Exception $e) {
       $this->assertEquals('InvalidArgumentException', get_class($e));

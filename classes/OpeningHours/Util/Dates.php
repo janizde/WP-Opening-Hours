@@ -169,6 +169,11 @@ class Dates extends AbstractModule {
    * If you can be sure $date1 or $date2 are not `INF` or `-INF` use the overloaded comparison operators for
    * instances of `\DateTime` for better readability.
    *
+   * If $date1 is before $date2 a negative value will be returned.
+   * If $date1 is after $date2 a positive value will be returned.
+   * If $date1 and $date2 are equal 0 will be returned.
+   * If $date1 and $date2 are both infinite and equal 0 will be returned.
+   *
    * @param       \DateTime|float     $date1      The first date as `DateTime`, `INF` or `-INF`
    * @param       \DateTime|float     $date2      The second date as `DateTime`, `INF` or `-INF`
    * @return      float                           Difference of $date1 and $date2 in seconds (concerning the day)

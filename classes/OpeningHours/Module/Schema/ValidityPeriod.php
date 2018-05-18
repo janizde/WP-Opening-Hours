@@ -3,6 +3,7 @@
 namespace OpeningHours\Module\Schema;
 
 use OpeningHours\Entity\Set;
+use OpeningHours\Util\Dates;
 
 /**
  * Represents a period in time in which the specified `$set` serves
@@ -21,16 +22,18 @@ class ValidityPeriod {
   protected $set;
 
   /**
-   * The first date at which `$set` serves the regular opening hours
-   * The time component must always be 00:00:00
+   * The first date at which `$set` serves the regular opening hours.
+   * The time component must always be 00:00:00.
+   * May also be `-INF` to indicate that the `ValidityPeriod` has no start
    *
-   * @var     \DateTime|null
+   * @var     \DateTime|float
    */
   protected $start;
 
   /**
    * The last date at which `$set` serves the regular opening hours.
-   * The time component must always be 00:00:00
+   * The time component must always be 00:00:00.
+   * May also be `INF` to indicate that the `ValidityPeriod` has no end
    *
    * @var     \DateTime|null
    */
@@ -40,13 +43,21 @@ class ValidityPeriod {
    * Creates a new `ValidityPeriod` with set, start and end
    *
    * @param     Set       $set
-   * @param     \DateTime $start
-   * @param     \DateTime $end
+   * @param     \DateTime|float   $start    Start as DateTime or -INF
+   * @param     \DateTime|float   $end      Start as DateTime o INF
    *
-   * @throws    \InvalidArgumentException   if `$start` is after `$end`
+   * @throws    \InvalidArgumentException   If $start or $end are incorrect or $start is after $end
    */
-  public function __construct(Set $set, \DateTime $start = null, \DateTime $end = null) {
-    if ($start !== null && $end !== null && $end < $start) {
+  public function __construct(Set $set, $start, $end) {
+    if (!$start instanceof \DateTime && $start !== -INF) {
+      throw new \InvalidArgumentException('$start must either be an instance of \\DateTime or -INF');
+    }
+
+    if (!$end instanceof \DateTime && $end !== INF) {
+      throw new \InvalidArgumentException('\end must either be an instance of \\DateTime or INF');
+    }
+
+    if (Dates::compareDateTime($start, $end) > 0) {
       throw new \InvalidArgumentException('$start must be before $end');
     }
 
@@ -63,14 +74,14 @@ class ValidityPeriod {
   }
 
   /**
-   * @return \DateTime|null
+   * @return \DateTime|float
    */
   public function getStart() {
     return $this->start;
   }
 
   /**
-   * @return \DateTime|null
+   * @return \DateTime|float
    */
   public function getEnd() {
     return $this->end;
