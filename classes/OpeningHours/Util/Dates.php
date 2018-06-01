@@ -197,6 +197,57 @@ class Dates extends AbstractModule {
   }
 
   /**
+   * Returns $date as a float value.
+   * If $date is an instance of `\DateTime` its timestamp will be returned as float.
+   * If $date is a float it will be returned.
+   * If $date is neither of the above 0 will be returned.
+   *
+   * This method is particularly useful if $date could either be a `\DateTime`, `INF` or `-INF`
+   *
+   * @param $date
+   * @return float
+   */
+  public static function getFloatFrom($date) {
+    if ($date instanceof DateTime) {
+      return (float) $date->getTimestamp();
+    }
+
+    return is_float($date) ? $date : 0;
+  }
+
+  /**
+   * Determines the min value of $a and $b.
+   * $a and $b can either be instances of DateTime, -INF or INF
+   *
+   * @param     DateTime|float    $a
+   * @param     DateTime|float    $b
+   * @return    DateTime|float
+   */
+  public static function min($a, $b) {
+    $aFloat = self::getFloatFrom($a);
+    $bFloat = self::getFloatFrom($b);
+    $min = min($aFloat, $bFloat);
+
+    return is_finite($min) ? \DateTime::createFromFormat('U', $min) : $min;
+  }
+
+  /**
+   * Determines the max value of $a and $b.
+   * $a and $b can either be instances of DateTime, -INF or INF
+   *
+   * @param     DateTime|float    $a
+   * @param     DateTime|float    $b
+   * @return    DateTime|float
+   */
+  public static function max($a, $b) {
+    $aFloat = self::getFloatFrom($a);
+    $bFloat = self::getFloatFrom($b);
+    $max = max($aFloat, $bFloat);
+
+    return is_finite($max) ? \DateTime::createFromFormat('U', $max) : $max;
+  }
+
+  /**
    * Compares only the date in year, month and day of two DateTime objects
    *
    * @param     DateTime $date1 The first DateTime object
