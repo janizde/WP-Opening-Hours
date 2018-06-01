@@ -1,6 +1,7 @@
 <?php
 
 namespace OpeningHours\Module\Schema;
+use OpeningHours\Util\Dates;
 
 /**
  * Represents a sequence of `ValidityPeriods`
@@ -27,76 +28,35 @@ class ValiditySequence {
   }
 
   /**
-   * Returns a new `ValiditySequence` whose `$periods` correnspong to those of this `ValiditySequence`
+   * Returns a new `ValiditySequence` whose `$periods` correspond to those of this `ValiditySequence`
    * but restricted to the date range specified by `$min` and `$max`
    *
-   * If `$min` or `$max` is not specified the new `ValiditySequence` will not be restricted
+   * If `$min` is `-INF` or `$max` is `INF` the new `ValiditySequence` will not be restricted
    * in the respective direction
    *
    * `ValidityPeriod`s that are fully out of the date range are removed
    * and those who reach out of the date range are restricted
    *
-   * @param     \DateTime         $min                minimum validity period start
-   * @param     \DateTime         $max                maximum validity period end
-   * @return    ValiditySequence                      sequence with restricted `ValidityPeriod`s
+   * @param     \DateTime|float     $min    minimum validity period start
+   * @param     \DateTime|float     $max    maximum validity period end
+   * @return    ValiditySequence                    sequence with restricted `ValidityPeriod`s
    */
-  public function restrictedToDateRange(\DateTime $min = null, \DateTime $max = null) {
+  public function restrictedToDateRange($min, $max) {
     $periodsInRange = array_filter($this->periods, function (ValidityPeriod $period) use ($min, $max) {
       return !(
-        // `$min` is set and period is before `$min`
-        ($min !== null && $period->getEnd() !== null && $period->getEnd() < $min)
-        // `$max` ist set and period is after `$max`
-        || ($max !== null && $period->getStart() !== null && $period->getStart() > $max)
+        Dates::compareDateTime($period->getEnd(), $min) < 0
+        || Dates::compareDateTime($period->getStart(), $max) > 0
       );
     });
 
-    /**
-     * Determines the start date of a restricted `ValidityPeriod`
-     * @param     ValidityPeriod    $period
-     * @return    \DateTime|null
-     */
-    $getPeriodStart = function (ValidityPeriod $period) use ($min) {
-      if ($period->getStart() === null && $min === null) {
-        return null;
-      }
+    $minFloat = Dates::getFloatFrom($min);
+    $maxFloat = Dates::getFloatFrom($max);
 
-      if ($period->getStart() === null) {
-        return $min;
-      }
-
-      if ($min === null) {
-        return $period->getStart();
-      }
-
-      return max($min, $period->getStart());
-    };
-
-    /**
-     * Determines the end date of a restricted `ValidityPeriod`
-     * @param     ValidityPeriod    $period
-     * @return    \DateTime|null
-     */
-    $getPeriodEnd = function (ValidityPeriod $period) use ($max) {
-      if ($period->getEnd() === null && $max === null) {
-        return null;
-      }
-
-      if ($period->getEnd() === null) {
-        return $max;
-      }
-
-      if ($max === null) {
-        return $period->getEnd();
-      }
-
-      return min($max, $period->getEnd());
-    };
-
-    $restrictedPeriods = array_map(function (ValidityPeriod $period) use ($getPeriodStart, $getPeriodEnd) {
+    $restrictedPeriods = array_map(function (ValidityPeriod $period) use ($minFloat, $maxFloat) {
       return new ValidityPeriod(
         $period->getSet(),
-        $getPeriodStart($period),
-        $getPeriodEnd($period)
+        Dates::max($period->getStart(), $minFloat),
+        Dates::min($period->getEnd(), $maxFloat)
       );
     }, $periodsInRange);
 

@@ -92,7 +92,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    * - `restrictedToDateRange` does not remove `ValidityPeriod`s in the past when `$min` is `null`
    *   and re-indexes the `$periods` array
    */
-  public function testRestrictToDateRange_OutsideMinNull() {
+  public function testRestrictToDateRange_OutsideMinInfinity() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
@@ -100,7 +100,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
     ));
 
-    $restricted = $vs->restrictedToDateRange(null, new \DateTime('2018-04-29'));
+    $restricted = $vs->restrictedToDateRange(-INF, new \DateTime('2018-04-29'));
 
     $expected = array(
       new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
@@ -115,7 +115,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    * - `restrictedToDateRange` does not remove `ValidityPeriod`s in the past when `$max` is `null`
    *   and re-indexes the `$periods` array
    */
-  public function testRestrictToDateRange_OutsideMaxNull() {
+  public function testRestrictToDateRange_OutsideMaxInfinity() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
@@ -123,7 +123,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
     ));
 
-    $restricted = $vs->restrictedToDateRange(new \DateTime('2018-03-22'), null);
+    $restricted = $vs->restrictedToDateRange(new \DateTime('2018-03-22'), INF);
 
     $expected = array(
       new ValidityPeriod($set, new \DateTime('2018-03-22'), new \DateTime('2018-03-28')),
@@ -137,16 +137,16 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   /**
    * - `restrictedToDateRange` keeps `null` as periods' end when `$max` is `null`
    */
-  public function testRestrictToDateRange_OutsideMaxNullPeriodNull() {
+  public function testRestrictToDateRange_OutsideMaxInfinityeriodInfinity() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), null),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), INF),
     ));
 
-    $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-02'), null);
+    $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-02'), INF);
 
     $expected = array(
-      new ValidityPeriod($set, new \DateTime('2018-04-02'), null)
+      new ValidityPeriod($set, new \DateTime('2018-04-02'), INF)
     );
 
     $this->assertEquals($expected, $restricted->getPeriods());
@@ -155,10 +155,10 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   /**
    * - `restrictedToDateRange` sets an end date to a period with with a `null` end when `$max` is set
    */
-  public function testRestrictToDateRange_OutsideMaxValuePeriodNull() {
+  public function testRestrictToDateRange_OutsideMaxValuePeriodInfinity() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), null),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), INF),
     ));
 
     $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-02'), new \DateTime('2018-05-01'));
@@ -173,16 +173,16 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   /**
    * - `restrictedToDateRange` keeps `null` as periods' end when `$min` is `null`
    */
-  public function testRestrictToDateRange_OutsideMinNullPeriodNull() {
+  public function testRestrictToDateRange_OutsideMinInfinityPeriodInfinity() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, null, new \DateTime('2018-04-30')),
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-30')),
     ));
 
-    $restricted = $vs->restrictedToDateRange(null, new \DateTime('2018-04-20'));
+    $restricted = $vs->restrictedToDateRange(-INF, new \DateTime('2018-04-20'));
 
     $expected = array(
-      new ValidityPeriod($set, null, new \DateTime('2018-04-20'))
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-20'))
     );
 
     $this->assertEquals($expected, $restricted->getPeriods());
@@ -192,16 +192,16 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    * - `restrictedToDateRange` keeps `null` as periods' start and end when `$min` and `$max` are `null`
    *   and date range is from `null` to `null`
    */
-  public function testRestrictToDateRange_AllRangesNull() {
+  public function testRestrictToDateRange_AllRangesInfinity() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, null, null),
+      new ValidityPeriod($set, -INF, INF),
     ));
 
-    $restricted = $vs->restrictedToDateRange(null, null);
+    $restricted = $vs->restrictedToDateRange(-INF, INF);
 
     $expected = array(
-      new ValidityPeriod($set, null, null)
+      new ValidityPeriod($set, -INF, INF)
     );
 
     $this->assertEquals($expected, $restricted->getPeriods());
