@@ -19,19 +19,19 @@ class ChildSetWrapper implements DateTimeRange {
 
   /**
    * The start of the child set range
-   * @var     \DateTime | null
+   * @var     \DateTime|float
    */
   protected $dateStart;
 
   /**
    * The end of the child set range
-   * @var     \DateTime | null
+   * @var     \DateTime|float
    */
   protected $dateEnd;
 
   /**
    * The week scheme (even / odd)
-   * @var     string | null
+   * @var     string|null
    */
   protected $weekScheme;
 
@@ -41,7 +41,16 @@ class ChildSetWrapper implements DateTimeRange {
    */
   protected $children;
 
-  public function __construct(Set $set, \DateTime $dateStart = null, \DateTime $dateEnd = null, $weekScheme = null, $children = array()) {
+  /**
+   * ChildSetWrapper constructor.
+   *
+   * @param     Set               $set          Set to be wrapped
+   * @param     \DateTime|float   $dateStart    start of child set as \DateTime or -INF
+   * @param     \DateTime|float   $dateEnd      end of child set as \DateTime or INF
+   * @param     string|null       $weekScheme   week scheme as `even`, `odd` or null
+   * @param     ChildSetWrapper[] $children     further children of this set
+   */
+  public function __construct(Set $set, $dateStart, $dateEnd, $weekScheme = null, $children = array()) {
     $this->set = $set;
     $this->dateStart = $dateStart;
     $this->dateEnd = $dateEnd;
@@ -61,9 +70,9 @@ class ChildSetWrapper implements DateTimeRange {
     $details = SetDetails::getInstance()->getPersistence();
     $weekScheme = $details->getValue('weekScheme', $set->getId());
     $dateStart = $details->getValue('dateStart', $set->getId());
-    $dateStart = empty($dateStart) ? null : new \DateTime($dateStart);
+    $dateStart = empty($dateStart) ? -INF : new \DateTime($dateStart);
     $dateEnd = $details->getValue('dateEnd', $set->getId());
-    $dateEnd = empty($dateEnd) ? null : new \DateTime($dateEnd);
+    $dateEnd = empty($dateEnd) ? INF : new \DateTime($dateEnd);
     return new ChildSetWrapper($set, $dateStart, $dateEnd, $weekScheme);
   }
 

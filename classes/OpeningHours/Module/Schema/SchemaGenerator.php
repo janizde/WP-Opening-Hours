@@ -47,68 +47,44 @@ class SchemaGenerator {
    * Children of higher index in the `$children` array might overwrite previously created `ValidityPeriod`s
    *
    * @param     ChildSetWrapper   $child        Current child
-   * @param     \DateTime         $defaultMin   Default start date of a child when it has no own start value
-   * @param     \DateTime         $defaultMax   Default end date of a child when it has no own end value
    *
    * @return    ValiditySequence                Validity sequence containing `$child` and all its children recursively
    */
-  public function createChildSetValiditySequence(ChildSetWrapper $child, \DateTime $defaultMin, \DateTime $defaultMax) {
-    $childStart = $child->getStart() ?: $defaultMin;
-    $childEnd = $child->getEnd() ?: $defaultMax;
-
+  public function createChildSetValiditySequence(ChildSetWrapper $child) {
     $ownValiditySequence = new ValiditySequence(array(
       new ValidityPeriod(
         $child->getSet(),
-        $childStart,
-        $childEnd
+        $child->getStart(),
+        $child->getEnd()
       ),
     ));
 
     /** @var ValiditySequence $sequenceWithChildren */
     $sequenceWithChildren = array_reduce(
       $child->getChildren(),
-      function (ValiditySequence $sequence, ChildSetWrapper $childWrapper) use ($defaultMin, $defaultMax) {
-        $childSequence = $this->createChildSetValiditySequence($childWrapper, $defaultMin, $defaultMax);
+      function (ValiditySequence $sequence, ChildSetWrapper $childWrapper) {
+        $childSequence = $this->createChildSetValiditySequence($childWrapper);
         return $sequence->coveredWith($childSequence);
       },
       $ownValiditySequence
     );
 
-    return $sequenceWithChildren->restrictedToDateRange($childStart, $childEnd);
+    return $sequenceWithChildren->restrictedToDateRange($child->getStart(), $child->getEnd());
   }
 
   /**
    * Creates a `ValiditySequence` containing the `$mainSet` and all `$childSets`
    *
    * Gaps between child sets will be filled with `ValidityPeriod`s of the main set.
-   * The `ValiditySequence`'s `start` date is always the current date (or `$referenceNow`)
-   * The `ValiditySequence`'s `end` date is the last child set's `dateEnd` but at least `$referenceNow` plus one year
-   *
-   * @param       \DateTime       $referenceNow   Reference date time representing the current time
-   *                                              Will be the first item's `start` value
+   * The first ValidityPeriod will start at -INF and the last end at INF.
+   * If there are no child sets a single ValidityPeriod from -INF to INF will be created.
    *
    * @return      ValiditySequence                sequence of `$mainSet` and `$childSets` validity
    *
    * @throws      \Exception                      If the `interval_spec` of a \DateInterval is invalid
    */
-  public function createSetValiditySequence(\DateTime $referenceNow = null) {
-    $now = $referenceNow === null ? Dates::getNow() : $referenceNow;
-    $now->setTime(0,0,0);
-    $maxEnd = clone $now;
-    $maxEnd->add(new \DateInterval('P1Y'));
-
-    $childSets = array_filter($this->childSets, function (ChildSetWrapper $child) use ($now) {
-      return !$child->isPast($now);
-    });
-
-    $latestDefault = clone $maxEnd;
-    $latestDefault->sub(new \DateInterval('P1D'));
-    // Determine latest explicitly set end date or one year in future from the generated child partials
-    $latestSetDate = array_reduce($childSets, function (\DateTime $latest, ChildSetWrapper $childWrapper) {
-      return max($latest, $childWrapper->getEnd());
-    }, $latestDefault);
-
-    $mainWrapper = new ChildSetWrapper($this->mainSet, $now, $latestSetDate, null, $childSets);
-    return $this->createChildSetValiditySequence($mainWrapper, $now, $latestSetDate);
+  public function createSetValiditySequence() {
+    $mainWrapper = new ChildSetWrapper($this->mainSet, -INF, INF, null, $this->childSets);
+    return $this->createChildSetValiditySequence($mainWrapper);
   }
 }

@@ -19,10 +19,10 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $set = new Set(0);
     $sg = new SchemaGenerator($set);
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, -INF, INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -38,12 +38,12 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $child = new ChildSetWrapper($childSet, new \DateTime('2018-04-05'), new \DateTime('2018-04-10'));
     $sg = new SchemaGenerator($set, array($child));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-04')),
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-04')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-05'), new \DateTime('2018-04-10')),
-      new ValidityPeriod($set, new \DateTime('2018-04-11'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, new \DateTime('2018-04-11'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -58,11 +58,12 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $child = new ChildSetWrapper($childSet, new \DateTime('2018-04-01'), new \DateTime('2018-04-10'));
     $sg = new SchemaGenerator($set, array($child));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
+      new ValidityPeriod($set, -INF, new \DateTime('2018-03-31')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-01'), new \DateTime('2018-04-10')),
-      new ValidityPeriod($set, new \DateTime('2018-04-11'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, new \DateTime('2018-04-11'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -77,29 +78,12 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $child = new ChildSetWrapper($childSet, new \DateTime('2018-04-30'), new \DateTime('2019-03-31'));
     $sg = new SchemaGenerator($set, array($child));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-29')),
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-29')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-30'), new \DateTime('2019-03-31')),
-    ));
-
-    $this->assertEquals($expected, $result);
-  }
-
-  /**
-   * - `createSetValiditySequence` does not add periods for children that are fully in the past
-   */
-  public function testCreateSetValiditySequence_OneChildInPast() {
-    $set = new Set(0);
-    $childSet = new Set(1);
-    $child = new ChildSetWrapper($childSet, new \DateTime('2018-02-30'), new \DateTime('2018-03-31'));
-    $sg = new SchemaGenerator($set, array($child));
-
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
-
-    $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, new \DateTime('2019-04-01'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -114,28 +98,12 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $child = new ChildSetWrapper($childSet, new \DateTime('2018-04-01'), new \DateTime('2019-03-31'));
     $sg = new SchemaGenerator($set, array($child));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
+      new ValidityPeriod($set, -INF, new \DateTime('2018-03-31')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-01'), new \DateTime('2019-03-31')),
-    ));
-
-    $this->assertEquals($expected, $result);
-  }
-
-  /**
-   * - `createSetValiditySequence` restricts the period of the child set its parent's date range
-   */
-  public function testCreateSetValiditySequence_OneChildWholeAndBeyond() {
-    $set = new Set(0);
-    $childSet = new Set(1);
-    $child = new ChildSetWrapper($childSet, new \DateTime('2018-03-03'), new \DateTime('2019-04-30'));
-    $sg = new SchemaGenerator($set, array($child));
-
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
-
-    $expected = new ValiditySequence(array(
-      new ValidityPeriod($childSet, new \DateTime('2018-04-01'), new \DateTime('2019-04-30')),
+      new ValidityPeriod($set, new \DateTime('2019-04-01'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -152,14 +120,14 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $child2 = new ChildSetWrapper($childSet2, new \DateTime('2018-04-12'), new \DateTime('2018-04-14'));
     $sg = new SchemaGenerator($set, array($child2, $child1));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-04')),
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-04')),
       new ValidityPeriod($childSet1, new \DateTime('2018-04-05'), new \DateTime('2018-04-10')),
       new ValidityPeriod($set, new \DateTime('2018-04-11'), new \DateTime('2018-04-11')),
       new ValidityPeriod($childSet2, new \DateTime('2018-04-12'), new \DateTime('2018-04-14')),
-      new ValidityPeriod($set, new \DateTime('2018-04-15'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -176,13 +144,13 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $child2 = new ChildSetWrapper($childSet2, new \DateTime('2018-04-12'), new \DateTime('2018-04-14'));
     $sg = new SchemaGenerator($set, array($child2, $child1));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-04')),
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-04')),
       new ValidityPeriod($childSet1, new \DateTime('2018-04-05'), new \DateTime('2018-04-11')),
       new ValidityPeriod($childSet2, new \DateTime('2018-04-12'), new \DateTime('2018-04-14')),
-      new ValidityPeriod($set, new \DateTime('2018-04-15'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -199,13 +167,13 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $child2 = new ChildSetWrapper($childSet2, new \DateTime('2018-04-12'), new \DateTime('2018-04-14'));
     $sg = new SchemaGenerator($set, array($child2, $child1));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-04')),
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-04')),
       new ValidityPeriod($childSet1, new \DateTime('2018-04-05'), new \DateTime('2018-04-13')),
       new ValidityPeriod($childSet2, new \DateTime('2018-04-14'), new \DateTime('2018-04-14')),
-      new ValidityPeriod($set, new \DateTime('2018-04-15'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -218,14 +186,14 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
   public function testCreateSetValiditySequence_OneChildWithoutDateStart() {
     $set = new Set(0);
     $childSet = new Set(1);
-    $child = new ChildSetWrapper($childSet, null, new \DateTime('2018-04-13'));
+    $child = new ChildSetWrapper($childSet, -INF, new \DateTime('2018-04-13'));
     $sg = new SchemaGenerator($set, array($child));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($childSet, new \DateTime('2018-04-01'), new \DateTime('2018-04-13')),
-      new ValidityPeriod($set, new \DateTime('2018-04-14'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($childSet, -INF, new \DateTime('2018-04-13')),
+      new ValidityPeriod($set, new \DateTime('2018-04-14'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -238,14 +206,14 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
   public function testCreateSetValiditySequence_OneChildWithoutDateEnd() {
     $set = new Set(0);
     $childSet = new Set(1);
-    $child = new ChildSetWrapper($childSet, new \DateTime('2018-04-13'), null);
+    $child = new ChildSetWrapper($childSet, new \DateTime('2018-04-13'), INF);
     $sg = new SchemaGenerator($set, array($child));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-12')),
-      new ValidityPeriod($childSet, new \DateTime('2018-04-13'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($set, -INF, new \DateTime('2018-04-12')),
+      new ValidityPeriod($childSet, new \DateTime('2018-04-13'), INF),
     ));
 
     $this->assertEquals($expected, $result);
@@ -258,13 +226,13 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
   public function testCreateSetValiditySequence_OneChildWithoutAnyDate() {
     $set = new Set(0);
     $childSet = new Set(1);
-    $child = new ChildSetWrapper($childSet, null, null);
+    $child = new ChildSetWrapper($childSet, -INF, INF);
     $sg = new SchemaGenerator($set, array($child));
 
-    $result = $sg->createSetValiditySequence(new \DateTime('2018-04-01'));
+    $result = $sg->createSetValiditySequence();
 
     $expected = new ValiditySequence(array(
-      new ValidityPeriod($childSet, new \DateTime('2018-04-01'), new \DateTime('2019-03-31')),
+      new ValidityPeriod($childSet, -INF, INF),
     ));
 
     $this->assertEquals($expected, $result);

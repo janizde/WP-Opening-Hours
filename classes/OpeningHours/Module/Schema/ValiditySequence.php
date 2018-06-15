@@ -91,7 +91,7 @@ class ValiditySequence {
 
     // If the background sequence exceeds the foreground sequence
     // add the restricted background sequence to the total sequence
-    if ($this->getStart() < $foregroundSequence->getStart()) {
+    if (Dates::getFloatFrom($this->getStart()) < Dates::getFloatFrom($foregroundSequence->getStart())) {
       $gapStart = $this->getStart();
       $gapEnd = clone $foregroundSequence->getStart();
       $gapEnd->sub(new \DateInterval('P1D'));
@@ -125,7 +125,7 @@ class ValiditySequence {
 
     // If the background sequence exceeds the foreground sequence
     // add the restricted background sequence to the total sequence
-    if ($this->getEnd() > $foregroundSequence->getEnd()) {
+    if (Dates::getFloatFrom($this->getEnd()) > Dates::getFloatFrom($foregroundSequence->getEnd())) {
       $gapStart = $foregroundSequence->getEnd();
       $gapStart->add(new \DateInterval('P1D'));
       $gapEnd = $this->getEnd();
@@ -148,18 +148,28 @@ class ValiditySequence {
   /**
    * Returns the first `ValidityPeriod`s start date
    *
-   * @return    \DateTime|null    The first `ValidityPeriods` start date or null if the sequence is empty
+   * @return    \DateTime|float   The first `ValidityPeriods` start date or -INF if the sequence is empty
    */
   public function getStart() {
-    return count($this->periods) > 0 ? (clone $this->periods[0]->getStart()) : null;
+    if (count($this->periods) < 1) {
+      return -INF;
+    }
+
+    $start = $this->periods[0]->getStart();
+    return $start instanceof \DateTime ? clone $start : $start;
   }
 
   /**
    * Returns the last `ValidityPeriod`s end date
    *
-   * @return    \DateTime|null    The last `ValidityPeriods` end date or null if the sequence is empty
+   * @return    \DateTime|float   The last `ValidityPeriods` end date or INF if the sequence is empty
    */
   public function getEnd() {
-    return count($this->periods) > 0 ? (clone $this->periods[count($this->periods) - 1]->getEnd()) : null;
+    if (count($this->periods) < 1) {
+      return INF;
+    }
+
+    $end = $this->periods[count($this->periods) - 1]->getEnd();
+    return $end instanceof \DateTime ? clone $end : INF;
   }
 }
