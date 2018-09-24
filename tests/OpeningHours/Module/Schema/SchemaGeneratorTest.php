@@ -3,12 +3,15 @@
 namespace OpeningHours\Test\Module\Schema;
 
 use OpeningHours\Entity\ChildSetWrapper;
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\Schema\SchemaGenerator;
 use OpeningHours\Module\Schema\ValidityPeriod;
 use OpeningHours\Module\Schema\ValiditySequence;
 use OpeningHours\Test\OpeningHoursTestCase;
+use OpeningHours\Util\Dates;
 
 class SchemaGeneratorTest extends OpeningHoursTestCase {
 
@@ -401,6 +404,37 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     );
 
     $result = $sg->createOpeningHoursSpecDefinition($vs);
+    $this->assertEquals($expected, $result);
+  }
+
+  public function test_createSpecialOpeningHoursSpecification() {
+    $set = new Set(0);
+    $set->getHolidays()->append(new Holiday('Holiday 1', new \DateTime('2018-09-24'), new \DateTime('2018-09-25')));
+    $set->getHolidays()->append(new Holiday('Holiday 2', new \DateTime('2018-09-26'), new \DateTime('2018-09-27')));
+    $set->getIrregularOpenings()->append(new IrregularOpening('IO 1', '2018-09-25', '13:00', '14:00'));
+    $set->getIrregularOpenings()->append(new IrregularOpening('IO 2', '2018-09-26', '15:00', '16:00'));
+    Dates::setNow(new \DateTime('2018-09-26'));
+    $sg = new SchemaGenerator($set);
+
+    $expected = array(
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'name' => 'Holiday 2',
+        'validFrom' => '2018-09-26',
+        'validThrough' => '2018-09-27',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'name' => 'IO 2',
+        'opens' => '15:00',
+        'closes' => '16:00',
+        'validFrom' => '2018-09-26',
+        'validThrough' => '2018-09-26',
+      )
+    );
+
+    $result = $sg->createSpecialOpeningHoursSpecification();
+
     $this->assertEquals($expected, $result);
   }
 }

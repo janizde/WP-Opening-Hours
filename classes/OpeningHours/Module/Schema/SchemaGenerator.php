@@ -3,8 +3,12 @@
 namespace OpeningHours\Module\Schema;
 
 use OpeningHours\Entity\ChildSetWrapper;
+use OpeningHours\Entity\Holiday;
+use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
+use OpeningHours\Module\Widget\IrregularOpenings;
+use OpeningHours\Util\Dates;
 
 /**
  * Generator for schema.org `OpeningHoursSpec` objects from Opening Hours `Set`s
@@ -118,6 +122,49 @@ class SchemaGenerator {
     return array_reduce($vs->getPeriods(), function (array $specs, ValidityPeriod $p) use ($that) {
       return array_merge($specs, $that->createSpecItemsFromValidityPeriod($p));
     }, array());
+  }
+
+  /**
+   * Creates OpeningHoursSpecification objects for the current Set's
+   * Holidays and Irregular Openings. All past items will not be considered
+   *
+   * @return      array[]         Sequence of OpeningHoursSpecification objects
+   *                              representing the current Set's Holidays and Irregular Openings
+   */
+  public function createSpecialOpeningHoursSpecification() {
+    $now = Dates::getNow();
+    $holidays = array_filter($this->mainSet->getHolidays()->getArrayCopy(), function (Holiday $holiday) use ($now) {
+      return $holiday->getEnd() > $now;
+    });
+
+    $ios = array_filter($this->mainSet->getIrregularOpenings()->getArrayCopy(), function (IrregularOpening $io) use ($now) {
+      return $io->getEnd() > $now;
+    });
+
+    $holidaySpecs = array_map(function (Holiday $h) {
+      return array(
+        '@type' => 'OpeningHoursSpecification',
+        'name' => $h->getName(),
+        'validFrom' => $h->getStart()->format(self::SCHEMA_DATE_FORMAT),
+        'validThrough' => $h->getEnd()->format(self::SCHEMA_DATE_FORMAT),
+      );
+    }, $holidays);
+
+    $ioSpecs = array_map(function (IrregularOpening $io) {
+      return array(
+        '@type' => 'OpeningHoursSpecification',
+        'name' => $io->getName(),
+        'opens' => $io->getStart()->format(self::SCHEMA_TIME_FORMAT),
+        'closes' => $io->getEnd()->format(self::SCHEMA_TIME_FORMAT),
+        'validFrom' => $io->getDate()->format(self::SCHEMA_DATE_FORMAT),
+        'validThrough' => $io->getDate()->format(self::SCHEMA_DATE_FORMAT)
+      );
+    }, $ios);
+
+    return array_merge(
+      $holidaySpecs,
+      $ioSpecs
+    );
   }
 
   /**
