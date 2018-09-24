@@ -105,7 +105,15 @@ class SchemaGenerator {
     return $this->createChildSetValiditySequence($mainWrapper);
   }
 
-  public function createSpecDefinition(ValiditySequence $vs) {
+  /**
+   * Creates schema.org OpeningHoursSpecification objects for the whole ValiditySequence
+   * contained in `$vs` for the current Set.
+   *
+   * @param     ValiditySequence    $vs     The ValiditySequence from which to create the spec items
+   * @return    array                       Array of associative arrays representing the OpeningHoursSpecification
+   *                                        objects of all child sets and the main set in `$vp`
+   */
+  public function createOpeningHoursSpecDefinition(ValiditySequence $vs) {
     $that = $this;
     return array_reduce($vs->getPeriods(), function (array $specs, ValidityPeriod $p) use ($that) {
       return array_merge($specs, $that->createSpecItemsFromValidityPeriod($p));

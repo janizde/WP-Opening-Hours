@@ -354,4 +354,53 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
 
     $this->assertEquals($expected, $result);
   }
+
+  public function test_createOpeningHoursSpecDefinition() {
+    $set = new Set(0);
+    $set->getPeriods()->append(new Period(0, '12:00', '13:00'));
+    $set->getPeriods()->append(new Period(6, '13:00', '14:00'));
+    $child = new Set(1);
+    $child->getPeriods()->append(new Period(1, '15:00', '16:00'));
+    $child->getPeriods()->append(new Period(5, '17:00', '18:00'));
+
+    $sg = new SchemaGenerator($set, array($child));
+    $vs = new ValiditySequence(array(
+      new ValidityPeriod($set, -INF, new \DateTime('2018-09-24')),
+      new ValidityPeriod($child, new \DateTime('2018-09-25'), INF)
+    ));
+
+    $expected = array(
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '12:00',
+        'closes' => '13:00',
+        'dayOfWeek' => 'http://schema.org/Sunday',
+        'validThrough' => '2018-09-24',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '13:00',
+        'closes' => '14:00',
+        'dayOfWeek' => 'http://schema.org/Saturday',
+        'validThrough' => '2018-09-24',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '15:00',
+        'closes' => '16:00',
+        'dayOfWeek' => 'http://schema.org/Monday',
+        'validFrom' => '2018-09-25',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '17:00',
+        'closes' => '18:00',
+        'dayOfWeek' => 'http://schema.org/Friday',
+        'validFrom' => '2018-09-25',
+      ),
+    );
+
+    $result = $sg->createOpeningHoursSpecDefinition($vs);
+    $this->assertEquals($expected, $result);
+  }
 }
