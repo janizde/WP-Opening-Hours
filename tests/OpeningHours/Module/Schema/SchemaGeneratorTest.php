@@ -3,6 +3,7 @@
 namespace OpeningHours\Test\Module\Schema;
 
 use OpeningHours\Entity\ChildSetWrapper;
+use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
 use OpeningHours\Module\Schema\SchemaGenerator;
 use OpeningHours\Module\Schema\ValidityPeriod;
@@ -234,6 +235,122 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $expected = new ValiditySequence(array(
       new ValidityPeriod($childSet, -INF, INF),
     ));
+
+    $this->assertEquals($expected, $result);
+  }
+
+  public function test_createSpecItemsFromValidityPeriod_Infinite() {
+    $set = new Set(0);
+    $set->getPeriods()->append(new Period(0, '12:00', '13:00'));
+    $set->getPeriods()->append(new Period(6, '13:00', '14:00'));
+    $sg = new SchemaGenerator($set);
+    $vp = new ValidityPeriod($set, -INF, INF);
+
+    $expected = array(
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '12:00',
+        'closes' => '13:00',
+        'dayOfWeek' => 'http://schema.org/Sunday',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '13:00',
+        'closes' => '14:00',
+        'dayOfWeek' => 'http://schema.org/Saturday',
+      ),
+    );
+
+    $result = $sg->createSpecItemsFromValidityPeriod($vp);
+
+    $this->assertEquals($expected, $result);
+  }
+
+  public function test_createSpecItemsFromValidityPeriod_StartInfinite() {
+    $set = new Set(0);
+    $set->getPeriods()->append(new Period(0, '12:00', '13:00'));
+    $set->getPeriods()->append(new Period(6, '13:00', '14:00'));
+    $sg = new SchemaGenerator($set);
+    $vp = new ValidityPeriod($set, -INF, new \DateTime('2018-09-24'));
+
+    $expected = array(
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '12:00',
+        'closes' => '13:00',
+        'dayOfWeek' => 'http://schema.org/Sunday',
+        'validThrough' => '2018-09-24',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '13:00',
+        'closes' => '14:00',
+        'dayOfWeek' => 'http://schema.org/Saturday',
+        'validThrough' => '2018-09-24',
+      ),
+    );
+
+    $result = $sg->createSpecItemsFromValidityPeriod($vp);
+
+    $this->assertEquals($expected, $result);
+  }
+
+  public function test_createSpecItemsFromValidityPeriod_EndInfinite() {
+    $set = new Set(0);
+    $set->getPeriods()->append(new Period(0, '12:00', '13:00'));
+    $set->getPeriods()->append(new Period(6, '13:00', '14:00'));
+    $sg = new SchemaGenerator($set);
+    $vp = new ValidityPeriod($set, new \DateTime('2018-09-24'), INF);
+
+    $expected = array(
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '12:00',
+        'closes' => '13:00',
+        'dayOfWeek' => 'http://schema.org/Sunday',
+        'validFrom' => '2018-09-24',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '13:00',
+        'closes' => '14:00',
+        'dayOfWeek' => 'http://schema.org/Saturday',
+        'validFrom' => '2018-09-24',
+      ),
+    );
+
+    $result = $sg->createSpecItemsFromValidityPeriod($vp);
+
+    $this->assertEquals($expected, $result);
+  }
+
+  public function test_createSpecItemsFromValidityPeriod_Finite() {
+    $set = new Set(0);
+    $set->getPeriods()->append(new Period(0, '12:00', '13:00'));
+    $set->getPeriods()->append(new Period(6, '13:00', '14:00'));
+    $sg = new SchemaGenerator($set);
+    $vp = new ValidityPeriod($set, new \DateTime('2018-09-24'), new \DateTime('2018-09-25'));
+
+    $expected = array(
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '12:00',
+        'closes' => '13:00',
+        'dayOfWeek' => 'http://schema.org/Sunday',
+        'validFrom' => '2018-09-24',
+        'validThrough' => '2018-09-25',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'opens' => '13:00',
+        'closes' => '14:00',
+        'dayOfWeek' => 'http://schema.org/Saturday',
+        'validFrom' => '2018-09-24',
+        'validThrough' => '2018-09-25',
+      ),
+    );
+
+    $result = $sg->createSpecItemsFromValidityPeriod($vp);
 
     $this->assertEquals($expected, $result);
   }

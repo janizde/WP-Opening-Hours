@@ -64,7 +64,7 @@ class ValiditySequence {
   }
 
   /**
-   * Returns a new `ValiditySequence` containing all `ValidityPeriods` of the specified `$foreGroundsequence`
+   * Returns a new `ValiditySequence` containing all `ValidityPeriods` of the specified `$foreGroundSequence`
    * and fills the gaps between `$foregroundSequence`'s periods with the periods from this `ValiditySequence`
    *
    * The new `ValiditySequence`'s start and end are specified by the most exceeding periods in this `ValiditySequence`
