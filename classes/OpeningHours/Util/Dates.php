@@ -65,7 +65,18 @@ class Dates extends AbstractModule {
     $this->dateFormat = get_option('date_format', self::STD_DATE_FORMAT);
     $this->timeFormat = get_option('time_format', self::STD_TIME_FORMAT);
     $this->startOfWeek = intval(get_option('start_of_week', 0));
-    $this->timezone = new DateTimeZone('UTC');
+
+    $timezone_string = get_option( 'timezone_string' );
+
+    if ( ! empty( $timezone_string ) ) {
+        $this->timezone = new DateTimeZone($timezone_string);
+    } else {
+        $offset  = get_option( 'gmt_offset' );
+        $hours   = (int) $offset;
+        $minutes = ( $offset - floor( $offset ) ) * 60;
+        $this->timezone = new DateTimeZone(sprintf( '%+03d:%02d', $hours, $minutes ));
+    }
+
     $this->now = new DateTime(current_time('Y-m-d H:i:s'), $this->timezone);
   }
 
