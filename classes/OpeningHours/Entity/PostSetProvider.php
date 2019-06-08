@@ -204,4 +204,23 @@ class PostSetProvider extends SetProvider {
 
     throw new \InvalidArgumentException("A post set with id or alias '$id' does not exist.");
   }
+
+  /**
+   * Creates an instance of Set from a Post object
+   * and populates it with the post name and Periods, Holidays
+   * and Irregular Openings which are saved for that specific Set.
+   *
+   * @param       \WP_Post    $post   The post from which to create the set
+   * @return      Set                 The Set instance consisting of the post's meta data
+   */
+  public function createSetFromPost(\WP_Post $post) {
+    $set = new Set($post->ID);
+    $set->setName($post->post_title);
+
+    $persistence = new Persistence($post);
+    $set->setPeriods(ArrayObject::createFromArray($persistence->loadPeriods()));
+    $set->setHolidays(ArrayObject::createFromArray($persistence->loadHolidays()));
+    $set->setIrregularOpenings(ArrayObject::createFromArray($persistence->loadIrregularOpenings()));
+    return $set;
+  }
 }

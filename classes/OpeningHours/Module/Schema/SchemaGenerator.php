@@ -7,7 +7,6 @@ use OpeningHours\Entity\Holiday;
 use OpeningHours\Entity\IrregularOpening;
 use OpeningHours\Entity\Period;
 use OpeningHours\Entity\Set;
-use OpeningHours\Module\Widget\IrregularOpenings;
 use OpeningHours\Util\Dates;
 
 /**
