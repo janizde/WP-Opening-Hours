@@ -1,8 +1,8 @@
 === Opening Hours ===
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
-Tested up to: 4.7.1
-Stable tag: 2.1.3
+Tested up to: 5.1.1
+Stable tag: 2.1.4
 Requires at least: 4.0.0
 Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
@@ -74,6 +74,11 @@ There are multiple ways to install the Opening Hours Plugin
 
 == Frequently Asked Questions ==
 
+= How can I change the styling of the widgets / shortcodes? =
+
+The Plugin provides very minimal styling, which is the red and green colors for the open / closed messages. All other kind of styling is left to the WordPress Theme you are using or your custom CSS.
+To disable the styling of the text color the [`op_use_front_end_styles`](https://github.com/janizde/WP-Opening-Hours/blob/master/doc/filters.md#op_use_front_end_styles) filter hook can be used.
+
 = My language is not provided in the Plugin =
 
 You can participate to Plugin translations to make it available in more languages.
@@ -84,6 +89,11 @@ Please read the section on [contributing to translations](https://github.com/jan
 If you found a bug you would like to fix feel free to [contribute to the project on GitHub](https://github.com/janizde/WP-Opening-Hours#contributing-to-code).
 
 == Changelog ==
+
+= 2.1.4 =
+
+* Fixed a warning occuring in the Overview shortcode with PHP >= 7.2
+* Added method `OpeningHours->clearSetProviders()` to `OpeningHours` singleton
 
 = 2.1.3 =
 
