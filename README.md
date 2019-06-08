@@ -916,6 +916,11 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
+### v2.1.4
+
+* Fixed a warning occuring in the Overview shortcode with PHP >= 7.2
+* Added method `OpeningHours->clearSetProviders()` to `OpeningHours` singleton
+
 ### v2.1.3
 
 * Fix concerning time formats of Irregular Openings and Periods when saving by @Braunson
