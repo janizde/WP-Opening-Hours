@@ -62,6 +62,13 @@ class OpeningHours extends AbstractModule {
   }
 
   /**
+   * Resets the array of SetProviders to an empty list
+   */
+  public function clearSetProviders() {
+    $this->setProviders = array();
+  }
+
+  /**
    * Getter: Sets
    * @return    ArrayObject
    */
