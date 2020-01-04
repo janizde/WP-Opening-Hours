@@ -62,6 +62,14 @@ class OpeningHours extends AbstractModule {
   }
 
   /**
+   * Returns all registered SetProviders as array
+   * @return      SetProvider[]
+   */
+  public function getSetProviders() {
+    return $this->setProviders;
+  }
+
+  /**
    * Getter: Sets
    * @return    ArrayObject
    */

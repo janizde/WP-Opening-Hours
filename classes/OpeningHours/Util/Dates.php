@@ -164,6 +164,90 @@ class Dates extends AbstractModule {
   }
 
   /**
+   * Compares $date1 and $date2 and determines the difference in seconds.
+   * Also if $date1 or $date2 is not finite i.e. either INF or -INF then an infinite difference will be returned.
+   * If you can be sure $date1 or $date2 are not `INF` or `-INF` use the overloaded comparison operators for
+   * instances of `\DateTime` for better readability.
+   *
+   * If $date1 is before $date2 a negative value will be returned.
+   * If $date1 is after $date2 a positive value will be returned.
+   * If $date1 and $date2 are equal 0 will be returned.
+   * If $date1 and $date2 are both infinite and equal 0 will be returned.
+   *
+   * @param       \DateTime|float     $date1      The first date as `DateTime`, `INF` or `-INF`
+   * @param       \DateTime|float     $date2      The second date as `DateTime`, `INF` or `-INF`
+   * @return      float                           Difference of $date1 and $date2 in seconds (concerning the day)
+   *                                              or `INF` / `-INF`
+   */
+  public static function compareDateTime($date1, $date2) {
+    if ($date1 instanceof DateTime) {
+      $date1 = $date1->getTimestamp();
+    }
+
+    if ($date2 instanceof DateTime) {
+      $date2 = $date2->getTimestamp();
+    }
+
+    // Manual workaround because INF - INF evaluates to NAN
+    if (is_infinite($date1) && is_infinite($date2) && $date1 === $date2) {
+      return 0;
+    }
+
+    return $date1 - $date2;
+  }
+
+  /**
+   * Returns $date as a float value.
+   * If $date is an instance of `\DateTime` its timestamp will be returned as float.
+   * If $date is a float it will be returned.
+   * If $date is neither of the above 0 will be returned.
+   *
+   * This method is particularly useful if $date could either be a `\DateTime`, `INF` or `-INF`
+   *
+   * @param $date
+   * @return float
+   */
+  public static function getFloatFrom($date) {
+    if ($date instanceof DateTime) {
+      return (float) $date->getTimestamp();
+    }
+
+    return is_float($date) ? $date : 0;
+  }
+
+  /**
+   * Determines the min value of $a and $b.
+   * $a and $b can either be instances of DateTime, -INF or INF
+   *
+   * @param     DateTime|float    $a
+   * @param     DateTime|float    $b
+   * @return    DateTime|float
+   */
+  public static function min($a, $b) {
+    $aFloat = self::getFloatFrom($a);
+    $bFloat = self::getFloatFrom($b);
+    $min = min($aFloat, $bFloat);
+
+    return is_finite($min) ? \DateTime::createFromFormat('U', $min) : $min;
+  }
+
+  /**
+   * Determines the max value of $a and $b.
+   * $a and $b can either be instances of DateTime, -INF or INF
+   *
+   * @param     DateTime|float    $a
+   * @param     DateTime|float    $b
+   * @return    DateTime|float
+   */
+  public static function max($a, $b) {
+    $aFloat = self::getFloatFrom($a);
+    $bFloat = self::getFloatFrom($b);
+    $max = max($aFloat, $bFloat);
+
+    return is_finite($max) ? \DateTime::createFromFormat('U', $max) : $max;
+  }
+
+  /**
    * Compares only the date in year, month and day of two DateTime objects
    *
    * @param     DateTime $date1 The first DateTime object
@@ -184,6 +268,19 @@ class Dates extends AbstractModule {
     } else {
       return 1;
     }
+  }
+
+  /**
+   * Returns a new instance of `DateTime` with the same date as `$date`
+   * but the time component set to 23:59:59.
+   *
+   * @param     DateTime    $date
+   * @return    DateTime
+   */
+  public static function endOfDay(DateTime $date) {
+    $date = clone $date;
+    $date->setTime(23, 59, 59);
+    return $date;
   }
 
   /**

@@ -59,7 +59,7 @@ abstract class AbstractWidget extends WP_Widget {
    *
    * @param     string    $id          The widget id
    * @param     string    $title       The widget title
-   * @param     array     $description The widget description
+   * @param     string    $description The widget description
    * @param     Shortcode $shortcode   The shortcode singleton instance
    */
   public function __construct ( $id, $title, $description, Shortcode $shortcode ) {
@@ -71,7 +71,9 @@ abstract class AbstractWidget extends WP_Widget {
     $this->fieldRenderer = new WidgetFieldRenderer($this);
     $this->registerFields();
 
-    parent::__construct($id, $title, $description);
+    parent::__construct($id, $title, array(
+      'description' => $description
+    ));
   }
 
   /**
