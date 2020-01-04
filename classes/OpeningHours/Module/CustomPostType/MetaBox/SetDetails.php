@@ -13,7 +13,6 @@ use WP_Post;
  * @package     OpeningHours\Module\CustomPostType\MetaBox
  */
 class SetDetails extends AbstractMetaBox {
-
   const FILTER_ALIAS_PRESETS = 'op_set_alias_presets';
 
   /**
@@ -34,8 +33,13 @@ class SetDetails extends AbstractMetaBox {
    */
   protected $fieldRenderer;
 
-  public function __construct () {
-    parent::__construct('op_meta_box_set_details', __('Set Details', 'wp-opening-hours'), self::CONTEXT_SIDE, self::PRIORITY_HIGH);
+  public function __construct() {
+    parent::__construct(
+      'op_meta_box_set_details',
+      __('Set Details', 'wp-opening-hours'),
+      self::CONTEXT_SIDE,
+      self::PRIORITY_HIGH
+    );
     $this->fieldRenderer = new MetaBoxFieldRenderer($this->id);
     $this->persistence = new MetaBoxPersistence($this->id);
 
@@ -90,23 +94,27 @@ class SetDetails extends AbstractMetaBox {
         'type' => 'heading',
         'name' => 'childSetNotice',
         'heading' => __('Add a Child-Set', 'wp-opening-hours'),
-        'description' => __('You may add a child set that overwrites the parent Opening Hours in a specific time range. Choose a parent set under "Attributes".', 'wp-opening-hours'),
+        'description' => __(
+          'You may add a child set that overwrites the parent Opening Hours in a specific time range. Choose a parent set under "Attributes".',
+          'wp-opening-hours'
+        ),
         'show_when' => 'parent'
       )
     );
   }
 
   /** @inheritdoc */
-  public function renderMetaBox (WP_Post $post) {
+  public function renderMetaBox(WP_Post $post) {
     $this->nonceField();
 
-    echo '<p><h3>'.__('Set Id', 'wp-opening-hours').': <code>'.$post->ID.'</code></h3></p>';
+    echo '<p><h3>' . __('Set Id', 'wp-opening-hours') . ': <code>' . $post->ID . '</code></h3></p>';
 
     $type = $post->post_parent == 0 ? 'parent' : 'child';
 
     foreach ($this->fields as $field) {
-      if (array_key_exists('show_when', $field) && $field['show_when'] != $type)
+      if (array_key_exists('show_when', $field) && $field['show_when'] != $type) {
         continue;
+      }
 
       $value = $this->persistence->getValue($field['name'], $post->ID);
       echo $this->fieldRenderer->getFieldMarkup($field, $value);
@@ -114,9 +122,10 @@ class SetDetails extends AbstractMetaBox {
   }
 
   /** @inheritdoc */
-  protected function saveData ( $post_id, WP_Post $post, $update ) {
-    if (!array_key_exists($this->id, $_POST))
+  protected function saveData($post_id, WP_Post $post, $update) {
+    if (!array_key_exists($this->id, $_POST)) {
       return;
+    }
 
     $data = $_POST[$this->id];
     foreach ($this->fields as $field) {
@@ -129,7 +138,7 @@ class SetDetails extends AbstractMetaBox {
    * Returns the persistence manager for the meta box
    * @return    MetaBoxPersistence
    */
-  public function getPersistence () {
+  public function getPersistence() {
     return $this->persistence;
   }
 }

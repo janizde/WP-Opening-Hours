@@ -11,7 +11,6 @@ use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
  * @package OpeningHours\Entity
  */
 class ChildSetWrapper implements DateTimeRange {
-
   /**
    * @var     Set         The Set instance
    */

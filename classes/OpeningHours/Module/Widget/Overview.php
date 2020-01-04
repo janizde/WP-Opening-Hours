@@ -12,16 +12,17 @@ use OpeningHours\Module\Shortcode\Overview as OverviewShortcode;
  * @package     OpeningHours\Module\Widget
  */
 class Overview extends AbstractWidget {
-
-  public function __construct () {
+  public function __construct() {
     $title = __('Opening Hours: Overview', 'wp-opening-hours');
-    $description = __('Displays a Table with your Opening Hours. Alternatively use the op-overview Shortcode.', 'wp-opening-hours');
+    $description = __(
+      'Displays a Table with your Opening Hours. Alternatively use the op-overview Shortcode.',
+      'wp-opening-hours'
+    );
     parent::__construct('widget_op_overview', $title, $description, OverviewShortcode::getInstance());
   }
 
   /** @inheritdoc */
-  protected function registerFields () {
-
+  protected function registerFields() {
     // Standard Fields
     $this->addField('title', array(
       'type' => 'text',
@@ -66,7 +67,7 @@ class Overview extends AbstractWidget {
 
     $this->addField('include_io', array(
       'type' => 'checkbox',
-      'caption' => __('Include Irregular Openings', 'wp-opening-hours'),
+      'caption' => __('Include Irregular Openings', 'wp-opening-hours')
     ));
 
     $this->addField('include_holidays', array(
@@ -122,7 +123,10 @@ class Overview extends AbstractWidget {
     $this->addField('week_offset', array(
       'type' => 'number',
       'caption' => __('Week offset', 'wp-opening-hours'),
-      'description' => __('Number of weeks the overview contents shall be offset. Might be a positive or negative integer.', 'wp-opening-hours'),
+      'description' => __(
+        'Number of weeks the overview contents shall be offset. Might be a positive or negative integer.',
+        'wp-opening-hours'
+      ),
       'default_placeholder' => true,
       'extended' => true,
       'attributes' => array(

@@ -13,7 +13,6 @@ use OpeningHours\Test\OpeningHoursTestCase;
  * @package OpeningHours\Test\Module\Schema
  */
 class ValidityPeriodTest extends OpeningHoursTestCase {
-
   /**
    * - `__construct` sets `$set`, `$start` and `$end` properly
    */

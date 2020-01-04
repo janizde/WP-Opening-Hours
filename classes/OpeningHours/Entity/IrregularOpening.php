@@ -14,7 +14,6 @@ use OpeningHours\Util\Dates;
  * @package     OpeningHours\Entity
  */
 class IrregularOpening implements TimeContextEntity, DateTimeRange {
-
   /**
    * The name of the IO
    * @type      string
@@ -50,18 +49,22 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    *
    * @throws    InvalidArgumentException  On validation error
    */
-  public function __construct ( $name, $date, $timeStart, $timeEnd, $dummy = false ) {
-    if (!preg_match(Dates::STD_TIME_FORMAT_REGEX, $timeStart))
+  public function __construct($name, $date, $timeStart, $timeEnd, $dummy = false) {
+    if (!preg_match(Dates::STD_TIME_FORMAT_REGEX, $timeStart)) {
       throw new InvalidArgumentException("\$timeStart is not in valid time format");
+    }
 
-    if (!preg_match(Dates::STD_TIME_FORMAT_REGEX, $timeEnd))
+    if (!preg_match(Dates::STD_TIME_FORMAT_REGEX, $timeEnd)) {
       throw new InvalidArgumentException("\$timeEnd is not in valid time format");
+    }
 
-    if (!preg_match(Dates::STD_DATE_FORMAT_REGEX, $date))
+    if (!preg_match(Dates::STD_DATE_FORMAT_REGEX, $date)) {
       throw new InvalidArgumentException("\$date is not in valid date format");
+    }
 
-    if (!$dummy and empty($name))
+    if (!$dummy and empty($name)) {
       throw new InvalidArgumentException("\$name must not be empty when Irregular Opening is not a dummy");
+    }
 
     $date = new DateTime($date);
     $this->name = $name;
@@ -69,15 +72,16 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
     $this->timeEnd = Dates::mergeDateIntoTime($date, new DateTime($timeEnd));
     $this->dummy = $dummy;
 
-    if (Dates::compareTime($this->timeStart, $this->timeEnd) >= 0)
+    if (Dates::compareTime($this->timeStart, $this->timeEnd) >= 0) {
       $this->timeEnd->add(new DateInterval('P1D'));
+    }
   }
 
   /**
    * @deprecated  Legacy method for old isActiveOnDay implementation.
    *              Use isInEffect instead.
    */
-  public function isActiveOnDay (DateTime $now = null) {
+  public function isActiveOnDay(DateTime $now = null) {
     return $this->isInEffect($now);
   }
 
@@ -90,7 +94,7 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    * @param     DateTime|null $now    The DateTime to compare against. Default is the current time
    * @return    bool                  Whether irregular opening is in effect
    */
-  public function isInEffect (DateTime $now = null) {
+  public function isInEffect(DateTime $now = null) {
     if ($now === null) {
       $now = Dates::getNow();
     }
@@ -102,11 +106,7 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
     $startOfDay = clone $this->getEnd();
     $startOfDay->setTime(0, 0, 0);
 
-    return (
-      Dates::compareDate($this->getStart(), $this->getEnd()) < 0
-      && $now >= $startOfDay
-      && $now <= $this->getEnd()
-    );
+    return Dates::compareDate($this->getStart(), $this->getEnd()) < 0 && $now >= $startOfDay && $now <= $this->getEnd();
   }
 
   /**
@@ -116,14 +116,16 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    *
    * @return    bool              Whether the venue is actually open due to this IO
    */
-  public function isOpen ( DateTime $now = null ) {
-    if ($now == null)
+  public function isOpen(DateTime $now = null) {
+    if ($now == null) {
       $now = Dates::getNow();
+    }
 
-    if (!$this->isInEffect($now))
+    if (!$this->isInEffect($now)) {
       return false;
+    }
 
-    return ($this->timeStart <= $now and $this->timeEnd >= $now);
+    return $this->timeStart <= $now and $this->timeEnd >= $now;
   }
 
   /**
@@ -134,9 +136,10 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    *
    * @return    string                    The time range as string
    */
-  public function getFormattedTimeRange ( $timeFormat = null, $outputFormat = "%s - %s" ) {
-    if ($timeFormat == null)
+  public function getFormattedTimeRange($timeFormat = null, $outputFormat = "%s - %s") {
+    if ($timeFormat == null) {
       $timeFormat = Dates::getTimeFormat();
+    }
 
     return sprintf($outputFormat, $this->timeStart->format($timeFormat), $this->timeEnd->format($timeFormat));
   }
@@ -145,7 +148,7 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    * Creates a Period representing the Irregular Opening
    * @return    Period    Period representing Irregular Opening in correct week context
    */
-  public function createPeriod () {
+  public function createPeriod() {
     $weekday = (int) $this->timeStart->format('w');
     $timeStart = $this->timeStart->format('H:i');
     $timeEnd = $this->timeEnd->format('H:i');
@@ -161,12 +164,12 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    *
    * @return    int
    */
-  public static function sortStrategy ( IrregularOpening $io1, IrregularOpening $io2 ) {
-    if ($io1->timeStart < $io2->timeStart) :
+  public static function sortStrategy(IrregularOpening $io1, IrregularOpening $io2) {
+    if ($io1->timeStart < $io2->timeStart):
       return -1;
-    elseif ($io1->timeStart > $io2->timeStart) :
+    elseif ($io1->timeStart > $io2->timeStart):
       return 1;
-    else :
+    else:
       return 0;
     endif;
   }
@@ -187,7 +190,7 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    * Factory for dummy IO
    * @return    IrregularOpening  An IO dummy
    */
-  public static function createDummy () {
+  public static function createDummy() {
     $now = Dates::getNow();
     return new IrregularOpening('', $now->format(Dates::STD_DATE_FORMAT), '00:00', '00:00', true);
   }
@@ -196,17 +199,17 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    * Getter: Name
    * @return    string
    */
-  public function getName () {
+  public function getName() {
     return $this->name;
   }
 
   /** @inheritdoc */
-  public function getStart () {
+  public function getStart() {
     return $this->timeStart;
   }
 
   /** @inheritdoc */
-  public function getEnd () {
+  public function getEnd() {
     return $this->timeEnd;
   }
 
@@ -230,7 +233,7 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    * Getter: Dummy
    * @return    bool
    */
-  public function isDummy () {
+  public function isDummy() {
     return $this->dummy;
   }
 
@@ -238,9 +241,9 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    * Getter: Date
    * @return    DateTime
    */
-  public function getDate () {
+  public function getDate() {
     $date = clone $this->timeStart;
-    $date->setTime(0,0,0);
+    $date->setTime(0, 0, 0);
     return $date;
   }
 }

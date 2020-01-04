@@ -14,7 +14,6 @@ use OpeningHours\Module\Schema\SchemaGenerator;
  * @package     OpeningHours\Module\Shortcode
  */
 class Schema extends AbstractShortcode {
-
   /** @inheritdoc */
   protected function init() {
     $this->setShortcodeTag('op-schema');
@@ -25,12 +24,12 @@ class Schema extends AbstractShortcode {
       'exclude_irregular_openings' => false,
       'schema_attr_type' => 'Place',
       'schema_attr_name' => null,
-      'schema_attr_description' => null,
+      'schema_attr_description' => null
     );
 
     $this->validAttributeValues = array(
       'exclude_holidays' => array(false, true),
-      'exclude_irregular_openings' => array(false, true),
+      'exclude_irregular_openings' => array(false, true)
     );
   }
 
@@ -86,13 +85,12 @@ class Schema extends AbstractShortcode {
     }
 
     $name = $attributes['schema_attr_name'] == null ? $set->getName() : $attributes['schema_attr_name'];
-    $description = $attributes['schema_attr_description'] == null ? $set->getDescription() : $attributes['schema_attr_description'];
+    $description =
+      $attributes['schema_attr_description'] == null ? $set->getDescription() : $attributes['schema_attr_description'];
 
     $schema = array(
-      '@context' => array(
-        'http://schema.org'
-      ),
-      '@type' => $attributes['schema_attr_type'],
+      '@context' => array('http://schema.org'),
+      '@type' => $attributes['schema_attr_type']
     );
 
     if (!empty($name)) {

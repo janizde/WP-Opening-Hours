@@ -14,7 +14,6 @@ use OpeningHours\Util\Dates;
  * @package OpeningHours\Module\Schema
  */
 class ValidityPeriod {
-
   /**
    * The Set serving the regular opening hours from `$start` through `$end`
    * @var     Set

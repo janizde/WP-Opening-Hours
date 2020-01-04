@@ -14,7 +14,6 @@ use OpeningHours\Util\ArrayObject;
  * @package     OpeningHours\Module
  */
 class OpeningHours extends AbstractModule {
-
   const WP_FILTER_SET_PROVIDERS = 'op_set_providers';
 
   /**
@@ -30,14 +29,14 @@ class OpeningHours extends AbstractModule {
   protected $setProviders;
 
   /** Constructor */
-  public function __construct () {
+  public function __construct() {
     $this->sets = new ArrayObject();
     $this->setProviders = array();
     $this->registerHookCallbacks();
   }
 
   /** Register Hook Callbacks */
-  public function registerHookCallbacks () {
+  public function registerHookCallbacks() {
     add_filter('detail_fields_metabox_context', function () {
       return 'side';
     });
@@ -48,7 +47,7 @@ class OpeningHours extends AbstractModule {
   /**
    * Registers the default SetProviders and triggers op_set_providers filter
    */
-  public function registerDefaultSetProviders () {
+  public function registerDefaultSetProviders() {
     $this->addSetProvider(new PostSetProvider());
     $this->setProviders = apply_filters(self::WP_FILTER_SET_PROVIDERS, $this->setProviders);
   }
@@ -57,7 +56,7 @@ class OpeningHours extends AbstractModule {
    * Appends a new SetProvider
    * @param     SetProvider   $setProvider  The SetProvider to add to the list
    */
-  public function addSetProvider (SetProvider $setProvider) {
+  public function addSetProvider(SetProvider $setProvider) {
     $this->setProviders[] = $setProvider;
   }
 
@@ -73,7 +72,7 @@ class OpeningHours extends AbstractModule {
    * Getter: Sets
    * @return    ArrayObject
    */
-  public static function getSets () {
+  public static function getSets() {
     return self::getInstance()->sets;
   }
 
@@ -84,13 +83,14 @@ class OpeningHours extends AbstractModule {
    *
    * @return    array
    */
-  public function getSetsOptions () {
+  public function getSetsOptions() {
     $options = array();
     foreach ($this->setProviders as $setProvider) {
       $sets = $setProvider->getAvailableSetInfo();
       foreach ($sets as $setInfo) {
-        if (array_key_exists('hidden', $setInfo) && $setInfo['hidden'] == true)
+        if (array_key_exists('hidden', $setInfo) && $setInfo['hidden'] == true) {
           continue;
+        }
 
         $options[$setInfo['id']] = $setInfo['name'];
       }
@@ -103,9 +103,10 @@ class OpeningHours extends AbstractModule {
    * @param     string|int  $setId  The id of the Set to retrieve
    * @return    Set|null            The Set with the specified id or null if no set could be retrieved
    */
-  public function getSet ($setId) {
-    if ($this->sets->offsetExists($setId))
+  public function getSet($setId) {
+    if ($this->sets->offsetExists($setId)) {
       return $this->sets->offsetGet($setId);
+    }
 
     foreach ($this->setProviders as $setProvider) {
       foreach ($setProvider->getAvailableSetInfo() as $setInfo) {

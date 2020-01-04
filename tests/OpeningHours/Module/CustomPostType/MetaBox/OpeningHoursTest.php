@@ -8,8 +8,7 @@ use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Weekday;
 
 class OpeningHoursTest extends OpeningHoursTestCase {
-
-  public function testGroupPeriodsWithDummyNoPeriods () {
+  public function testGroupPeriodsWithDummyNoPeriods() {
     $data = OpeningHours::getInstance()->groupPeriodsWithDummy(array());
 
     $this->assertEquals(7, count($data));
@@ -25,12 +24,8 @@ class OpeningHoursTest extends OpeningHoursTestCase {
     }
   }
 
-  public function testGroupPeriodsWithDummyHasPeriods () {
-    $periods = array(
-      new Period(1, '13:00', '17:00'),
-      new Period(1, '18:00', '21:00'),
-      new Period(2, '13:00', '17:00')
-    );
+  public function testGroupPeriodsWithDummyHasPeriods() {
+    $periods = array(new Period(1, '13:00', '17:00'), new Period(1, '18:00', '21:00'), new Period(2, '13:00', '17:00'));
 
     $data = OpeningHours::getInstance()->groupPeriodsWithDummy($periods);
     $this->assertEquals(7, count($data));

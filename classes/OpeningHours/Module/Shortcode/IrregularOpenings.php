@@ -14,10 +14,8 @@ use OpeningHours\Util\Dates;
  * @package     OpeningHours\Module\Shortcode
  */
 class IrregularOpenings extends AbstractShortcode {
-
   /** @inheritdoc */
-  protected function init () {
-
+  protected function init() {
     $this->setShortcodeTag('op-irregular-openings');
 
     $this->defaultAttributes = array(
@@ -32,24 +30,25 @@ class IrregularOpenings extends AbstractShortcode {
       'date_format' => Dates::getDateFormat(),
       'time_format' => Dates::getTimeFormat(),
       'template' => 'table',
-      'include_past' => false,
+      'include_past' => false
     );
 
     $this->validAttributeValues = array(
       'highlight' => array(false, true),
       'template' => array('table', 'list'),
-      'include_past' => array(false, true),
+      'include_past' => array(false, true)
     );
   }
 
   /** @inheritdoc */
-  public function shortcode ( array $attributes ) {
+  public function shortcode(array $attributes) {
     $setId = $attributes['set_id'];
 
     $set = OpeningHours::getInstance()->getSet($setId);
 
-    if (!$set instanceof Set)
+    if (!$set instanceof Set) {
       return;
+    }
 
     $templateMap = array(
       'table' => 'shortcode/irregular-openings.php',

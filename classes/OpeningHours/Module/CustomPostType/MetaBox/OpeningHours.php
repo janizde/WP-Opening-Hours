@@ -18,16 +18,20 @@ use WP_Post;
  * @package     OpeningHours\Module\CustomPostType\MetaBox
  */
 class OpeningHours extends AbstractMetaBox {
-
   const TEMPLATE_PATH = 'meta-box/opening-hours.php';
   const TEMPLATE_PATH_SINGLE = 'ajax/op-set-period.php';
 
-  public function __construct () {
-    parent::__construct('op_meta_box_opening_hours', __('Opening Hours', 'wp-opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_HIGH);
+  public function __construct() {
+    parent::__construct(
+      'op_meta_box_opening_hours',
+      __('Opening Hours', 'wp-opening-hours'),
+      self::CONTEXT_ADVANCED,
+      self::PRIORITY_HIGH
+    );
   }
 
   /** @inheritdoc */
-  public function renderMetaBox ( WP_Post $post ) {
+  public function renderMetaBox(WP_Post $post) {
     $set = $this->getSet($post->ID);
     $periods = $this->groupPeriodsWithDummy($set->getPeriods()->getArrayCopy());
 
@@ -39,11 +43,12 @@ class OpeningHours extends AbstractMetaBox {
   }
 
   /** @inheritdoc */
-  protected function saveData ( $post_id, WP_Post $post, $update ) {
+  protected function saveData($post_id, WP_Post $post, $update) {
     $config = $_POST['opening-hours'];
 
-    if (!is_array($config))
+    if (!is_array($config)) {
       $config = array();
+    }
 
     $periods = $this->getPeriodsFromPostData($config);
     $persistence = new Persistence($post);
@@ -57,19 +62,21 @@ class OpeningHours extends AbstractMetaBox {
    *
    * @return    Period[]            array of Periods derived from post data
    */
-  public function getPeriodsFromPostData ( array $data ) {
+  public function getPeriodsFromPostData(array $data) {
     $periods = array();
 
     foreach ($data as $weekday => $dayConfig) {
       for ($i = 0; $i <= count($dayConfig['start']); $i++) {
-        if (empty($dayConfig['start'][$i]) or empty($dayConfig['end'][$i]))
+        if (empty($dayConfig['start'][$i]) or empty($dayConfig['end'][$i])) {
           continue;
+        }
 
         $dayConfig['start'][$i] = date('H:i', strtotime($dayConfig['start'][$i]));
-        $dayConfig['end'][$i]   = date('H:i', strtotime($dayConfig['end'][$i]));
+        $dayConfig['end'][$i] = date('H:i', strtotime($dayConfig['end'][$i]));
 
-        if ($dayConfig['start'][$i] === '00:00' and $dayConfig['end'][$i] === '00:00')
+        if ($dayConfig['start'][$i] === '00:00' and $dayConfig['end'][$i] === '00:00') {
           continue;
+        }
 
         try {
           $period = new Period($weekday, $dayConfig['start'][$i], $dayConfig['end'][$i]);
@@ -90,7 +97,7 @@ class OpeningHours extends AbstractMetaBox {
    *                                  day: Weekday instance representing the weekday
    *                                  periods: Period[] containing the period for day
    */
-  public function groupPeriodsWithDummy (array $periods) {
+  public function groupPeriodsWithDummy(array $periods) {
     $days = array_map(function (Weekday $weekday) {
       return array(
         'day' => $weekday,
@@ -104,8 +111,9 @@ class OpeningHours extends AbstractMetaBox {
     }
 
     foreach ($days as &$day) {
-      if (count($day['periods']) < 1)
+      if (count($day['periods']) < 1) {
         $day['periods'][] = Period::createDummy($day['day']->getIndex());
+      }
     }
 
     for ($i = 0; $i < Dates::getStartOfWeek(); ++$i) {

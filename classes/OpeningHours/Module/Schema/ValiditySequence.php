@@ -11,7 +11,6 @@ use OpeningHours\Util\Dates;
  * @package OpeningHours\Module\Schema
  */
 class ValiditySequence {
-
   /**
    * Sequence of `ValidityPeriod`s as array sorted by their start date
    * @var       ValidityPeriod[]
@@ -44,8 +43,7 @@ class ValiditySequence {
   public function restrictedToDateRange($min, $max) {
     $periodsInRange = array_filter($this->periods, function (ValidityPeriod $period) use ($min, $max) {
       return !(
-        Dates::compareDateTime($period->getEnd(), $min) < 0
-        || Dates::compareDateTime($period->getStart(), $max) > 0
+        Dates::compareDateTime($period->getEnd(), $min) < 0 || Dates::compareDateTime($period->getStart(), $max) > 0
       );
     });
 

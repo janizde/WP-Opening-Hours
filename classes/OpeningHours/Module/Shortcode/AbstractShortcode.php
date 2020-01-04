@@ -14,7 +14,6 @@ use OpeningHours\Util\ViewRenderer;
  * @package     OpeningHours\Module\Shortcode
  */
 abstract class AbstractShortcode extends AbstractModule {
-
   const FILTER_ATTRIBUTES = 'op_shortcode_attributes';
 
   const FILTER_TEMPLATE = 'op_shortcode_template';
@@ -45,17 +44,17 @@ abstract class AbstractShortcode extends AbstractModule {
    */
   protected $validAttributeValues = array();
 
-  public function __construct () {
+  public function __construct() {
     $this->registerHookCallbacks();
   }
 
   /** Registers Hook Callbacks */
-  protected function registerHookCallbacks () {
+  protected function registerHookCallbacks() {
     add_action('init', array($this, 'registerShortCode'));
   }
 
   /** Registers Shortcode */
-  public function registerShortcode () {
+  public function registerShortcode() {
     $this->init();
 
     try {
@@ -71,9 +70,12 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @throws    InvalidArgumentException    On validation error
    */
-  public function validate () {
-    if (empty($this->shortcodeTag))
-      throw new InvalidArgumentException(__('Shortcode has no tag name and could not be registered', 'wp-opening-hours'));
+  public function validate() {
+    if (empty($this->shortcodeTag)) {
+      throw new InvalidArgumentException(
+        __('Shortcode has no tag name and could not be registered', 'wp-opening-hours')
+      );
+    }
   }
 
   /**
@@ -83,15 +85,17 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @return    string    The shortcode markup
    */
-  public function renderShortcode ( $attributes ) {
-    if (!is_array($attributes))
+  public function renderShortcode($attributes) {
+    if (!is_array($attributes)) {
       return '';
+    }
 
     $attributes = Helpers::unsetEmptyValues($attributes);
     $attributes = shortcode_atts($this->defaultAttributes, $attributes, $this->shortcodeTag);
 
-    if (!array_key_exists('shortcode', $attributes))
+    if (!array_key_exists('shortcode', $attributes)) {
       $attributes['shortcode'] = $this;
+    }
 
     ob_start();
     $this->shortcode($attributes);
@@ -115,7 +119,7 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @return    string    The shortcode markup
    */
-  public function renderShortcodeTemplate ( array $attributes, $templatePath ) {
+  public function renderShortcodeTemplate(array $attributes, $templatePath) {
     /**
      * Filter shortcode template path. Callback should be:
      * @param   string            $templatePath   Absolute path to template file
@@ -132,8 +136,9 @@ abstract class AbstractShortcode extends AbstractModule {
      */
     $attributes = apply_filters(self::FILTER_ATTRIBUTES, $attributes, $this);
 
-    if (empty($templatePath))
+    if (empty($templatePath)) {
       return '';
+    }
 
     $data = array(
       'attributes' => $attributes
@@ -152,15 +157,19 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @return    array     The filtered attributes
    */
-  protected function filterAttributes ( array $attributes ) {
+  protected function filterAttributes(array $attributes) {
     $validValues = $this->validAttributeValues;
 
     foreach ($attributes as $key => &$value) {
-      if (!array_key_exists($key, $validValues) or !is_array($validValues[$key]) or
-        count($validValues[$key]) < 1 or in_array($value, $validValues[$key]) or
+      if (
+        !array_key_exists($key, $validValues) or
+        !is_array($validValues[$key]) or
+        count($validValues[$key]) < 1 or
+        in_array($value, $validValues[$key]) or
         !isset($validValues[$key][0])
-      )
+      ) {
         continue;
+      }
 
       $value = $validValues[$key][0];
     }
@@ -172,7 +181,7 @@ abstract class AbstractShortcode extends AbstractModule {
    * Getter: Shortcode Tag
    * @return    string
    */
-  public function getShortcodeTag () {
+  public function getShortcodeTag() {
     return $this->shortcodeTag;
   }
 
@@ -181,7 +190,7 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @param     string $shortcodeTag
    */
-  public function setShortcodeTag ( $shortcodeTag ) {
+  public function setShortcodeTag($shortcodeTag) {
     $this->shortcodeTag = apply_filters('op_shortcode_tag', $shortcodeTag);
   }
 
@@ -192,10 +201,8 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @return    mixed
    */
-  public function getDefaultAttribute ( $attributeName ) {
-    return (isset($this->defaultAttributes[$attributeName]))
-      ? $this->defaultAttributes[$attributeName]
-      : null;
+  public function getDefaultAttribute($attributeName) {
+    return isset($this->defaultAttributes[$attributeName]) ? $this->defaultAttributes[$attributeName] : null;
   }
 
   /**
@@ -206,7 +213,7 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @param      array $attributes
    */
-  abstract public function shortcode ( array $attributes );
+  abstract public function shortcode(array $attributes);
 
   /**
    *  Init
@@ -215,6 +222,5 @@ abstract class AbstractShortcode extends AbstractModule {
    * @access    protected
    * @abstract
    */
-  abstract protected function init ();
-
+  abstract protected function init();
 }

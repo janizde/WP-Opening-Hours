@@ -9,18 +9,17 @@ use OpeningHours\Util\Dates;
  * @package OpeningHours\Test\Util
  */
 class DatesNoOptionsTest extends \PHPUnit_Framework_TestCase {
-
-  protected function setUp () {
+  protected function setUp() {
     parent::setUp();
     \WP_Mock::setUp();
   }
 
-  protected function tearDown () {
+  protected function tearDown() {
     parent::tearDown();
     \WP_Mock::tearDown();
   }
 
-  public function testNoOptionsSet () {
+  public function testNoOptionsSet() {
     \WP_Mock::wpFunction('get_option', array(
       'args' => array('date_format', Dates::STD_DATE_FORMAT),
       'return' => Dates::STD_DATE_FORMAT

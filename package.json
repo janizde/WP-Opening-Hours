@@ -28,7 +28,10 @@
     "run-sequence": "^1.1.5"
   },
   "devDependencies": {},
-  "scripts": {},
+  "scripts": {
+    "export": "gulp export",
+    "prettify": "prettier all --parser php --write \"classes/**/*.php\" \"./*.php\" \"tests/**/*.php\""
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/janizde/WP-Opening-Hours.git"

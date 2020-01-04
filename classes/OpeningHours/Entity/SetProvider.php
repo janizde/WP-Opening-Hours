@@ -9,7 +9,6 @@ namespace OpeningHours\Entity;
  * @package OpeningHours\Entity
  */
 abstract class SetProvider {
-
   /**
    * Cached version of Set Info
    * @var       array
@@ -21,7 +20,7 @@ abstract class SetProvider {
    * @param     string|int  $id     The id of the Set to create
    * @return    Set                 The newly created Set
    */
-  abstract public function createSet ($id);
+  abstract public function createSet($id);
 
   /**
    * Returns the ids and names of all available Sets for this SetProvider.
@@ -29,7 +28,7 @@ abstract class SetProvider {
    *                        id:   scalar with set id
    *                        name: string with set name
    */
-  abstract protected function createAvailableSetInfo ();
+  abstract protected function createAvailableSetInfo();
 
   /**
    * Returns the cached Set Info or creates it if it has not already been created
@@ -37,9 +36,10 @@ abstract class SetProvider {
    *                        id:   scalar with set id
    *                        name: string with set name
    */
-  public function getAvailableSetInfo () {
-    if (is_array($this->setInfo))
+  public function getAvailableSetInfo() {
+    if (is_array($this->setInfo)) {
       return $this->setInfo;
+    }
 
     $this->setInfo = $this->createAvailableSetInfo();
     return $this->setInfo;

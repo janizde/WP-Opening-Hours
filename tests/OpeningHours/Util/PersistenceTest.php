@@ -11,20 +11,16 @@ use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
 
 class PersistenceTest extends OpeningHoursTestCase {
-
-  protected function createPersistence () {
+  protected function createPersistence() {
     $post = $this->getMockBuilder('WP_Post')->getMock();
     $post->ID = 64;
     return new Persistence($post);
   }
 
-	public function testSavePeriods () {
+  public function testSavePeriods() {
     $persistence = $this->createPersistence();
 
-		$periods = array(
-			new Period( 1, '13:00', '17:00' ),
-			new Period( 2, '16:30', '19:00' )
-		);
+    $periods = array(new Period(1, '13:00', '17:00'), new Period(2, '16:30', '19:00'));
 
     $data = array(
       array(
@@ -44,10 +40,10 @@ class PersistenceTest extends OpeningHoursTestCase {
       'args' => array(64, Persistence::PERIODS_META_KEY, $data)
     ));
 
-		$persistence->savePeriods( $periods );
+    $persistence->savePeriods($periods);
   }
 
-	public function testLoadPeriods () {
+  public function testLoadPeriods() {
     $persistence = $this->createPersistence();
 
     $data = array(
@@ -68,30 +64,30 @@ class PersistenceTest extends OpeningHoursTestCase {
       'args' => array(64, Persistence::PERIODS_META_KEY, true),
       'return' => $data
     ));
-    
+
     $periods = $persistence->loadPeriods();
-    $this->assertTrue( is_array( $periods ) );
-    $this->assertEquals( 2, count( $periods ) );
-    
+    $this->assertTrue(is_array($periods));
+    $this->assertEquals(2, count($periods));
+
     $p1 = $periods[0];
     $p2 = $periods[1];
 
-    $this->assertEquals( 1, $p1->getWeekday() );
-    $this->assertEquals( '13:00', $p1->getTimeStart()->format(Dates::STD_TIME_FORMAT) );
-    $this->assertEquals( '17:00', $p1->getTimeEnd()->format(Dates::STD_TIME_FORMAT) );
+    $this->assertEquals(1, $p1->getWeekday());
+    $this->assertEquals('13:00', $p1->getTimeStart()->format(Dates::STD_TIME_FORMAT));
+    $this->assertEquals('17:00', $p1->getTimeEnd()->format(Dates::STD_TIME_FORMAT));
 
-    $this->assertEquals( 2, $p2->getWeekday() );
-    $this->assertEquals( '16:30', $p2->getTimeStart()->format(Dates::STD_TIME_FORMAT) );
-    $this->assertEquals( '19:00', $p2->getTimeEnd()->format(Dates::STD_TIME_FORMAT) );
+    $this->assertEquals(2, $p2->getWeekday());
+    $this->assertEquals('16:30', $p2->getTimeStart()->format(Dates::STD_TIME_FORMAT));
+    $this->assertEquals('19:00', $p2->getTimeEnd()->format(Dates::STD_TIME_FORMAT));
   }
 
-	public function testSaveHolidays () {
+  public function testSaveHolidays() {
     $persistence = $this->createPersistence();
 
-		$holidays = array(
-			new Holiday( 'Holiday1', new DateTime('2016-02-03'), new DateTime('2016-02-07') ),
-			new Holiday( 'Holiday2', new DateTime('2016-03-03'), new DateTime('2016-03-07') )
-		);
+    $holidays = array(
+      new Holiday('Holiday1', new DateTime('2016-02-03'), new DateTime('2016-02-07')),
+      new Holiday('Holiday2', new DateTime('2016-03-03'), new DateTime('2016-03-07'))
+    );
 
     $data = array(
       array(
@@ -110,10 +106,10 @@ class PersistenceTest extends OpeningHoursTestCase {
       'times' => 1,
       'args' => array(64, Persistence::HOLIDAYS_META_KEY, $data)
     ));
-		$persistence->saveHolidays( $holidays );
-	}
+    $persistence->saveHolidays($holidays);
+  }
 
-	public function testLoadHolidays () {
+  public function testLoadHolidays() {
     $persistence = $this->createPersistence();
 
     $data = array(
@@ -136,26 +132,26 @@ class PersistenceTest extends OpeningHoursTestCase {
     ));
 
     $holidays = $persistence->loadHolidays();
-    $this->assertTrue( is_array( $holidays ) );
-    $this->assertEquals( 2, count( $holidays ) );
+    $this->assertTrue(is_array($holidays));
+    $this->assertEquals(2, count($holidays));
     $h1 = $holidays[0];
     $h2 = $holidays[1];
 
-    $this->assertEquals( 'Holiday1', $h1->getName() );
-    $this->assertEquals( new DateTime('2016-02-03'), $h1->getStart() );
-    $this->assertEquals( new DateTime('2016-02-07 23:59:59', Dates::getTimezone()), $h1->getEnd() );
+    $this->assertEquals('Holiday1', $h1->getName());
+    $this->assertEquals(new DateTime('2016-02-03'), $h1->getStart());
+    $this->assertEquals(new DateTime('2016-02-07 23:59:59', Dates::getTimezone()), $h1->getEnd());
 
-    $this->assertEquals( 'Holiday2', $h2->getName() );
-    $this->assertEquals( new DateTime('2016-03-03'), $h2->getStart() );
-    $this->assertEquals( new DateTime('2016-03-07 23:59:59', Dates::getTimezone()), $h2->getEnd() );
+    $this->assertEquals('Holiday2', $h2->getName());
+    $this->assertEquals(new DateTime('2016-03-03'), $h2->getStart());
+    $this->assertEquals(new DateTime('2016-03-07 23:59:59', Dates::getTimezone()), $h2->getEnd());
   }
 
-  public function testSaveIrregularOpenings () {
+  public function testSaveIrregularOpenings() {
     $persistence = $this->createPersistence();
 
     $ios = array(
-      new IrregularOpening( 'IO1', '2016-02-03', '13:00', '17:00' ),
-      new IrregularOpening( 'IO2', '2016-03-03', '16:30', '19:00' )
+      new IrregularOpening('IO1', '2016-02-03', '13:00', '17:00'),
+      new IrregularOpening('IO2', '2016-03-03', '16:30', '19:00')
     );
 
     $data = array(
@@ -181,7 +177,7 @@ class PersistenceTest extends OpeningHoursTestCase {
     $persistence->saveIrregularOpenings($ios);
   }
 
-  public function testLoadIrregularOpenings () {
+  public function testLoadIrregularOpenings() {
     $persistence = $this->createPersistence();
 
     $data = array(
@@ -210,14 +206,14 @@ class PersistenceTest extends OpeningHoursTestCase {
     $io1 = $ios[0];
     $io2 = $ios[1];
 
-    $this->assertEquals( 'IO1', $io1->getName() );
-    $this->assertEquals( new DateTime('2016-02-03'), $io1->getDate() );
-    $this->assertEquals( new DateTime('2016-02-03 13:00'), $io1->getStart() );
-    $this->assertEquals( new DateTime('2016-02-03 17:00'), $io1->getEnd() );
+    $this->assertEquals('IO1', $io1->getName());
+    $this->assertEquals(new DateTime('2016-02-03'), $io1->getDate());
+    $this->assertEquals(new DateTime('2016-02-03 13:00'), $io1->getStart());
+    $this->assertEquals(new DateTime('2016-02-03 17:00'), $io1->getEnd());
 
-    $this->assertEquals( 'IO2', $io2->getName() );
-    $this->assertEquals( new DateTime('2016-03-03'), $io2->getDate() );
-    $this->assertEquals( new DateTime('2016-03-03 16:30'), $io2->getStart() );
-    $this->assertEquals( new DateTime('2016-03-03 19:00'), $io2->getEnd() );
+    $this->assertEquals('IO2', $io2->getName());
+    $this->assertEquals(new DateTime('2016-03-03'), $io2->getDate());
+    $this->assertEquals(new DateTime('2016-03-03 16:30'), $io2->getStart());
+    $this->assertEquals(new DateTime('2016-03-03 19:00'), $io2->getEnd());
   }
 }

@@ -16,7 +16,6 @@ use OpeningHours\Util\Dates;
  * @package OpeningHours\Module\Schema
  */
 class SchemaGenerator {
-
   /**
    * Schema.org URIs for all weekdays.
    * Array indices correspond to the week day numbers starting at Sunday
@@ -28,7 +27,7 @@ class SchemaGenerator {
     'http://schema.org/Wednesday',
     'http://schema.org/Thursday',
     'http://schema.org/Friday',
-    'http://schema.org/Saturday',
+    'http://schema.org/Saturday'
   );
 
   const SCHEMA_TIME_FORMAT = 'H:i';
@@ -83,11 +82,7 @@ class SchemaGenerator {
    */
   public function createChildSetValiditySequence(ChildSetWrapper $child) {
     $ownValiditySequence = new ValiditySequence(array(
-      new ValidityPeriod(
-        $child->getSet(),
-        $child->getStart(),
-        $child->getEnd()
-      ),
+      new ValidityPeriod($child->getSet(), $child->getStart(), $child->getEnd())
     ));
 
     /** @var ValiditySequence $sequenceWithChildren */
@@ -127,9 +122,13 @@ class SchemaGenerator {
    */
   public function createOpeningHoursSpecDefinition(ValiditySequence $vs) {
     $that = $this;
-    return array_reduce($vs->getPeriods(), function (array $specs, ValidityPeriod $p) use ($that) {
-      return array_merge($specs, $that->createSpecItemsFromValidityPeriod($p));
-    }, array());
+    return array_reduce(
+      $vs->getPeriods(),
+      function (array $specs, ValidityPeriod $p) use ($that) {
+        return array_merge($specs, $that->createSpecItemsFromValidityPeriod($p));
+      },
+      array()
+    );
   }
 
   /**
@@ -143,7 +142,7 @@ class SchemaGenerator {
     $now = Dates::getNow();
 
     $holidays = array_values(
-        array_filter($this->mainSet->getHolidays()->getArrayCopy(), function (Holiday $holiday) use ($now) {
+      array_filter($this->mainSet->getHolidays()->getArrayCopy(), function (Holiday $holiday) use ($now) {
         $result = $holiday->getEnd() > $now;
         return $result;
       })
@@ -154,7 +153,7 @@ class SchemaGenerator {
         '@type' => 'OpeningHoursSpecification',
         'name' => $h->getName(),
         'validFrom' => $h->getStart()->format(self::SCHEMA_DATE_FORMAT),
-        'validThrough' => $h->getEnd()->format(self::SCHEMA_DATE_FORMAT),
+        'validThrough' => $h->getEnd()->format(self::SCHEMA_DATE_FORMAT)
       );
     }, $holidays);
   }
@@ -170,7 +169,7 @@ class SchemaGenerator {
     $now = Dates::getNow();
 
     $ios = array_values(
-        array_filter($this->mainSet->getIrregularOpenings()->getArrayCopy(), function (IrregularOpening $io) use ($now) {
+      array_filter($this->mainSet->getIrregularOpenings()->getArrayCopy(), function (IrregularOpening $io) use ($now) {
         return $io->getEnd() > $now;
       })
     );
@@ -204,23 +203,29 @@ class SchemaGenerator {
    *                                      OpeningHoursSpec objects
    */
   public function createSpecItemsFromValidityPeriod(ValidityPeriod $vp) {
-    return array_map(function (Period $p) use ($vp) {
-      $spec = array(
-        '@type' => 'OpeningHoursSpecification',
-        'opens' => $p->getTimeStart()->format(self::SCHEMA_TIME_FORMAT),
-        'closes' => $p->getTimeEnd()->format(self::SCHEMA_TIME_FORMAT),
-        'dayOfWeek' => self::SCHEMA_WEEKDAYS[$p->getWeekday()],
-      );
+    return array_map(
+      function (Period $p) use ($vp) {
+        $spec = array(
+          '@type' => 'OpeningHoursSpecification',
+          'opens' => $p->getTimeStart()->format(self::SCHEMA_TIME_FORMAT),
+          'closes' => $p->getTimeEnd()->format(self::SCHEMA_TIME_FORMAT),
+          'dayOfWeek' => self::SCHEMA_WEEKDAYS[$p->getWeekday()]
+        );
 
-      if ($vp->getStart() instanceof \DateTime) {
-        $spec['validFrom'] = $vp->getStart()->format(self::SCHEMA_DATE_FORMAT);
-      }
+        if ($vp->getStart() instanceof \DateTime) {
+          $spec['validFrom'] = $vp->getStart()->format(self::SCHEMA_DATE_FORMAT);
+        }
 
-      if ($vp->getEnd() instanceof \DateTime) {
-        $spec['validThrough'] = $vp->getEnd()->format(self::SCHEMA_DATE_FORMAT);
-      }
+        if ($vp->getEnd() instanceof \DateTime) {
+          $spec['validThrough'] = $vp->getEnd()->format(self::SCHEMA_DATE_FORMAT);
+        }
 
-      return $spec;
-    }, $vp->getSet()->getPeriods()->getArrayCopy());
+        return $spec;
+      },
+      $vp
+        ->getSet()
+        ->getPeriods()
+        ->getArrayCopy()
+    );
   }
 }

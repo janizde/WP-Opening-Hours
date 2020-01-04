@@ -11,28 +11,22 @@ use OpeningHours\Util\Dates;
 use OpeningHours\Util\Weekdays;
 
 class OverviewModelTest extends OpeningHoursTestCase {
-
   protected $oldStartOfWeek;
 
-  public function setUp () {
+  public function setUp() {
     parent::setUp();
     $this->oldStartOfWeek = Dates::getStartOfWeek();
     Dates::setStartOfWeek(2);
   }
 
-  public function tearDown () {
+  public function tearDown() {
     parent::tearDown();
     Dates::setStartOfWeek($this->oldStartOfWeek);
   }
 
-  public function testConstructAndPeriods () {
-
+  public function testConstructAndPeriods() {
     /** @var Period[] $periods */
-    $periods = array(
-      new Period(2, '09:00', '13:00'),
-      new Period(2, '14:00', '15:00'),
-      new Period(0, '09:00', '13:00')
-    );
+    $periods = array(new Period(2, '09:00', '13:00'), new Period(2, '14:00', '15:00'), new Period(0, '09:00', '13:00'));
 
     $dt = new \DateTime('2016-09-28');
     $model = new OverviewModel($periods, new \DateTime('2016-09-28'));
@@ -53,7 +47,10 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $this->assertEquals(1, $data[6]['days'][0]->getIndex());
 
     // Period Assertions
-    $this->assertEquals(array($periods[0]->getCopyInDateContext($dt), $periods[1]->getCopyInDateContext($dt)), $data[0]['items']);
+    $this->assertEquals(
+      array($periods[0]->getCopyInDateContext($dt), $periods[1]->getCopyInDateContext($dt)),
+      $data[0]['items']
+    );
     $this->assertEquals(array(), $data[1]['items']);
     $this->assertEquals(array(), $data[2]['items']);
     $this->assertEquals(array(), $data[3]['items']);
@@ -62,7 +59,7 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $this->assertEquals(array(), $data[6]['items']);
   }
 
-  public function testMergeHolidays () {
+  public function testMergeHolidays() {
     $dt = new \DateTime('2016-09-28');
     $model = new OverviewModel(array(), $dt);
     $holiday = new Holiday('H', new \DateTime('2016-08-20'), new \DateTime('2016-10-20'));
@@ -127,7 +124,7 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $this->assertEquals($holiday2, $data[6]['items']);
   }
 
-  public function testMergeIrregularOpenings () {
+  public function testMergeIrregularOpenings() {
     $dt = new \DateTime('2016-09-28');
     $model = new OverviewModel(array(), $dt);
 
@@ -152,7 +149,7 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $this->assertEquals($irregularOpenings[4], $data[6]['items']);
   }
 
-  public function testGetDataCompressedPeriods () {
+  public function testGetDataCompressedPeriods() {
     $dt = new \DateTime('2016-09-28');
     /** @var Period[] $periods */
     $periods = array(
@@ -188,7 +185,7 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $this->assertEquals($expected, $data);
   }
 
-  public function testGetDataCompressed () {
+  public function testGetDataCompressed() {
     $dt = new \DateTime('2016-09-28');
     /** @var Period[] $periods */
     $periods = array(
@@ -238,31 +235,31 @@ class OverviewModelTest extends OpeningHoursTestCase {
     $expected = array(
       array(
         'days' => array(Weekdays::getWeekday(2)),
-        'items' => array(),
+        'items' => array()
       ),
       array(
         'days' => array(Weekdays::getWeekday(3)),
-        'items' => array(),
+        'items' => array()
       ),
       array(
         'days' => array(Weekdays::getWeekday(4)),
-        'items' => array(),
+        'items' => array()
       ),
       array(
         'days' => array(Weekdays::getWeekday(5)),
-        'items' => array(),
+        'items' => array()
       ),
       array(
         'days' => array(Weekdays::getWeekday(6)),
-        'items' => array(),
+        'items' => array()
       ),
       array(
         'days' => array(Weekdays::getWeekday(0)),
-        'items' => array(),
+        'items' => array()
       ),
       array(
         'days' => array(Weekdays::getWeekday(1)),
-        'items' => array(),
+        'items' => array()
       )
     );
 
@@ -277,9 +274,9 @@ class OverviewModelTest extends OpeningHoursTestCase {
           Weekdays::getWeekday(5),
           Weekdays::getWeekday(6),
           Weekdays::getWeekday(0),
-          Weekdays::getWeekday(1),
+          Weekdays::getWeekday(1)
         ),
-        'items' => array(),
+        'items' => array()
       )
     );
 

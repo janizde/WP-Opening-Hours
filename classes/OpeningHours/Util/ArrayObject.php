@@ -11,17 +11,18 @@ use ArrayObject as NativeArrayObject;
  * @package     OpeningHours\Util
  */
 class ArrayObject extends NativeArrayObject {
-
   /**
    * Removes an element from the collection.
    * Compares by identity (===).
    *
    * @param     mixed $element The element to remove
    */
-  public function removeElement ( $element ) {
-    foreach ($this as $id => $current)
-      if ($element === $current)
+  public function removeElement($element) {
+    foreach ($this as $id => $current) {
+      if ($element === $current) {
         $this->offsetUnset($id);
+      }
+    }
   }
 
   /**
@@ -31,12 +32,11 @@ class ArrayObject extends NativeArrayObject {
    *
    * @return    ArrayObject         The ArrayObject filled with the data
    */
-  public static function createFromArray ( array $data ) {
+  public static function createFromArray(array $data) {
     $ao = new ArrayObject();
     foreach ($data as $item) {
       $ao->append($item);
     }
     return $ao;
   }
-
 }

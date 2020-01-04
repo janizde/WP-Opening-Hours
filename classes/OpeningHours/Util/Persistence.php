@@ -16,7 +16,6 @@ use WP_Post;
  * @package     OpeningHours\Util
  */
 class Persistence {
-
   /** Meta key under which period data is saved in post meta */
   const PERIODS_META_KEY = '_op_set_periods';
 
@@ -37,7 +36,7 @@ class Persistence {
    *
    * @param     WP_Post $post The post to save data to and load data from
    */
-  public function __construct ( WP_Post $post ) {
+  public function __construct(WP_Post $post) {
     $this->post = $post;
   }
 
@@ -46,7 +45,7 @@ class Persistence {
    *
    * @param     Period[] $periods The periods to save
    */
-  public function savePeriods ( array $periods ) {
+  public function savePeriods(array $periods) {
     $meta = array();
     foreach ($periods as $period) {
       $meta[] = array(
@@ -62,15 +61,16 @@ class Persistence {
    * Loads Periods from set meta
    * @return    Period[]  All Periods associated with the set
    */
-  public function loadPeriods () {
+  public function loadPeriods() {
     $meta = get_post_meta($this->post->ID, self::PERIODS_META_KEY, true);
-    if (!is_array($meta))
+    if (!is_array($meta)) {
       return array();
+    }
 
     $periods = array();
     foreach ($meta as $data) {
       try {
-        $period = new Period((int)$data['weekday'], $data['timeStart'], $data['timeEnd']);
+        $period = new Period((int) $data['weekday'], $data['timeStart'], $data['timeEnd']);
         $periods[] = $period;
       } catch (InvalidArgumentException $e) {
         trigger_error(sprintf('Could not load a period due to: %s', $e->getMessage()));
@@ -85,7 +85,7 @@ class Persistence {
    *
    * @param     Holiday[] $holidays The holidays to save
    */
-  public function saveHolidays ( array $holidays ) {
+  public function saveHolidays(array $holidays) {
     $meta = array();
     foreach ($holidays as $holiday) {
       $meta[] = array(
@@ -101,10 +101,11 @@ class Persistence {
    * Loads Holidays from set meta
    * @return    Holiday[] All Holidays associated with the set
    */
-  public function loadHolidays () {
+  public function loadHolidays() {
     $meta = get_post_meta($this->post->ID, self::HOLIDAYS_META_KEY, true);
-    if (!is_array($meta))
+    if (!is_array($meta)) {
       return array();
+    }
 
     $holidays = array();
     foreach ($meta as $data) {
@@ -124,11 +125,12 @@ class Persistence {
    *
    * @param     IrregularOpening[] $irregularOpenings The IrregularOpenings to save
    */
-  public function saveIrregularOpenings ( array $irregularOpenings ) {
+  public function saveIrregularOpenings(array $irregularOpenings) {
     $meta = array();
     foreach ($irregularOpenings as $io) {
-      if (!$io instanceof IrregularOpening)
+      if (!$io instanceof IrregularOpening) {
         continue;
+      }
 
       $meta[] = array(
         'name' => $io->getName(),
@@ -144,10 +146,11 @@ class Persistence {
    * Loads IrregularOpenings from set meta
    * @return    IrregularOpening[]  All IrregularOpenings associated with the set
    */
-  public function loadIrregularOpenings () {
+  public function loadIrregularOpenings() {
     $meta = get_post_meta($this->post->ID, self::IRREGULAR_OPENINGS_META_KEY, true);
-    if (!is_array($meta))
+    if (!is_array($meta)) {
       return array();
+    }
 
     $ios = array();
     foreach ($meta as $data) {

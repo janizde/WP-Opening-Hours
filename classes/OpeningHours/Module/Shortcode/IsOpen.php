@@ -16,13 +16,11 @@ use OpeningHours\Util\Weekdays;
  * @package     OpeningHours\Module\Shortcode
  */
 class IsOpen extends AbstractShortcode {
-
   const FILTER_FORMAT_TODAY = 'op_is_open_format_today';
   const FILTER_FORMAT_NEXT = 'op_is_open_format_next';
 
   /** @inheritdoc */
-  protected function init () {
-
+  protected function init() {
     $this->setShortcodeTag('op-is-open');
 
     $this->defaultAttributes = array(
@@ -55,13 +53,14 @@ class IsOpen extends AbstractShortcode {
   }
 
   /** @inheritdoc */
-  public function shortcode ( array $attributes ) {
+  public function shortcode(array $attributes) {
     $setId = $attributes['set_id'];
 
     $set = OpeningHours::getInstance()->getSet($setId);
 
-    if (!$set instanceof Set)
+    if (!$set instanceof Set) {
       return;
+    }
 
     $isOpen = $set->isOpen();
     $todayData = $set->getDataForDate(Dates::getNow());
@@ -69,30 +68,41 @@ class IsOpen extends AbstractShortcode {
     if ($attributes['show_next']) {
       $nextPeriod = $set->getNextOpenPeriod();
       $attributes['next_period'] = $set->getNextOpenPeriod();
-      $attributes['next_string'] = apply_filters(self::FILTER_FORMAT_NEXT, $this->formatNext($nextPeriod, $attributes), $nextPeriod, $attributes, $todayData);
+      $attributes['next_string'] = apply_filters(
+        self::FILTER_FORMAT_NEXT,
+        $this->formatNext($nextPeriod, $attributes),
+        $nextPeriod,
+        $attributes,
+        $todayData
+      );
     }
 
-    if (
-      $attributes['show_today'] === 'always'
-      || $attributes['show_today'] === 'open' && $isOpen
-    ) {
+    if ($attributes['show_today'] === 'always' || ($attributes['show_today'] === 'open' && $isOpen)) {
       $todayPeriods = $this->getTodaysPeriods($todayData);
       $attributes['today_periods'] = $todayPeriods;
-      $attributes['today_string'] = apply_filters(self::FILTER_FORMAT_TODAY, $this->formatToday($todayPeriods, $attributes), $todayPeriods, $attributes, $todayData);
+      $attributes['today_string'] = apply_filters(
+        self::FILTER_FORMAT_TODAY,
+        $this->formatToday($todayPeriods, $attributes),
+        $todayPeriods,
+        $attributes,
+        $todayData
+      );
     }
 
     $attributes['is_open'] = $isOpen;
-    $attributes['classes'] .= ($isOpen) ? $attributes['open_class'] : $attributes['closed_class'];
+    $attributes['classes'] .= $isOpen ? $attributes['open_class'] : $attributes['closed_class'];
 
     // If the attribute show_closed_holidays is enabled
     if ($attributes['show_closed_holidays']) {
-        $holidaysList = $this->getTodaysHolidaysCommaSeperated($todayData);
-        $closedText = $holidaysList ? sprintf($attributes['closed_holiday_text'], $holidaysList) : $attributes['closed_text'];
+      $holidaysList = $this->getTodaysHolidaysCommaSeperated($todayData);
+      $closedText = $holidaysList
+        ? sprintf($attributes['closed_holiday_text'], $holidaysList)
+        : $attributes['closed_text'];
     } else {
-        $closedText = $attributes['closed_text'];
+      $closedText = $attributes['closed_text'];
     }
 
-    $attributes['text'] = ($isOpen) ? $attributes['open_text'] : $closedText;
+    $attributes['text'] = $isOpen ? $attributes['open_text'] : $closedText;
 
     echo $this->renderShortcodeTemplate($attributes, 'shortcode/is-open.php');
   }
@@ -103,14 +113,14 @@ class IsOpen extends AbstractShortcode {
    * @return string            Extracted holiday name(s)
    */
   public function getTodaysHolidaysCommaSeperated($todayData) {
-      if (count($todayData['holidays']) > 0) {
-        $holidayNames = array();
+    if (count($todayData['holidays']) > 0) {
+      $holidayNames = array();
 
-        foreach ($todayData['holidays'] as $holiday) {
-            array_push($holidayNames, $holiday->getName());
-        }
+      foreach ($todayData['holidays'] as $holiday) {
+        array_push($holidayNames, $holiday->getName());
+      }
 
-        return implode(', ', $holidayNames);
+      return implode(', ', $holidayNames);
     }
 
     return null;
@@ -125,9 +135,7 @@ class IsOpen extends AbstractShortcode {
     if (count($todayData['irregularOpenings']) > 0) {
       /* @var IrregularOpening $io */
       $io = $todayData['irregularOpenings'][0];
-      return array(
-        $io->createPeriod()
-      );
+      return array($io->createPeriod());
     }
 
     if (count($todayData['holidays']) > 0) {

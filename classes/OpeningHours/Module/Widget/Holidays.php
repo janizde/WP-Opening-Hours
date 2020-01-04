@@ -12,16 +12,14 @@ use OpeningHours\Module\Shortcode\Holidays as HolidaysShortcode;
  * @package     OpeningHours\Module\Widget
  */
 class Holidays extends AbstractWidget {
-
-  public function __construct () {
+  public function __construct() {
     $title = __('Opening Hours: Holidays', 'wp-opening-hours');
     $description = __('Lists up all Holidays in the selected Set.', 'wp-opening-hours');
     parent::__construct('widget_op_holidays', $title, $description, HolidaysShortcode::getInstance());
   }
 
   /** @inheritdoc */
-  protected function registerFields () {
-
+  protected function registerFields() {
     // Standard Fields
     $this->addField('title', array(
       'type' => 'text',
@@ -31,7 +29,7 @@ class Holidays extends AbstractWidget {
     $this->addField('set_id', array(
       'type' => 'select',
       'caption' => __('Set', 'wp-opening-hours'),
-      'options_callback' => array(OpeningHours::getInstance(), 'getSetsOptions'),
+      'options_callback' => array(OpeningHours::getInstance(), 'getSetsOptions')
     ));
 
     $this->addField('highlight', array(

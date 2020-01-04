@@ -15,30 +15,36 @@ use WP_Post;
  * @package     OpeningHours\Module\CustomPostType\MetaBox
  */
 class IrregularOpenings extends AbstractMetaBox {
-
   const TEMPLATE_PATH = 'meta-box/irregular-openings.php';
   const TEMPLATE_PATH_SINGLE = 'ajax/op-set-irregular-opening.php';
 
   const POST_KEY = 'opening-hours-irregular-openings';
 
-  public function __construct () {
-    parent::__construct('op_meta_box_irregular_openings', __('Irregular Openings', 'wp-opening-hours'), self::CONTEXT_ADVANCED, self::PRIORITY_DEFAULT);
+  public function __construct() {
+    parent::__construct(
+      'op_meta_box_irregular_openings',
+      __('Irregular Openings', 'wp-opening-hours'),
+      self::CONTEXT_ADVANCED,
+      self::PRIORITY_DEFAULT
+    );
   }
 
   /** @inheritdoc */
-  public function registerMetaBox () {
-    if (!$this->currentSetIsParent())
+  public function registerMetaBox() {
+    if (!$this->currentSetIsParent()) {
       return;
+    }
 
     parent::registerMetaBox();
   }
 
   /** @inheritdoc */
-  public function renderMetaBox (WP_Post $post) {
+  public function renderMetaBox(WP_Post $post) {
     $set = $this->getSet($post->ID);
 
-    if (count($set->getIrregularOpenings()) < 1)
+    if (count($set->getIrregularOpenings()) < 1) {
       $set->getIrregularOpenings()->append(IrregularOpening::createDummy());
+    }
 
     $variables = array(
       'irregular_openings' => $set->getIrregularOpenings()
@@ -49,10 +55,11 @@ class IrregularOpenings extends AbstractMetaBox {
   }
 
   /** @inheritdoc */
-  protected function saveData ( $post_id, WP_Post $post, $update ) {
-    $ios = (array_key_exists(self::POST_KEY, $_POST) && is_array($_POST[self::POST_KEY]))
-      ? $this->getIrregularOpeningsFromPostData($_POST[self::POST_KEY])
-      : array();
+  protected function saveData($post_id, WP_Post $post, $update) {
+    $ios =
+      array_key_exists(self::POST_KEY, $_POST) && is_array($_POST[self::POST_KEY])
+        ? $this->getIrregularOpeningsFromPostData($_POST[self::POST_KEY])
+        : array();
 
     $persistence = new Persistence($post);
     $persistence->saveIrregularOpenings($ios);
@@ -65,12 +72,12 @@ class IrregularOpenings extends AbstractMetaBox {
    *
    * @return    IrregularOpening[]
    */
-  public function getIrregularOpeningsFromPostData ( array $data ) {
+  public function getIrregularOpeningsFromPostData(array $data) {
     $ios = array();
     for ($i = 0; $i < count($data['name']); $i++) {
       try {
         $data['timeStart'][$i] = date('H:i', strtotime($data['timeStart'][$i]));
-        $data['timeEnd'][$i]   = date('H:i', strtotime($data['timeEnd'][$i]));
+        $data['timeEnd'][$i] = date('H:i', strtotime($data['timeEnd'][$i]));
 
         $io = new IrregularOpening($data['name'][$i], $data['date'][$i], $data['timeStart'][$i], $data['timeEnd'][$i]);
         $ios[] = $io;

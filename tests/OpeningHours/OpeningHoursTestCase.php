@@ -7,8 +7,7 @@ use OpeningHours\Util\ArrayObject;
 use WP_Mock\Functions;
 
 abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
-
-  protected function setUp () {
+  protected function setUp() {
     parent::setUp();
     \WP_Mock::setUp();
 
@@ -31,7 +30,7 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     ));
   }
 
-  protected function tearDown () {
+  protected function tearDown() {
     parent::tearDown();
     \WP_Mock::tearDown();
   }
@@ -40,7 +39,7 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
    * Sets option values
    * @param     array     $map      Associative array containing key-value pairs representing an option
    */
-  protected function applyOptionsMap ( array $map ) {
+  protected function applyOptionsMap(array $map) {
     foreach ($map as $key => $value) {
       \WP_Mock::wpFunction('get_option', array(
         'times' => '0+',
@@ -61,7 +60,12 @@ abstract class OpeningHoursTestCase extends \PHPUnit_Framework_TestCase {
     ));
   }
 
-  protected function createSet ($id, array $periods = array(), array $holidays = array(), array $irregularOpenings = array()) {
+  protected function createSet(
+    $id,
+    array $periods = array(),
+    array $holidays = array(),
+    array $irregularOpenings = array()
+  ) {
     $set = new Set($id);
     $set->setPeriods(ArrayObject::createFromArray($periods));
     $set->setHolidays(ArrayObject::createFromArray($holidays));

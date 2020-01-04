@@ -14,7 +14,6 @@ use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 
 class SchemaGeneratorTest extends OpeningHoursTestCase {
-
   /**
    * - `createSetValiditySequence` creates one `ValidityPeriod` containing the main set
    *   from `$referenceNow` through one year in future
@@ -25,9 +24,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
 
     $result = $sg->createSetValiditySequence();
 
-    $expected = new ValiditySequence(array(
-      new ValidityPeriod($set, -INF, INF),
-    ));
+    $expected = new ValiditySequence(array(new ValidityPeriod($set, -INF, INF)));
 
     $this->assertEquals($expected, $result);
   }
@@ -47,7 +44,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $expected = new ValiditySequence(array(
       new ValidityPeriod($set, -INF, new \DateTime('2018-04-04')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-05'), new \DateTime('2018-04-10')),
-      new ValidityPeriod($set, new \DateTime('2018-04-11'), INF),
+      new ValidityPeriod($set, new \DateTime('2018-04-11'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -67,7 +64,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $expected = new ValiditySequence(array(
       new ValidityPeriod($set, -INF, new \DateTime('2018-03-31')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-01'), new \DateTime('2018-04-10')),
-      new ValidityPeriod($set, new \DateTime('2018-04-11'), INF),
+      new ValidityPeriod($set, new \DateTime('2018-04-11'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -87,7 +84,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $expected = new ValiditySequence(array(
       new ValidityPeriod($set, -INF, new \DateTime('2018-04-29')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-30'), new \DateTime('2019-03-31')),
-      new ValidityPeriod($set, new \DateTime('2019-04-01'), INF),
+      new ValidityPeriod($set, new \DateTime('2019-04-01'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -107,7 +104,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $expected = new ValiditySequence(array(
       new ValidityPeriod($set, -INF, new \DateTime('2018-03-31')),
       new ValidityPeriod($childSet, new \DateTime('2018-04-01'), new \DateTime('2019-03-31')),
-      new ValidityPeriod($set, new \DateTime('2019-04-01'), INF),
+      new ValidityPeriod($set, new \DateTime('2019-04-01'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -131,7 +128,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
       new ValidityPeriod($childSet1, new \DateTime('2018-04-05'), new \DateTime('2018-04-10')),
       new ValidityPeriod($set, new \DateTime('2018-04-11'), new \DateTime('2018-04-11')),
       new ValidityPeriod($childSet2, new \DateTime('2018-04-12'), new \DateTime('2018-04-14')),
-      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF),
+      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -154,7 +151,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
       new ValidityPeriod($set, -INF, new \DateTime('2018-04-04')),
       new ValidityPeriod($childSet1, new \DateTime('2018-04-05'), new \DateTime('2018-04-11')),
       new ValidityPeriod($childSet2, new \DateTime('2018-04-12'), new \DateTime('2018-04-14')),
-      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF),
+      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -177,7 +174,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
       new ValidityPeriod($set, -INF, new \DateTime('2018-04-04')),
       new ValidityPeriod($childSet1, new \DateTime('2018-04-05'), new \DateTime('2018-04-13')),
       new ValidityPeriod($childSet2, new \DateTime('2018-04-14'), new \DateTime('2018-04-14')),
-      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF),
+      new ValidityPeriod($set, new \DateTime('2018-04-15'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -197,7 +194,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
 
     $expected = new ValiditySequence(array(
       new ValidityPeriod($childSet, -INF, new \DateTime('2018-04-13')),
-      new ValidityPeriod($set, new \DateTime('2018-04-14'), INF),
+      new ValidityPeriod($set, new \DateTime('2018-04-14'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -217,7 +214,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
 
     $expected = new ValiditySequence(array(
       new ValidityPeriod($set, -INF, new \DateTime('2018-04-12')),
-      new ValidityPeriod($childSet, new \DateTime('2018-04-13'), INF),
+      new ValidityPeriod($childSet, new \DateTime('2018-04-13'), INF)
     ));
 
     $this->assertEquals($expected, $result);
@@ -235,9 +232,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
 
     $result = $sg->createSetValiditySequence();
 
-    $expected = new ValiditySequence(array(
-      new ValidityPeriod($childSet, -INF, INF),
-    ));
+    $expected = new ValiditySequence(array(new ValidityPeriod($childSet, -INF, INF)));
 
     $this->assertEquals($expected, $result);
   }
@@ -254,14 +249,14 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         '@type' => 'OpeningHoursSpecification',
         'opens' => '12:00',
         'closes' => '13:00',
-        'dayOfWeek' => 'http://schema.org/Sunday',
+        'dayOfWeek' => 'http://schema.org/Sunday'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
         'opens' => '13:00',
         'closes' => '14:00',
-        'dayOfWeek' => 'http://schema.org/Saturday',
-      ),
+        'dayOfWeek' => 'http://schema.org/Saturday'
+      )
     );
 
     $result = $sg->createSpecItemsFromValidityPeriod($vp);
@@ -282,15 +277,15 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         'opens' => '12:00',
         'closes' => '13:00',
         'dayOfWeek' => 'http://schema.org/Sunday',
-        'validThrough' => '2018-09-24',
+        'validThrough' => '2018-09-24'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
         'opens' => '13:00',
         'closes' => '14:00',
         'dayOfWeek' => 'http://schema.org/Saturday',
-        'validThrough' => '2018-09-24',
-      ),
+        'validThrough' => '2018-09-24'
+      )
     );
 
     $result = $sg->createSpecItemsFromValidityPeriod($vp);
@@ -311,15 +306,15 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         'opens' => '12:00',
         'closes' => '13:00',
         'dayOfWeek' => 'http://schema.org/Sunday',
-        'validFrom' => '2018-09-24',
+        'validFrom' => '2018-09-24'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
         'opens' => '13:00',
         'closes' => '14:00',
         'dayOfWeek' => 'http://schema.org/Saturday',
-        'validFrom' => '2018-09-24',
-      ),
+        'validFrom' => '2018-09-24'
+      )
     );
 
     $result = $sg->createSpecItemsFromValidityPeriod($vp);
@@ -341,7 +336,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         'closes' => '13:00',
         'dayOfWeek' => 'http://schema.org/Sunday',
         'validFrom' => '2018-09-24',
-        'validThrough' => '2018-09-25',
+        'validThrough' => '2018-09-25'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
@@ -349,8 +344,8 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         'closes' => '14:00',
         'dayOfWeek' => 'http://schema.org/Saturday',
         'validFrom' => '2018-09-24',
-        'validThrough' => '2018-09-25',
-      ),
+        'validThrough' => '2018-09-25'
+      )
     );
 
     $result = $sg->createSpecItemsFromValidityPeriod($vp);
@@ -378,29 +373,29 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         'opens' => '12:00',
         'closes' => '13:00',
         'dayOfWeek' => 'http://schema.org/Sunday',
-        'validThrough' => '2018-09-24',
+        'validThrough' => '2018-09-24'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
         'opens' => '13:00',
         'closes' => '14:00',
         'dayOfWeek' => 'http://schema.org/Saturday',
-        'validThrough' => '2018-09-24',
+        'validThrough' => '2018-09-24'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
         'opens' => '15:00',
         'closes' => '16:00',
         'dayOfWeek' => 'http://schema.org/Monday',
-        'validFrom' => '2018-09-25',
+        'validFrom' => '2018-09-25'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
         'opens' => '17:00',
         'closes' => '18:00',
         'dayOfWeek' => 'http://schema.org/Friday',
-        'validFrom' => '2018-09-25',
-      ),
+        'validFrom' => '2018-09-25'
+      )
     );
 
     $result = $sg->createOpeningHoursSpecDefinition($vs);
@@ -412,7 +407,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $set->getHolidays()->append(new Holiday('Holiday 1', new \DateTime('2018-09-24'), new \DateTime('2018-09-25')));
     $set->getHolidays()->append(new Holiday('Holiday 2', new \DateTime('2018-09-26'), new \DateTime('2018-09-27')));
     $set->getHolidays()->append(new Holiday('Holiday 3', new \DateTime('2019-09-26'), new \DateTime('2019-09-27')));
-    Dates::setNow(new \DateTime(('2018-09-26')));
+    Dates::setNow(new \DateTime('2018-09-26'));
     $sg = new SchemaGenerator($set, array());
 
     $expected = array(
@@ -420,14 +415,14 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         '@type' => 'OpeningHoursSpecification',
         'name' => 'Holiday 2',
         'validFrom' => '2018-09-26',
-        'validThrough' => '2018-09-27',
+        'validThrough' => '2018-09-27'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
         'name' => 'Holiday 3',
         'validFrom' => '2019-09-26',
-        'validThrough' => '2019-09-27',
-      ),
+        'validThrough' => '2019-09-27'
+      )
     );
 
     $result = $sg->createHolidaysOpeningHoursSpecification();
@@ -439,7 +434,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $set->getIrregularOpenings()->append(new IrregularOpening('IO 1', '2018-09-25', '13:00', '14:00'));
     $set->getIrregularOpenings()->append(new IrregularOpening('IO 2', '2018-09-26', '15:00', '16:00'));
     $set->getIrregularOpenings()->append(new IrregularOpening('IO 3', '2019-09-26', '15:00', '16:00'));
-    Dates::setNow(new \DateTime(('2018-09-26')));
+    Dates::setNow(new \DateTime('2018-09-26'));
     $sg = new SchemaGenerator($set, array());
 
     $expected = array(
@@ -449,7 +444,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         'opens' => '15:00',
         'closes' => '16:00',
         'validFrom' => '2018-09-26',
-        'validThrough' => '2018-09-26',
+        'validThrough' => '2018-09-26'
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
@@ -457,7 +452,7 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
         'opens' => '15:00',
         'closes' => '16:00',
         'validFrom' => '2019-09-26',
-        'validThrough' => '2019-09-26',
+        'validThrough' => '2019-09-26'
       )
     );
 

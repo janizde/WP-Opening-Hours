@@ -12,7 +12,6 @@ use OpeningHours\Util\Dates;
  * @package     OpeningHours\Entity
  */
 class Holiday implements TimeContextEntity, DateTimeRange {
-
   /**
    * The holiday's name
    * @type            string
@@ -45,9 +44,10 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    * @param     DateTime $dateEnd   DateTime object representing the end of the holiday
    * @param     bool     $dummy     Whether holiday is a dummy or not
    */
-  public function __construct ( $name, DateTime $dateStart, DateTime $dateEnd, $dummy = false ) {
-    if (!$dummy && empty($name))
+  public function __construct($name, DateTime $dateStart, DateTime $dateEnd, $dummy = false) {
+    if (!$dummy && empty($name)) {
       throw new \InvalidArgumentException("\$name must not be empty when holiday is no dummy.");
+    }
 
     $this->name = $name;
     $this->setStart($dateStart);
@@ -65,11 +65,12 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    *
    * @return    bool              Whether the holiday has been active, will be active, is active at the provided time
    */
-  public function isActive ( DateTime $now = null ) {
-    if ($now === null)
+  public function isActive(DateTime $now = null) {
+    if ($now === null) {
       $now = Dates::getNow();
+    }
 
-    return ($this->dateStart <= $now and $this->dateEnd >= $now);
+    return $this->dateStart <= $now and $this->dateEnd >= $now;
   }
 
   /**
@@ -80,12 +81,12 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    *
    * @return    int
    */
-  public static function sortStrategy ( Holiday $holiday_1, Holiday $holiday_2 ) {
-    if ($holiday_1->dateStart > $holiday_2->dateStart) :
+  public static function sortStrategy(Holiday $holiday_1, Holiday $holiday_2) {
+    if ($holiday_1->dateStart > $holiday_2->dateStart):
       return 1;
-    elseif ($holiday_1->dateStart < $holiday_2->dateStart) :
+    elseif ($holiday_1->dateStart < $holiday_2->dateStart):
       return -1;
-    else :
+    else:
       return 0;
     endif;
   }
@@ -94,7 +95,7 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    * Factory for dummy Holiday
    * @return    Holiday
    */
-  public static function createDummyPeriod () {
+  public static function createDummyPeriod() {
     return new Holiday('', Dates::getNow(), Dates::getNow(), true);
   }
 
@@ -123,19 +124,23 @@ class Holiday implements TimeContextEntity, DateTimeRange {
       return Dates::format($dateFormat, $this->dateStart);
     }
 
-    return sprintf($rangeFormat, Dates::format($dateFormat, $this->dateStart), Dates::format($dateFormat, $this->dateEnd));
+    return sprintf(
+      $rangeFormat,
+      Dates::format($dateFormat, $this->dateStart),
+      Dates::format($dateFormat, $this->dateEnd)
+    );
   }
 
   /**
    * Getter: Name
    * @return          string
    */
-  public function getName () {
+  public function getName() {
     return $this->name;
   }
 
   /** @inheritdoc */
-  public function getStart () {
+  public function getStart() {
     return $this->dateStart;
   }
 
@@ -144,12 +149,12 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    *
    * @param           DateTime|string $dateStart
    */
-  protected function setStart ($dateStart) {
+  protected function setStart($dateStart) {
     $this->setDateUniversal($dateStart, 'dateStart');
   }
 
   /** @inheritdoc */
-  public function getEnd () {
+  public function getEnd() {
     return $this->dateEnd;
   }
 
@@ -158,7 +163,7 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    *
    * @param           DateTime|string $dateEnd
    */
-  protected function setEnd ($dateEnd) {
+  protected function setEnd($dateEnd) {
     $this->setDateUniversal($dateEnd, 'dateEnd', true);
   }
 
@@ -201,17 +206,30 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    * @param     string          $property   The name of the property to set
    * @param     bool            $end_of_day Whether the time should be shifted to the end of the day
    */
-  private function setDateUniversal ( $date, $property, $end_of_day = false ) {
-    if (is_string($date) and (preg_match(Dates::STD_DATE_FORMAT_REGEX, $date) or preg_match(Dates::STD_DATE_FORMAT_REGEX . ' ' . Dates::STD_TIME_FORMAT_REGEX, $date)))
+  private function setDateUniversal($date, $property, $end_of_day = false) {
+    if (
+      is_string($date) and
+      (preg_match(Dates::STD_DATE_FORMAT_REGEX, $date) or
+        preg_match(Dates::STD_DATE_FORMAT_REGEX . ' ' . Dates::STD_TIME_FORMAT_REGEX, $date))
+    ) {
       $date = new DateTime($date);
+    }
 
-    if (!$date instanceof DateTime)
-      add_notice(sprintf('Argument one for %s has to be of type string or DateTime, %s given', __CLASS__ . '::' . __METHOD__, gettype($date)));
+    if (!$date instanceof DateTime) {
+      add_notice(
+        sprintf(
+          'Argument one for %s has to be of type string or DateTime, %s given',
+          __CLASS__ . '::' . __METHOD__,
+          gettype($date)
+        )
+      );
+    }
 
     $date = Dates::applyTimeZone($date);
 
-    if ($end_of_day === true)
+    if ($end_of_day === true) {
       $date->setTime(23, 59, 59);
+    }
 
     $this->$property = Dates::applyTimeZone($date);
   }
@@ -220,8 +238,7 @@ class Holiday implements TimeContextEntity, DateTimeRange {
    * Getter: Dummy
    * @return    bool
    */
-  public function isDummy () {
+  public function isDummy() {
     return $this->dummy;
   }
-
 }

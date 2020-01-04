@@ -14,7 +14,6 @@ use OpeningHours\Test\OpeningHoursTestCase;
  * @package OpeningHours\Test\Module\Schema
  */
 class ValiditySequenceTest extends OpeningHoursTestCase {
-
   /**
    * - `__construct` sets the `$period` attribute properly
    * - `getPeriods` returns the value of the `$periods` attribute
@@ -23,7 +22,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $set = new Set(0);
     $validityPeriods = array(
       new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
-      new ValidityPeriod($set, new \DateTime('2018-05-01'), new \DateTime('2018-05-18')),
+      new ValidityPeriod($set, new \DateTime('2018-05-01'), new \DateTime('2018-05-18'))
     );
 
     $vs = new ValiditySequence($validityPeriods);
@@ -37,14 +36,12 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   public function testRestrictToDateRange_OneFullyInside() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30'))
     ));
 
     $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
 
-    $expected = array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
-    );
+    $expected = array(new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')));
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
@@ -55,14 +52,12 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   public function testRestrictedToDateRange_OneExceeds() {
     $set = new Set(0);
     $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-03-31'), new \DateTime('2018-05-01')),
+      new ValidityPeriod($set, new \DateTime('2018-03-31'), new \DateTime('2018-05-01'))
     ));
 
     $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
 
-    $expected = array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
-    );
+    $expected = array(new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')));
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
@@ -76,14 +71,12 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $vs = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-30'), new \DateTime('2018-03-30')),
       new ValidityPeriod($set, new \DateTime('2018-05-01'), new \DateTime('2018-05-01')),
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30'))
     ));
 
     $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
 
-    $expected = array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
-    );
+    $expected = array(new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')));
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
@@ -97,7 +90,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $vs = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
       new ValidityPeriod($set, new \DateTime('2018-03-29'), new \DateTime('2018-04-02')),
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30'))
     ));
 
     $restricted = $vs->restrictedToDateRange(-INF, new \DateTime('2018-04-29'));
@@ -120,7 +113,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $vs = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-20'), new \DateTime('2018-03-28')),
       new ValidityPeriod($set, new \DateTime('2018-03-29'), new \DateTime('2018-04-02')),
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30'))
     ));
 
     $restricted = $vs->restrictedToDateRange(new \DateTime('2018-03-22'), INF);
@@ -139,15 +132,11 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    */
   public function testRestrictToDateRange_OutsideMaxInfinityeriodInfinity() {
     $set = new Set(0);
-    $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), INF),
-    ));
+    $vs = new ValiditySequence(array(new ValidityPeriod($set, new \DateTime('2018-04-01'), INF)));
 
     $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-02'), INF);
 
-    $expected = array(
-      new ValidityPeriod($set, new \DateTime('2018-04-02'), INF)
-    );
+    $expected = array(new ValidityPeriod($set, new \DateTime('2018-04-02'), INF));
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
@@ -157,15 +146,11 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    */
   public function testRestrictToDateRange_OutsideMaxValuePeriodInfinity() {
     $set = new Set(0);
-    $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), INF),
-    ));
+    $vs = new ValiditySequence(array(new ValidityPeriod($set, new \DateTime('2018-04-01'), INF)));
 
     $restricted = $vs->restrictedToDateRange(new \DateTime('2018-04-02'), new \DateTime('2018-05-01'));
 
-    $expected = array(
-      new ValidityPeriod($set, new \DateTime('2018-04-02'), new \DateTime('2018-05-01'))
-    );
+    $expected = array(new ValidityPeriod($set, new \DateTime('2018-04-02'), new \DateTime('2018-05-01')));
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
@@ -175,15 +160,11 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    */
   public function testRestrictToDateRange_OutsideMinInfinityPeriodInfinity() {
     $set = new Set(0);
-    $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, -INF, new \DateTime('2018-04-30')),
-    ));
+    $vs = new ValiditySequence(array(new ValidityPeriod($set, -INF, new \DateTime('2018-04-30'))));
 
     $restricted = $vs->restrictedToDateRange(-INF, new \DateTime('2018-04-20'));
 
-    $expected = array(
-      new ValidityPeriod($set, -INF, new \DateTime('2018-04-20'))
-    );
+    $expected = array(new ValidityPeriod($set, -INF, new \DateTime('2018-04-20')));
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
@@ -194,15 +175,11 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    */
   public function testRestrictToDateRange_AllRangesInfinity() {
     $set = new Set(0);
-    $vs = new ValiditySequence(array(
-      new ValidityPeriod($set, -INF, INF),
-    ));
+    $vs = new ValiditySequence(array(new ValidityPeriod($set, -INF, INF)));
 
     $restricted = $vs->restrictedToDateRange(-INF, INF);
 
-    $expected = array(
-      new ValidityPeriod($set, -INF, INF)
-    );
+    $expected = array(new ValidityPeriod($set, -INF, INF));
 
     $this->assertEquals($expected, $restricted->getPeriods());
   }
@@ -215,7 +192,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $fg = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-30'), new \DateTime('2018-03-30')),
       new ValidityPeriod($set, new \DateTime('2018-05-01'), new \DateTime('2018-05-01')),
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30'))
     ));
 
     $bg = new ValiditySequence(array());
@@ -233,7 +210,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $bg = new ValiditySequence(array(
       new ValidityPeriod($set, new \DateTime('2018-03-30'), new \DateTime('2018-03-30')),
       new ValidityPeriod($set, new \DateTime('2018-05-01'), new \DateTime('2018-05-01')),
-      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30')),
+      new ValidityPeriod($set, new \DateTime('2018-04-01'), new \DateTime('2018-04-30'))
     ));
 
     $result = $bg->coveredWith($fg);
@@ -256,13 +233,13 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
       new Set(5),
       new Set(6),
       new Set(7),
-      new Set(8),
+      new Set(8)
     );
 
     $fg = new ValiditySequence(array(
       new ValidityPeriod($sets[0], new \DateTime('2018-04-01'), new \DateTime('2018-04-13')),
       new ValidityPeriod($sets[1], new \DateTime('2018-04-15'), new \DateTime('2018-04-15')),
-      new ValidityPeriod($sets[2], new \DateTime('2018-04-19'), new \DateTime('2018-04-20')),
+      new ValidityPeriod($sets[2], new \DateTime('2018-04-19'), new \DateTime('2018-04-20'))
     ));
 
     $bg = new ValiditySequence(array(
@@ -271,7 +248,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
       new ValidityPeriod($sets[5], new \DateTime('2018-04-14'), new \DateTime('2018-04-14')),
       new ValidityPeriod($sets[6], new \DateTime('2018-04-15'), new \DateTime('2018-04-16')),
       new ValidityPeriod($sets[7], new \DateTime('2018-04-20'), new \DateTime('2018-04-22')),
-      new ValidityPeriod($sets[8], new \DateTime('2018-04-23'), new \DateTime('2018-04-25')),
+      new ValidityPeriod($sets[8], new \DateTime('2018-04-23'), new \DateTime('2018-04-25'))
     ));
 
     $expected = new ValiditySequence(array(
@@ -283,7 +260,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
       new ValidityPeriod($sets[6], new \DateTime('2018-04-16'), new \DateTime('2018-04-16')),
       new ValidityPeriod($sets[2], new \DateTime('2018-04-19'), new \DateTime('2018-04-20')),
       new ValidityPeriod($sets[7], new \DateTime('2018-04-21'), new \DateTime('2018-04-22')),
-      new ValidityPeriod($sets[8], new \DateTime('2018-04-23'), new \DateTime('2018-04-25')),
+      new ValidityPeriod($sets[8], new \DateTime('2018-04-23'), new \DateTime('2018-04-25'))
     ));
 
     $result = $bg->coveredWith($fg);
