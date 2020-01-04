@@ -59,7 +59,8 @@ class OpeningHours extends AbstractModule {
       'OpeningHours\Module\Widget\Overview',
       'OpeningHours\Module\Widget\IsOpen',
       'OpeningHours\Module\Widget\Holidays',
-      'OpeningHours\Module\Widget\IrregularOpenings'
+      'OpeningHours\Module\Widget\IrregularOpenings',
+      'OpeningHours\Module\Widget\Schema'
     );
   }
 
