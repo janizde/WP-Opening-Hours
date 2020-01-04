@@ -21,12 +21,14 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 	* [Is Open Widget](#is-open-widget)
 	* [Holidays Widget](#holidays-widget)
 	* [Irregular Openings Widget](#irregular-openings-widget)
+	* [Schema.org Widget](#schema-org-widget)
 * [Shortcodes](#shortcodes)
 	* [Common Attributes](#common-attributes)
 	* [[op-overview] Shortcode](#op-overview-shortcode)
 	* [[op-is-open] Shortcode](#op-is-open-shortcode)
 	* [[op-holidays] Shortcode](#op-holidays-shortcode)
 	* [[op-irregular-openings] Shortcode](#op-irregular-openings-shortcode)
+	* [[op-schema] Shortcode](#op-schema-shortcode)
 * [Troubleshooting / FAQ](#troubleshooting)
 * [Contributing](#contributing)
 	* [Contributing to Code](#contributing-to-code)
@@ -476,6 +478,53 @@ There are the following options:
 
 #### Irregular Openings Widget options
 ![Irregular Openings Widget options](./doc/screenshots/widget-irregular-openings-options.png)
+
+### <a name="schema-org-widget"></a>Schema.org Widget
+
+The **Schema.org Widget**adds a JSON-LD record to the WordPress site representing the opening hours of a given Set. [Refer to the docs on Schema.org integration](doc/schema-org.md) for more information. 
+
+There are the following options:
+
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Set</td>
+			<td>The Set whose JSON-LD representation to insert</td>
+		</tr>
+		<tr>
+			<td>Exclude Holidays</td>
+			<td>When enabled, holidays are not considered for the SpecialOpeningHoursSpecification</td>
+		</tr>
+		<tr>
+			<td>Exclude Irregular Openings</td>
+			<td>When enabled, irregular openings are not considered for the SpecialOpeningHoursSpecification</td>
+		</tr>
+	</tbody>
+	<thead>
+		<th colspan="2">Extended Settings</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>@Type</code> property of the schema object</td>
+			<td>Custom override for the @type of the schema record. By default <a href="https://schema.org/Place" target="_blank">Place</a> is taken.</td>
+		</tr>
+		<tr>
+			<td><code>name</code> property of the schema object</td>
+			<td>Custom override for the <code>name</code> of the schema record. By default the name of the selected Set is taken.</td>
+		</tr>
+		<tr>
+			<td><code>description</code> property of the schema object</td>
+			<td>Custom override for the <code>description</code> of the schema record. By default the description of the selected Set is taken.</td>
+		</tr>
+	</tbody>
+</table>
+
+#### Schema.org Widget options
+![Schema.org Widget options](./doc/screenshots/widget-schema-options.png)
 
 [↑ Table of Contents](#contents)
 
