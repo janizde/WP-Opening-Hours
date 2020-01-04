@@ -1,95 +1,92 @@
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
-var jshint = require('gulp-jshint');
-var sass = require('gulp-sass');
-var cssmin = require('gulp-minify-css');
-var watch = require('gulp-watch');
-var sourcemaps = require('gulp-sourcemaps');
-var autoprefixer = require('gulp-autoprefixer');
-var gulpZip = require('gulp-zip');
-var gulpIf = require('gulp-if');
-var runSequence = require('run-sequence');
+const gulp = require("gulp");
+const uglify = require("gulp-uglify");
+const concat = require("gulp-concat");
+const jshint = require("gulp-jshint");
+const sass = require("gulp-sass");
+const cleanCSS = require("gulp-clean-css");
+const sourcemaps = require("gulp-sourcemaps");
+const autoprefixer = require("gulp-autoprefixer");
+const gulpZip = require("gulp-zip");
+const gulpIf = require("gulp-if");
+const del = require("del");
 
-var paths = {
+const paths = {
   src: {
-    scripts: [
-      './includes/jquery-ui-timepicker/jquery.ui.timepicker.js',
-      './assets/scripts/**/*.js'
-    ],
-    styles: [
-      './assets/styles/main.scss',
-      './includes/jquery-ui-timepicker/jquery.ui.timepicker.css'
-    ]
+    scripts: ["./includes/jquery-ui-timepicker/jquery.ui.timepicker.js", "./assets/scripts/**/*.js"],
+    styles: ["./assets/styles/main.scss", "./includes/jquery-ui-timepicker/jquery.ui.timepicker.css"]
   },
   dest: {
-    scripts: './dist/scripts/',
-    styles: './dist/styles/'
+    scripts: "./dist/scripts/",
+    styles: "./dist/styles/"
   }
 };
 
-gulp.task( 'scripts', [], function () {
-  return gulp.src( paths.src.scripts )
-    .pipe( jshint() )
-    .pipe( sourcemaps.init() )
-    .pipe( concat( 'main.js' ) )
-    .pipe( uglify() )
-    .pipe( sourcemaps.write('.') )
-    .pipe( gulp.dest( paths.dest.scripts ) );
-} );
+function scripts() {
+  return gulp
+    .src(paths.src.scripts)
+    .pipe(jshint())
+    .pipe(sourcemaps.init())
+    .pipe(concat("main.js"))
+    .pipe(uglify())
+    .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest(paths.dest.scripts));
+}
 
-gulp.task( 'styles', [], function () {
-  return gulp.src( paths.src.styles )
-    .pipe( sourcemaps.init() )
-    .pipe( gulpIf('*.scss', sass()) )
-    .pipe( concat('main.css') )
-    .pipe( autoprefixer() )
-    .pipe( cssmin() )
-    .pipe( sourcemaps.write('.') )
-    .pipe( gulp.dest( paths.dest.styles ) )
-} );
+function styles() {
+  return gulp
+    .src(paths.src.styles)
+    .pipe(sourcemaps.init())
+    .pipe(gulpIf("*.scss", sass()))
+    .pipe(concat("main.css"))
+    .pipe(autoprefixer())
+    .pipe(cleanCSS())
+    .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest(paths.dest.styles));
+}
 
-gulp.task( 'watch', [], function () {
-  gulp.start( 'scripts' );
-  gulp.start( 'styles' );
+const build = gulp.parallel(styles, scripts);
 
-  watch( paths.src.scripts, function () {
-    gulp.start( 'scripts' );
-  } );
+const watch = gulp.series(build, function() {
+  gulp.watch(paths.src.scripts, scripts);
+  gulp.watch(paths.src.styles, styles);
+});
 
-  watch( './assets/styles/**/*.scss', function () {
-    gulp.start( 'styles' );
-  } );
-} );
+function clean() {
+  return del("dist");
+}
 
-gulp.task( 'build', [], function () {
-  return runSequence( ['scripts', 'styles'] );
-} );
-
-gulp.task( 'export', ['build'], function () {
-  var files = [
-    './**/*',
-    '!./node_modules/**/*',
-    '!node_modules',
-    '!./assets/**/*',
-    '!assets',
-    '!./vendor/**/*',
-    '!vendor',
-    '!**/.git/**/*',
-    '!.gitignore',
-    '!.gitmodules',
-    '!gulpfile.js',
-    '!package.json',
-    '!composer.lock',
-    '!phpunit.xml',
-    '!./tests/**/*',
-    '!tests',
-    '!./doc/**/*',
-    '!doc',
-    '!.travis.yml'
+const exportTask = gulp.series(clean, build, function() {
+  const files = [
+    "./**/*",
+    "!./node_modules/**/*",
+    "!node_modules",
+    "!./assets/**/*",
+    "!assets",
+    "!./vendor/**/*",
+    "!vendor",
+    "!**/.git/**/*",
+    "!.gitignore",
+    "!.gitmodules",
+    "!gulpfile.js",
+    "!package.json",
+    "!composer.lock",
+    "!phpunit.xml",
+    "!./tests/**/*",
+    "!tests",
+    "!./doc/**/*",
+    "!doc",
+    "!.travis.yml"
   ];
 
-  return gulp.src( files )
-    .pipe( gulpZip( 'wp-opening-hours.zip' ) )
-    .pipe( gulp.dest( '.' ) );
-} );
+  return gulp
+    .src(files)
+    .pipe(gulpZip("wp-opening-hours.zip"))
+    .pipe(gulp.dest("."));
+});
+
+exports.scripts = scripts;
+exports.styles = styles;
+exports.export = exportTask;
+exports.clean = clean;
+exports.build = build;
+exports.watch = watch;
