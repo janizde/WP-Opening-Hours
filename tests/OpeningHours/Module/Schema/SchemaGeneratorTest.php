@@ -407,14 +407,13 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  public function test_createSpecialOpeningHoursSpecification() {
+  public function test_createHolidaysOpeningHoursSpecification() {
     $set = new Set(0);
     $set->getHolidays()->append(new Holiday('Holiday 1', new \DateTime('2018-09-24'), new \DateTime('2018-09-25')));
     $set->getHolidays()->append(new Holiday('Holiday 2', new \DateTime('2018-09-26'), new \DateTime('2018-09-27')));
-    $set->getIrregularOpenings()->append(new IrregularOpening('IO 1', '2018-09-25', '13:00', '14:00'));
-    $set->getIrregularOpenings()->append(new IrregularOpening('IO 2', '2018-09-26', '15:00', '16:00'));
-    Dates::setNow(new \DateTime('2018-09-26'));
-    $sg = new SchemaGenerator($set);
+    $set->getHolidays()->append(new Holiday('Holiday 3', new \DateTime('2019-09-26'), new \DateTime('2019-09-27')));
+    Dates::setNow(new \DateTime(('2018-09-26')));
+    $sg = new SchemaGenerator($set, array());
 
     $expected = array(
       array(
@@ -425,16 +424,44 @@ class SchemaGeneratorTest extends OpeningHoursTestCase {
       ),
       array(
         '@type' => 'OpeningHoursSpecification',
+        'name' => 'Holiday 3',
+        'validFrom' => '2019-09-26',
+        'validThrough' => '2019-09-27',
+      ),
+    );
+
+    $result = $sg->createHolidaysOpeningHoursSpecification();
+    $this->assertEquals($expected, $result);
+  }
+
+  public function test_createIrregularOpeningHoursSpecification() {
+    $set = new Set(0);
+    $set->getIrregularOpenings()->append(new IrregularOpening('IO 1', '2018-09-25', '13:00', '14:00'));
+    $set->getIrregularOpenings()->append(new IrregularOpening('IO 2', '2018-09-26', '15:00', '16:00'));
+    $set->getIrregularOpenings()->append(new IrregularOpening('IO 3', '2019-09-26', '15:00', '16:00'));
+    Dates::setNow(new \DateTime(('2018-09-26')));
+    $sg = new SchemaGenerator($set, array());
+
+    $expected = array(
+      array(
+        '@type' => 'OpeningHoursSpecification',
         'name' => 'IO 2',
         'opens' => '15:00',
         'closes' => '16:00',
         'validFrom' => '2018-09-26',
         'validThrough' => '2018-09-26',
+      ),
+      array(
+        '@type' => 'OpeningHoursSpecification',
+        'name' => 'IO 3',
+        'opens' => '15:00',
+        'closes' => '16:00',
+        'validFrom' => '2019-09-26',
+        'validThrough' => '2019-09-26',
       )
     );
 
-    $result = $sg->createSpecialOpeningHoursSpecification();
-
+    $result = $sg->createIrregularOpeningHoursSpecification();
     $this->assertEquals($expected, $result);
   }
 }

@@ -141,9 +141,13 @@ class SchemaGenerator {
    */
   public function createHolidaysOpeningHoursSpecification() {
     $now = Dates::getNow();
-    $holidays = array_filter($this->mainSet->getHolidays()->getArrayCopy(), function (Holiday $holiday) use ($now) {
-      return $holiday->getEnd() > $now;
-    });
+
+    $holidays = array_values(
+        array_filter($this->mainSet->getHolidays()->getArrayCopy(), function (Holiday $holiday) use ($now) {
+        $result = $holiday->getEnd() > $now;
+        return $result;
+      })
+    );
 
     return array_map(function (Holiday $h) {
       return array(
@@ -164,9 +168,12 @@ class SchemaGenerator {
    */
   public function createIrregularOpeningHoursSpecification() {
     $now = Dates::getNow();
-    $ios = array_filter($this->mainSet->getIrregularOpenings()->getArrayCopy(), function (IrregularOpening $io) use ($now) {
-      return $io->getEnd() > $now;
-    });
+
+    $ios = array_values(
+        array_filter($this->mainSet->getIrregularOpenings()->getArrayCopy(), function (IrregularOpening $io) use ($now) {
+        return $io->getEnd() > $now;
+      })
+    );
 
     return array_map(function (IrregularOpening $io) {
       return array(
