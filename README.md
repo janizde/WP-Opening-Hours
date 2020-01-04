@@ -36,6 +36,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * [License](#license)
 
 ## Further Reading
+* [Schema.org Integration](./doc/schema-org.md)
 * [Developer Guide](./doc/developer-guide.md)
 * [Filters](./doc/filters.md)
 * [Set Providers](./doc/set-providers.md)
