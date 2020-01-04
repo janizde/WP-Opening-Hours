@@ -8,7 +8,6 @@ use OpeningHours\Entity\Period;
 use OpeningHours\Entity\PostSetProvider;
 use OpeningHours\Module\CustomPostType\MetaBox\SetDetails;
 use OpeningHours\Module\CustomPostType\Set;
-use OpeningHours\OpeningHours;
 use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Dates;
 
