@@ -15,6 +15,7 @@ use OpeningHours\Module\Schema\SchemaGenerator;
  */
 class Schema extends AbstractShortcode {
 
+  /** @inheritdoc */
   protected function init() {
     $this->setShortcodeTag('op-schema');
 
@@ -22,6 +23,9 @@ class Schema extends AbstractShortcode {
       'set_id' => null,
       'exclude_holidays' => false,
       'exclude_irregular_openings' => false,
+      'schema_attr_type' => 'Place',
+      'schema_attr_name' => null,
+      'schema_attr_description' => null,
     );
 
     $this->validAttributeValues = array(
@@ -75,12 +79,43 @@ class Schema extends AbstractShortcode {
   public function shortcode(array $attributes) {
     $setId = $attributes['set_id'];
     $generator = $this->createSchemaGenerator($setId);
+    $set = OpeningHours::getInstance()->getSet($setId);
 
     if ($generator == null) {
       return;
     }
 
-    $attributes['schema'] = $generator->createSchema();
+    $name = $attributes['schema_attr_name'] == null ? $set->getName() : $attributes['schema_attr_name'];
+    $description = $attributes['schema_attr_description'] == null ? $set->getDescription() : $attributes['schema_attr_description'];
+
+    $schema = array(
+      '@context' => array(
+        'http://schema.org'
+      ),
+      '@type' => $attributes['schema_attr_type'],
+    );
+
+    if (!empty($name)) {
+      $schema['name'] = $name;
+    }
+
+    if (!empty($description)) {
+      $schema['description'] = $description;
+    }
+
+    $schema['openingHoursSpecification'] = $generator->createOpeningHoursSpecificationEntries();
+
+    $specialEntries = array_merge(
+      $attributes['exclude_holidays'] ? array() : $generator->createHolidaysOpeningHoursSpecification(),
+      $attributes['exclude_irregular_openings'] ? array() : $generator->createIrregularOpeningHoursSpecification()
+    );
+
+    if (count($specialEntries) > 0) {
+      $schema['specialOpeningHoursSpecification'] = $specialEntries;
+    }
+
+    $attributes['schema'] = $schema;
+
     echo $this->renderShortcodeTemplate($attributes, 'shortcode/schema.php');
   }
 }

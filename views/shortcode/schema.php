@@ -9,5 +9,5 @@ extract($this->data['attributes']);
  */
 ?>
 <script type="application/ld+json">
-  <?php echo json_encode($schema); ?>
+  <?php echo json_encode($schema, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES); ?>
 </script>

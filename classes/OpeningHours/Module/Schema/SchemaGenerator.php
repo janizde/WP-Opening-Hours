@@ -65,7 +65,7 @@ class SchemaGenerator {
    *
    * @return    array     Associative array containing JSON-LD schema
    */
-  public function createSchema() {
+  public function createOpeningHoursSpecificationEntries() {
     $sequence = $this->createSetValiditySequence();
     return $this->createOpeningHoursSpecDefinition($sequence);
   }
@@ -133,23 +133,19 @@ class SchemaGenerator {
   }
 
   /**
-   * Creates OpeningHoursSpecification objects for the current Set's
-   * Holidays and Irregular Openings. All past items will not be considered
+   * Creates OpeningHoursSpecification objects for the current Set's Holidays.
+   * All past items will not be considered.
    *
    * @return      array[]         Sequence of OpeningHoursSpecification objects
-   *                              representing the current Set's Holidays and Irregular Openings
+   *                              representing the current Set's Holidays
    */
-  public function createSpecialOpeningHoursSpecification() {
+  public function createHolidaysOpeningHoursSpecification() {
     $now = Dates::getNow();
     $holidays = array_filter($this->mainSet->getHolidays()->getArrayCopy(), function (Holiday $holiday) use ($now) {
       return $holiday->getEnd() > $now;
     });
 
-    $ios = array_filter($this->mainSet->getIrregularOpenings()->getArrayCopy(), function (IrregularOpening $io) use ($now) {
-      return $io->getEnd() > $now;
-    });
-
-    $holidaySpecs = array_map(function (Holiday $h) {
+    return array_map(function (Holiday $h) {
       return array(
         '@type' => 'OpeningHoursSpecification',
         'name' => $h->getName(),
@@ -157,8 +153,22 @@ class SchemaGenerator {
         'validThrough' => $h->getEnd()->format(self::SCHEMA_DATE_FORMAT),
       );
     }, $holidays);
+  }
 
-    $ioSpecs = array_map(function (IrregularOpening $io) {
+  /**
+   * Creates OpeningHoursSpecification objects for the current Set's Irregular Openings.
+   * All past items will not be considered.
+   *
+   * @return      array[]         Sequence of OpeningHoursSpecification objects
+   *                              representing the current Set's Irregular Openings
+   */
+  public function createIrregularOpeningHoursSpecification() {
+    $now = Dates::getNow();
+    $ios = array_filter($this->mainSet->getIrregularOpenings()->getArrayCopy(), function (IrregularOpening $io) use ($now) {
+      return $io->getEnd() > $now;
+    });
+
+    return array_map(function (IrregularOpening $io) {
       return array(
         '@type' => 'OpeningHoursSpecification',
         'name' => $io->getName(),
@@ -168,11 +178,6 @@ class SchemaGenerator {
         'validThrough' => $io->getDate()->format(self::SCHEMA_DATE_FORMAT)
       );
     }, $ios);
-
-    return array_merge(
-      $holidaySpecs,
-      $ioSpecs
-    );
   }
 
   /**
