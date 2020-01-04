@@ -866,6 +866,58 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 	</tbody>
 </table>
 
+### <a name="op-schema-shortcode"></a>op-schema Shortcode
+Corresponds to the Schema.org Widget.  
+The **[op-schema]** shortcode adds a JSON-LD record to the WordPress site representing the opening hours of a given Set. [Refer to the docs on Schema.org integration](doc/schema-org.md) for more information.    
+The following attributes are available (**This shortcode does not process the [Common Attributes](#common-attributes)**):
+
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="15%">Type</th>
+		<th width="15%">Default</th>
+		<th width="45%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>set_id</code></td>
+			<td><code>number|string</code></td>
+			<td>none</td>
+			<td>The Set id or Set alias of the set</td>
+		</tr>
+		<tr>
+			<td><code>exclude_holidays</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>When enabled, holidays are not considered for <code>specialOpeningHoursSpecification</code></td>
+		</tr>
+		<tr>
+			<td><code>exclude_irregular_openings</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>When enabled, irregular openings are not considered for <code>specialOpeningHoursSpecification</code></td>
+		</tr>
+		<tr>
+			<td><code>schema_attr_type</code></td>
+			<td><code>string</code></td>
+			<td><code>Place</code></td>
+			<td>The <code>@type</code> property of the schema.org object.</td>
+		</tr>
+		<tr>
+			<td><code>schema_attr_name</code></td>
+			<td><code>string</code></td>
+			<td>Name of the seleted Set</td>
+			<td>The <code>name</code> property of the schema.org object.</td>
+		</tr>
+		<tr>
+			<td><code>schema_attr_description</code></td>
+			<td><code>string</code></td>
+			<td>Description of the selected Set</td>
+			<td>The <code>name</code> property of the schema.org object.</td>
+		</tr>
+	</tbody>
+</table>
+
 [↑ Table of Contents](#contents)
 
 ## <a name="troubleshooting"></a>Troubleshooting / FAQ
