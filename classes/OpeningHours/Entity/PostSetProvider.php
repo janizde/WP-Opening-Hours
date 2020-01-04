@@ -179,7 +179,7 @@ class PostSetProvider extends SetProvider {
    * @return    \WP_Post            The post with matching id or alias
    * @throws    \InvalidArgumentException  If no post could be found
    */
-  protected function findPost ($id) {
+  public function findPost ($id) {
     if (empty($id))
       throw new \InvalidArgumentException("Parameter \$id must not be empty.");
 
@@ -213,7 +213,7 @@ class PostSetProvider extends SetProvider {
    * @param       \WP_Post    $post   The post from which to create the set
    * @return      Set                 The Set instance consisting of the post's meta data
    */
-  public function createSetFromPost(\WP_Post $post) {
+  protected function createSetFromPost(\WP_Post $post) {
     $set = new Set($post->ID);
     $set->setName($post->post_title);
 
@@ -222,5 +222,54 @@ class PostSetProvider extends SetProvider {
     $set->setHolidays(ArrayObject::createFromArray($persistence->loadHolidays()));
     $set->setIrregularOpenings(ArrayObject::createFromArray($persistence->loadIrregularOpenings()));
     return $set;
+  }
+
+  /**
+   * Creates a ChildSetWrapper from a post which is considered a child set. The child set
+   * criteria is read from the post SetDetails.
+   *
+   * @param     \WP_Post      $post   Post from which to create the set
+   * @return    ChildSetWrapper       Wrapper around the child set
+   */
+  protected function createChildWrapperFromPost(\WP_Post $post) {
+    $setAndChildren = $this->createSetAndChildrenFromPost($post);
+    $details = SetDetails::getInstance()->getPersistence();
+
+    $dateStart = $details->getValue('dateStart', $post->ID);
+    $dateEnd = $details->getValue('dateEnd', $post->ID);
+    $weekScheme = $details->getValue('weekScheme', $post->ID);
+
+    return new ChildSetWrapper(
+      $setAndChildren['parent'],
+      empty($dateStart) ? -INF : new \DateTime($dateStart),
+      empty($dateEnd) ? INF : new \DateTime($dateEnd),
+      $weekScheme,
+      $setAndChildren['children']
+    );
+  }
+
+  /**
+   * Creates an associative array containing the Set corresponding to `$post` under the key
+   * `parent` and an array of Sets corresponding to the post children under the key `children`.
+   *
+   * @param     \WP_Post      $post   Post corresponding to parent set
+   * @return    array
+   */
+  public function createSetAndChildrenFromPost(\WP_Post $post) {
+    $parentSet = $this->createSetFromPost($post);
+    $children = get_posts(array(
+      'post_type' => SetPostType::CPT_SLUG,
+      'numberposts' => -1,
+      'orderby' => 'menu_order',
+      'order' => 'ASC',
+      'post_parent' => $post->ID
+    ));
+
+    $childSets = array_map(array($this, 'createChildWrapperFromPost'), $children);
+
+    return array(
+      'parent' => $parentSet,
+      'children' => $childSets,
+    );
   }
 }

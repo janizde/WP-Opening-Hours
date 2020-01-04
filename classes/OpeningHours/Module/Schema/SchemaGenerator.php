@@ -60,6 +60,17 @@ class SchemaGenerator {
   }
 
   /**
+   * Creates the complete Schema.org opening hours schema as an associative array corrsponding
+   * to the JSON-LD format
+   *
+   * @return    array     Associative array containing JSON-LD schema
+   */
+  public function createSchema() {
+    $sequence = $this->createSetValiditySequence();
+    return $this->createOpeningHoursSpecDefinition($sequence);
+  }
+
+  /**
    * Creates a `ValiditySequence` of the specified `$child` and all of its children
    * The `ValiditySequence` will contain a `ValidityPeriod` of `$child` in the background
    * which will then recursively be covered by the respective children of `$child`
@@ -100,8 +111,6 @@ class SchemaGenerator {
    * If there are no child sets a single ValidityPeriod from -INF to INF will be created.
    *
    * @return      ValiditySequence                sequence of `$mainSet` and `$childSets` validity
-   *
-   * @throws      \Exception                      If the `interval_spec` of a \DateInterval is invalid
    */
   public function createSetValiditySequence() {
     $mainWrapper = new ChildSetWrapper($this->mainSet, -INF, INF, null, $this->childSets);
