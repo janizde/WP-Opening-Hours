@@ -7,8 +7,7 @@ use OpeningHours\Module\Importer;
 use OpeningHours\Test\OpeningHoursTestCase;
 
 class ImporterUpgradeWidgetsTest extends OpeningHoursTestCase {
-
-  public function testUpgradeWidgets () {
+  public function testUpgradeWidgets() {
     $oldWidgetOverviewData = array(
       2 => array(
         'title' => 'My Opening Hours',
@@ -33,7 +32,7 @@ class ImporterUpgradeWidgetsTest extends OpeningHoursTestCase {
         'title' => 'Current Status',
         'caption-closed' => 'We are closed',
         'caption-open' => 'We are open',
-        'caption-closed-holiday' => 'We are on holiday',
+        'caption-closed-holiday' => 'We are on holiday'
       )
     );
 
@@ -103,27 +102,15 @@ class ImporterUpgradeWidgetsTest extends OpeningHoursTestCase {
 
     $oldSidebarWidgets = array(
       'wp_inactive_widgets' => array(),
-      'sidebar-1' => array(
-        'widget_op_overview-2',
-        'widget_op_status-3'
-      ),
-      'sidebar-2' => array(
-        'widget_op_holidays-4',
-        'widget_op_special_openings-5'
-      ),
+      'sidebar-1' => array('widget_op_overview-2', 'widget_op_status-3'),
+      'sidebar-2' => array('widget_op_holidays-4', 'widget_op_special_openings-5'),
       'array_version' => 3
     );
 
     $expectedSidebarWidgets = array(
       'wp_inactive_widgets' => array(),
-      'sidebar-1' => array(
-        'widget_op_overview-2',
-        'widget_op_is_open-3'
-      ),
-      'sidebar-2' => array(
-        'widget_op_holidays-4',
-        'widget_op_irregular_openings-5'
-      ),
+      'sidebar-1' => array('widget_op_overview-2', 'widget_op_is_open-3'),
+      'sidebar-2' => array('widget_op_holidays-4', 'widget_op_irregular_openings-5'),
       'array_version' => 3
     );
 

@@ -9,7 +9,6 @@ namespace OpeningHours\Fields;
  * @package     OpeningHours\Fields
  */
 class FieldRenderer {
-
   /**
    * Filter the field configuration
    *
@@ -17,22 +16,25 @@ class FieldRenderer {
    *
    * @return    array               filtered config-array for the field
    */
-  protected function filterField ( array $field ) {
+  protected function filterField(array $field) {
     $field = $this->moveToAttributes($field, array('required', 'placeholder'));
     if (array_key_exists('class', $field['attributes'])) {
-      if (!is_array($field['attributes']['class']))
+      if (!is_array($field['attributes']['class'])) {
         $field['attributes']['class'] = preg_split('/\s+/', $field['attributes']['class']);
+      }
 
       $field['attributes']['class'][] = 'widefat';
     } else {
       $field['attributes']['class'] = array('widefat');
     }
 
-    if (array_key_exists('options_callback', $field) && is_callable($field['options_callback']))
+    if (array_key_exists('options_callback', $field) && is_callable($field['options_callback'])) {
       $field['options'] = call_user_func($field['options_callback']);
+    }
 
-    if (array_key_exists('datalist', $field) && is_callable($field['datalist']))
+    if (array_key_exists('datalist', $field) && is_callable($field['datalist'])) {
       $field['datalist'] = call_user_func($field['datalist']);
+    }
 
     return $field;
   }
@@ -43,27 +45,27 @@ class FieldRenderer {
    * @param     array $field filtered config-array for the field
    * @param     mixed $value the value that the field shall be populated with. (default: null)
    */
-  protected function renderField ( array $field, $value = null ) {
+  protected function renderField(array $field, $value = null) {
     $id = array_key_exists('id', $field) ? $field['id'] : '';
     $caption = array_key_exists('caption', $field) ? $field['caption'] : '';
     $type = $field['type'];
     $name = $field['name'];
     $options = array_key_exists('options', $field) ? $field['options'] : array();
 
-    $attributes = array_key_exists('attributes', $field) && is_array($field['attributes'])
-      ? $field['attributes']
-      : array();
+    $attributes =
+      array_key_exists('attributes', $field) && is_array($field['attributes']) ? $field['attributes'] : array();
 
     /** Start of Field Element */
     echo '<p>';
 
     /** Field Label */
-    if (!empty($caption) and !in_array($type, array(FieldTypes::CHECKBOX, FieldTypes::HEADING)))
+    if (!empty($caption) and !in_array($type, array(FieldTypes::CHECKBOX, FieldTypes::HEADING))) {
       printf('<label for="%s">%s</label>', $id, $caption);
+    }
 
     switch ($type) {
       case FieldTypes::TEXT:
-      case FieldTypes::NUMBER;
+      case FieldTypes::NUMBER:
       case FieldTypes::TIME:
       case FieldTypes::EMAIL:
       case FieldTypes::URL:
@@ -88,7 +90,7 @@ class FieldRenderer {
 
       case FieldTypes::SELECT:
       case FieldTypes::SELECT_MULTI:
-        $is_multi = ($type == FieldTypes::SELECT_MULTI);
+        $is_multi = $type == FieldTypes::SELECT_MULTI;
 
         if ($is_multi) {
           $attributes['multiple'] = 'multiple';
@@ -104,9 +106,9 @@ class FieldRenderer {
           $selected = 'selected="selected"';
 
           if ($is_multi) {
-            $selected = in_array($key, (array)$value) ? $selected : '';
+            $selected = in_array($key, (array) $value) ? $selected : '';
           } else {
-            $selected = ($key == $value) ? $selected : null;
+            $selected = $key == $value ? $selected : null;
           }
 
           printf('<option value="%s" %s>%s</option>', $key, $selected, $caption);
@@ -116,23 +118,33 @@ class FieldRenderer {
         break;
 
       case FieldTypes::CHECKBOX:
-        if (!empty($value))
+        if (!empty($value)) {
           $attributes['checked'] = 'checked';
+        }
 
         $attrString = $this->generateAttributesString($attributes);
-        printf('<label for="%s"><input type="checkbox" name="%s" id="%s" %s /> %s</label>', $id, $name, $id, $attrString, $caption);
+        printf(
+          '<label for="%s"><input type="checkbox" name="%s" id="%s" %s /> %s</label>',
+          $id,
+          $name,
+          $id,
+          $attrString,
+          $caption
+        );
         break;
 
       case FieldTypes::HEADING:
-        if (!array_key_exists('heading', $field))
+        if (!array_key_exists('heading', $field)) {
           break;
+        }
 
         printf('<h3>%s</h3>', trim($field['heading']));
         break;
     }
 
-    if (array_key_exists('description', $field))
+    if (array_key_exists('description', $field)) {
       printf('<span class="op-field-description">%s</span>', $field['description']);
+    }
 
     if (isset($description) and is_string($description)) {
       echo '<span class="op-widget-description">' . $description . '</span>';
@@ -149,7 +161,7 @@ class FieldRenderer {
    *
    * @return    string              the field markup
    */
-  public function getFieldMarkup ( array $field, $value = null ) {
+  public function getFieldMarkup(array $field, $value = null) {
     $field = $this->filterField($field);
     ob_start();
     $this->renderField($field, $value);
@@ -166,17 +178,19 @@ class FieldRenderer {
    *
    * @return    string                HTML attribute string
    */
-  protected function generateAttributesString ( array $attributes ) {
+  protected function generateAttributesString(array $attributes) {
     $str = '';
     foreach ($attributes as $key => $value) {
-      if (is_array($value))
+      if (is_array($value)) {
         $value = implode(' ', $value);
+      }
 
       $str .= sprintf('%s="%s" ', $key, $value);
     }
 
-    if (count($attributes) > 0)
+    if (count($attributes) > 0) {
       $str = substr($str, 0, -1);
+    }
 
     return $str;
   }
@@ -189,13 +203,15 @@ class FieldRenderer {
    *
    * @return    array                 field config with moved attributes
    */
-  protected function moveToAttributes ( array $field, array $properties ) {
-    if (!array_key_exists('attributes', $field))
+  protected function moveToAttributes(array $field, array $properties) {
+    if (!array_key_exists('attributes', $field)) {
       $field['attributes'] = array();
+    }
 
     foreach ($properties as $property) {
-      if (!array_key_exists($property, $field))
+      if (!array_key_exists($property, $field)) {
         continue;
+      }
 
       $field['attributes'][$property] = $field[$property];
       unset($field[$property]);

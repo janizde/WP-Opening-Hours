@@ -14,9 +14,8 @@ use OpeningHours\Util\DateTimeRange;
  * @package     OpeningHours\Module\Shortcode
  */
 class Holidays extends AbstractShortcode {
-
   /** @inheritdoc */
-  protected function init () {
+  protected function init() {
     $this->setShortcodeTag('op-holidays');
 
     $this->defaultAttributes = array(
@@ -31,23 +30,24 @@ class Holidays extends AbstractShortcode {
       'class_highlighted' => 'highlighted',
       'date_format' => Dates::getDateFormat(),
       'template' => 'table',
-      'include_past' => false,
+      'include_past' => false
     );
 
     $this->validAttributeValues = array(
       'template' => array('table', 'list'),
-      'include_past' => array(false, true),
+      'include_past' => array(false, true)
     );
   }
 
   /** @inheritdoc */
-  public function shortcode ( array $attributes ) {
+  public function shortcode(array $attributes) {
     $setId = $attributes['set_id'];
 
     $set = OpeningHours::getInstance()->getSet($setId);
 
-    if (!$set instanceof Set)
+    if (!$set instanceof Set) {
       return;
+    }
 
     $templateMap = array(
       'table' => 'shortcode/holidays.php',
@@ -61,5 +61,4 @@ class Holidays extends AbstractShortcode {
     $attributes['holidays'] = $holidays;
     echo $this->renderShortcodeTemplate($attributes, $templateMap[$attributes['template']]);
   }
-
 }

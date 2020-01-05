@@ -6,8 +6,7 @@ use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Helpers;
 
 class HelpersTest extends OpeningHoursTestCase {
-
-  public function testUnsetEmptyValues () {
+  public function testUnsetEmptyValues() {
     $expected = array(
       'foo' => 'bar',
       'bar' => 'baz',

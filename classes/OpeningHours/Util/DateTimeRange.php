@@ -5,7 +5,6 @@ namespace OpeningHours\Util;
 use OpeningHours\Entity\DateTimeRange as DateTimeRangeInterface;
 
 class DateTimeRange {
-
   /**
    * Sorts an array of DateTimeRange entities by start date
    * @param     $objects    DateTimeRangeInterface[]

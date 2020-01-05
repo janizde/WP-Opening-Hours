@@ -8,36 +8,22 @@ use OpeningHours\Test\OpeningHoursTestCase;
 use OpeningHours\Util\Persistence;
 
 class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
-
-  public function testImportOpeningHours () {
+  public function testImportOpeningHours() {
     $oldPeriodData = array(
       'monday' => array(
-        'times' => array(
-          array('08', '00', '12', '00'),
-          array('12', '30', '18', '00')
-        )
+        'times' => array(array('08', '00', '12', '00'), array('12', '30', '18', '00'))
       ),
       'tuesday' => array(
-        'times' => array(
-          array('08', '00', '12', '00'),
-          array('12', '30', '18', '00')
-        )
+        'times' => array(array('08', '00', '12', '00'), array('12', '30', '18', '00'))
       ),
       'wednesday' => array(
-        'times' => array(
-          array('08', '00', '12', '00'),
-          array('12', '30', '18', '00')
-        )
+        'times' => array(array('08', '00', '12', '00'), array('12', '30', '18', '00'))
       ),
       'thursday' => array(
-        'times' => array(
-          array('08', '00', '12', '00')
-        )
+        'times' => array(array('08', '00', '12', '00'))
       ),
       'sunday' => array(
-        'times' => array(
-          array('09', '00', '13', '00')
-        )
+        'times' => array(array('09', '00', '13', '00'))
       )
     );
 
@@ -72,8 +58,16 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     );
 
     $expectedHolidayData = array(
-      array('name' => 'Holiday 1', 'dateStart' => '2016-08-09', 'dateEnd' => '2016-08-20'),
-      array('name' => 'Holiday 2', 'dateStart' => '2016-08-21', 'dateEnd' => '2016-08-27')
+      array(
+        'name' => 'Holiday 1',
+        'dateStart' => '2016-08-09',
+        'dateEnd' => '2016-08-20'
+      ),
+      array(
+        'name' => 'Holiday 2',
+        'dateStart' => '2016-08-21',
+        'dateEnd' => '2016-08-27'
+      )
     );
 
     \WP_Mock::wpFunction('get_option', array(
@@ -88,7 +82,8 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
         'date' => '08/30/2016',
         'start' => '08:30',
         'end' => '19:00'
-      ), array(
+      ),
+      array(
         'name' => 'IO 2',
         'date' => '09/01/2016',
         'start' => '09:00',
@@ -97,8 +92,18 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     );
 
     $expectedIOData = array(
-      array('name' => 'IO 1', 'date' => '2016-08-30', 'timeStart' => '08:30', 'timeEnd' => '19:00'),
-      array('name' => 'IO 2', 'date' => '2016-09-01', 'timeStart' => '09:00', 'timeEnd' => '21:00')
+      array(
+        'name' => 'IO 1',
+        'date' => '2016-08-30',
+        'timeStart' => '08:30',
+        'timeEnd' => '19:00'
+      ),
+      array(
+        'name' => 'IO 2',
+        'date' => '2016-09-01',
+        'timeStart' => '09:00',
+        'timeEnd' => '21:00'
+      )
     );
 
     \WP_Mock::wpFunction('get_option', array(
@@ -115,11 +120,13 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
 
     \WP_Mock::wpFunction('wp_insert_post', array(
       'times' => 1,
-      'args' => array(array(
-        'post_type' => SetCPT::CPT_SLUG,
-        'post_title' => 'Opening Hours',
-        'post_status' => 'publish'
-      )),
+      'args' => array(
+        array(
+          'post_type' => SetCPT::CPT_SLUG,
+          'post_title' => 'Opening Hours',
+          'post_status' => 'publish'
+        )
+      ),
       'return' => $post->ID
     ));
 
@@ -146,7 +153,15 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
       'args' => array($post->ID, Persistence::IRREGULAR_OPENINGS_META_KEY, $expectedIOData)
     ));
 
-    foreach (array(Importer::OPTION_KEY_PERIODS, Importer::OPTION_KEY_HOLIDAYS, Importer::OPTION_KEY_IRREGULAR_OPENINGS, Importer::OPTION_KEY_SETTINGS) as $key) {
+    foreach (
+      array(
+        Importer::OPTION_KEY_PERIODS,
+        Importer::OPTION_KEY_HOLIDAYS,
+        Importer::OPTION_KEY_IRREGULAR_OPENINGS,
+        Importer::OPTION_KEY_SETTINGS
+      )
+      as $key
+    ) {
       \WP_Mock::wpFunction('delete_option', array(
         'times' => 1,
         'args' => array($key)
@@ -156,8 +171,11 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $this->runImportOpeningHours();
   }
 
-  public function testNoOldData () {
-    foreach (array(Importer::OPTION_KEY_PERIODS, Importer::OPTION_KEY_HOLIDAYS, Importer::OPTION_KEY_IRREGULAR_OPENINGS) as $key) {
+  public function testNoOldData() {
+    foreach (
+      array(Importer::OPTION_KEY_PERIODS, Importer::OPTION_KEY_HOLIDAYS, Importer::OPTION_KEY_IRREGULAR_OPENINGS)
+      as $key
+    ) {
       \WP_Mock::wpFunction('get_option', array(
         'times' => 1,
         'args' => array($key),
@@ -172,7 +190,7 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $this->runImportOpeningHours();
   }
 
-  public function testMalformedPeriodsString () {
+  public function testMalformedPeriodsString() {
     \WP_Mock::wpFunction('get_option', array(
       'times' => 1,
       'args' => array(Importer::OPTION_KEY_PERIODS),
@@ -190,22 +208,16 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $this->runImportOpeningHours();
   }
 
-  public function testMalformedPeriodsInvalidData () {
+  public function testMalformedPeriodsInvalidData() {
     $periodData = array(
       'invalidWeekday' => array(
-        'times' => array(
-          array('08', '00', '13', '00')
-        )
+        'times' => array(array('08', '00', '13', '00'))
       ),
       'monday' => array(
-        'invalidKey' => array(
-          array('08', '00', '13', '00')
-        )
+        'invalidKey' => array(array('08', '00', '13', '00'))
       ),
       'tuesday' => array(
-        'times' => array(
-          array('foo', 'bar', 'foo', 'baz')
-        )
+        'times' => array(array('foo', 'bar', 'foo', 'baz'))
       )
     );
 
@@ -226,7 +238,7 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $this->runImportOpeningHours();
   }
 
-  public function testMalformedHolidaysString () {
+  public function testMalformedHolidaysString() {
     \WP_Mock::wpFunction('get_option', array(
       'times' => 1,
       'args' => array(Importer::OPTION_KEY_HOLIDAYS),
@@ -244,9 +256,10 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $this->runImportOpeningHours();
   }
 
-  public function testMalformedHolidaysInvalidData () {
+  public function testMalformedHolidaysInvalidData() {
     $holidayData = array(
-      array( // name missing
+      array(
+        // name missing
         'start' => '08/09/2016',
         'end' => '08/20/2016'
       ),
@@ -270,7 +283,7 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $this->runImportOpeningHours();
   }
 
-  public function testMalformedIrregularOpeningsString () {
+  public function testMalformedIrregularOpeningsString() {
     \WP_Mock::wpFunction('get_option', array(
       'times' => 1,
       'args' => array(Importer::OPTION_KEY_IRREGULAR_OPENINGS),
@@ -289,15 +302,17 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $importer->import();
   }
 
-  public function testMalformedIrregularOpeningsInvalidData () {
+  public function testMalformedIrregularOpeningsInvalidData() {
     $ioData = array(
-      array( // name missing
+      array(
+        // name missing
         'start' => '08:00',
         'end' => '20:00',
         'date' => '08/07/2016'
       ),
       'foo', // not an array
-      array( // Invalid time format
+      array(
+        // Invalid time format
         'start' => 'foo',
         'end' => 'bar',
         'date' => '08/07/2016',
@@ -322,7 +337,7 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
     $this->runImportOpeningHours();
   }
 
-  public function testParseDateString () {
+  public function testParseDateString() {
     $importer = Importer::getInstance();
     $date = $importer->parseDateString('08/09/2016');
     $this->assertEquals(9, (int) $date->format('d'));
@@ -333,7 +348,7 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
   /**
    * @expectedException \InvalidArgumentException
    */
-  public function testParseDateStringInvalidFormat () {
+  public function testParseDateStringInvalidFormat() {
     $importer = Importer::getInstance();
     $importer->parseDateString('08\09');
   }
@@ -341,12 +356,12 @@ class ImporterImportOpeningHoursTest extends OpeningHoursTestCase {
   /**
    * @expectedException \InvalidArgumentException
    */
-  public function testParseDateStringEmpty () {
+  public function testParseDateStringEmpty() {
     $importer = Importer::getInstance();
     $importer->parseDateString('');
   }
 
-  protected function runImportOpeningHours () {
+  protected function runImportOpeningHours() {
     // Call protected method importOpeningHours via Reflection to split up into multiple tests
     $importer = Importer::getInstance();
     $importerReflection = new \ReflectionClass($importer);

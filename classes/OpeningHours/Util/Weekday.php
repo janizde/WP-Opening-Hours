@@ -9,7 +9,6 @@ namespace OpeningHours\Util;
  * @package     OpeningHours\Util
  */
 class Weekday {
-
   /**
    * The numeric weekday index from 0 (Monday) - 6 (Sunday)
    * @var       int
@@ -42,7 +41,7 @@ class Weekday {
    * @param     string $name      The translated full name of the weekday
    * @param     string $shortName The translated short name of the weekday
    */
-  public function __construct ( $index, $slug, $name, $shortName ) {
+  public function __construct($index, $slug, $name, $shortName) {
     $this->index = $index;
     $this->slug = $slug;
     $this->name = $name;
@@ -54,7 +53,7 @@ class Weekday {
    * E.g. when the start_of_week setting is set to Tuesday it will return 0 for Tuesday, 1 for Wednesday ... 6 for Monday
    * @return    int       The relative index
    */
-  public function getRelativeIndex () {
+  public function getRelativeIndex() {
     $startOfWeek = Dates::getStartOfWeek();
     return ($this->index - $startOfWeek + 7) % 7;
   }
@@ -63,7 +62,7 @@ class Weekday {
    * Getter: Index
    * @return    int
    */
-  public function getIndex () {
+  public function getIndex() {
     return $this->index;
   }
 
@@ -71,7 +70,7 @@ class Weekday {
    * Getter: Slug
    * @return    string
    */
-  public function getSlug () {
+  public function getSlug() {
     return $this->slug;
   }
 
@@ -79,7 +78,7 @@ class Weekday {
    * Getter: Name
    * @return    string
    */
-  public function getName () {
+  public function getName() {
     return $this->name;
   }
 
@@ -87,7 +86,7 @@ class Weekday {
    * Getter: Short Name
    * @return    string
    */
-  public function getShortName () {
+  public function getShortName() {
     return $this->shortName;
   }
 }

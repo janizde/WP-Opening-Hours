@@ -12,16 +12,19 @@ use OpeningHours\Module\Shortcode\IrregularOpenings as IrregularOpeningsShortcod
  * @package     OpeningHours\Module\Widget
  */
 class IrregularOpenings extends AbstractWidget {
-
-  public function __construct () {
+  public function __construct() {
     $title = __('Opening Hours: Irregular Openings', 'wp-opening-hours');
     $description = __('Lists up all Irregular Openings in the selected Set.', 'wp-opening-hours');
-    parent::__construct('widget_op_irregular_openings', $title, $description, IrregularOpeningsShortcode::getInstance());
+    parent::__construct(
+      'widget_op_irregular_openings',
+      $title,
+      $description,
+      IrregularOpeningsShortcode::getInstance()
+    );
   }
 
   /** @inheritdoc */
-  protected function registerFields () {
-
+  protected function registerFields() {
     // Standard Fields
     $this->addField('title', array(
       'type' => 'text',
@@ -31,7 +34,7 @@ class IrregularOpenings extends AbstractWidget {
     $this->addField('set_id', array(
       'type' => 'select',
       'caption' => __('Set', 'wp-opening-hours'),
-      'options_callback' => array(OpeningHours::getInstance(), 'getSetsOptions'),
+      'options_callback' => array(OpeningHours::getInstance(), 'getSetsOptions')
     ));
 
     $this->addField('highlight', array(

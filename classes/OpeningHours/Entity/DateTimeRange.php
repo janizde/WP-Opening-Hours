@@ -3,7 +3,6 @@
 namespace OpeningHours\Entity;
 
 interface DateTimeRange {
-
   /**
    * Returns the Entity's start date and time
    * @return    \DateTime
@@ -22,5 +21,4 @@ interface DateTimeRange {
    * @return    bool                      Whether the entity is in past as compared to $reference
    */
   public function isPast(\DateTime $reference);
-
 }

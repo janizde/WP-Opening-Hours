@@ -8,7 +8,7 @@
  *
  * @deprecated  Use OpeningHours\Entity\Set::isOpen() instead
  */
-function is_open ($return_type = false) {
+function is_open($return_type = false) {
   $posts = get_posts(array(
     'post_type' => \OpeningHours\Module\CustomPostType\Set::CPT_SLUG,
     'numberposts' => 1,
@@ -17,17 +17,19 @@ function is_open ($return_type = false) {
     'order' => 'ASC'
   ));
 
-  if (count($posts) < 1)
+  if (count($posts) < 1) {
     return $return_type ? array(false, 'period') : false;
+  }
 
   $set = \OpeningHours\Module\OpeningHours::getInstance()->getSet($posts[0]->ID);
 
   $type = 'period';
   if ($return_type) {
-    if ($set->isIrregularOpeningInEffect())
+    if ($set->isIrregularOpeningInEffect()) {
       $type = 'special_opening';
-    elseif ($set->isHolidayActive())
+    } elseif ($set->isHolidayActive()) {
       $type = 'holiday';
+    }
   }
 
   $isOpen = $set->isOpen();
@@ -42,7 +44,7 @@ function is_open ($return_type = false) {
  *
  * @deprecated  Use OpeningHours\Entity\Set::isOpen() instead
  */
-function is_closed ($return_type = false) {
+function is_closed($return_type = false) {
   $isOpen = is_open($return_type);
   if ($return_type) {
     $isOpen[0] = !$isOpen[0];

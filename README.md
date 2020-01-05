@@ -1,7 +1,5 @@
-# WordPress Opening Hours
+# WordPress Opening Hours 🔌 🕐
 [![Build Status](https://travis-ci.org/janizde/WP-Opening-Hours.svg?branch=develop)](https://travis-ci.org/janizde/WP-Opening-Hours)
-[![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8FYGR6EJSN8S8)
 
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
@@ -21,12 +19,15 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 	* [Is Open Widget](#is-open-widget)
 	* [Holidays Widget](#holidays-widget)
 	* [Irregular Openings Widget](#irregular-openings-widget)
+	* [Schema.org Widget](#schema-org-widget)
 * [Shortcodes](#shortcodes)
+    * [Shortcode Builder](#shortcode-builder)
 	* [Common Attributes](#common-attributes)
 	* [[op-overview] Shortcode](#op-overview-shortcode)
 	* [[op-is-open] Shortcode](#op-is-open-shortcode)
 	* [[op-holidays] Shortcode](#op-holidays-shortcode)
 	* [[op-irregular-openings] Shortcode](#op-irregular-openings-shortcode)
+	* [[op-schema] Shortcode](#op-schema-shortcode)
 * [Troubleshooting / FAQ](#troubleshooting)
 * [Contributing](#contributing)
 	* [Contributing to Code](#contributing-to-code)
@@ -36,6 +37,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * [License](#license)
 
 ## Further Reading
+* [Schema.org Integration](./doc/schema-org.md)
 * [Developer Guide](./doc/developer-guide.md)
 * [Filters](./doc/filters.md)
 * [Set Providers](./doc/set-providers.md)
@@ -476,13 +478,60 @@ There are the following options:
 #### Irregular Openings Widget options
 ![Irregular Openings Widget options](./doc/screenshots/widget-irregular-openings-options.png)
 
+### <a name="schema-org-widget"></a>Schema.org Widget
+
+The **Schema.org Widget**adds a JSON-LD record to the WordPress site representing the opening hours of a given Set. [Refer to the docs on Schema.org integration](doc/schema-org.md) for more information. 
+
+There are the following options:
+
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Set</td>
+			<td>The Set whose JSON-LD representation to insert</td>
+		</tr>
+		<tr>
+			<td>Exclude Holidays</td>
+			<td>When enabled, holidays are not considered for the SpecialOpeningHoursSpecification</td>
+		</tr>
+		<tr>
+			<td>Exclude Irregular Openings</td>
+			<td>When enabled, irregular openings are not considered for the SpecialOpeningHoursSpecification</td>
+		</tr>
+	</tbody>
+	<thead>
+		<th colspan="2">Extended Settings</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>@Type</code> property of the schema object</td>
+			<td>Custom override for the @type of the schema record. By default <a href="https://schema.org/Place" target="_blank">Place</a> is taken.</td>
+		</tr>
+		<tr>
+			<td><code>name</code> property of the schema object</td>
+			<td>Custom override for the <code>name</code> of the schema record. By default the name of the selected Set is taken.</td>
+		</tr>
+		<tr>
+			<td><code>description</code> property of the schema object</td>
+			<td>Custom override for the <code>description</code> of the schema record. By default the description of the selected Set is taken.</td>
+		</tr>
+	</tbody>
+</table>
+
+#### Schema.org Widget options
+![Schema.org Widget options](./doc/screenshots/widget-schema-options.png)
+
 [↑ Table of Contents](#contents)
 
 ## <a name="shortcodes"></a>Shortcodes
 
-### General
+### About Shortcodes
 
-Shortcodes are a WordPress core component, which give you the ability to add rich components to your posts' and pages' content. You can insert a Shortcode in the default WordPress TinyMCE editor.
+Shortcodes are a WordPress core component, which give you the ability to add rich components to your posts' and pages' content. You can insert a Shortcode in the default WordPress editor.
 
 The basic format of a shortcode is:
 
@@ -497,6 +546,15 @@ You can read more about Shortcodes in the [WordPress documentation.](https://cod
 
 Shortcodes have exactly the same options as Widgets because every Widget is basically a representation of the corresponding Shortcode with a GUI for the Widget edit section.  
 **The only required attribute for all Shortcodes is `set_id`. All other attributes are optional!**
+
+### <a name="shortcode-builder"></a>Shortcode Builder
+
+The [Opening Hours Shortcode Builder](http://bit.ly/2mmneSk) assembles shortcodes for you that you can copy and insert into your content. This is particularly useful for people who are unfamiliar with shortcodes.
+
+The builder can be found at [https://janizde.github.io/opening-hours-shortcode-builder/](http://bit.ly/2mmneSk)  
+Development takes place in the [GitHub Repo](http://bit.ly/35rsQiD)
+
+In the edit page of parent sets the button *Create a Shortcode* opens the shortcode builder in a popup and prefills the `set_id` accordingly.
 
 ### <a name="common-attributes"></a>Common attributes for all Shortcodes
 <table>
@@ -564,6 +622,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td><code>bool</code></td>
 			<td><code>false</code></td>
 			<td>Whether to display a row for closed days with a "Closed"-caption</td>
+		</tr>
+		<tr>
+			<td><code>caption_closed</code></td>
+			<td><code>string</code></td>
+			<td><code>Closed</code></td>
+			<td>Change the text of the closed caption</td>
 		</tr>
 		<tr>
 			<td><code>show_description</code></td>
@@ -669,6 +733,15 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 			<td>Caption to show when the venue is closed</td>
 		</tr>
 		<tr>
+			<td><code>closed_holiday_text</code></td>
+			<td><code>string</code></td>
+			<td>We\'re currently closed for <code>%1$s</code>. (translated)</td>
+			<td>Caption to show when the venue is closed and if there is one or more holidays, show them in a comma separated list<br><strong>Note:</strong> <code>show_closed_holidays</code> must be set to <code>true</code> for this to be displayed.<br>
+			<ul>
+				<li><code>%1$s</code> A comma separated formatted string of todays holiday(s)</li>
+			</ul></td>
+		</tr>
+		<tr>
 			<td><code>show_next</code></td>
 			<td><code>bool</code></td>
 			<td><code>false</code></td>
@@ -687,6 +760,12 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 					<li><code>always</code></li>
 				</ul>
 			</td>
+		</tr>
+		<tr>
+			<td><code>show_closed_holidays</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>Show today's holiday name(s) when closed</td>
 		</tr>
 		<tr>
 			<td><code>next_format</code></td>
@@ -844,6 +923,58 @@ The following attributes are available (Also mind the **[Common Attributes](#com
 	</tbody>
 </table>
 
+### <a name="op-schema-shortcode"></a>op-schema Shortcode
+Corresponds to the Schema.org Widget.  
+The **[op-schema]** shortcode adds a JSON-LD record to the WordPress site representing the opening hours of a given Set. [Refer to the docs on Schema.org integration](doc/schema-org.md) for more information.    
+The following attributes are available (**This shortcode does not process the [Common Attributes](#common-attributes)**):
+
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="15%">Type</th>
+		<th width="15%">Default</th>
+		<th width="45%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>set_id</code></td>
+			<td><code>number|string</code></td>
+			<td>none</td>
+			<td>The Set id or Set alias of the set</td>
+		</tr>
+		<tr>
+			<td><code>exclude_holidays</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>When enabled, holidays are not considered for <code>specialOpeningHoursSpecification</code></td>
+		</tr>
+		<tr>
+			<td><code>exclude_irregular_openings</code></td>
+			<td><code>bool</code></td>
+			<td><code>false</code></td>
+			<td>When enabled, irregular openings are not considered for <code>specialOpeningHoursSpecification</code></td>
+		</tr>
+		<tr>
+			<td><code>schema_attr_type</code></td>
+			<td><code>string</code></td>
+			<td><code>Place</code></td>
+			<td>The <code>@type</code> property of the schema.org object.</td>
+		</tr>
+		<tr>
+			<td><code>schema_attr_name</code></td>
+			<td><code>string</code></td>
+			<td>Name of the seleted Set</td>
+			<td>The <code>name</code> property of the schema.org object.</td>
+		</tr>
+		<tr>
+			<td><code>schema_attr_description</code></td>
+			<td><code>string</code></td>
+			<td>Description of the selected Set</td>
+			<td>The <code>name</code> property of the schema.org object.</td>
+		</tr>
+	</tbody>
+</table>
+
 [↑ Table of Contents](#contents)
 
 ## <a name="troubleshooting"></a>Troubleshooting / FAQ
@@ -866,7 +997,7 @@ To disable the styling of the text color the [`op_use_front_end_styles`](https:/
 The development of the Opening Hours Plugin takes place at [GitHub](https://github.com/janizde/WP-Opening-Hours).  
 If you want to contribute feel free to fork the repository and send pull requests.
 
-##### <a name="git-flow"></a>GitFlow 
+##### <a name="git-flow"></a>GitFlow
 The project uses GitFlow. You can get more information on GitFlow on the [GitFlow Cheat Sheet](http://danielkummer.github.io/git-flow-cheatsheet/).  
 When forking the repository for contributions please fork from the `develop` branch. If the pull request will be accepted it will be released to the `master` branch for a new version of the Plugin.
 
@@ -915,6 +1046,11 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 [↑ Table of Contents](#contents)
 
 ## <a name="changelog"></a>Changelog
+
+### v2.2.0
+
+* Added [op-schema] shortcode and *Schema.org* Widget for structured JSON-LD representation of opening hours, holidays and irregular openings
+* Added button for Shortcode Builder in Set edit page
 
 ### v2.1.4
 

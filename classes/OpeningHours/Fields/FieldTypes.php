@@ -9,7 +9,6 @@ namespace OpeningHours\Fields;
  * @package     OpeningHours\Fields
  */
 class FieldTypes {
-
   const TEXT = 'text';
   const NUMBER = 'number';
   const DATE = 'date';
@@ -21,5 +20,4 @@ class FieldTypes {
   const SELECT_MULTI = 'select-multi';
   const CHECKBOX = 'checkbox';
   const HEADING = 'heading';
-
 }

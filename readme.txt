@@ -2,7 +2,7 @@
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
 Tested up to: 5.1.1
-Stable tag: 2.1.4
+Stable tag: 2.2.0
 Requires at least: 4.0.0
 Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
@@ -24,13 +24,17 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 * Is Open Widget: Indicates whether the selected venue is currently open or closed and optionally shows when it will be open again
 * Holidays Widget: Lists up all Holidays in a table or list
 * Irregular Openings Widget: Lists up all Irregular Openings in a table or list
+* Schema.org Widgets: Inserts structured [JSON-LD](https://en.wikipedia.org/wiki/JSON-LD) into a WordPress page or post
 
 [More on Widgets](https://github.com/janizde/WP-Opening-Hours#widgets)
 
 = Shortcodes =
 All of the widgets listed up above are also available as shortcodes.
+With the [Opening Hours Shortcode Builder](http://bit.ly/2mmneSk) you can assemble a Shortcode by filling in a form. This is particularly useful when you are not comfortable with the shortcode syntax.
 
-[More on Shortcodes](https://github.com/janizde/WP-Opening-Hours#shortcodes)
+* [More on Shortcodes](https://github.com/janizde/WP-Opening-Hours#shortcodes)
+* [Shortcode Builder](http://bit.ly/2mmneSk)
+* [Shortcode Builder on GitHub](http://bit.ly/35rsQiD)
 
 = Further Documentation =
 **Further documentation is available on [GitHub](https://github.com/janizde/WP-Opening-Hours).**
@@ -89,6 +93,11 @@ Please read the section on [contributing to translations](https://github.com/jan
 If you found a bug you would like to fix feel free to [contribute to the project on GitHub](https://github.com/janizde/WP-Opening-Hours#contributing-to-code).
 
 == Changelog ==
+
+= 2.2.0 =
+
+* Added [op-schema] shortcode and Schema.org Widget for structured JSON-LD representation of opening hours, holidays and irregular openings
+* Added button for Shortcode Builder in Set edit page
 
 = 2.1.4 =
 

@@ -11,7 +11,6 @@ use OpeningHours\Module\AbstractModule;
  * @package     OpeningHours\Util
  */
 class Weekdays extends AbstractModule {
-
   /**
    * Collection of all weekday in the right order
    * @var       Weekday[]
@@ -19,7 +18,7 @@ class Weekdays extends AbstractModule {
   protected $weekdays;
 
   /** Sets up all weekday instances */
-  protected function __construct () {
+  protected function __construct() {
     $this->weekdays = array(
       new Weekday(0, 'sunday', __('Sunday'), __('Sun') . '.'),
       new Weekday(1, 'monday', __('Monday'), __('Mon') . '.'),
@@ -35,7 +34,7 @@ class Weekdays extends AbstractModule {
    * Returns whole collection of weekdays
    * @return    Weekday[]
    */
-  public static function getWeekdays () {
+  public static function getWeekdays() {
     $i = self::getInstance();
     return $i->weekdays;
   }
@@ -47,11 +46,12 @@ class Weekdays extends AbstractModule {
    *
    * @return    Weekday             The weekday instance
    */
-  public static function getWeekday ( $index ) {
+  public static function getWeekday($index) {
     $days = self::getInstance()->getWeekdays();
 
-    if ($index < 0 or $index >= count($days))
+    if ($index < 0 or $index >= count($days)) {
       return null;
+    }
 
     return $days[$index];
   }
@@ -63,11 +63,13 @@ class Weekdays extends AbstractModule {
    *
    * @return    Weekday             The weekday instance
    */
-  public static function getWeekdayBySlug ( $slug ) {
+  public static function getWeekdayBySlug($slug) {
     $i = self::getInstance();
-    foreach ($i->weekdays as $weekday)
-      if ($weekday->getSlug() == $slug)
+    foreach ($i->weekdays as $weekday) {
+      if ($weekday->getSlug() == $slug) {
         return $weekday;
+      }
+    }
 
     return null;
   }
@@ -79,7 +81,7 @@ class Weekdays extends AbstractModule {
    *
    * @return    string[]            Sequential array of weekday captions
    */
-  public static function getCaptions ( $short = false ) {
+  public static function getCaptions($short = false) {
     $captions = array();
     $i = self::getInstance();
     foreach ($i->weekdays as $weekday) {
@@ -95,13 +97,14 @@ class Weekdays extends AbstractModule {
    * @param     bool        $short    Whether to use short weekday names
    * @return    string                Caption for the specified weekdays
    */
-  public static function getDaysCaption (array $days, $short = false) {
-    if (count($days) == 1)
+  public static function getDaysCaption(array $days, $short = false) {
+    if (count($days) == 1) {
       return $short ? $days[0]->getShortName() : $days[0]->getName();
+    }
 
     $sequence = true;
     for ($i = 1; $i < count($days); ++$i) {
-      if ($days[$i-1]->getRelativeIndex() !== $days[$i]->getRelativeIndex()-1) {
+      if ($days[$i - 1]->getRelativeIndex() !== $days[$i]->getRelativeIndex() - 1) {
         $sequence = false;
         break;
       }
@@ -109,7 +112,7 @@ class Weekdays extends AbstractModule {
 
     if ($sequence) {
       $format = "%s - %s";
-      $last = $days[count($days)-1];
+      $last = $days[count($days) - 1];
       if ($short) {
         return sprintf($format, $days[0]->getShortName(), $last->getShortName());
       } else {
@@ -129,9 +132,9 @@ class Weekdays extends AbstractModule {
    *                        'full': Array with full day names starting from Sunday
    *                        'short': Array with short day names starting from Sunday without dot
    */
-  public static function getDatePickerTranslations () {
+  public static function getDatePickerTranslations() {
     $weekdays = self::getInstance()->weekdays;
-    $full = array_map(function ( Weekday $d ) {
+    $full = array_map(function (Weekday $d) {
       return $d->getName();
     }, $weekdays);
 
@@ -149,12 +152,12 @@ class Weekdays extends AbstractModule {
    * Returns all Weekdays in order according to startOfWeek
    * @return    Weekday[]
    */
-  public static function getWeekdaysInOrder () {
+  public static function getWeekdaysInOrder() {
     $instance = self::getInstance();
     $days = array();
     $start = Dates::getStartOfWeek();
     for ($i = 0; $i < 7; ++$i) {
-      $days[] = $instance->weekdays[($i+$start) % 7];
+      $days[] = $instance->weekdays[($i + $start) % 7];
     }
     return $days;
   }
@@ -164,11 +167,12 @@ class Weekdays extends AbstractModule {
    * @param     Weekday[] $weekdays The weekdays to check
    * @return    bool                Whether $weekdays contains any day that represents today's weekday
    */
-  public static function containsToday (array $weekdays) {
+  public static function containsToday(array $weekdays) {
     $today = intval(Dates::getNow()->format('w'));
     foreach ($weekdays as $day) {
-      if ($day->getIndex() === $today)
+      if ($day->getIndex() === $today) {
         return true;
+      }
     }
     return false;
   }

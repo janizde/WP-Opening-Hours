@@ -15,7 +15,6 @@ use OpeningHours\Util\Weekdays;
  * @package     OpeningHours
  */
 class OpeningHours extends AbstractModule {
-
   const FILTER_USE_FRONT_END_STYLES = 'op_use_front_end_styles';
 
   /**
@@ -40,7 +39,7 @@ class OpeningHours extends AbstractModule {
   const PREFIX = 'op_';
 
   /** Constructor for OpeningHours module */
-  protected function __construct () {
+  protected function __construct() {
     $this->registerHookCallbacks();
 
     $this->modules = array(
@@ -51,19 +50,21 @@ class OpeningHours extends AbstractModule {
       'Shortcode\IsOpen' => Module\Shortcode\IsOpen::getInstance(),
       'Shortcode\Overview' => Module\Shortcode\Overview::getInstance(),
       'Shortcode\Holidays' => Module\Shortcode\Holidays::getInstance(),
-      'Shortcode\IrregularOpenings' => Module\Shortcode\IrregularOpenings::getInstance()
+      'Shortcode\IrregularOpenings' => Module\Shortcode\IrregularOpenings::getInstance(),
+      'Shortcode\Schema' => Module\Shortcode\Schema::getInstance()
     );
 
     $this->widgets = array(
       'OpeningHours\Module\Widget\Overview',
       'OpeningHours\Module\Widget\IsOpen',
       'OpeningHours\Module\Widget\Holidays',
-      'OpeningHours\Module\Widget\IrregularOpenings'
+      'OpeningHours\Module\Widget\IrregularOpenings',
+      'OpeningHours\Module\Widget\Schema'
     );
   }
 
   /** Registers callbacks for actions and filters */
-  public function registerHookCallbacks () {
+  public function registerHookCallbacks() {
     add_action('wp_enqueue_scripts', array($this, 'loadResources'));
     add_action('admin_enqueue_scripts', array($this, 'loadResources'));
 
@@ -71,35 +72,33 @@ class OpeningHours extends AbstractModule {
     add_action('wp_loaded', array($this, 'maybeUpdate'));
   }
 
-  public function maybeUpdate () {
+  public function maybeUpdate() {
     $dbVersion = get_option('opening_hours_db_version', false);
 
     if ($dbVersion === false) {
       Module\Importer::getInstance()->import();
       add_option('opening_hours_db_version', self::DB_VERSION);
-    } else if ($dbVersion !== self::DB_VERSION) {
+    } elseif ($dbVersion !== self::DB_VERSION) {
       update_option('opening_hours_db_version', self::DB_VERSION);
     }
 
     $version = get_option('opening_hours_version');
     if ($version === false) {
       add_option('opening_hours_version', self::VERSION);
-    } else if ($version !== self::VERSION) {
+    } elseif ($version !== self::VERSION) {
       update_option('opening_hours_version', self::VERSION);
     }
   }
 
   /** Registers all plugin widgets */
-  public function registerWidgets () {
-    foreach ($this->widgets as $widgetClass)
+  public function registerWidgets() {
+    foreach ($this->widgets as $widgetClass) {
       $widgetClass::registerWidget();
+    }
   }
 
-  public function loadResources () {
-    wp_register_style(
-      self::PREFIX . 'css',
-      plugins_url('dist/styles/main.css', op_bootstrap_file())
-    );
+  public function loadResources() {
+    wp_register_style(self::PREFIX . 'css', plugins_url('dist/styles/main.css', op_bootstrap_file()));
 
     $useFrontEndStyles = apply_filters(self::FILTER_USE_FRONT_END_STYLES, true);
 
@@ -111,12 +110,10 @@ class OpeningHours extends AbstractModule {
       $screen = get_current_screen();
 
       if (
-        $screen
-        && (
-          $screen->base === 'post' && $screen->post_type === Module\CustomPostType\Set::CPT_SLUG
-          || $screen->base === 'edit' && $screen->post_type === Module\CustomPostType\Set::CPT_SLUG
-          || $screen->base === 'widgets'
-        )
+        $screen &&
+        (($screen->base === 'post' && $screen->post_type === Module\CustomPostType\Set::CPT_SLUG) ||
+          ($screen->base === 'edit' && $screen->post_type === Module\CustomPostType\Set::CPT_SLUG) ||
+          $screen->base === 'widgets')
       ) {
         wp_register_script(
           self::PREFIX . 'js',

@@ -9,7 +9,6 @@ namespace OpeningHours\Util;
  * @package     OpeningHours\Util
  */
 class MetaBoxPersistence {
-
   /**
    * The namespace in which to store the values.
    * Will be used as meta key prefix
@@ -17,7 +16,7 @@ class MetaBoxPersistence {
    */
   protected $namespace;
 
-  public function __construct ( $namespace ) {
+  public function __construct($namespace) {
     $this->namespace = $namespace;
   }
 
@@ -29,7 +28,7 @@ class MetaBoxPersistence {
    *
    * @return    mixed               The meta value for the specified key and post id
    */
-  public function getValue ( $key, $postId ) {
+  public function getValue($key, $postId) {
     return get_post_meta($postId, $this->generateMetaKey($key), true);
   }
 
@@ -40,7 +39,7 @@ class MetaBoxPersistence {
    * @param     mixed  $value  The value to store in post meta
    * @param     int    $postId The id of the post in whose meta data to store the data
    */
-  public function putValue ( $key, $value, $postId ) {
+  public function putValue($key, $value, $postId) {
     update_post_meta($postId, $this->generateMetaKey($key), $value);
   }
 
@@ -51,7 +50,7 @@ class MetaBoxPersistence {
    *
    * @return    string              The key for post meta
    */
-  public function generateMetaKey ( $key ) {
+  public function generateMetaKey($key) {
     return sprintf("_%s_%s", $this->namespace, $key);
   }
 }

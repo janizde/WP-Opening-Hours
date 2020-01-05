@@ -6,7 +6,6 @@
 namespace OpeningHours\Util;
 
 class Helpers {
-
   /**
    * Unset Empty
    * unsets all array elements that have an empty array as value
@@ -16,12 +15,13 @@ class Helpers {
    *
    * @return    array               The array without any empty values
    */
-  public static function unsetEmptyValues ( array $array ) {
-    foreach ($array as $key => $value)
-      if (is_string($value) and empty($value))
+  public static function unsetEmptyValues(array $array) {
+    foreach ($array as $key => $value) {
+      if (is_string($value) and empty($value)) {
         unset($array[$key]);
+      }
+    }
 
     return $array;
   }
-
 }

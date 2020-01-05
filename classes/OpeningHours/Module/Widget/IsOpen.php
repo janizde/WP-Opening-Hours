@@ -12,16 +12,17 @@ use OpeningHours\Module\Shortcode\IsOpen as IsOpenShortcode;
  * @package     OpeningHours\Module\Widget
  */
 class IsOpen extends AbstractWidget {
-
-  public function __construct () {
+  public function __construct() {
     $title = __('Opening Hours: Is Open Status', 'wp-opening-hours');
-    $description = __('Shows a box saying whether a specific set is currently open or closed based on Periods.', 'wp-opening-hours');
+    $description = __(
+      'Shows a box saying whether a specific set is currently open or closed based on Periods.',
+      'wp-opening-hours'
+    );
     parent::__construct('widget_op_is_open', $title, $description, IsOpenShortcode::getInstance());
   }
 
   /** @inheritdoc */
-  protected function registerFields () {
-
+  protected function registerFields() {
     // Standard Fields
     $this->addField('title', array(
       'type' => 'text',
@@ -45,8 +46,13 @@ class IsOpen extends AbstractWidget {
       'options' => array(
         'never' => __('Never', 'wp-opening-hours'),
         'open' => __('When open', 'wp-opening-hours'),
-        'always' => __('Always', 'wp-opening-hours'),
+        'always' => __('Always', 'wp-opening-hours')
       )
+    ));
+
+    $this->addField('show_closed_holidays', array(
+      'type' => 'checkbox',
+      'caption' => __('Show Holiday name(s) when closed', 'wp-opening-hours')
     ));
 
     // Extended Fields
@@ -62,6 +68,14 @@ class IsOpen extends AbstractWidget {
       'caption' => __('Caption if closed', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true
+    ));
+
+    $this->addField('closed_holiday_text', array(
+      'type' => 'text',
+      'caption' => __('Caption if closed and day has holiday(s)', 'wp-opening-hours'),
+      'extended' => true,
+      'default_placeholder' => true,
+      'description' => sprintf('%s: %s', '<code>%1$s</code>', __('Formatted Holiday Names String', 'wp-opening-hours'))
     ));
 
     $this->addField('open_class', array(
@@ -83,11 +97,16 @@ class IsOpen extends AbstractWidget {
       'caption' => __('Next Period String Format', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true,
-      'description' => sprintf('%s: %s<br />%s: %s<br />%s: %s<br />%s: %s',
-        '<code>%1$s</code>', __('Formatted Date', 'wp-opening-hours'),
-        '<code>%2$s</code>', __('Weekday', 'wp-opening-hours'),
-        '<code>%3$s</code>', __('Formatted Start Time', 'wp-opening-hours'),
-        '<code>%4$s</code>', __('Formatted End Time', 'wp-opening-hours')
+      'description' => sprintf(
+        '%s: %s<br />%s: %s<br />%s: %s<br />%s: %s',
+        '<code>%1$s</code>',
+        __('Formatted Date', 'wp-opening-hours'),
+        '<code>%2$s</code>',
+        __('Weekday', 'wp-opening-hours'),
+        '<code>%3$s</code>',
+        __('Formatted Start Time', 'wp-opening-hours'),
+        '<code>%4$s</code>',
+        __('Formatted End Time', 'wp-opening-hours')
       )
     ));
 
@@ -96,10 +115,14 @@ class IsOpen extends AbstractWidget {
       'caption' => __('Todays opening hours format', 'wp-opening-hours'),
       'extended' => true,
       'default_placeholder' => true,
-      'description' => sprintf('%s: %s<br />%s: %s<br />%s: %s',
-        '<code>%1$s</code>', __('Formatted time range of all periods', 'wp-opening-hours'),
-        '<code>%2$s</code>', __('Formatted start time of first period on that day', 'wp-opening-hours'),
-        '<code>%3$s</code>', __('Formatted end time of last period on that day', 'wp-opening-hours')
+      'description' => sprintf(
+        '%s: %s<br />%s: %s<br />%s: %s',
+        '<code>%1$s</code>',
+        __('Formatted time range of all periods', 'wp-opening-hours'),
+        '<code>%2$s</code>',
+        __('Formatted start time of first period on that day', 'wp-opening-hours'),
+        '<code>%3$s</code>',
+        __('Formatted end time of last period on that day', 'wp-opening-hours')
       )
     ));
 

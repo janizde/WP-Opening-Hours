@@ -12,7 +12,6 @@ use OpeningHours\Util\Dates;
  * @package OpeningHours\Entity
  */
 class Set {
-
   /**
    * The Id of the set
    * @var       string|int
@@ -49,7 +48,7 @@ class Set {
    */
   protected $description;
 
-  public function __construct ($id) {
+  public function __construct($id) {
     $this->id = $id;
     $this->name = __('Untitled Set', 'wp-opening-hours');
     $this->periods = new ArrayObject();
@@ -64,7 +63,7 @@ class Set {
    *
    * @return    bool                Whether any holiday in the set is currently active
    */
-  public function isHolidayActive ( $now = null ) {
+  public function isHolidayActive($now = null) {
     return $this->getActiveHoliday($now) instanceof Holiday;
   }
 
@@ -75,10 +74,12 @@ class Set {
    *
    * @return    Holiday             The first active Holiday or null if none is active
    */
-  public function getActiveHoliday ( DateTime $now = null ) {
-    foreach ($this->holidays as $holiday)
-      if ($holiday->isActive($now))
+  public function getActiveHoliday(DateTime $now = null) {
+    foreach ($this->holidays as $holiday) {
+      if ($holiday->isActive($now)) {
         return $holiday;
+      }
+    }
 
     return null;
   }
@@ -86,7 +87,7 @@ class Set {
   /**
    * @deprecated    Use isIrregularOpeningInEffect instead.
    */
-  public function isIrregularOpeningActive (DateTime $now = null) {
+  public function isIrregularOpeningActive(DateTime $now = null) {
     return $this->isIrregularOpeningInEffect($now);
   }
 
@@ -97,7 +98,7 @@ class Set {
    *
    * @return    bool                whether any irregular opening is currently active
    */
-  public function isIrregularOpeningInEffect (DateTime $now = null ) {
+  public function isIrregularOpeningInEffect(DateTime $now = null) {
     return $this->getIrregularOpeningInEffect($now) instanceof IrregularOpening;
   }
 
@@ -108,18 +109,21 @@ class Set {
    *
    * @return    bool                Whether venue is currently open or not
    */
-  public function isOpen ( DateTime $now = null ) {
-    if ($this->isHolidayActive($now))
+  public function isOpen(DateTime $now = null) {
+    if ($this->isHolidayActive($now)) {
       return false;
+    }
 
     if ($this->isIrregularOpeningInEffect($now)) {
       $io = $this->getIrregularOpeningInEffect($now);
       return $io->isOpen($now);
     }
 
-    foreach ($this->periods as $period)
-      if ($period->isOpen($now, $this))
+    foreach ($this->periods as $period) {
+      if ($period->isOpen($now, $this)) {
         return true;
+      }
+    }
 
     return false;
   }
@@ -131,7 +135,7 @@ class Set {
    *
    * @return    Period    The next open period or null if no period has been found
    */
-  public function getNextOpenPeriod (DateTime $now = null) {
+  public function getNextOpenPeriod(DateTime $now = null) {
     if ($now === null) {
       $now = Dates::getNow();
     }
@@ -162,16 +166,19 @@ class Set {
 
     $periods->uasort(array('\OpeningHours\Entity\Period', 'sortStrategy'));
 
-    if (count($periods) < 1 && count($this->irregularOpenings) < 1)
+    if (count($periods) < 1 && count($this->irregularOpenings) < 1) {
       return null;
+    }
 
     // For each period in future: check if it will actually be open
     foreach ($periods as $period) {
-      if ($period->compareToDateTime($now) <= 0)
+      if ($period->compareToDateTime($now) <= 0) {
         continue;
+      }
 
-      if (!$period->willBeOpen($this))
+      if (!$period->willBeOpen($this)) {
         continue;
+      }
 
       return $closestPeriod === null || $period->getTimeStart() <= $closestPeriod->getTimeStart()
         ? $period
@@ -180,13 +187,13 @@ class Set {
 
     $interval = new DateInterval('P7D');
     for ($weekOffset = 1; $weekOffset < 52; $weekOffset++) {
-
       foreach ($periods as $period) {
         $period->getTimeStart()->add($interval);
         $period->getTimeEnd()->add($interval);
 
-        if (!$period->willBeOpen($this))
+        if (!$period->willBeOpen($this)) {
           continue;
+        }
 
         return $closestPeriod === null || $period->getTimeStart() <= $closestPeriod->getTimeStart()
           ? $period
@@ -200,7 +207,7 @@ class Set {
   /**
    * @deprecated    Use getIrregularOpeningInEffect instead.
    */
-  public function getActiveIrregularOpening (DateTime $now = null) {
+  public function getActiveIrregularOpening(DateTime $now = null) {
     return $this->getIrregularOpeningInEffect($now);
   }
 
@@ -211,10 +218,10 @@ class Set {
    * @param     DateTime    $now      Custom time. Default is the current time.
    * @return    IrregularOpening|null The first irregular opening in effect or null
    */
-  public function getIrregularOpeningInEffect (DateTime $now = null) {
+  public function getIrregularOpeningInEffect(DateTime $now = null) {
     /** @var IrregularOpening $io */
     foreach ($this->irregularOpenings as $io) {
-      if ($io->isInEffect(($now))) {
+      if ($io->isInEffect($now)) {
         return $io;
       }
     }
@@ -227,69 +234,71 @@ class Set {
    * @param     DateTime    $now
    * @return    array       Associative array containing arrays of data for the keys 'periods', 'holidays', 'irregularOpenings'
    */
-  public function getDataForDate (DateTime $now = null) {
+  public function getDataForDate(DateTime $now = null) {
     if ($now === null) {
       $now = Dates::getNow();
     }
 
     $getForDay = function (ArrayObject $objects) use ($now) {
-      return array_values(array_filter((array) $objects, function (TimeContextEntity $o) use ($now) {
-        return $o->happensOnDate($now);
-      }));
+      return array_values(
+        array_filter((array) $objects, function (TimeContextEntity $o) use ($now) {
+          return $o->happensOnDate($now);
+        })
+      );
     };
 
     return array(
       'periods' => $getForDay($this->periods),
       'holidays' => $getForDay($this->holidays),
-      'irregularOpenings' => $getForDay($this->irregularOpenings),
+      'irregularOpenings' => $getForDay($this->irregularOpenings)
     );
   }
 
-  public function getId () {
+  public function getId() {
     return $this->id;
   }
 
-  public function setId ($id) {
+  public function setId($id) {
     $this->id = $id;
   }
 
-  public function getName () {
+  public function getName() {
     return $this->name;
   }
 
-  public function setName ($name) {
+  public function setName($name) {
     $this->name = $name;
   }
 
-  public function getPeriods () {
+  public function getPeriods() {
     return $this->periods;
   }
 
-  public function setPeriods (ArrayObject $periods) {
+  public function setPeriods(ArrayObject $periods) {
     $this->periods = $periods;
   }
 
-  public function getHolidays () {
+  public function getHolidays() {
     return $this->holidays;
   }
 
-  public function setHolidays (ArrayObject $holidays) {
+  public function setHolidays(ArrayObject $holidays) {
     $this->holidays = $holidays;
   }
 
-  public function getIrregularOpenings () {
+  public function getIrregularOpenings() {
     return $this->irregularOpenings;
   }
 
-  public function setIrregularOpenings (ArrayObject $irregularOpenings) {
+  public function setIrregularOpenings(ArrayObject $irregularOpenings) {
     $this->irregularOpenings = $irregularOpenings;
   }
 
-  public function getDescription () {
+  public function getDescription() {
     return $this->description;
   }
 
-  public function setDescription ($description) {
+  public function setDescription($description) {
     $this->description = $description;
   }
 }

@@ -3,7 +3,6 @@
 namespace OpeningHours\Entity;
 
 interface TimeContextEntity {
-
   /**
    * Checks whether the entity happens on a specific date
    * @param     \DateTime   $date   The reference date

@@ -17,11 +17,10 @@ use OpeningHours\Util\Weekdays;
  * @package     OpeningHours\Module\Shortcode
  */
 class Overview extends AbstractShortcode {
-
   const FILTER_OVERVIEW_MODEL = 'op_overview_model';
 
   /** @inheritdoc */
-  protected function init () {
+  protected function init() {
     $this->setShortcodeTag('op-overview');
 
     $this->defaultAttributes = array(
@@ -44,7 +43,7 @@ class Overview extends AbstractShortcode {
       'time_format' => Dates::getTimeFormat(),
       'hide_io_date' => false,
       'template' => 'table',
-      'week_offset' => 0,
+      'week_offset' => 0
     );
 
     $this->validAttributeValues = array(
@@ -59,7 +58,7 @@ class Overview extends AbstractShortcode {
   }
 
   /** @inheritdoc */
-  public function shortcode ( array $attributes ) {
+  public function shortcode(array $attributes) {
     if (!isset($attributes['set_id'])) {
       trigger_error("Set id not properly set in Opening Hours Overview shortcode");
       return;
@@ -73,8 +72,9 @@ class Overview extends AbstractShortcode {
     $setId = $attributes['set_id'];
     $set = OpeningHours::getInstance()->getSet($setId);
 
-    if (!$set instanceof Set)
+    if (!$set instanceof Set) {
       return;
+    }
 
     $attributes['set'] = $set;
 
@@ -105,17 +105,19 @@ class Overview extends AbstractShortcode {
       }
     }
 
-    $data = $attributes['compress']
-      ? $model->getCompressedData()
-      : $model->getData();
+    $data = $attributes['compress'] ? $model->getCompressedData() : $model->getData();
 
     $days = array();
     foreach ($data as $row) {
-      if (!$attributes['show_closed_days'] && is_array($row['items']) &&  count($row['items']) < 1)
+      if (!$attributes['show_closed_days'] && is_array($row['items']) && count($row['items']) < 1) {
         continue;
+      }
 
       $dayData = array(
-        'highlightedDayClass' => ($attributes['highlight'] === 'day' && Weekdays::containsToday($row['days'])) ? $attributes['highlighted_day_class'] : '',
+        'highlightedDayClass' =>
+          $attributes['highlight'] === 'day' && Weekdays::containsToday($row['days'])
+            ? $attributes['highlighted_day_class']
+            : '',
         'dayCaption' => Weekdays::getDaysCaption($row['days'], $attributes['short'])
       );
 
@@ -127,12 +129,17 @@ class Overview extends AbstractShortcode {
         $markup = '';
         /** @var Period $period */
         foreach ($row['items'] as $period) {
-          $highlightedPeriod = ( $attributes['highlight'] == 'period' and $period->isOpenOnAny($row['days'], $set) ) ? $attributes['highlighted_period_class'] : '';
-          $markup .= sprintf('<span class="op-period-time %s">%s</span>', $highlightedPeriod, $period->getFormattedTimeRange($attributes['time_format']));
+          ($highlightedPeriod = $attributes['highlight'] == 'period') and
+            ($period->isOpenOnAny($row['days'], $set) ? $attributes['highlighted_period_class'] : '');
+          $markup .= sprintf(
+            '<span class="op-period-time %s">%s</span>',
+            $highlightedPeriod,
+            $period->getFormattedTimeRange($attributes['time_format'])
+          );
         }
         $dayData['periodsMarkup'] = $markup;
       } else {
-        $dayData['periodsMarkup'] = '<span class="op-closed">'.$attributes['caption_closed'].'</span>';
+        $dayData['periodsMarkup'] = '<span class="op-closed">' . $attributes['caption_closed'] . '</span>';
       }
 
       $days[] = $dayData;
@@ -150,19 +157,18 @@ class Overview extends AbstractShortcode {
    * @param     array            $attributes The shortcode attributes
    * @return    string                       The markup for the Irregular Opening
    */
-  public static function renderIrregularOpening ( IrregularOpening $io, array $attributes ) {
+  public static function renderIrregularOpening(IrregularOpening $io, array $attributes) {
     $name = $io->getName();
     $date = Dates::format(Dates::getDateFormat(), $io->getStart());
     $markup = '';
 
-    $heading = ($attributes['hide_io_date']) ? $name : sprintf('%s (%s)', $name, $date);
+    $heading = $attributes['hide_io_date'] ? $name : sprintf('%s (%s)', $name, $date);
 
     $now = Dates::getNow();
-    $highlighted = ($attributes['highlight'] == 'period'
-      && $io->getStart() <= $now
-      && $now <= $io->getEnd())
-      ? $attributes['highlighted_period_class']
-      : null;
+    $highlighted =
+      $attributes['highlight'] == 'period' && $io->getStart() <= $now && $now <= $io->getEnd()
+        ? $attributes['highlighted_period_class']
+        : null;
 
     $markup .= sprintf('<span class="op-period-time irregular-opening %s">%s</span>', $highlighted, $heading);
 
@@ -179,7 +185,7 @@ class Overview extends AbstractShortcode {
    * @param     Holiday $holiday    The Holiday item to show
    * @return    string              The holiday markup
    */
-  public static function renderHoliday ( Holiday $holiday ) {
+  public static function renderHoliday(Holiday $holiday) {
     return '<span class="op-period-time op-closed holiday">' . $holiday->getName() . '</span>';
   }
 }

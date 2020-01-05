@@ -11,7 +11,6 @@ use OpeningHours\Module\AbstractModule;
  * @package     OpeningHours\Module\CustomPostType
  */
 class Set extends AbstractModule {
-
   const CPT_SLUG = 'op-set';
   const META_BOX_ID = 'op-set-periods';
   const META_BOX_CONTEXT = 'advanced';
@@ -32,7 +31,7 @@ class Set extends AbstractModule {
   protected static $metaBoxes;
 
   /** Constructor */
-  public function __construct () {
+  public function __construct() {
     $this->registerHookCallbacks();
 
     static::$metaBoxes = array(
@@ -44,18 +43,18 @@ class Set extends AbstractModule {
   }
 
   /** Register Hook Callbacks */
-  public function registerHookCallbacks () {
+  public function registerHookCallbacks() {
     add_action('init', array($this, 'registerPostType'));
     add_action('admin_menu', array($this, 'cleanUpMenu'));
   }
 
   /** Registers Post Type */
-  public function registerPostType () {
+  public function registerPostType() {
     register_post_type(self::CPT_SLUG, $this->getArguments());
   }
 
   /** Clean Up Menu */
-  public function cleanUpMenu () {
+  public function cleanUpMenu() {
     global $submenu;
 
     /** Top Level: Registered via post_type op-set: Remove "Add New" Item */
@@ -66,7 +65,7 @@ class Set extends AbstractModule {
    * Getter: Labels
    * @return    array
    */
-  public function getLabels () {
+  public function getLabels() {
     return array(
       'name' => __('Sets', 'wp-opening-hours'),
       'singular_name' => __('Set', 'wp-opening-hours'),
@@ -89,7 +88,7 @@ class Set extends AbstractModule {
    * Getter: Arguments
    * @return    array
    */
-  public function getArguments () {
+  public function getArguments() {
     return array(
       'labels' => $this->getLabels(),
       'public' => false,
