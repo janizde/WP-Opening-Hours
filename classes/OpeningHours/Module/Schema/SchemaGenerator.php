@@ -144,8 +144,8 @@ class SchemaGenerator {
       return array(
         '@type' => 'OpeningHoursSpecification',
         'name' => $h->getName(),
-        'validFrom' => $h->getStart()->format(self::SCHEMA_DATE_FORMAT),
-        'validThrough' => $h->getEnd()->format(self::SCHEMA_DATE_FORMAT)
+        'validFrom' => $h->getStart()->format(SchemaGenerator::SCHEMA_DATE_FORMAT),
+        'validThrough' => $h->getEnd()->format(SchemaGenerator::SCHEMA_DATE_FORMAT)
       );
     }, $holidays);
   }
@@ -170,10 +170,10 @@ class SchemaGenerator {
       return array(
         '@type' => 'OpeningHoursSpecification',
         'name' => $io->getName(),
-        'opens' => $io->getStart()->format(self::SCHEMA_TIME_FORMAT),
-        'closes' => $io->getEnd()->format(self::SCHEMA_TIME_FORMAT),
-        'validFrom' => $io->getDate()->format(self::SCHEMA_DATE_FORMAT),
-        'validThrough' => $io->getDate()->format(self::SCHEMA_DATE_FORMAT)
+        'opens' => $io->getStart()->format(SchemaGenerator::SCHEMA_TIME_FORMAT),
+        'closes' => $io->getEnd()->format(SchemaGenerator::SCHEMA_TIME_FORMAT),
+        'validFrom' => $io->getDate()->format(SchemaGenerator::SCHEMA_DATE_FORMAT),
+        'validThrough' => $io->getDate()->format(SchemaGenerator::SCHEMA_DATE_FORMAT)
       );
     }, $ios);
   }
@@ -195,23 +195,23 @@ class SchemaGenerator {
    *                                      OpeningHoursSpec objects
    */
   public function createSpecItemsFromValidityPeriod(ValidityPeriod $vp) {
-    $weekdays = self::getSchemaWeekdays();
+    $weekdays = SchemaGenerator::getSchemaWeekdays();
 
     return array_map(
       function (Period $p) use ($vp, $weekdays) {
         $spec = array(
           '@type' => 'OpeningHoursSpecification',
-          'opens' => $p->getTimeStart()->format(self::SCHEMA_TIME_FORMAT),
-          'closes' => $p->getTimeEnd()->format(self::SCHEMA_TIME_FORMAT),
+          'opens' => $p->getTimeStart()->format(SchemaGenerator::SCHEMA_TIME_FORMAT),
+          'closes' => $p->getTimeEnd()->format(SchemaGenerator::SCHEMA_TIME_FORMAT),
           'dayOfWeek' => $weekdays[$p->getWeekday()]
         );
 
         if ($vp->getStart() instanceof \DateTime) {
-          $spec['validFrom'] = $vp->getStart()->format(self::SCHEMA_DATE_FORMAT);
+          $spec['validFrom'] = $vp->getStart()->format(SchemaGenerator::SCHEMA_DATE_FORMAT);
         }
 
         if ($vp->getEnd() instanceof \DateTime) {
-          $spec['validThrough'] = $vp->getEnd()->format(self::SCHEMA_DATE_FORMAT);
+          $spec['validThrough'] = $vp->getEnd()->format(SchemaGenerator::SCHEMA_DATE_FORMAT);
         }
 
         return $spec;
