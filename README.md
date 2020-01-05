@@ -551,7 +551,7 @@ Shortcodes have exactly the same options as Widgets because every Widget is basi
 
 ### <a name="shortcode-builder"></a>Shortcode Builder
 
-The [Opening Hours Shortcode Builder](https://janize.github.io/opening-hours-shortcode-builder) assembles shortcodes for you that you can copy and insert into your content. This is particularly useful for people who are unfamiliar with shortcodes.
+The [Opening Hours Shortcode Builder](https://janizde.github.io/opening-hours-shortcode-builder) assembles shortcodes for you that you can copy and insert into your content. This is particularly useful for people who are unfamiliar with shortcodes.
 
 The builder can be found at https://janizde.github.io/opening-hours-shortcode-builder/
 
