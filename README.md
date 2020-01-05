@@ -23,6 +23,7 @@ Opening Hours is a highly customizable WordPress plugin to set up your venue's o
 	* [Irregular Openings Widget](#irregular-openings-widget)
 	* [Schema.org Widget](#schema-org-widget)
 * [Shortcodes](#shortcodes)
+    * [Shortcode Builder](#shortcode-builder)
 	* [Common Attributes](#common-attributes)
 	* [[op-overview] Shortcode](#op-overview-shortcode)
 	* [[op-is-open] Shortcode](#op-is-open-shortcode)
@@ -530,9 +531,9 @@ There are the following options:
 
 ## <a name="shortcodes"></a>Shortcodes
 
-### General
+### About Shortcodes
 
-Shortcodes are a WordPress core component, which give you the ability to add rich components to your posts' and pages' content. You can insert a Shortcode in the default WordPress TinyMCE editor.
+Shortcodes are a WordPress core component, which give you the ability to add rich components to your posts' and pages' content. You can insert a Shortcode in the default WordPress editor.
 
 The basic format of a shortcode is:
 
@@ -547,6 +548,14 @@ You can read more about Shortcodes in the [WordPress documentation.](https://cod
 
 Shortcodes have exactly the same options as Widgets because every Widget is basically a representation of the corresponding Shortcode with a GUI for the Widget edit section.  
 **The only required attribute for all Shortcodes is `set_id`. All other attributes are optional!**
+
+### <a name="shortcode-builder"></a>Shortcode Builder
+
+The [Opening Hours Shortcode Builder](https://janize.github.io/opening-hours-shortcode-builder) assembles shortcodes for you that you can copy and insert into your content. This is particularly useful for people who are unfamiliar with shortcodes.
+
+The builder can be found at https://janizde.github.io/opening-hours-shortcode-builder/
+
+In the edit page of parent sets the button *Create a Shortcode* opens the shortcode builder in a popup and prefills the `set_id` accordingly.
 
 ### <a name="common-attributes"></a>Common attributes for all Shortcodes
 <table>
