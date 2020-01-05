@@ -14,6 +14,7 @@ use WP_Post;
  */
 class SetDetails extends AbstractMetaBox {
   const FILTER_ALIAS_PRESETS = 'op_set_alias_presets';
+  const SHORTCODE_BUILDER_FORMAT = 'https://janizde.github.io/opening-hours-shortcode-builder/#%s';
 
   /**
    * Array of field configuration arrays
@@ -103,11 +104,34 @@ class SetDetails extends AbstractMetaBox {
     );
   }
 
+  /**
+   * Creates the URL including the sets option containing only the current set for the Shortcode Builder
+   *
+   * @param     WP_Post     $post     The post whose set to include in the sets
+   * @return    string                The URL for the Shortcode Builder
+   */
+  private function createShortcodeBuilderUrl(WP_Post $post) {
+    $sets = array();
+    $sets[$post->ID] = $post->post_title;
+    $shortcodeGeneratorHash = base64_encode(
+      json_encode(array(
+        'sets' => $sets
+      ))
+    );
+
+    return sprintf(self::SHORTCODE_BUILDER_FORMAT, $shortcodeGeneratorHash);
+  }
+
   /** @inheritdoc */
   public function renderMetaBox(WP_Post $post) {
     $this->nonceField();
+    $builderUrl = $this->createShortcodeBuilderUrl($post);
 
-    echo '<p><h3>' . __('Set Id', 'wp-opening-hours') . ': <code>' . $post->ID . '</code></h3></p>';
+    echo '<p>';
+    echo '<h3>' . __('Set Id', 'wp-opening-hours') . ': <code>' . $post->ID . '</code></h3>';
+    // prettier-ignore
+    echo '<a class="op-generate-sc-link" data-shortcode-builder-url="' . $builderUrl . '" href="' . $builderUrl . '" target="_blank">' . __('Create a Shortcode', 'wp-opening-hours') . '</a>';
+    echo '</h3>';
 
     $type = $post->post_parent == 0 ? 'parent' : 'child';
 
