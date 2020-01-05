@@ -71,11 +71,17 @@ class SchemaGenerator {
       new ValidityPeriod($child->getSet(), $child->getStart(), $child->getEnd())
     ));
 
+    /**
+     * Compatibility as $this cannot be referenced in the closure in PHO 5.3
+     * @todo                  Remove when requirement is PHP >= 5.4
+     */
+    $self = $this;
+
     /** @var ValiditySequence $sequenceWithChildren */
     $sequenceWithChildren = array_reduce(
       $child->getChildren(),
-      function (ValiditySequence $sequence, ChildSetWrapper $childWrapper) {
-        $childSequence = $this->createChildSetValiditySequence($childWrapper);
+      function (ValiditySequence $sequence, ChildSetWrapper $childWrapper) use ($self) {
+        $childSequence = $self->createChildSetValiditySequence($childWrapper);
         return $sequence->coveredWith($childSequence);
       },
       $ownValiditySequence
