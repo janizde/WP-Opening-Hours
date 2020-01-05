@@ -551,7 +551,8 @@ Shortcodes have exactly the same options as Widgets because every Widget is basi
 
 The [Opening Hours Shortcode Builder](http://bit.ly/2mmneSk) assembles shortcodes for you that you can copy and insert into your content. This is particularly useful for people who are unfamiliar with shortcodes.
 
-The builder can be found at [https://janizde.github.io/opening-hours-shortcode-builder/](http://bit.ly/2mmneSk)
+The builder can be found at [https://janizde.github.io/opening-hours-shortcode-builder/](http://bit.ly/2mmneSk)  
+Development takes place in the [GitHub Repo](http://bit.ly/35rsQiD)
 
 In the edit page of parent sets the button *Create a Shortcode* opens the shortcode builder in a popup and prefills the `set_id` accordingly.
 
