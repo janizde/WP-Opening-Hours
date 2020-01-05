@@ -1,7 +1,5 @@
-# WordPress Opening Hours
+# WordPress Opening Hours 🔌 🕐
 [![Build Status](https://travis-ci.org/janizde/WP-Opening-Hours.svg?branch=develop)](https://travis-ci.org/janizde/WP-Opening-Hours)
-[![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8FYGR6EJSN8S8)
 
 Opening Hours is a highly customizable WordPress plugin to set up your venue's opening hours and display them with Shortcodes and Widgets.
@@ -551,9 +549,9 @@ Shortcodes have exactly the same options as Widgets because every Widget is basi
 
 ### <a name="shortcode-builder"></a>Shortcode Builder
 
-The [Opening Hours Shortcode Builder](https://janizde.github.io/opening-hours-shortcode-builder) assembles shortcodes for you that you can copy and insert into your content. This is particularly useful for people who are unfamiliar with shortcodes.
+The [Opening Hours Shortcode Builder](http://bit.ly/2mmneSk) assembles shortcodes for you that you can copy and insert into your content. This is particularly useful for people who are unfamiliar with shortcodes.
 
-The builder can be found at https://janizde.github.io/opening-hours-shortcode-builder/
+The builder can be found at [https://janizde.github.io/opening-hours-shortcode-builder/](http://bit.ly/2mmneSk)
 
 In the edit page of parent sets the button *Create a Shortcode* opens the shortcode builder in a popup and prefills the `set_id` accordingly.
 
@@ -1047,6 +1045,11 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 [↑ Table of Contents](#contents)
 
 ## <a name="changelog"></a>Changelog
+
+### v2.2.0
+
+* Added [op-schema] shortcode and *Schema.org* Widget for structured JSON-LD representation of opening hours, holidays and irregular openings
+* Added button for Shortcode Builder in Set edit page
 
 ### v2.1.4
 
