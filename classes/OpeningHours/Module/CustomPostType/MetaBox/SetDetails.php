@@ -14,6 +14,7 @@ use WP_Post;
  */
 class SetDetails extends AbstractMetaBox {
   const FILTER_ALIAS_PRESETS = 'op_set_alias_presets';
+  const SHORTCODE_BUILDER_FORMAT = 'https://janizde.github.io/opening-hours-shortcode-builder/#%s';
 
   /**
    * Array of field configuration arrays
@@ -118,17 +119,18 @@ class SetDetails extends AbstractMetaBox {
       ))
     );
 
-    return sprintf('https://janizde.github.io/opening-hours-shortcode-builder/#%s', $shortcodeGeneratorHash);
+    return sprintf(self::SHORTCODE_BUILDER_FORMAT, $shortcodeGeneratorHash);
   }
 
   /** @inheritdoc */
   public function renderMetaBox(WP_Post $post) {
     $this->nonceField();
+    $builderUrl = $this->createShortcodeBuilderUrl($post);
 
     echo '<p>';
     echo '<h3>' . __('Set Id', 'wp-opening-hours') . ': <code>' . $post->ID . '</code></h3>';
     // prettier-ignore
-    echo '<a class="op-generate-sc-link" data-shortcode-builder-url="' . $this->createShortcodeBuilderUrl($post) . '">' . __('Create a Shortcode', 'wp-opening-hours') . '</a>';
+    echo '<a class="op-generate-sc-link" data-shortcode-builder-url="' . $builderUrl . '" href="' . $builderUrl . '" target="_blank">' . __('Create a Shortcode', 'wp-opening-hours') . '</a>';
     echo '</h3>';
 
     $type = $post->post_parent == 0 ? 'parent' : 'child';
