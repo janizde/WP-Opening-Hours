@@ -986,6 +986,10 @@ Furthermore you may also set your custom date and time formates per Widget / Sho
 ### The Is Open Widget / Shortcode does not work properly
 The calculation of the Is Open status depends on the Timezone setting in WordPress. Please double check your Timezone setting under **Settings > General** before opening an issue.
 
+### How can I change the styling of the widgets / shortcodes?
+The Plugin provides very minimal styling, which is the red and green colors for the open / closed messages. All other kind of styling is left to the WordPress Theme you are using or your custom CSS.
+To disable the styling of the text color the [`op_use_front_end_styles`](https://github.com/janizde/WP-Opening-Hours/blob/master/doc/filters.md#op_use_front_end_styles) filter hook can be used.
+
 [↑ Table of Contents](#contents)
 
 ## <a name="contributing"></a>Contributing
@@ -1043,6 +1047,11 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 [↑ Table of Contents](#contents)
 
 ## <a name="changelog"></a>Changelog
+
+### v2.1.4
+
+* Fixed a warning occuring in the Overview shortcode with PHP >= 7.2
+* Added method `OpeningHours->clearSetProviders()` to `OpeningHours` singleton
 
 ### v2.1.3
 
@@ -1105,8 +1114,6 @@ I'd be very pleased if you donated a small amount if you like the plugin as I pu
 of this plugin.  
 You can donate via:
 
-GitCheese: [![gitcheese.com](https://api.gitcheese.com/v1/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/badges)](https://www.gitcheese.com/app/#/projects/b0a869ba-2c6c-461b-8df5-31763360d9dd/pledges/create)  
-flattr: [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=janizde&url=https://github.com/janizde/WP-Opening-Hours&title=WPOpeningHours&language=en&tags=github,wordpress,opening,hours&category=software)  
 PayPal: [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8FYGR6EJSN8S8)
 
 ## <a name="license"></a>License

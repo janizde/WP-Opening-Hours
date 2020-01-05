@@ -109,7 +109,7 @@ class Overview extends AbstractShortcode {
 
     $days = array();
     foreach ($data as $row) {
-      if (!$attributes['show_closed_days'] && count($row['items']) < 1) {
+      if (!$attributes['show_closed_days'] && is_array($row['items']) && count($row['items']) < 1) {
         continue;
       }
 

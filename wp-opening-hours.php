@@ -3,7 +3,7 @@
  * Plugin Name: Opening Hours
  * Plugin URI: https://github.com/janizde/WP-Opening-Hours
  * Description: Manage your venue's Opening Hours, Holidays and Irregular Openings in WordPress and display them in many different Widgets and Shortcodes
- * Version: 2.1.3
+ * Version: 2.1.4
  * Author: Jannik Portz
  * Author URI: http://jannikportz.de
  * Text Domain: wp-opening-hours

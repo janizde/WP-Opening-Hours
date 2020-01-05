@@ -89,10 +89,7 @@ class ValiditySequence {
 
     // If the background sequence exceeds the foreground sequence
     // add the restricted background sequence to the total sequence
-    if (isTrulyLessThan(
-      Dates::getFloatFrom($this->getStart()),
-      Dates::getFloatFrom($foregroundSequence->getStart())
-    )) {
+    if (isTrulyLessThan(Dates::getFloatFrom($this->getStart()), Dates::getFloatFrom($foregroundSequence->getStart()))) {
       $gapStart = $this->getStart();
       $gapEnd = clone $foregroundSequence->getStart();
       $gapEnd->sub(new \DateInterval('P1D'));
@@ -126,10 +123,7 @@ class ValiditySequence {
 
     // If the background sequence exceeds the foreground sequence
     // add the restricted background sequence to the total sequence
-    if (isTrulyGreaterThan(
-      Dates::getFloatFrom($this->getEnd()),
-      Dates::getFloatFrom($foregroundSequence->getEnd()))
-    ) {
+    if (isTrulyGreaterThan(Dates::getFloatFrom($this->getEnd()), Dates::getFloatFrom($foregroundSequence->getEnd()))) {
       $gapStart = $foregroundSequence->getEnd();
       $gapStart->add(new \DateInterval('P1D'));
       $gapEnd = $this->getEnd();

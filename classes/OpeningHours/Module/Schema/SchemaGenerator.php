@@ -232,13 +232,13 @@ class SchemaGenerator {
    */
   public static function getSchemaWeekdays() {
     return array(
-        'http://schema.org/Sunday',
-        'http://schema.org/Monday',
-        'http://schema.org/Tuesday',
-        'http://schema.org/Wednesday',
-        'http://schema.org/Thursday',
-        'http://schema.org/Friday',
-        'http://schema.org/Saturday'
+      'http://schema.org/Sunday',
+      'http://schema.org/Monday',
+      'http://schema.org/Tuesday',
+      'http://schema.org/Wednesday',
+      'http://schema.org/Thursday',
+      'http://schema.org/Friday',
+      'http://schema.org/Saturday'
     );
   }
 }
