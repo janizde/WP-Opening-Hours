@@ -16,20 +16,6 @@ use OpeningHours\Util\Dates;
  * @package OpeningHours\Module\Schema
  */
 class SchemaGenerator {
-  /**
-   * Schema.org URIs for all weekdays.
-   * Array indices correspond to the week day numbers starting at Sunday
-   */
-  const SCHEMA_WEEKDAYS = array(
-    'http://schema.org/Sunday',
-    'http://schema.org/Monday',
-    'http://schema.org/Tuesday',
-    'http://schema.org/Wednesday',
-    'http://schema.org/Thursday',
-    'http://schema.org/Friday',
-    'http://schema.org/Saturday'
-  );
-
   const SCHEMA_TIME_FORMAT = 'H:i';
   const SCHEMA_DATE_FORMAT = 'Y-m-d';
 
@@ -203,13 +189,15 @@ class SchemaGenerator {
    *                                      OpeningHoursSpec objects
    */
   public function createSpecItemsFromValidityPeriod(ValidityPeriod $vp) {
+    $weekdays = self::getSchemaWeekdays();
+
     return array_map(
-      function (Period $p) use ($vp) {
+      function (Period $p) use ($vp, $weekdays) {
         $spec = array(
           '@type' => 'OpeningHoursSpecification',
           'opens' => $p->getTimeStart()->format(self::SCHEMA_TIME_FORMAT),
           'closes' => $p->getTimeEnd()->format(self::SCHEMA_TIME_FORMAT),
-          'dayOfWeek' => self::SCHEMA_WEEKDAYS[$p->getWeekday()]
+          'dayOfWeek' => $weekdays[$p->getWeekday()]
         );
 
         if ($vp->getStart() instanceof \DateTime) {
@@ -226,6 +214,25 @@ class SchemaGenerator {
         ->getSet()
         ->getPeriods()
         ->getArrayCopy()
+    );
+  }
+
+  /**
+   * Creates Schema.org URIs for all weekdays.
+   * Array indices correspond to the week day numbers starting at Sunday
+   *
+   * @todo                  Move to class constant when requirement is PHP >= 5.6
+   * @return      array     Weekdays for schema
+   */
+  public static function getSchemaWeekdays() {
+    return array(
+        'http://schema.org/Sunday',
+        'http://schema.org/Monday',
+        'http://schema.org/Tuesday',
+        'http://schema.org/Wednesday',
+        'http://schema.org/Thursday',
+        'http://schema.org/Friday',
+        'http://schema.org/Saturday'
     );
   }
 }
