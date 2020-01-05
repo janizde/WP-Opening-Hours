@@ -14,7 +14,7 @@ use WP_Post;
  */
 class SetDetails extends AbstractMetaBox {
   const FILTER_ALIAS_PRESETS = 'op_set_alias_presets';
-  const SHORTCODE_BUILDER_FORMAT = 'https://janizde.github.io/opening-hours-shortcode-builder/#%s';
+  const SHORTCODE_BUILDER_FORMAT = 'https://bit.ly/op-sc-builder#%s';
 
   /**
    * Array of field configuration arrays
