@@ -89,7 +89,10 @@ class ValiditySequence {
 
     // If the background sequence exceeds the foreground sequence
     // add the restricted background sequence to the total sequence
-    if (Dates::getFloatFrom($this->getStart()) < Dates::getFloatFrom($foregroundSequence->getStart())) {
+    if (isTrulyLessThan(
+      Dates::getFloatFrom($this->getStart()),
+      Dates::getFloatFrom($foregroundSequence->getStart())
+    )) {
       $gapStart = $this->getStart();
       $gapEnd = clone $foregroundSequence->getStart();
       $gapEnd->sub(new \DateInterval('P1D'));
@@ -123,7 +126,10 @@ class ValiditySequence {
 
     // If the background sequence exceeds the foreground sequence
     // add the restricted background sequence to the total sequence
-    if (Dates::getFloatFrom($this->getEnd()) > Dates::getFloatFrom($foregroundSequence->getEnd())) {
+    if (isTrulyGreaterThan(
+      Dates::getFloatFrom($this->getEnd()),
+      Dates::getFloatFrom($foregroundSequence->getEnd()))
+    ) {
       $gapStart = $foregroundSequence->getEnd();
       $gapStart->add(new \DateInterval('P1D'));
       $gapEnd = $this->getEnd();
@@ -170,4 +176,18 @@ class ValiditySequence {
     $end = $this->periods[count($this->periods) - 1]->getEnd();
     return $end instanceof \DateTime ? clone $end : INF;
   }
+}
+
+/**
+ * Comparison functions for float values that handle -INF and INF properly across
+ * the supported PHP versions, since PHP 5.3 treats INF < INF and INF > INF as true.
+ *
+ * @todo        Remove once requirement is PHP > 5.3
+ */
+function isTrulyLessThan($a, $b) {
+  return $a < $b && $a !== $b;
+}
+
+function isTrulyGreaterThan($a, $b) {
+  return $a > $b && $a !== $b;
 }
