@@ -1047,6 +1047,10 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
+### v2.2.1
+
+* Add support for custom user locales in the admin panel for cases when the user locale differs from the site locale
+
 ### v2.2.0
 
 * Added [op-schema] shortcode and *Schema.org* Widget for structured JSON-LD representation of opening hours, holidays and irregular openings
