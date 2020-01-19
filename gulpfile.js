@@ -75,7 +75,9 @@ const exportTask = gulp.series(clean, build, function() {
     "!tests",
     "!./doc/**/*",
     "!doc",
-    "!.travis.yml"
+    "!.travis.yml",
+    "!yarn.lock",
+    "!.prettierrc"
   ];
 
   return gulp
