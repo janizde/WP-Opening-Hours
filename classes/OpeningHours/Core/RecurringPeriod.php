@@ -45,7 +45,9 @@ class RecurringPeriod {
   public function getPeriodOn(\DateTime $date): Period {
     $dateWeekday = (int) $date->format('w');
     if ($dateWeekday !== $this->weekday) {
-      throw new \InvalidArgumentException(sprintf("Argument $date must represent a date with weekday %d. Weekday %d given.", $this->weekday, $dateWeekday));
+      throw new \InvalidArgumentException(
+        sprintf("Argument $date must represent a date with weekday %d. Weekday %d given.", $this->weekday, $dateWeekday)
+      );
     }
 
     $start = clone $date;

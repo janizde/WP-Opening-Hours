@@ -1,6 +1,5 @@
 <?php
 
-
 namespace OpeningHours\Core;
 
 use OpeningHours\Test\OpeningHoursTestCase;

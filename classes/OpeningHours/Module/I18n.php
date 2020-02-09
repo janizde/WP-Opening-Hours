@@ -31,7 +31,7 @@ class I18n extends AbstractModule {
   /** Registers Plugin Textdomain */
   public function registerTextdomain() {
     // If `get_user_locale` is available (WP >= 4.7) use the user's locale instead of the site locale on admin
-    $userLocale =  function_exists('get_user_locale') && is_admin() ? get_user_locale() : get_locale();
+    $userLocale = function_exists('get_user_locale') && is_admin() ? get_user_locale() : get_locale();
     $locale = apply_filters('plugin_locale', $userLocale, self::TEXTDOMAIN);
     $customPath = sprintf("%s/plugins/%s-%s.mo", WP_LANG_DIR, self::TEXTDOMAIN, $locale);
 
