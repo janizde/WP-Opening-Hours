@@ -4,9 +4,22 @@ namespace OpeningHours\Core;
 
 use OpeningHours\Util\Dates;
 
+/**
+ * A sequence of `ValidityPeriods` that can be restricted to a specific interval or covered by a new ValidityPeriod.
+ * @package OpeningHours\Core
+ */
 class ValiditySequence {
+  /**
+   * Array of `ValidityPeriod` contained in this sequence
+   * @var     ValidityPeriod[]
+   */
   private $periods;
 
+  /**
+   * Creates a new ValiditySequence from periods
+   * @param   ValidityPeriod[]    $periods      Periods for the sequence ordered by their start date and should
+   *                                            not overlap
+   */
   public function __construct(array $periods) {
     $this->periods = $periods;
   }
@@ -21,19 +34,19 @@ class ValiditySequence {
    * `ValidityPeriod`s that are fully out of the date range are removed
    * and those who reach out of the date range are restricted
    *
-   * @param     \DateTime|float     $min    minimum validity period start
-   * @param     \DateTime|float     $max    maximum validity period end
+   * @param     \DateTime|float     $start  minimum validity period start
+   * @param     \DateTime|float     $end    maximum validity period end
    * @return    ValiditySequence            sequence with restricted `ValidityPeriod`s
    */
-  public function restrictedToDateRange($min, $max): ValiditySequence {
-    $periodsInRange = array_filter($this->periods, function (ValidityPeriod $period) use ($min, $max) {
+  public function restrictedToInterval($start, $end): ValiditySequence {
+    $periodsInRange = array_filter($this->periods, function (ValidityPeriod $period) use ($start, $end) {
       return !(
-        Dates::compareDateTime($period->getEnd(), $min) < 0 || Dates::compareDateTime($period->getStart(), $max) > 0
+        Dates::compareDateTime($period->getEnd(), $start) < 0 || Dates::compareDateTime($period->getStart(), $end) > 0
       );
     });
 
-    $minFloat = Dates::getFloatFrom($min);
-    $maxFloat = Dates::getFloatFrom($max);
+    $minFloat = Dates::getFloatFrom($start);
+    $maxFloat = Dates::getFloatFrom($end);
 
     $restrictedPeriods = array_map(function (ValidityPeriod $period) use ($minFloat, $maxFloat) {
       return new ValidityPeriod(
@@ -47,8 +60,8 @@ class ValiditySequence {
   }
 
   public function coveredWith(ValidityPeriod $fgPeriod): ValiditySequence {
-    $beforeSequence = $this->restrictedToDateRange(-INF, $fgPeriod->getStart());
-    $afterSequence = $this->restrictedToDateRange($fgPeriod->getEnd(), INF);
+    $beforeSequence = $this->restrictedToInterval(-INF, $fgPeriod->getStart());
+    $afterSequence = $this->restrictedToInterval($fgPeriod->getEnd(), INF);
     $nextPeriods = array_merge($beforeSequence->periods, $fgPeriod, $afterSequence->periods);
     return new ValiditySequence($nextPeriods);
   }
@@ -93,7 +106,14 @@ class ValiditySequence {
       return INF;
     }
 
-    $end = $this->periods[count($this->periods) - 1]->getEnd();
+    $end = array_reduce($this->periods, function ($highest, ValidityPeriod $period) {
+      return Dates::max($highest, $period->getEnd());
+    }, -INF);
+
     return $end instanceof \DateTime ? clone $end : INF;
+  }
+
+  public function getPeriods() {
+    return $this->periods;
   }
 }
