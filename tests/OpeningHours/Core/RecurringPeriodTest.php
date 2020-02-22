@@ -38,7 +38,16 @@ class RecurringPeriodTest extends OpeningHoursTestCase {
     $this->assertEquals(new \DateTime('2020-02-12 08:00:00'), $p->getEnd());
   }
 
-  public function test__getWeekday() {
+  /**
+   * @expectedException \InvalidArgumentException
+   */
+  public function test_getPeriodOn_throwsWeekday() {
+    // Mon 22:00 – Thu 08:00
+    $rp = new RecurringPeriod('22:00', 15 * 60 * 60, 1);
+    $rp->getPeriodOn(new \DateTime('2020-02-25'));
+  }
+
+  public function test_getWeekday() {
     $rp = new RecurringPeriod('12:00', 21600, 2);
     $this->assertEquals(2, $rp->getWeekday());
   }

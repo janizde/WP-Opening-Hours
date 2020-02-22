@@ -7,7 +7,7 @@ use OpeningHours\Test\OpeningHoursTestCase;
 class HolidayTest extends OpeningHoursTestCase {
   public function test_getName() {
     $holiday = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
-    $this->assertEquals('Foo Holiday', $holiday);
+    $this->assertEquals('Foo Holiday', $holiday->getName());
   }
 
   public function test_getKind() {

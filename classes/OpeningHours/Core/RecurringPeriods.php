@@ -40,14 +40,20 @@ class RecurringPeriods implements SpecEntry {
     $this->children = $children;
   }
 
+  /** @inheritDoc */
   function getKind(): string {
     return RecurringPeriods::SPEC_KIND;
   }
 
+  /** @inheritDoc */
   function getChildren(): array {
     return $this->children;
   }
 
+  /**
+   * Creates a ValidityPeriod with the same start and end dates of this `RecurringPeriods`
+   * @return    ValidityPeriod
+   */
   public function getValidityPeriod(): ValidityPeriod {
     return new ValidityPeriod($this->start, $this->end, $this);
   }

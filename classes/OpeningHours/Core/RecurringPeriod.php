@@ -46,7 +46,7 @@ class RecurringPeriod {
     $dateWeekday = (int) $date->format('w');
     if ($dateWeekday !== $this->weekday) {
       throw new \InvalidArgumentException(
-        sprintf("Argument $date must represent a date with weekday %d. Weekday %d given.", $this->weekday, $dateWeekday)
+        sprintf("Argument \$date must represent a date with weekday %d. Weekday %d given.", $this->weekday, $dateWeekday)
       );
     }
 
@@ -59,6 +59,10 @@ class RecurringPeriod {
     return new Period($start, $end);
   }
 
+  /**
+   * Returns the weekday at which the recurring period starts
+   * @return    int
+   */
   public function getWeekday() {
     return $this->weekday;
   }
