@@ -4,8 +4,8 @@ namespace OpeningHours\Core;
 
 use OpeningHours\Test\OpeningHoursTestCase;
 
-function dummyEntry() {
-  return new RecurringPeriods(-INF, INF, [], []);
+function dummyEntry($name = 'Dummy Entry') {
+  return new Holiday($name, new \DateTime('2018-02-01'), new \DateTime('2018-10-01'));
 }
 
 class ValiditySequenceTest extends OpeningHoursTestCase {
@@ -15,10 +15,10 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
    */
   public function test__construct() {
     $entry = new RecurringPeriods(-INF, INF, [], []);
-    $validityPeriods = array(
+    $validityPeriods = [
       new ValidityPeriod(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'), $entry),
       new ValidityPeriod(new \DateTime('2018-05-01'), new \DateTime('2018-05-18'), $entry)
-    );
+    ];
 
     $vs = new ValiditySequence($validityPeriods);
     $this->assertEquals($validityPeriods, $vs->getPeriods());
@@ -33,7 +33,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     ]);
 
     $restricted = $vs->restrictedToInterval(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
-    $expected = array(new ValidityPeriod(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'), dummyEntry()));
+    $expected = [new ValidityPeriod(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'), dummyEntry())];
     $this->assertEquals($expected, $restricted->getPeriods());
   }
 
@@ -46,7 +46,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     ]);
 
     $restricted = $vs->restrictedToInterval(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'));
-    $expected = array(new ValidityPeriod(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'), dummyEntry()));
+    $expected = [new ValidityPeriod(new \DateTime('2018-04-01'), new \DateTime('2018-04-30'), dummyEntry())];
     $this->assertEquals($expected, $restricted->getPeriods());
   }
 
@@ -147,8 +147,127 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   public function test__restrictedToInterval_AllRangesInfinity() {
     $vs = new ValiditySequence([new ValidityPeriod(-INF, INF, dummyEntry())]);
     $restricted = $vs->restrictedToInterval(-INF, INF);
-    $expected = array(new ValidityPeriod(-INF, INF, dummyEntry()));
+    $expected = [new ValidityPeriod(-INF, INF, dummyEntry())];
     $this->assertEquals($expected, $restricted->getPeriods());
+  }
+
+  /**
+   * - `restrictedToInterval` returns an empty sequence when the interval is exactly between to periods
+   */
+  public function test__restrictedToInterval_ExactlyBetween() {
+    $vs = new ValiditySequence([
+      new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-03-01T02:00:00'), dummyEntry()),
+      new ValidityPeriod(new \DateTime('2020-04-01T10:00:00'), new \DateTime('2020-05-01T02:00:00'), dummyEntry()),
+    ]);
+
+    $restricted = $vs->restrictedToInterval(new \DateTime('2020-03-01T02:00:00'), new \DateTime('2020-04-01T10:00:00'));
+    $this->assertEquals([], $restricted->getPeriods());
+  }
+
+  /**
+   * - `coveredWith` returns a new sequence only containing the covering period when it is infinite
+   */
+  public function test__coveredWith_infiniteForeground() {
+    $vs = new ValiditySequence([
+      new ValidityPeriod(new \DateTime('2020-02-01'), new \DateTime('2020-10-01'), dummyEntry()),
+      new ValidityPeriod(new \DateTime('2020-10-01'), new \DateTime('2021-01-01'), dummyEntry()),
+    ]);
+
+    $result = $vs->coveredWith(new ValidityPeriod(-INF, INF, dummyEntry()));
+    $expected = [new ValidityPeriod(-INF, INF, dummyEntry())];
+    $this->assertEquals($expected, $result->getPeriods());
+  }
+
+  /**
+   * - `coveredWith` returns a new sequence only containing the covering when both background and foreground are inf
+   */
+  public function test__coveredWith__infiniteForegroundBackground() {
+    $vs = new ValiditySequence([
+      new ValidityPeriod(-INF, new \DateTime('2020-10-01'), dummyEntry()),
+      new ValidityPeriod(new \DateTime('2020-10-01'), INF, dummyEntry()),
+    ]);
+
+    $result = $vs->coveredWith(new ValidityPeriod(-INF, INF, dummyEntry()));
+    $expected = [new ValidityPeriod(-INF, INF, dummyEntry())];
+    $this->assertEquals($expected, $result->getPeriods());
+  }
+
+  /**
+   * - `coveredWith` returns a new sequence merging a finite foreground sequence onto an infinite background sequence
+   */
+  public function test__coveredWith__finiteOverInfinite() {
+    $bgEntry = dummyEntry('BG');
+    $fgEntry = dummyEntry('FG');
+
+    $vs = new ValiditySequence([
+      new ValidityPeriod(-INF, INF, $bgEntry)
+    ]);
+
+    $fgPeriod = new ValidityPeriod(
+      new \DateTime('2020-02-01T02:00:00'),
+      new \DateTime('2020-10-01T14:00:00'),
+      $fgEntry
+    );
+
+    $result = $vs->coveredWith($fgPeriod);
+    $expected = [
+      new ValidityPeriod(-INF, new \DateTime('2020-02-01T02:00:00'), $bgEntry),
+      new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-10-01T14:00:00'), $fgEntry),
+      new ValidityPeriod(new \DateTime('2020-10-01T14:00:00'), INF, $bgEntry)
+    ];
+
+    $this->assertEquals($expected, $result->getPeriods());
+  }
+
+  public function test__coveredWith__finiteOverFinite() {
+    $bgEntry = dummyEntry('BG');
+    $fgEntry = dummyEntry('FG');
+
+    $vs = new ValiditySequence([
+      new ValidityPeriod(new \DateTime('2020-01-01'), new \DateTime('2021-01-01'), $bgEntry)
+    ]);
+
+    $fgPeriod = new ValidityPeriod(
+      new \DateTime('2020-02-01T02:00:00'),
+      new \DateTime('2020-10-01T14:00:00'),
+      $fgEntry
+    );
+
+    $result = $vs->coveredWith($fgPeriod);
+    $expected = [
+      new ValidityPeriod(new \DateTime('2020-01-01'), new \DateTime('2020-02-01T02:00:00'), $bgEntry),
+      new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-10-01T14:00:00'), $fgEntry),
+      new ValidityPeriod(new \DateTime('2020-10-01T14:00:00'), new \DateTime('2021-01-01'), $bgEntry)
+    ];
+
+    $this->assertEquals($expected, $result->getPeriods());
+  }
+
+  /**
+   * - `coveredWith` returns a new sequence with only the foreground period when the background periods have exactly the
+   *  same start and end
+   */
+  public function test__coveredWith__sameFiniteForeground() {
+    $bgEntry = dummyEntry('BG');
+    $fgEntry = dummyEntry('FG');
+
+    $vs = new ValiditySequence([
+      new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-05-01T14:00:00'), $bgEntry),
+      new ValidityPeriod(new \DateTime('2020-08-01T02:00:00'), new \DateTime('2020-05-01T14:00:00'), $bgEntry),
+    ]);
+
+    $fgPeriod = new ValidityPeriod(
+      new \DateTime('2020-02-01T02:00:00'),
+      new \DateTime('2020-10-01T14:00:00'),
+      $fgEntry
+    );
+
+    $result = $vs->coveredWith($fgPeriod);
+    $expected = [
+      new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-10-01T14:00:00'), $fgEntry),
+    ];
+
+    $this->assertEquals($expected, $result->getPeriods());
   }
 
   public function test__getStart__emptySequence() {

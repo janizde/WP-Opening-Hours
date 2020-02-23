@@ -41,7 +41,7 @@ class ValiditySequence {
   public function restrictedToInterval($start, $end): ValiditySequence {
     $periodsInRange = array_filter($this->periods, function (ValidityPeriod $period) use ($start, $end) {
       return !(
-        Dates::compareDateTime($period->getEnd(), $start) < 0 || Dates::compareDateTime($period->getStart(), $end) > 0
+        Dates::compareDateTime($period->getEnd(), $start) <= 0 || Dates::compareDateTime($period->getStart(), $end) >= 0
       );
     });
 
@@ -59,10 +59,16 @@ class ValiditySequence {
     return new ValiditySequence(array_values($restrictedPeriods));
   }
 
+  /**
+   * Returns a new `ValiditySequence` containing this sequence's periods covered with `$fgPeriod`
+   *
+   * @param     ValidityPeriod    $fgPeriod     Period to cover this sequence with
+   * @return    ValiditySequence                Sequence covered with `$fgPeriod`
+   */
   public function coveredWith(ValidityPeriod $fgPeriod): ValiditySequence {
     $beforeSequence = $this->restrictedToInterval(-INF, $fgPeriod->getStart());
     $afterSequence = $this->restrictedToInterval($fgPeriod->getEnd(), INF);
-    $nextPeriods = array_merge($beforeSequence->periods, $fgPeriod, $afterSequence->periods);
+    $nextPeriods = array_merge($beforeSequence->periods, [$fgPeriod], $afterSequence->periods);
     return new ValiditySequence($nextPeriods);
   }
 
