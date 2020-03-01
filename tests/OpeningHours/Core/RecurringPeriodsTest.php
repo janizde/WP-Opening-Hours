@@ -22,4 +22,25 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
     $expected = new ValidityPeriod(-INF, new \DateTime('2020-02-25'), $rp);
     $this->assertEquals($expected, $vp);
   }
+
+  /**
+   * - `getValidityPeriod` will enhance the end date of the `RecurringPeriods` when a period starts before the end
+   *  of the `RecurringPeriods` and ends after it
+   */
+  public function test_getValidityPeriod_lastPeriodExceeds() {
+    $rp = new RecurringPeriods(
+      new \DateTime('2020-03-02'),
+      new \DateTime('2020-10-01'),
+      [
+        new RecurringPeriod('12:00', 6 * 60 * 60, 3),
+        new RecurringPeriod('22:00', 6 * 60 * 60,3),
+        new RecurringPeriod('06:00',  6 * 60 * 60, 4),
+      ],
+      []
+    );
+
+    $vp = $rp->getValidityPeriod();
+    $expected = new ValidityPeriod(new \DateTime('2020-03-02'), new \DateTime('2020-10-01T04:00:00Z'), $rp);
+    $this->assertEquals($expected, $vp);
+  }
 }

@@ -51,4 +51,9 @@ class Holiday implements SpecEntry {
   function getValidityPeriod(): ValidityPeriod {
     return new ValidityPeriod($this->start, $this->end, $this);
   }
+
+  /** @inheritDoc */
+  function transformCoveringPeriod(ValidityPeriod $period): ValidityPeriod {
+    return $period;
+  }
 }

@@ -46,7 +46,11 @@ class RecurringPeriod {
     $dateWeekday = (int) $date->format('w');
     if ($dateWeekday !== $this->weekday) {
       throw new \InvalidArgumentException(
-        sprintf("Argument \$date must represent a date with weekday %d. Weekday %d given.", $this->weekday, $dateWeekday)
+        sprintf(
+          "Argument \$date must represent a date with weekday %d. Weekday %d given.",
+          $this->weekday,
+          $dateWeekday
+        )
       );
     }
 

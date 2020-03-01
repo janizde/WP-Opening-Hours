@@ -27,7 +27,7 @@ class DayOverride implements SpecEntry {
 
   /**
    * Periods of the day override
-   * @var array
+   * @var Period[]
    */
   private $periods;
 
@@ -65,6 +65,11 @@ class DayOverride implements SpecEntry {
   /** @inheritDoc */
   function getChildren(): array {
     return [];
+  }
+
+  /** @inheritDoc */
+  function transformCoveringPeriod(ValidityPeriod $period): ValidityPeriod {
+    return $period;
   }
 
   /**

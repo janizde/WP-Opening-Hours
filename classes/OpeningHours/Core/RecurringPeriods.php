@@ -2,6 +2,8 @@
 
 namespace OpeningHours\Core;
 
+use OpeningHours\Util\Dates;
+
 /**
  * Specification entry describing recurring periods related to weekdays
  * @package OpeningHours\Core
@@ -10,7 +12,7 @@ class RecurringPeriods implements SpecEntry {
   const SPEC_KIND = 'recurringPeriods';
 
   /**
-   * Start of the recurring periods as \DateTime (inclusiv) or -INF if unlimited
+   * Start of the recurring periods as \DateTime (inclusive) or -INF if unlimited
    * @var \DateTime|float
    */
   private $start;
@@ -22,7 +24,7 @@ class RecurringPeriods implements SpecEntry {
   private $end;
 
   /**
-   * Array of periods for this set of recurring periods
+   * Array of periods for this set of recurring periods ordered by their (weekday, start) combination
    * @var RecurringPeriod[]
    */
   private $periods;
@@ -40,6 +42,28 @@ class RecurringPeriods implements SpecEntry {
     $this->children = $children;
   }
 
+  /**
+   * Determines a concrete Period that is active at the $reference DateTime.
+   * If none is active, null is returned.
+   *
+   * @param     \DateTime     $reference    Reference date at which to search.
+   * @return    Period|null                 Period active at $reference or null
+   */
+  function getPeriodAt(\DateTime $reference) {
+    $lastOccurrences = array_map(function (RecurringPeriod $rp) use ($reference) {
+      $date = Dates::getWeekdayOccurrenceBefore($rp->getWeekday(), $reference);
+      return $rp->getPeriodOn($date);
+    }, $this->periods);
+
+    foreach ($lastOccurrences as $period) {
+      if ($period->getStart() <= $reference && $period->getEnd() > $reference) {
+        return $period;
+      }
+    }
+
+    return null;
+  }
+
   /** @inheritDoc */
   function getKind(): string {
     return RecurringPeriods::SPEC_KIND;
@@ -51,10 +75,38 @@ class RecurringPeriods implements SpecEntry {
   }
 
   /**
-   * Creates a ValidityPeriod with the same start and end dates of this `RecurringPeriods`
+   * Creates a ValidityPeriod with the same start and end dates of this `RecurringPeriods`.
+   * When a recurring period is active during the `$end` of this spec entry, the end in the ValidityPeriod
+   * is extended to the end of thar active Period.
+   *
    * @return    ValidityPeriod
    */
   public function getValidityPeriod(): ValidityPeriod {
-    return new ValidityPeriod($this->start, $this->end, $this);
+    $end = $this->end;
+
+    if ($end instanceof \DateTime) {
+      $periodAtEnd = $this->getPeriodAt($this->end);
+
+      if ($periodAtEnd !== null) {
+        $end = $periodAtEnd->getEnd();
+      }
+    }
+
+    return new ValidityPeriod($this->start, $end, $this);
+  }
+
+  /**
+   * Adjusts the start date of a covering ValidityPeriod if it is a concrete instance of \DateTime
+   * and a period in this RecurringPeriods is happening during this date. In these cases the ValidityPeriod
+   * is postponed until this Period has ended
+   *
+   * @param     ValidityPeriod    $validityPeriod     Covering period
+   * @return    ValidityPeriod                        Covering period with updated start if necessary
+   */
+  public function transformCoveringPeriod(ValidityPeriod $validityPeriod): ValidityPeriod {
+    $periodAtStart = $this->getPeriodAt($validityPeriod->getStart());
+    return $periodAtStart !== null
+      ? new ValidityPeriod($periodAtStart->getEnd(), $validityPeriod->getEnd(), $validityPeriod->getEntry())
+      : $validityPeriod;
   }
 }

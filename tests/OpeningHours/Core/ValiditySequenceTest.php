@@ -157,7 +157,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   public function test__restrictedToInterval_ExactlyBetween() {
     $vs = new ValiditySequence([
       new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-03-01T02:00:00'), dummyEntry()),
-      new ValidityPeriod(new \DateTime('2020-04-01T10:00:00'), new \DateTime('2020-05-01T02:00:00'), dummyEntry()),
+      new ValidityPeriod(new \DateTime('2020-04-01T10:00:00'), new \DateTime('2020-05-01T02:00:00'), dummyEntry())
     ]);
 
     $restricted = $vs->restrictedToInterval(new \DateTime('2020-03-01T02:00:00'), new \DateTime('2020-04-01T10:00:00'));
@@ -170,7 +170,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   public function test__coveredWith_infiniteForeground() {
     $vs = new ValiditySequence([
       new ValidityPeriod(new \DateTime('2020-02-01'), new \DateTime('2020-10-01'), dummyEntry()),
-      new ValidityPeriod(new \DateTime('2020-10-01'), new \DateTime('2021-01-01'), dummyEntry()),
+      new ValidityPeriod(new \DateTime('2020-10-01'), new \DateTime('2021-01-01'), dummyEntry())
     ]);
 
     $result = $vs->coveredWith(new ValidityPeriod(-INF, INF, dummyEntry()));
@@ -184,7 +184,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
   public function test__coveredWith__infiniteForegroundBackground() {
     $vs = new ValiditySequence([
       new ValidityPeriod(-INF, new \DateTime('2020-10-01'), dummyEntry()),
-      new ValidityPeriod(new \DateTime('2020-10-01'), INF, dummyEntry()),
+      new ValidityPeriod(new \DateTime('2020-10-01'), INF, dummyEntry())
     ]);
 
     $result = $vs->coveredWith(new ValidityPeriod(-INF, INF, dummyEntry()));
@@ -199,9 +199,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $bgEntry = dummyEntry('BG');
     $fgEntry = dummyEntry('FG');
 
-    $vs = new ValiditySequence([
-      new ValidityPeriod(-INF, INF, $bgEntry)
-    ]);
+    $vs = new ValiditySequence([new ValidityPeriod(-INF, INF, $bgEntry)]);
 
     $fgPeriod = new ValidityPeriod(
       new \DateTime('2020-02-01T02:00:00'),
@@ -253,7 +251,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
 
     $vs = new ValiditySequence([
       new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-05-01T14:00:00'), $bgEntry),
-      new ValidityPeriod(new \DateTime('2020-08-01T02:00:00'), new \DateTime('2020-05-01T14:00:00'), $bgEntry),
+      new ValidityPeriod(new \DateTime('2020-08-01T02:00:00'), new \DateTime('2020-05-01T14:00:00'), $bgEntry)
     ]);
 
     $fgPeriod = new ValidityPeriod(
@@ -264,10 +262,51 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
 
     $result = $vs->coveredWith($fgPeriod);
     $expected = [
-      new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-10-01T14:00:00'), $fgEntry),
+      new ValidityPeriod(new \DateTime('2020-02-01T02:00:00'), new \DateTime('2020-10-01T14:00:00'), $fgEntry)
     ];
 
     $this->assertEquals($expected, $result->getPeriods());
+  }
+
+  public function test__createFromSpecEntry__fullTree() {
+    $dayOverride = new DayOverride('International Women\'s day', new \DateTime('2020-03-08'), [
+      new Period(new \DateTime('2020-03-08T12:00:00'), new \DateTime('2020-03-08T18:00:00')),
+      new Period(new \DateTime('2020-03-08T22:00:00'), new \DateTime('2020-03-09T05:00:00'))
+    ]);
+
+    $holiday = new Holiday('Spring Holiday', new \DateTime('2020-05-01'), new \DateTime('2020-05-15'));
+
+    $childPeriods = new RecurringPeriods(
+      new \DateTime('2020-02-01'),
+      new \DateTime('2020-08-01'),
+      [
+        new RecurringPeriod('22:00', 5 * 60 * 60, 4),
+        new RecurringPeriod('22:00', 8 * 60 * 60, 5)
+      ],
+      []
+    );
+
+    $mainPeriods = new RecurringPeriods(
+      -INF,
+      INF,
+      [new RecurringPeriod('12:00', 8 * 60 * 60, 1)],
+      [$childPeriods, $dayOverride, $holiday]
+    );
+
+    $vs = ValiditySequence::createFromSpecTree($mainPeriods);
+    $expected = [
+      new ValidityPeriod(-INF, new \DateTime('2020-02-01'), $mainPeriods),
+      new ValidityPeriod(new \DateTime('2020-02-01'), new \DateTime('2020-03-08'), $childPeriods),
+      new ValidityPeriod(new \DateTime('2020-03-08'), new \DateTime('2020-03-09T05:00:00'), $dayOverride),
+      new ValidityPeriod(new \DateTime('2020-03-09T05:00:00'), new \DateTime('2020-05-01T03:00:00'), $childPeriods),
+      new ValidityPeriod(new \DateTime('2020-05-01T03:00:00'), new \DateTime('2020-05-15'), $holiday),
+      new ValidityPeriod(new \DateTime('2020-05-15'), new \DateTime('2020-08-01T06:00:00'), $childPeriods),
+      new ValidityPeriod(new \DateTime('2020-08-01T06:00:00'), INF, $mainPeriods)
+    ];
+
+    $this->assertEquals($expected, $vs->getPeriods());
+    $this->assertEquals(-INF, $vs->getStart());
+    $this->assertEquals(INF, $vs->getEnd());
   }
 
   public function test__getStart__emptySequence() {

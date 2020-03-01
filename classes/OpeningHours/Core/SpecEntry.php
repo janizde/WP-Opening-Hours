@@ -24,4 +24,16 @@ interface SpecEntry {
    * @return    ValidityPeriod
    */
   function getValidityPeriod(): ValidityPeriod;
+
+  /**
+   * Transforms a ValidityPeriod that is about to cover this SpecEntry's ValidityPeriod
+   * if necessary (e.g. postponing a SpecEntry until a better suited moment).
+   *
+   * If a SpecEntry implementation does not require custom transformation, the incoming
+   * $period can be passed through.
+   *
+   * @param     ValidityPeriod    $period   Incoming ValidityPeriod covering this period
+   * @return    ValidityPeriod              Transformed Period
+   */
+  function transformCoveringPeriod(ValidityPeriod $period): ValidityPeriod;
 }

@@ -66,17 +66,30 @@ class ValiditySequence {
    * @return    ValiditySequence                Sequence covered with `$fgPeriod`
    */
   public function coveredWith(ValidityPeriod $fgPeriod): ValiditySequence {
+    $fgPeriod = $this->transformPeriod($fgPeriod);
     $beforeSequence = $this->restrictedToInterval(-INF, $fgPeriod->getStart());
     $afterSequence = $this->restrictedToInterval($fgPeriod->getEnd(), INF);
     $nextPeriods = array_merge($beforeSequence->periods, [$fgPeriod], $afterSequence->periods);
     return new ValiditySequence($nextPeriods);
   }
 
+  /**
+   * Creates a `ValiditySequence` from a `SpecEntry` and all recursively merges its children's validity periods
+   *
+   * @static
+   * @param     SpecEntry         $entry    Root entry to create the sequence from
+   * @return    ValiditySequence            Sequence for the spec entry
+   */
   public static function createFromSpecTree(SpecEntry $entry) {
     $seq = new ValiditySequence([]);
     return $seq->mergeIntoSequence($entry);
   }
 
+  /**
+   * Recursively merges the `ValiditySequence` of `$entry` and all of its children into a new `ValiditySequence`
+   * @param     SpecEntry         $entry    Root entry for the spec tree
+   * @return    ValiditySequence            Sequence containing `$entry`'s children's periods
+   */
   private function mergeIntoSequence(SpecEntry $entry) {
     $merged = $this->coveredWith($entry->getValidityPeriod());
     return array_reduce(
@@ -85,6 +98,21 @@ class ValiditySequence {
         return $accum->mergeIntoSequence($child);
       },
       $merged
+    );
+  }
+
+  private function transformPeriod(ValidityPeriod $fgPeriod) {
+    $coveredPeriods = array_filter($this->periods, function (ValidityPeriod $bgPeriod) use ($fgPeriod) {
+      return Dates::compareDateTime($bgPeriod->getEnd(), $fgPeriod->getStart()) >= 0 &&
+        Dates::compareDateTime($bgPeriod->getStart(), $fgPeriod->getEnd()) <= 0;
+    });
+
+    return array_reduce(
+      $coveredPeriods,
+      function (ValidityPeriod $transformed, ValidityPeriod $bgPeriod) {
+        return $bgPeriod->getEntry()->transformCoveringPeriod($transformed);
+      },
+      $fgPeriod
     );
   }
 
@@ -112,9 +140,13 @@ class ValiditySequence {
       return INF;
     }
 
-    $end = array_reduce($this->periods, function ($highest, ValidityPeriod $period) {
-      return Dates::max($highest, $period->getEnd());
-    }, -INF);
+    $end = array_reduce(
+      $this->periods,
+      function ($highest, ValidityPeriod $period) {
+        return Dates::max($highest, $period->getEnd());
+      },
+      -INF
+    );
 
     return $end instanceof \DateTime ? clone $end : INF;
   }
