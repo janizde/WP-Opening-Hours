@@ -100,13 +100,13 @@ class RecurringPeriods implements SpecEntry {
    * and a period in this RecurringPeriods is happening during this date. In these cases the ValidityPeriod
    * is postponed until this Period has ended
    *
-   * @param     ValidityPeriod    $validityPeriod     Covering period
+   * @param     ValidityPeriod    $coveringPeriod     Covering period
    * @return    ValidityPeriod                        Covering period with updated start if necessary
    */
-  public function transformCoveringPeriod(ValidityPeriod $validityPeriod): ValidityPeriod {
-    $periodAtStart = $this->getPeriodAt($validityPeriod->getStart());
+  public function transformCoveringPeriod(ValidityPeriod $coveringPeriod): ValidityPeriod {
+    $periodAtStart = $this->getPeriodAt($coveringPeriod->getStart());
     return $periodAtStart !== null
-      ? new ValidityPeriod($periodAtStart->getEnd(), $validityPeriod->getEnd(), $validityPeriod->getEntry())
-      : $validityPeriod;
+      ? new ValidityPeriod($periodAtStart->getEnd(), $coveringPeriod->getEnd(), $coveringPeriod->getEntry())
+      : $coveringPeriod;
   }
 }

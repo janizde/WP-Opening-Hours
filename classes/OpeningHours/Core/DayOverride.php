@@ -68,8 +68,23 @@ class DayOverride implements SpecEntry {
   }
 
   /** @inheritDoc */
-  function transformCoveringPeriod(ValidityPeriod $period): ValidityPeriod {
-    return $period;
+  function transformCoveringPeriod(ValidityPeriod $coveringPeriod): ValidityPeriod {
+    $coveringStart = $coveringPeriod->getStart();
+    if (!$coveringStart instanceof \DateTime) {
+      return $coveringPeriod;
+    }
+
+    $periodAtStart = null;
+    foreach ($this->periods as $period) {
+      if ($period->getStart() <= $coveringStart && $period->getEnd() > $coveringStart) {
+        $periodAtStart = $period;
+        break;
+      }
+    }
+
+    return $periodAtStart !== null
+      ? new ValidityPeriod($periodAtStart->getEnd(), $coveringPeriod->getEnd(), $coveringPeriod->getEntry())
+      : $coveringPeriod;
   }
 
   /**

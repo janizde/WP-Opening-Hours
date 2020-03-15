@@ -279,10 +279,7 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $childPeriods = new RecurringPeriods(
       new \DateTime('2020-02-01'),
       new \DateTime('2020-08-01'),
-      [
-        new RecurringPeriod('22:00', 5 * 60 * 60, 4),
-        new RecurringPeriod('22:00', 8 * 60 * 60, 5)
-      ],
+      [new RecurringPeriod('22:00', 5 * 60 * 60, 4), new RecurringPeriod('22:00', 8 * 60 * 60, 5)],
       []
     );
 
@@ -307,6 +304,31 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
     $this->assertEquals($expected, $vs->getPeriods());
     $this->assertEquals(-INF, $vs->getStart());
     $this->assertEquals(INF, $vs->getEnd());
+  }
+
+  public function test__createFromSpecEntry__multipleTransformations() {
+    $holiday = new Holiday('Foo Holiday', new \DateTime('2020-03-01'), new \DateTime('2020-03-03'));
+    $dayOverride = new DayOverride('Foo Override', new \DateTime('2020-02-29'), [
+      new Period(new \DateTime('2020-02-29T12:00:00'), new \DateTime('2020-02-29T18:00:00')),
+      new Period(new \DateTime('2020-02-29T22:00:00'), new \DateTime('2020-03-01T02:00:00'))
+    ]);
+
+    $mainPeriods = new RecurringPeriods(
+      -INF,
+      INF,
+      [new RecurringPeriod('22:00', 5 * 60 * 60, 6)],
+      [$dayOverride, $holiday]
+    );
+
+    $vs = ValiditySequence::createFromSpecTree($mainPeriods);
+    $expected = [
+      new ValidityPeriod(-INF, new \DateTime('2020-02-29'), $mainPeriods),
+      new ValidityPeriod(new \DateTime('2020-02-29'), new \DateTime('2020-03-01T02:00:00'), $dayOverride),
+      new ValidityPeriod(new \DateTime('2020-03-01T02:00:00'), new \DateTime('2020-03-03'), $holiday),
+      new ValidityPeriod(new \DateTime('2020-03-03'), INF, $mainPeriods)
+    ];
+
+    $this->assertEquals($expected, $vs->getPeriods());
   }
 
   public function test__getStart__emptySequence() {

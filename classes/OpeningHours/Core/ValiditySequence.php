@@ -120,19 +120,16 @@ class ValiditySequence {
     );
   }
 
+  /**
+   * Transforms a foreground period that is about to be merged into the sequence by determining
+   * the `ValidityPeriod` that is active when `$fgPeriod` starts and asking to transform the period.
+   *
+   * @param     ValidityPeriod    $fgPeriod   Original period
+   * @return    ValidityPeriod                Possibly transformed period
+   */
   private function transformPeriod(ValidityPeriod $fgPeriod) {
-    $coveredPeriods = array_filter($this->periods, function (ValidityPeriod $bgPeriod) use ($fgPeriod) {
-      return Dates::compareDateTime($bgPeriod->getEnd(), $fgPeriod->getStart()) >= 0 &&
-        Dates::compareDateTime($bgPeriod->getStart(), $fgPeriod->getEnd()) <= 0;
-    });
-
-    return array_reduce(
-      $coveredPeriods,
-      function (ValidityPeriod $transformed, ValidityPeriod $bgPeriod) {
-        return $bgPeriod->getEntry()->transformCoveringPeriod($transformed);
-      },
-      $fgPeriod
-    );
+    $periodAtStart = $this->getPeriodAt($fgPeriod->getStart());
+    return $periodAtStart ? $periodAtStart->getEntry()->transformCoveringPeriod($fgPeriod) : $fgPeriod;
   }
 
   /**

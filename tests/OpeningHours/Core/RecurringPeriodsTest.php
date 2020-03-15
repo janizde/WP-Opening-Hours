@@ -33,8 +33,8 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
       new \DateTime('2020-10-01'),
       [
         new RecurringPeriod('12:00', 6 * 60 * 60, 3),
-        new RecurringPeriod('22:00', 6 * 60 * 60,3),
-        new RecurringPeriod('06:00',  6 * 60 * 60, 4),
+        new RecurringPeriod('22:00', 6 * 60 * 60, 3),
+        new RecurringPeriod('06:00', 6 * 60 * 60, 4)
       ],
       []
     );
