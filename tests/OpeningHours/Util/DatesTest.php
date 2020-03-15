@@ -114,4 +114,15 @@ class DatesTest extends OpeningHoursTestCase {
     $this->assertEquals(0, Dates::compareDate($d1, $d3));
     $this->assertEquals(1, Dates::compareDate($d2, $d1));
   }
+
+  public function test__getWeekdayOccurrenceBefore() {
+    $reference = new \DateTime('2020-03-01T10:00:00Z');
+    $this->assertEquals(new \DateTime('2020-03-01'), Dates::getWeekdayOccurrenceBefore(0, $reference));
+    $this->assertEquals(new \DateTime('2020-02-29'), Dates::getWeekdayOccurrenceBefore(6, $reference));
+    $this->assertEquals(new \DateTime('2020-02-28'), Dates::getWeekdayOccurrenceBefore(5, $reference));
+    $this->assertEquals(new \DateTime('2020-02-27'), Dates::getWeekdayOccurrenceBefore(4, $reference));
+    $this->assertEquals(new \DateTime('2020-02-26'), Dates::getWeekdayOccurrenceBefore(3, $reference));
+    $this->assertEquals(new \DateTime('2020-02-25'), Dates::getWeekdayOccurrenceBefore(2, $reference));
+    $this->assertEquals(new \DateTime('2020-02-24'), Dates::getWeekdayOccurrenceBefore(1, $reference));
+  }
 }

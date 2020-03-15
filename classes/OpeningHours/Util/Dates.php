@@ -134,6 +134,24 @@ class Dates extends AbstractModule {
   }
 
   /**
+   * Determines the latest occurrence of a weekday before the specified $reference date.
+   * When $weekday is the same as the $reference weekday, the $reference date is returned.
+   *
+   * @param     int       $weekday      Target weekday
+   * @param     DateTime  $reference    Reference weekday before which to search
+   * @return    DateTime                Last occurrence of $weekday before $reference
+   */
+  public static function getWeekdayOccurrenceBefore(int $weekday, \DateTime $reference): \DateTime {
+    $referenceWd = (int) $reference->format('w');
+    $offset = ($referenceWd - $weekday + 7) % 7;
+    $interval = new \DateInterval('P' . $offset . 'D');
+    $date = clone $reference;
+    $date->setTime(0, 0, 0);
+    $date->sub($interval);
+    return $date;
+  }
+
+  /**
    * Compares only the time in hours and minutes of two DateTime objects
    *
    * @param     DateTime $time1 The first DateTime object
