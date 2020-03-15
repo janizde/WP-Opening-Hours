@@ -83,7 +83,7 @@ class ValiditySequence {
     foreach ($this->periods as $period) {
       if (
         Dates::compareDateTime($period->getStart(), $date) <= 0 &&
-        Dates::compareDateTime($period->getEnd(), $date) > 0
+        (Dates::compareDateTime($period->getEnd(), $date) > 0 || $period->getEnd() === INF)
       ) {
         return $period;
       }
