@@ -74,6 +74,25 @@ class ValiditySequence {
   }
 
   /**
+   * Determines the `ValidityPeriod` that is active at the given reference date or null if none is active
+   *
+   * @param     \DateTime|float     $date     The date to sample the ValiditySequence at
+   * @return    ValidityPeriod|null           Active ValidityPeriod or null if none is active
+   */
+  public function getPeriodAt($date) {
+    foreach ($this->periods as $period) {
+      if (
+        Dates::compareDateTime($period->getStart(), $date) <= 0 &&
+        Dates::compareDateTime($period->getEnd(), $date) > 0
+      ) {
+        return $period;
+      }
+    }
+
+    return null;
+  }
+
+  /**
    * Creates a `ValiditySequence` from a `SpecEntry` and all recursively merges its children's validity periods
    *
    * @static

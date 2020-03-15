@@ -353,4 +353,38 @@ class ValiditySequenceTest extends OpeningHoursTestCase {
 
     $this->assertEquals(INF, $seq->getEnd());
   }
+
+  public function test__getPeriodAt__emptySequence() {
+    $vs = new ValiditySequence([]);
+    $this->assertEquals(null, $vs->getPeriodAt(-INF));
+    $this->assertEquals(null, $vs->getPeriodAt(INF));
+    $this->assertEquals(null, $vs->getPeriodAt(new \DateTime('2020-03-15')));
+  }
+
+  public function test__getPeriodAt__infiniteEntry() {
+    $period = new ValidityPeriod(-INF, INF, dummyEntry());
+    $vs = new ValiditySequence([$period]);
+    $this->assertEquals($period, $vs->getPeriodAt(-INF));
+    $this->assertEquals($period, $vs->getPeriodAt(INF));
+    $this->assertEquals($period, $vs->getPeriodAt(new \DateTime('2020-03-15')));
+  }
+
+  public function test__getPeriodAt__mergedFinite() {
+    $entry1 = dummyEntry('DE1');
+    $entry2 = dummyEntry('DE2');
+    $period1 = new ValidityPeriod(new \DateTime('2020-02-01'), new \DateTime('2020-02-03T02:00:00'), $entry1);
+    $period2 = new ValidityPeriod(new \DateTime('2020-02-04'), new \DateTime('2020-02-05'), $entry2);
+    $vs = new ValiditySequence([$period1, $period2]);
+
+    $this->assertEquals(null, $vs->getPeriodAt(-INF));
+    $this->assertEquals(null, $vs->getPeriodAt(new \DateTime('2020-01-31T23:59:59')));
+    $this->assertEquals($period1, $vs->getPeriodAt(new \DateTime('2020-02-01')));
+    $this->assertEquals($period1, $vs->getPeriodAt(new \DateTime('2020-02-03T01:59:59')));
+    $this->assertEquals(null, $vs->getPeriodAt(new \DateTime('2020-02-03T02:00:00')));
+    $this->assertEquals(null, $vs->getPeriodAt(new \DateTime('2020-02-03T23:59:59')));
+    $this->assertEquals($period2, $vs->getPeriodAt(new \DateTime('2020-02-04')));
+    $this->assertEquals($period2, $vs->getPeriodAt(new \DateTime('2020-02-04T23:59:59')));
+    $this->assertEquals(null, $vs->getPeriodAt(new \DateTime('2020-02-05')));
+    $this->assertEquals(null, $vs->getPeriodAt(INF));
+  }
 }
