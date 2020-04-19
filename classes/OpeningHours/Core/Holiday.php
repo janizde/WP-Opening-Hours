@@ -65,16 +65,12 @@ class Holiday implements SpecEntry {
       'kind' => Holiday::SPEC_KIND,
       'name' => $this->name,
       'start' => Dates::serialize($this->start),
-      'end' => Dates::serialize($this->end),
+      'end' => Dates::serialize($this->end)
     ];
   }
 
   /** @inheritDoc */
   static function fromSerializableArray(array $array): ArraySerializable {
-    return new Holiday(
-      $array['name'],
-      Dates::deserialize($array['start']),
-      Dates::deserialize($array['end'])
-    );
+    return new Holiday($array['name'], Dates::deserialize($array['start']), Dates::deserialize($array['end']));
   }
 }

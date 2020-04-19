@@ -116,8 +116,12 @@ class RecurringPeriods implements SpecEntry {
       'kind' => self::SPEC_KIND,
       'start' => Dates::serialize($this->start),
       'end' => Dates::serialize($this->end),
-      'periods' => array_map(function (RecurringPeriod $p) { return $p->toSerializableArray(); }, $this->periods),
-      'children' => array_map(function (SpecEntry $se) { return $se->toSerializableArray(); }, $this->children),
+      'periods' => array_map(function (RecurringPeriod $p) {
+        return $p->toSerializableArray();
+      }, $this->periods),
+      'children' => array_map(function (SpecEntry $se) {
+        return $se->toSerializableArray();
+      }, $this->children)
     ];
   }
 
@@ -126,8 +130,12 @@ class RecurringPeriods implements SpecEntry {
     return new RecurringPeriods(
       Dates::deserialize($array['start']),
       Dates::deserialize($array['end']),
-      array_map(function (array $ser) { return RecurringPeriod::fromSerializableArray($ser); }, $array['periods']),
-      array_map(function (array $ser) { return SpecEntryParser::fromSerializableArray($ser); }, $array['children'])
+      array_map(function (array $ser) {
+        return RecurringPeriod::fromSerializableArray($ser);
+      }, $array['periods']),
+      array_map(function (array $ser) {
+        return SpecEntryParser::fromSerializableArray($ser);
+      }, $array['children'])
     );
   }
 }

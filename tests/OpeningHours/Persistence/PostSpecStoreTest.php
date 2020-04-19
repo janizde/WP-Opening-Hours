@@ -15,11 +15,7 @@ class PostSpecStoreTest extends OpeningHoursTestCase {
 
     \WP_Mock::wpFunction('update_post_meta', [
       'times' => 1,
-      'args' => [
-        42,
-        PostSpecStore::SPEC_META_KEY,
-        getSerializedSpecification(),
-      ]
+      'args' => [42, PostSpecStore::SPEC_META_KEY, getSerializedSpecification()]
     ]);
 
     $store->storeSpecification($rootEntry);
@@ -30,12 +26,8 @@ class PostSpecStoreTest extends OpeningHoursTestCase {
 
     \WP_Mock::wpFunction('get_post_meta', [
       'times' => 1,
-      'args' => [
-        42,
-        PostSpecStore::SPEC_META_KEY,
-        true,
-      ],
-      'return' => getSerializedSpecification(),
+      'args' => [42, PostSpecStore::SPEC_META_KEY, true],
+      'return' => getSerializedSpecification()
     ]);
 
     $rootEntry = $store->loadSpecification();
@@ -52,7 +44,7 @@ function getSerializedSpecification() {
       [
         'startTime' => '12:00',
         'duration' => 6 * 60 * 60,
-        'weekday' => 3,
+        'weekday' => 3
       ]
     ],
     'children' => [
@@ -61,13 +53,13 @@ function getSerializedSpecification() {
         'start' => '2020-05-01T00:00:00+00:00',
         'end' => '2020-08-01T00:00:00+00:00',
         'periods' => [],
-        'children' => [],
+        'children' => []
       ],
       [
         'kind' => Holiday::SPEC_KIND,
         'name' => 'Foo Holiday',
         'start' => '2020-03-15T00:00:00+00:00',
-        'end' => '2020-04-01T00:00:00+00:00',
+        'end' => '2020-04-01T00:00:00+00:00'
       ],
       [
         'kind' => DayOverride::SPEC_KIND,
@@ -75,7 +67,7 @@ function getSerializedSpecification() {
         'date' => '2020-04-15T00:00:00+00:00',
         'periods' => []
       ]
-    ],
+    ]
   ];
 }
 
@@ -87,13 +79,7 @@ function getDeserializedSpecification() {
   return new RecurringPeriods(
     new \DateTime('2020-03-02'),
     new \DateTime('2020-10-01'),
-    [
-      new RecurringPeriod('12:00', 6 * 60 * 60, 3),
-    ],
-    [
-      $rpChild,
-      $holiday,
-      $dayOverride,
-    ]
+    [new RecurringPeriod('12:00', 6 * 60 * 60, 3)],
+    [$rpChild, $holiday, $dayOverride]
   );
 }

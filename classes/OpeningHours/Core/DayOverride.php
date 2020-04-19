@@ -116,7 +116,9 @@ class DayOverride implements SpecEntry {
       'kind' => DayOverride::SPEC_KIND,
       'name' => $this->name,
       'date' => Dates::serialize($this->date),
-      'periods' => array_map(function (Period $p) { return $p->toSerializableArray(); }, $this->periods),
+      'periods' => array_map(function (Period $p) {
+        return $p->toSerializableArray();
+      }, $this->periods)
     ];
   }
 
@@ -125,7 +127,9 @@ class DayOverride implements SpecEntry {
     return new DayOverride(
       $array['name'],
       Dates::deserialize($array['date']),
-      array_map(function (array $ser) { return Period::fromSerializableArray($ser); }, $array['periods'])
+      array_map(function (array $ser) {
+        return Period::fromSerializableArray($ser);
+      }, $array['periods'])
     );
   }
 }

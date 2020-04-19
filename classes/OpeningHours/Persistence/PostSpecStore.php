@@ -1,6 +1,5 @@
 <?php
 
-
 namespace OpeningHours\Persistence;
 
 use OpeningHours\Core\SpecEntry;

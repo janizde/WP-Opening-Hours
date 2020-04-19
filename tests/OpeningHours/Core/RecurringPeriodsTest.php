@@ -52,14 +52,8 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
     $rp = new RecurringPeriods(
       new \DateTime('2020-03-02'),
       new \DateTime('2020-10-01'),
-      [
-        new RecurringPeriod('12:00', 6 * 60 * 60, 3),
-      ],
-      [
-        $rpChild,
-        $holiday,
-        $dayOverride,
-      ]
+      [new RecurringPeriod('12:00', 6 * 60 * 60, 3)],
+      [$rpChild, $holiday, $dayOverride]
     );
 
     $expected = [
@@ -70,7 +64,7 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
         [
           'startTime' => '12:00',
           'duration' => 6 * 60 * 60,
-          'weekday' => 3,
+          'weekday' => 3
         ]
       ],
       'children' => [
@@ -79,13 +73,13 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
           'start' => '2020-05-01T00:00:00+00:00',
           'end' => '2020-08-01T00:00:00+00:00',
           'periods' => [],
-          'children' => [],
+          'children' => []
         ],
         [
           'kind' => Holiday::SPEC_KIND,
           'name' => 'Foo Holiday',
           'start' => '2020-03-15T00:00:00+00:00',
-          'end' => '2020-04-01T00:00:00+00:00',
+          'end' => '2020-04-01T00:00:00+00:00'
         ],
         [
           'kind' => DayOverride::SPEC_KIND,
@@ -93,7 +87,7 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
           'date' => '2020-04-15T00:00:00+00:00',
           'periods' => []
         ]
-      ],
+      ]
     ];
 
     $this->assertEquals($expected, $rp->toSerializableArray());
@@ -108,7 +102,7 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
         [
           'startTime' => '12:00',
           'duration' => 6 * 60 * 60,
-          'weekday' => 3,
+          'weekday' => 3
         ]
       ],
       'children' => [
@@ -117,13 +111,13 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
           'start' => '2020-05-01T00:00:00+00:00',
           'end' => '2020-08-01T00:00:00+00:00',
           'periods' => [],
-          'children' => [],
+          'children' => []
         ],
         [
           'kind' => Holiday::SPEC_KIND,
           'name' => 'Foo Holiday',
           'start' => '2020-03-15T00:00:00+00:00',
-          'end' => '2020-04-01T00:00:00+00:00',
+          'end' => '2020-04-01T00:00:00+00:00'
         ],
         [
           'kind' => DayOverride::SPEC_KIND,
@@ -131,7 +125,7 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
           'date' => '2020-04-15T00:00:00+00:00',
           'periods' => []
         ]
-      ],
+      ]
     ];
 
     $rpChild = new RecurringPeriods(new \DateTime('2020-05-01'), new \DateTime('2020-08-01'), [], []);
@@ -141,14 +135,8 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
     $expected = new RecurringPeriods(
       new \DateTime('2020-03-02'),
       new \DateTime('2020-10-01'),
-      [
-        new RecurringPeriod('12:00', 6 * 60 * 60, 3),
-      ],
-      [
-        $rpChild,
-        $holiday,
-        $dayOverride,
-      ]
+      [new RecurringPeriod('12:00', 6 * 60 * 60, 3)],
+      [$rpChild, $holiday, $dayOverride]
     );
 
     $this->assertEquals($expected, RecurringPeriods::fromSerializableArray($serialized));

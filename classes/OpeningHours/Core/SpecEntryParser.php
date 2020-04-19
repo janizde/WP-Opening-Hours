@@ -21,7 +21,9 @@ class SpecEntryParser {
         break;
 
       default:
-        throw new \InvalidArgumentException(sprintf("Serialized array must have a valid value of 'kind'. Value '%s' not recognized.", $array['kind']));
+        throw new \InvalidArgumentException(
+          sprintf("Serialized array must have a valid value of 'kind'. Value '%s' not recognized.", $array['kind'])
+        );
     }
 
     return $entry;

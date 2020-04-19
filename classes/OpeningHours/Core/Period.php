@@ -49,7 +49,7 @@ class Period implements ArraySerializable {
   function toSerializableArray(): array {
     return [
       'start' => Dates::serialize($this->start),
-      'end' => Dates::serialize($this->end),
+      'end' => Dates::serialize($this->end)
     ];
   }
 

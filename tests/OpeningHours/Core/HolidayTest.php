@@ -36,7 +36,7 @@ class HolidayTest extends OpeningHoursTestCase {
       'kind' => Holiday::SPEC_KIND,
       'name' => 'Foo Holiday',
       'start' => '2020-02-10T00:00:00+00:00',
-      'end' => '2020-02-17T00:00:00+00:00',
+      'end' => '2020-02-17T00:00:00+00:00'
     ];
 
     $this->assertEquals($expected, $holiday->toSerializableArray());
@@ -47,7 +47,7 @@ class HolidayTest extends OpeningHoursTestCase {
       'kind' => Holiday::SPEC_KIND,
       'name' => 'Foo Holiday',
       'start' => '2020-02-10T00:00:00+00:00',
-      'end' => '2020-02-17T00:00:00+00:00',
+      'end' => '2020-02-17T00:00:00+00:00'
     ];
 
     $expected = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
