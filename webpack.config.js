@@ -9,6 +9,7 @@ module.exports = (env, argv) => {
     mode,
     entry: {
       admin: ["./assets/admin/index.ts"],
+      site: ["./assets/site/index.ts"],
     },
     output: {
       filename: "[name].js",

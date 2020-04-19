@@ -1,4 +1,4 @@
-@import "_variables";
+@import "../../common/styles/_variables.scss";
 @import "_mixins";
 
 @import "_form";
@@ -8,7 +8,4 @@
 @import "_meta-box-periods";
 @import "_meta-box-holidays";
 @import "_meta-box-irregular-openings";
-@import "_shortcode-overview";
-@import "_shortcode-holidays";
-@import "_shortcode-irregular-openings";
 @import "_converter";
