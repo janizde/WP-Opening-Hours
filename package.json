@@ -3,6 +3,11 @@
   "version": "2.2.1",
   "description": "WordPress Plugin for managing Opening Hours and Holidays",
   "dependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-typescript": "^7.9.0",
+    "@types/jest": "^25.2.1",
+    "babel-jest": "^25.3.0",
     "css-loader": "^3.5.2",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
@@ -15,6 +20,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
     "gulp-zip": "^5.0.1",
+    "jest": "^25.3.0",
     "jshint": "^2.10.3",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",
@@ -30,7 +36,8 @@
   "devDependencies": {},
   "scripts": {
     "export": "gulp export",
-    "prettify": "prettier all --parser php --write \"classes/**/*.php\" \"./*.php\" \"tests/**/*.php\""
+    "prettify": "prettier all --parser php --write \"classes/**/*.php\" \"./*.php\" \"tests/**/*.php\"",
+    "test": "jest assets/**/*.ts assets/**/*.tsx"
   },
   "repository": {
     "type": "git",
