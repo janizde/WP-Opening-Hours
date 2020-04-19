@@ -311,7 +311,7 @@ class Dates extends AbstractModule {
    */
   public static function serialize($date): string {
     if ($date instanceof DateTime) {
-      return $date->format(\DateTimeInterface::W3C);
+      return $date->format(\DateTime::W3C);
     }
 
     return (string) $date;
@@ -331,7 +331,7 @@ class Dates extends AbstractModule {
       return INF;
     }
 
-    return DateTime::createFromFormat(\DateTimeInterface::W3C, $serialized);
+    return DateTime::createFromFormat(\DateTime::W3C, $serialized);
   }
 
   /**
