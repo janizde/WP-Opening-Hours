@@ -12,7 +12,7 @@ class HolidayTest extends OpeningHoursTestCase {
 
   public function test_getKind() {
     $holiday = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
-    $this->assertEquals(Holiday::ENTRY_KIND, $holiday->getKind());
+    $this->assertEquals(Holiday::SPEC_KIND, $holiday->getKind());
   }
 
   public function test__getChildren() {
@@ -28,5 +28,29 @@ class HolidayTest extends OpeningHoursTestCase {
       $holiday
     );
     $this->assertEquals($expected, $holiday->getValidityPeriod());
+  }
+
+  public function test__toSerializableArray() {
+    $holiday = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
+    $expected = [
+      'kind' => Holiday::SPEC_KIND,
+      'name' => 'Foo Holiday',
+      'start' => '2020-02-10T00:00:00+00:00',
+      'end' => '2020-02-17T00:00:00+00:00',
+    ];
+
+    $this->assertEquals($expected, $holiday->toSerializableArray());
+  }
+
+  public function test__fromSerializableArray() {
+    $serialized = [
+      'kind' => Holiday::SPEC_KIND,
+      'name' => 'Foo Holiday',
+      'start' => '2020-02-10T00:00:00+00:00',
+      'end' => '2020-02-17T00:00:00+00:00',
+    ];
+
+    $expected = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
+    $this->assertEquals($expected, Holiday::fromSerializableArray($serialized));
   }
 }

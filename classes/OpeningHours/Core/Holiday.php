@@ -2,12 +2,14 @@
 
 namespace OpeningHours\Core;
 
+use OpeningHours\Util\Dates;
+
 /**
  * Specification entry describing a holiday during which a venue is considered closed
  * @package OpeningHours\Core
  */
 class Holiday implements SpecEntry {
-  const ENTRY_KIND = 'holiday';
+  const SPEC_KIND = 'holiday';
 
   /**
    * Start date of the holiday (inclusive)
@@ -39,7 +41,7 @@ class Holiday implements SpecEntry {
 
   /** @inheritDoc */
   function getKind(): string {
-    return Holiday::ENTRY_KIND;
+    return Holiday::SPEC_KIND;
   }
 
   /** @inheritDoc */
@@ -55,5 +57,24 @@ class Holiday implements SpecEntry {
   /** @inheritDoc */
   function transformCoveringPeriod(ValidityPeriod $period): ValidityPeriod {
     return $period;
+  }
+
+  /** @inheritDoc */
+  function toSerializableArray(): array {
+    return [
+      'kind' => Holiday::SPEC_KIND,
+      'name' => $this->name,
+      'start' => Dates::serialize($this->start),
+      'end' => Dates::serialize($this->end),
+    ];
+  }
+
+  /** @inheritDoc */
+  static function fromSerializableArray(array $array): ArraySerializable {
+    return new Holiday(
+      $array['name'],
+      Dates::deserialize($array['start']),
+      Dates::deserialize($array['end'])
+    );
   }
 }
