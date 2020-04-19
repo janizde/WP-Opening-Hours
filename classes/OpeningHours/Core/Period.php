@@ -2,11 +2,13 @@
 
 namespace OpeningHours\Core;
 
+use OpeningHours\Util\Dates;
+
 /**
  * Concrete instance of a Period with start and end dates
  * @package OpeningHours\Core
  */
-class Period {
+class Period implements ArraySerializable {
   /**
    * Start date and time of this period (inclusive)
    * @var \DateTime
@@ -41,5 +43,18 @@ class Period {
 
   public function getWeekday(): int {
     return $this->weekday;
+  }
+
+  /** @inheritDoc */
+  function toSerializableArray(): array {
+    return [
+      'start' => Dates::serialize($this->start),
+      'end' => Dates::serialize($this->end),
+    ];
+  }
+
+  /** @inheritDoc */
+  static function fromSerializableArray(array $array): ArraySerializable {
+    return new Period(Dates::deserialize($array['start']), Dates::deserialize($array['end']));
   }
 }

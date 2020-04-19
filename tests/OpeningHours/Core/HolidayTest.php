@@ -12,7 +12,7 @@ class HolidayTest extends OpeningHoursTestCase {
 
   public function test_getKind() {
     $holiday = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
-    $this->assertEquals(Holiday::ENTRY_KIND, $holiday->getKind());
+    $this->assertEquals(Holiday::SPEC_KIND, $holiday->getKind());
   }
 
   public function test__getChildren() {

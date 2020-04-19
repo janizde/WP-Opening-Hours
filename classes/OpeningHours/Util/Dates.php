@@ -305,6 +305,36 @@ class Dates extends AbstractModule {
   }
 
   /**
+   * Serializes a date into a string
+   * @param     \DateTime|float   $date   \DateTime, -INF or INF to serialize
+   * @return    string                    String representation
+   */
+  public static function serialize($date): string {
+    if ($date instanceof DateTime) {
+      return $date->format(\DateTimeInterface::W3C);
+    }
+
+    return (string) $date;
+  }
+
+  /**
+   * Deserializes a DateTime, -INF or INF that was serialized by Dates::serialize
+   * @param     string    $serialized   W3C representation of DateTime, "-INF" or "INF"
+   * @return    DateTime|float          Deserialized value
+   */
+  public static function deserialize(string $serialized) {
+    if ($serialized === "-INF") {
+      return -INF;
+    }
+
+    if ($serialized === "INF") {
+      return INF;
+    }
+
+    return DateTime::createFromFormat(\DateTimeInterface::W3C, $serialized);
+  }
+
+  /**
    * Getter: Date Format
    * @return    string
    */

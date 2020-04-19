@@ -9,7 +9,7 @@ namespace OpeningHours\Core;
  *
  * @package OpeningHours\Core
  */
-class RecurringPeriod {
+class RecurringPeriod implements ArraySerializable {
   /**
    * Start time of the period as `H:i` time string
    * @var string
@@ -69,5 +69,19 @@ class RecurringPeriod {
    */
   public function getWeekday() {
     return $this->weekday;
+  }
+
+  /** @inheritDoc */
+  function toSerializableArray(): array {
+    return [
+      'startTime' => $this->startTime,
+      'duration' => $this->duration,
+      'weekday' => $this->weekday
+    ];
+  }
+
+  /** @inheritDoc */
+  static function fromSerializableArray(array $array): ArraySerializable {
+    return new RecurringPeriod($array['startTime'], $array['duration'], $array['weekday']);
   }
 }

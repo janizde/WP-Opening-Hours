@@ -18,7 +18,7 @@ class RecurringPeriods implements SpecEntry {
   private $start;
 
   /**
-   * End of the recurring periods as \DateTime (exclusive) or INF if unlimite
+   * End of the recurring periods as \DateTime (exclusive) or INF if unlimited
    * @var \DateTime|float
    */
   private $end;
@@ -108,5 +108,26 @@ class RecurringPeriods implements SpecEntry {
     return $periodAtStart !== null
       ? new ValidityPeriod($periodAtStart->getEnd(), $coveringPeriod->getEnd(), $coveringPeriod->getEntry())
       : $coveringPeriod;
+  }
+
+  /** @inheritDoc */
+  function toSerializableArray(): array {
+    return [
+      'kind' => self::SPEC_KIND,
+      'start' => Dates::serialize($this->start),
+      'end' => Dates::serialize($this->end),
+      'periods' => array_map(function (RecurringPeriod $p) { return $p->toSerializableArray(); }, $this->periods),
+      'children' => array_map(function (SpecEntry $se) { return $se->toSerializableArray(); }, $this->children),
+    ];
+  }
+
+  /** @inheritDoc */
+  static function fromSerializableArray(array $array): ArraySerializable {
+    return new RecurringPeriods(
+      Dates::deserialize($array['start']),
+      Dates::deserialize($array['end']),
+      array_map(function (array $ser) { return RecurringPeriod::fromSerializableArray($ser); }, $array['periods']),
+      array_map(function (array $ser) { return SpecEntryParser::fromSerializableArray($ser); }, $array['children'])
+    );
   }
 }

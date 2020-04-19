@@ -6,7 +6,7 @@ namespace OpeningHours\Core;
  * Describes a specification entry in the Opening Hours data tree
  * @package OpeningHours\Core
  */
-interface SpecEntry {
+interface SpecEntry extends ArraySerializable {
   /**
    * Returns the kind of specification entry
    * @return    string
