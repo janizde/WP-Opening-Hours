@@ -1,21 +1,21 @@
-language: php
+matrix:
+  include:
+    - language: php
+      php:
+        - 7.1
+        - 7.2
+        - 7.3
+      install: composer install
+      script: vendor/bin/phpunit
+      sudo: required
+      dist: precise
+    - language: node_js
+      node:
+        - 12
+      install: npm install
+      script: test
 
 notifications:
   email:
     on_success: never
     on_failure: change
-
-php:
-  - 7.1
-  - 7.2
-  - 7.3
-
-install:
-  - composer install
-
-# `precise` must be used until the plugin drops support for PHP 5.3
-# as `trusty` does not support this version
-sudo: required
-dist: precise
-
-script: vendor/bin/phpunit
