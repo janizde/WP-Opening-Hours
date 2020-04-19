@@ -14,7 +14,13 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
     "gulp-zip": "^5.0.1",
-    "jshint": "^2.10.3"
+    "jshint": "^2.10.3",
+    "preact": "^10.4.0",
+    "ts-loader": "^7.0.0",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   },
   "devDependencies": {},
   "scripts": {
