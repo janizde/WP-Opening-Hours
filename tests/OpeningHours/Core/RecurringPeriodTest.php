@@ -51,4 +51,27 @@ class RecurringPeriodTest extends OpeningHoursTestCase {
     $rp = new RecurringPeriod('12:00', 21600, 2);
     $this->assertEquals(2, $rp->getWeekday());
   }
+
+  public function test__toSerializableArray() {
+    $rp = new RecurringPeriod('12:00', 21600, 1);
+    $expected = [
+      'startTime' => '12:00',
+      'duration' => 21600,
+      'weekday' => 1
+    ];
+
+    $this->assertEquals($expected, $rp->toSerializableArray());
+  }
+
+  public function test__fromSerializableArray() {
+    $serialized = [
+      'startTime' => '12:00',
+      'duration' => 21600,
+      'weekday' => 1
+    ];
+
+    $expected = new RecurringPeriod('12:00', 21600, 1);
+
+    $this->assertEquals($expected, RecurringPeriod::fromSerializableArray($serialized));
+  }
 }

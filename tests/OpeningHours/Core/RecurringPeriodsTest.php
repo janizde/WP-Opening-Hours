@@ -43,4 +43,114 @@ class RecurringPeriodsTest extends OpeningHoursTestCase {
     $expected = new ValidityPeriod(new \DateTime('2020-03-02'), new \DateTime('2020-10-01T04:00:00Z'), $rp);
     $this->assertEquals($expected, $vp);
   }
+
+  public function test__toSerializableArray() {
+    $rpChild = new RecurringPeriods(new \DateTime('2020-05-01'), new \DateTime('2020-08-01'), [], []);
+    $holiday = new Holiday('Foo Holiday', new \DateTime('2020-03-15'), new \DateTime('2020-04-01'));
+    $dayOverride = new DayOverride('Foo Override', new \DateTime('2020-04-15'), []);
+
+    $rp = new RecurringPeriods(
+      new \DateTime('2020-03-02'),
+      new \DateTime('2020-10-01'),
+      [
+        new RecurringPeriod('12:00', 6 * 60 * 60, 3),
+      ],
+      [
+        $rpChild,
+        $holiday,
+        $dayOverride,
+      ]
+    );
+
+    $expected = [
+      'kind' => RecurringPeriods::SPEC_KIND,
+      'start' => '2020-03-02T00:00:00+00:00',
+      'end' => '2020-10-01T00:00:00+00:00',
+      'periods' => [
+        [
+          'startTime' => '12:00',
+          'duration' => 6 * 60 * 60,
+          'weekday' => 3,
+        ]
+      ],
+      'children' => [
+        [
+          'kind' => RecurringPeriods::SPEC_KIND,
+          'start' => '2020-05-01T00:00:00+00:00',
+          'end' => '2020-08-01T00:00:00+00:00',
+          'periods' => [],
+          'children' => [],
+        ],
+        [
+          'kind' => Holiday::SPEC_KIND,
+          'name' => 'Foo Holiday',
+          'start' => '2020-03-15T00:00:00+00:00',
+          'end' => '2020-04-01T00:00:00+00:00',
+        ],
+        [
+          'kind' => DayOverride::SPEC_KIND,
+          'name' => 'Foo Override',
+          'date' => '2020-04-15T00:00:00+00:00',
+          'periods' => []
+        ]
+      ],
+    ];
+
+    $this->assertEquals($expected, $rp->toSerializableArray());
+  }
+
+  public function test__fromSerializableArray() {
+    $serialized = [
+      'kind' => RecurringPeriods::SPEC_KIND,
+      'start' => '2020-03-02T00:00:00+00:00',
+      'end' => '2020-10-01T00:00:00+00:00',
+      'periods' => [
+        [
+          'startTime' => '12:00',
+          'duration' => 6 * 60 * 60,
+          'weekday' => 3,
+        ]
+      ],
+      'children' => [
+        [
+          'kind' => RecurringPeriods::SPEC_KIND,
+          'start' => '2020-05-01T00:00:00+00:00',
+          'end' => '2020-08-01T00:00:00+00:00',
+          'periods' => [],
+          'children' => [],
+        ],
+        [
+          'kind' => Holiday::SPEC_KIND,
+          'name' => 'Foo Holiday',
+          'start' => '2020-03-15T00:00:00+00:00',
+          'end' => '2020-04-01T00:00:00+00:00',
+        ],
+        [
+          'kind' => DayOverride::SPEC_KIND,
+          'name' => 'Foo Override',
+          'date' => '2020-04-15T00:00:00+00:00',
+          'periods' => []
+        ]
+      ],
+    ];
+
+    $rpChild = new RecurringPeriods(new \DateTime('2020-05-01'), new \DateTime('2020-08-01'), [], []);
+    $holiday = new Holiday('Foo Holiday', new \DateTime('2020-03-15'), new \DateTime('2020-04-01'));
+    $dayOverride = new DayOverride('Foo Override', new \DateTime('2020-04-15'), []);
+
+    $expected = new RecurringPeriods(
+      new \DateTime('2020-03-02'),
+      new \DateTime('2020-10-01'),
+      [
+        new RecurringPeriod('12:00', 6 * 60 * 60, 3),
+      ],
+      [
+        $rpChild,
+        $holiday,
+        $dayOverride,
+      ]
+    );
+
+    $this->assertEquals($expected, RecurringPeriods::fromSerializableArray($serialized));
+  }
 }

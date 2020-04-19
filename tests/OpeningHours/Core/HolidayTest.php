@@ -29,4 +29,28 @@ class HolidayTest extends OpeningHoursTestCase {
     );
     $this->assertEquals($expected, $holiday->getValidityPeriod());
   }
+
+  public function test__toSerializableArray() {
+    $holiday = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
+    $expected = [
+      'kind' => Holiday::SPEC_KIND,
+      'name' => 'Foo Holiday',
+      'start' => '2020-02-10T00:00:00+00:00',
+      'end' => '2020-02-17T00:00:00+00:00',
+    ];
+
+    $this->assertEquals($expected, $holiday->toSerializableArray());
+  }
+
+  public function test__fromSerializableArray() {
+    $serialized = [
+      'kind' => Holiday::SPEC_KIND,
+      'name' => 'Foo Holiday',
+      'start' => '2020-02-10T00:00:00+00:00',
+      'end' => '2020-02-17T00:00:00+00:00',
+    ];
+
+    $expected = new Holiday('Foo Holiday', new \DateTime('2020-02-10'), new \DateTime('2020-02-17'));
+    $this->assertEquals($expected, Holiday::fromSerializableArray($serialized));
+  }
 }
