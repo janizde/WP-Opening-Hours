@@ -1,10 +1,19 @@
 matrix:
   include:
     - language: php
-      php:
-        - 7.1
-        - 7.2
-        - 7.3
+      php: 7.1
+      install: composer install
+      script: vendor/bin/phpunit
+      sudo: required
+      dist: precise
+    - language: php
+      php: 7.2
+      install: composer install
+      script: vendor/bin/phpunit
+      sudo: required
+      dist: precise
+    - language: php
+      php: 7.3
       install: composer install
       script: vendor/bin/phpunit
       sudo: required
