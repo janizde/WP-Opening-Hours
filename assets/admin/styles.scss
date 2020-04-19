@@ -1,0 +1,8 @@
+.foo {
+  background-color: #000;
+
+  &,
+  & .bar {
+    background-color: #f00;
+  }
+}

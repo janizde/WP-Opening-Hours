@@ -1,8 +1,12 @@
 const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (env, argv) => {
+  const mode = process.env.NODE_ENV || "development";
+  const isDevelopment = mode === "development";
+
   const config = {
-    mode: process.env.NODE_ENV || "development",
+    mode,
     entry: {
       admin: ["./assets/admin/index.ts"],
     },
@@ -21,8 +25,32 @@ module.exports = (env, argv) => {
           loader: "ts-loader",
           exclude: /node_modules/,
         },
+        {
+          test: /\.scss$/,
+          loader: [
+            isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+            {
+              loader: "css-loader",
+              options: {
+                sourceMap: isDevelopment,
+              },
+            },
+            {
+              loader: "sass-loader",
+              options: {
+                sourceMap: isDevelopment,
+              },
+            },
+          ],
+        },
       ],
     },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: "[name].css",
+        chunkFilename: "[id].css",
+      }),
+    ],
   };
 
   return config;
