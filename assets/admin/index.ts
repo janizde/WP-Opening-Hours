@@ -1,6 +1,8 @@
 import { render, h } from "preact";
 import RootComponent from "./root-component";
 
+import "../../includes/jquery-ui-timepicker/jquery.ui.timepicker.js";
+
 import "./legacy/ExtendedSettings";
 import "./legacy/Holidays";
 import "./legacy/IrregularOpenings";
