@@ -1,7 +1,7 @@
 .PHONY: clean install export test test-php test-js
 
 node_modules:
-	yarn install
+	npm install
 	
 vendor:
 	composer install
@@ -28,3 +28,6 @@ export: clean build test wp-opening-hours.zip
 
 clean:
 	rm -rf node_modules vendor dist
+
+prettify:
+	pwd && ./node_modules/.bin/prettier --parser php --write classes/**/*.php ./*.php tests/**/*.php
