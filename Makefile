@@ -2,10 +2,10 @@
 
 node_modules:
 	npm install
-	
+
 vendor:
 	composer install
-	
+
 install: node_modules vendor
 
 wp-opening-hours.zip: install
