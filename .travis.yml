@@ -2,27 +2,29 @@ matrix:
   include:
     - language: php
       php: 7.1
-      install: composer install
-      script: vendor/bin/phpunit
+      install: make vendor
+      script: make test-php
       sudo: required
       dist: precise
     - language: php
       php: 7.2
-      install: composer install
-      script: vendor/bin/phpunit
+      install: make vendor
+      script: make test-php
       sudo: required
       dist: precise
     - language: php
       php: 7.3
-      install: composer install
-      script: vendor/bin/phpunit
+      install: make vendor
+      script: make test-php
       sudo: required
       dist: precise
     - language: node_js
       node:
         - 12
-      install: npm install
-      script: npm test
+      install: make node_modules
+      script:
+        - make build
+        - make test-js
 
 notifications:
   email:
