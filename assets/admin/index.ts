@@ -14,7 +14,7 @@ import "./legacy/ShortcodeBuilder";
 import "./styles/index.scss";
 
 window.addEventListener("load", () => {
-  const rootEl = document.getElementById("op_admin_ui_root");
+  const rootEl = document.getElementById("op_opening_hours_specification");
 
   if (!rootEl) {
     return;

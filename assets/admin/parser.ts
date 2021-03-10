@@ -1,0 +1,1 @@
+import { SpecEntry } from './types';

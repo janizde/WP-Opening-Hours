@@ -117,7 +117,7 @@ class OpeningHours extends AbstractModule {
       ) {
         wp_register_script(
           self::PREFIX . 'js',
-          plugins_url('dist/scripts/main.js', op_bootstrap_file()),
+          plugins_url('dist/admin.js', op_bootstrap_file()),
           array('jquery', 'jquery-ui-core', 'jquery-ui-datepicker'),
           self::VERSION,
           true

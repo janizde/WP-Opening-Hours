@@ -2,6 +2,10 @@
 
 namespace OpeningHours\Persistence;
 
+use OpeningHours\Core\DayOverride;
+use OpeningHours\Core\Holiday;
+use OpeningHours\Core\RecurringPeriod;
+use OpeningHours\Core\RecurringPeriods;
 use OpeningHours\Core\SpecEntry;
 use OpeningHours\Core\SpecEntryParser;
 
@@ -25,10 +29,25 @@ class PostSpecStore {
 
   /**
    * Loads the specification from post meta data, parses the serialized version and returns the root spec entry
-   * @return    SpecEntry   Root of the specification
+   * @return    SpecEntry|null   Root of the specification or null if none exists
    */
-  public function loadSpecification(): SpecEntry {
-    $serialized = get_post_meta($this->postId, self::SPEC_META_KEY, true);
+  public function loadSpecification() {
+    // $serialized = get_post_meta($this->postId, self::SPEC_META_KEY, true);
+    $rpChild = new RecurringPeriods(new \DateTime('2020-05-01'), new \DateTime('2020-08-01'), [], []);
+    $holiday = new Holiday('Foo Holiday', new \DateTime('2020-03-15'), new \DateTime('2020-04-01'));
+    $dayOverride = new DayOverride('Foo Override', new \DateTime('2020-04-15'), []);
+
+    $serialized = (new RecurringPeriods(
+      new \DateTime('2020-03-02'),
+      new \DateTime('2020-10-01'),
+      [new RecurringPeriod('12:00', 6 * 60 * 60, 3)],
+      [$rpChild, $holiday, $dayOverride]
+    ))->toSerializableArray();
+
+    if (!is_array($serialized)) {
+      return null;
+    }
+
     return SpecEntryParser::fromSerializableArray($serialized);
   }
 

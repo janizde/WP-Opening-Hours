@@ -9,7 +9,7 @@ type Props = {
 
 const Holidays: FunctionComponent<Props> = () => null;
 const DayOverrides: FunctionComponent<Props> = () => null;
-const RecurringPeriods: FunctionComponent<Props> = () => null;
+const RecurringPeriods: FunctionComponent<Props> = () => <h1>Hello World</h1>;
 
 const RootComponent: FunctionComponent<Props> = ({ spec }) => {
   const elements = useMemo(
@@ -23,9 +23,10 @@ const RootComponent: FunctionComponent<Props> = ({ spec }) => {
 
   return (
     <Fragment>
-      {createPortal(<Holidays spec={spec} />, elements[SpecKind.holiday])}
-      {createPortal(<DayOverrides spec={spec} />, elements[SpecKind.dayOverride])}
-      {createPortal(<RecurringPeriods spec={spec} />, elements[SpecKind.recurringPeriods])}
+      {elements[SpecKind.holiday] && createPortal(<Holidays spec={spec} />, elements[SpecKind.holiday])}
+      {elements[SpecKind.dayOverride] && createPortal(<DayOverrides spec={spec} />, elements[SpecKind.dayOverride])}
+      {elements[SpecKind.recurringPeriods] &&
+        createPortal(<RecurringPeriods spec={spec} />, elements[SpecKind.recurringPeriods])}
     </Fragment>
   );
 };

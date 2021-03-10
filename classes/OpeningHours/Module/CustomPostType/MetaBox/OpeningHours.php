@@ -3,10 +3,9 @@
 namespace OpeningHours\Module\CustomPostType\MetaBox;
 
 use OpeningHours\Entity\Period;
-use OpeningHours\Module\OpeningHours as OpeningHoursModule;
+use OpeningHours\Persistence\PostSpecStore;
 use OpeningHours\Util\Dates;
 use OpeningHours\Util\Persistence;
-use OpeningHours\Util\ViewRenderer;
 use OpeningHours\Util\Weekday;
 use OpeningHours\Util\Weekdays;
 use WP_Post;
@@ -32,14 +31,11 @@ class OpeningHours extends AbstractMetaBox {
 
   /** @inheritdoc */
   public function renderMetaBox(WP_Post $post) {
-    $set = $this->getSet($post->ID);
-    $periods = $this->groupPeriodsWithDummy($set->getPeriods()->getArrayCopy());
+    $postSpeStore = new PostSpecStore($post->ID);
+    $spec = $postSpeStore->loadSpecification();
 
-    $vr = new ViewRenderer(op_view_path(self::TEMPLATE_PATH), array(
-      'periods' => $periods,
-      'set' => $set
-    ));
-    $vr->render();
+    echo '<script type="application/json" id="op_opening_hours_specification">' . json_encode($spec->toSerializableArray()) . '</script>';
+    echo '<div id="op_meta_box_recurring_periods"></div>';
   }
 
   /** @inheritdoc */
