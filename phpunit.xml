@@ -7,7 +7,7 @@
 	convertWarningsToExceptions="true"
 	>
 	<testsuites>
-		<testsuite>
+		<testsuite name="OpeningHours">
 			<directory suffix="Test.php">./tests/OpeningHours/</directory>
 		</testsuite>
 	</testsuites>
