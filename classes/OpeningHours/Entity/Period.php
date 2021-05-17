@@ -266,7 +266,7 @@ class Period implements TimeContextEntity {
       $timeFormat = Dates::getTimeFormat();
     }
 
-    return $this->timeStart->format($timeFormat) . ' - ' . $this->timeEnd->format($timeFormat);
+    return $this->timeStart->format($timeFormat) . ' – ' . $this->timeEnd->format($timeFormat);
   }
 
   /**

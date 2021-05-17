@@ -136,7 +136,7 @@ class IrregularOpening implements TimeContextEntity, DateTimeRange {
    *
    * @return    string                    The time range as string
    */
-  public function getFormattedTimeRange($timeFormat = null, $outputFormat = "%s - %s") {
+  public function getFormattedTimeRange($timeFormat = null, $outputFormat = "%s – %s") {
     if ($timeFormat == null) {
       $timeFormat = Dates::getTimeFormat();
     }

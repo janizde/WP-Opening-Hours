@@ -111,7 +111,7 @@ class Weekdays extends AbstractModule {
     }
 
     if ($sequence) {
-      $format = "%s - %s";
+      $format = "%s – %s";
       $last = $days[count($days) - 1];
       if ($short) {
         return sprintf($format, $days[0]->getShortName(), $last->getShortName());
