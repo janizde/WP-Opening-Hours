@@ -33,7 +33,7 @@ class OpeningHours extends AbstractModule {
   const VERSION = '2.1.3';
 
   /** The Plugin DB version */
-  const DB_VERSION = 2;
+  const DB_VERSION = '2';
 
   /** The plugin prefix */
   const PREFIX = 'op_';
@@ -78,7 +78,7 @@ class OpeningHours extends AbstractModule {
     if ($dbVersion === false) {
       Module\Importer::getInstance()->import();
       add_option('opening_hours_db_version', self::DB_VERSION);
-    } elseif ($dbVersion !== self::DB_VERSION) {
+    } elseif ((string) $dbVersion !== self::DB_VERSION) {
       update_option('opening_hours_db_version', self::DB_VERSION);
     }
 
