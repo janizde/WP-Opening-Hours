@@ -51,8 +51,8 @@ class WeekdaysTest extends OpeningHoursTestCase {
 
     $this->assertEquals('Monday, Wednesday, Friday', Weekdays::getDaysCaption($this->toWeekdays(array(1, 3, 5))));
     $this->assertEquals('Mon., Wed., Fri.', Weekdays::getDaysCaption($this->toWeekdays(array(1, 3, 5)), true));
-    $this->assertEquals('Monday - Friday', Weekdays::getDaysCaption($this->toWeekdays(range(1, 5))));
-    $this->assertEquals('Mon. - Fri.', Weekdays::getDaysCaption($this->toWeekdays(range(1, 5)), true));
+    $this->assertEquals('Monday – Friday', Weekdays::getDaysCaption($this->toWeekdays(range(1, 5))));
+    $this->assertEquals('Mon. – Fri.', Weekdays::getDaysCaption($this->toWeekdays(range(1, 5)), true));
     $this->assertEquals(
       'Monday, Tuesday, Wednesday, Friday',
       Weekdays::getDaysCaption($this->toWeekdays(array(1, 2, 3, 5)))
