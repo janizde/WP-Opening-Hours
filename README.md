@@ -1047,6 +1047,14 @@ translate.jannikportz.de has been shut down in favor of WordPress Polyglots. Ple
 
 ## <a name="changelog"></a>Changelog
 
+### v2.3.0
+
+* Fix a bug that would cause redundant database writes caused by a DB_VERSION mismatch
+* Add filter `op_shortcode_template_path`
+* Deprecate filter `op_shortcode_template` in favor of `op_shortcode_template_path`
+* Consistently use en dashes to separate dates and times in default formats
+* Add filter `op_set_post_type_arguments`
+
 ### v2.2.1
 
 * Add support for custom user locales in the admin panel for cases when the user locale differs from the site locale
