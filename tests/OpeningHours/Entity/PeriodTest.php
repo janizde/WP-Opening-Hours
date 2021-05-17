@@ -180,8 +180,8 @@ class PeriodTest extends OpeningHoursTestCase {
   public function testGetFormattedTimeRange() {
     $p = new Period(0, '13:00', '17:00');
 
-    $this->assertEquals('13:00 - 17:00', $p->getFormattedTimeRange());
-    $this->assertEquals('0013 - 0017', $p->getFormattedTimeRange('iH'));
+    $this->assertEquals('13:00 – 17:00', $p->getFormattedTimeRange());
+    $this->assertEquals('0013 – 0017', $p->getFormattedTimeRange('iH'));
   }
 
   public function testHappensOnDate() {

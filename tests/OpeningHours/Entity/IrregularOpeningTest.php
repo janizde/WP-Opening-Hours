@@ -98,8 +98,8 @@ class IrregularOpeningTest extends OpeningHoursTestCase {
   public function testGetFormattedTimeRange() {
     $io = new IrregularOpening('Test', '2016-02-03', '13:00', '01:00');
 
-    $this->assertEquals('13:00 - 01:00', $io->getFormattedTimeRange());
-    $this->assertEquals('1300 - 0100', $io->getFormattedTimeRange('Hi'));
+    $this->assertEquals('13:00 – 01:00', $io->getFormattedTimeRange());
+    $this->assertEquals('1300 – 0100', $io->getFormattedTimeRange('Hi'));
     $this->assertEquals('01:00 // 13:00', $io->getFormattedTimeRange(null, '%2$s // %1$s'));
   }
 

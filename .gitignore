@@ -6,3 +6,4 @@ wp-opening-hours
 wp-opening-hours.zip
 /vendor/
 composer.lock
+.vscode
