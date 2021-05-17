@@ -368,6 +368,25 @@ The below screenshot shows the above example in Chrome:
 
 ![Set Alias presets in Chrome](./screenshots/set-alias-presets.png)
 
+## <a name="op_set_post_type_arguments"></a>`op_set_post_type_arguments`
+
+With the `op_set_alias_presets` filter you can change the arguments passed to [`register_post_type`](https://developer.wordpress.org/reference/functions/register_post_type/) when registering the custom post type for Set. This can be used to e.g., change the capabilities required to being able to edit Sets.
+
+Parameters passed to the callback:
+
+|Name|Type|Description|
+|---|---|---|
+|`$arguments`|`array`|Default arguments passed to `register_post_type`|
+
+### Example: Changing the `capability_type`
+
+~~~php
+add_filter('op_set_post_type_arguments', function (array $arguments) {
+	$arguments['capability_type'] = 'story';
+	return $arguments;
+});
+~~~
+
 ## Need another filter?
 Filters are a great way to give developers more control over the behavior of an external Plugin and are very easy to integrate.  
 If you feel you would want to have another filter, open an [issue on GitHub](https://github.com/janizde/WP-Opening-Hours/issues).

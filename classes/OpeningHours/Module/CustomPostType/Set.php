@@ -20,6 +20,8 @@ class Set extends AbstractModule {
   const NONCE_NAME = 'op-update-set-nonce';
   const NONCE_VALUE = 'op-set-opening-hours';
 
+  const FILTER_POST_TYPE_ARGUMENTS = 'op_set_post_type_arguments';
+
   /**
    * Meta Boxes
    * associative array of MetaBox modules with:
@@ -89,7 +91,7 @@ class Set extends AbstractModule {
    * @return    array
    */
   public function getArguments() {
-    return array(
+    $arguments = array(
       'labels' => $this->getLabels(),
       'public' => false,
       'publicly_queryable' => true,
@@ -103,5 +105,12 @@ class Set extends AbstractModule {
       'menu_icon' => 'dashicons-clock',
       'supports' => array('title', 'page-attributes')
     );
+
+    /**
+     * Filter Set custom post type arguments.
+     * @param   array    $arguments     The arguments passed to `register_post_type`
+     * @return  array                   Filtered arguments passed to `register_post_type`
+     */
+    return apply_filters(self::FILTER_POST_TYPE_ARGUMENTS, $arguments);
   }
 }
