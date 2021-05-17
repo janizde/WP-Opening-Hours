@@ -3,18 +3,18 @@
   "version": "2.3.0",
   "description": "WordPress Plugin for managing Opening Hours and Holidays",
   "dependencies": {
-    "del": "^5.1.0",
+    "del": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
-    "gulp-clean-css": "^4.2.0",
+    "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.0",
     "gulp-if": "^3.0.0",
     "gulp-jshint": "^2.0.0",
-    "gulp-sass": "^4.0.:q2",
-    "gulp-sourcemaps": "^2.6.5",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
-    "gulp-zip": "^5.0.1",
-    "jshint": "^2.10.3"
+    "gulp-zip": "^5.1.0",
+    "jshint": "^2.12.0"
   },
   "devDependencies": {},
   "scripts": {

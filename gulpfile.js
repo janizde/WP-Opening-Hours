@@ -52,7 +52,7 @@ const watch = gulp.series(build, function() {
 });
 
 function clean() {
-  return del("dist");
+  return del(["dist"]);
 }
 
 const exportTask = gulp.series(clean, build, function() {
