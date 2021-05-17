@@ -1,0 +1,17 @@
+name: CI
+
+on: [push]
+
+jobs:
+  php-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout 🛎
+      uses: actions/checkout@v2
+    - name: Composer Install
+      uses: php-actions/composer@v5
+    - name: Unit Test ✅
+      uses: php-actions/phpunit@v2
+      with:
+        configuration: phpunit.xml
