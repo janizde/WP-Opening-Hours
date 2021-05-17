@@ -17,6 +17,7 @@ abstract class AbstractShortcode extends AbstractModule {
   const FILTER_ATTRIBUTES = 'op_shortcode_attributes';
 
   const FILTER_TEMPLATE = 'op_shortcode_template';
+  const FILTER_TEMPLATE_PATH = 'op_shortcode_template_path';
 
   const FILTER_SHORTCODE_MARKUP = 'op_shortcode_markup';
 
@@ -119,14 +120,15 @@ abstract class AbstractShortcode extends AbstractModule {
    *
    * @return    string    The shortcode markup
    */
-  public function renderShortcodeTemplate(array $attributes, $templatePath) {
+  public function renderShortcodeTemplate(array $attributes, $templatePathRel) {
     /**
-     * Filter shortcode template path. Callback should be:
-     * @param   string            $templatePath   Absolute path to template file
+     * Filter the relative shortcode template path. Callback should be:
+     * @deprecated                                Use the absolute `op_shortcode_template_path` instead
+     * @param   string            $templatePath   Relative path to template file
      * @param   AbstractShortcode $shortcode      The shortcode singleton instance
-     * @return  string                            The filtered template path
+     * @return  string                            The filtered relative template path
      */
-    $templatePath = apply_filters(self::FILTER_TEMPLATE, $templatePath, $this);
+    $templatePathRel = apply_filters(self::FILTER_TEMPLATE, $templatePathRel, $this);
 
     /**
      * Filter shortcode attributes path. Callback should be:
@@ -136,7 +138,7 @@ abstract class AbstractShortcode extends AbstractModule {
      */
     $attributes = apply_filters(self::FILTER_ATTRIBUTES, $attributes, $this);
 
-    if (empty($templatePath)) {
+    if (empty($templatePathRel)) {
       return '';
     }
 
@@ -144,9 +146,17 @@ abstract class AbstractShortcode extends AbstractModule {
       'attributes' => $attributes
     );
 
-    $templatePath = sprintf('%s/views/%s', op_plugin_path(), $templatePath);
+    $templatePathAbs = sprintf('%s/views/%s', op_plugin_path(), $templatePathRel);
 
-    $view = new ViewRenderer($templatePath, $data);
+    /**
+     * Filter the absolute shortcode template path. Callback should be:
+     * @param   string            $templatePath   Absolute path to template file
+     * @param   AbstractShortcode $shortcode      The shortcode singleton instance
+     * @return  string                            The filtered absolute template path
+     */
+    $templatePathAbs = apply_filters(self::FILTER_TEMPLATE_PATH, $templatePathAbs, $this);
+
+    $view = new ViewRenderer($templatePathAbs, $data);
     return $view->getContents();
   }
 

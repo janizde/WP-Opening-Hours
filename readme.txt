@@ -1,8 +1,8 @@
 === Opening Hours ===
 Contributors: janizde
 Tags: opening hours,business hours,hours,table,overview,date,time,widget,shortcode,status,currently open,bar,restaurant
-Tested up to: 5.1.1
-Stable tag: 2.2.1
+Tested up to: 5.7.2
+Stable tag: 2.3.0
 Requires at least: 4.0.0
 Donate link: https://github.com/janizde/WP-Opening-Hours#donate
 License: GPLv2 or later
@@ -93,6 +93,14 @@ Please read the section on [contributing to translations](https://github.com/jan
 If you found a bug you would like to fix feel free to [contribute to the project on GitHub](https://github.com/janizde/WP-Opening-Hours#contributing-to-code).
 
 == Changelog ==
+
+= 2.3.0 =
+
+* Fix a bug that would cause redundant database writes caused by a DB_VERSION mismatch
+* Add filter `op_shortcode_template_path`
+* Deprecate filter `op_shortcode_template` in favor of `op_shortcode_template_path`
+* Consistently use en dashes to separate dates and times in default formats
+* Add filter `op_set_post_type_arguments`
 
 = 2.2.1 =
 

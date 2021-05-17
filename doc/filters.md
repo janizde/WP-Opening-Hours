@@ -54,7 +54,36 @@ add_filter('op_shortcode_attributes', function (array $attributes, $shortcode) {
 	return $attributes;
 }, 10, 2);
 ~~~
-## `op_shortcode_template`
+
+## ~~`op_shortcode_template`~~ (deprecated)
+
+> This filter receives the template path relative to the Opening Hours `views` directory and is deprecated as of v2.1.5. It will be remove with the next major version. Please refer to the [`op_shortcode_template_path`](#op_shortcode_template_path) filter instead.
+
+With the `op_shortcode_template` filter you can specify your own shortcode template.
+
+Parameters passed to the filter callback:
+<table>
+	<thead>
+		<th width="25%">Name</th>
+		<th width="25%">Type</th>
+		<th width="50%">Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td><code>$template</code></td>
+			<td><code>string</code></td>
+			<td>Relative path to a `.php` template file.</td>
+		</tr>
+		<tr>
+			<td><code>$shortcode</code></td>
+			<td><code>AbstractShortcode</code></td>
+			<td>The Shortcode singleton instance. You can for example check for the type of Shortcode with the `instanceof` operator.</td>
+		</tr>
+	</tbody>
+</table>
+
+## `op_shortcode_template_path`
+
 With the `op_shortcode_template` filter you can specify your own shortcode template.
 
 Parameters passed to the filter callback:
@@ -82,7 +111,7 @@ Parameters passed to the filter callback:
 ~~~php
 use OpeningHours\Module\Shortcode\Holidays;
 
-add_filter('op_shortcode_template', function ($template, $shortcode) {
+add_filter('op_shortcode_template_path', function ($template, $shortcode) {
 	// If the Shortcode is a Holidays shortcode return you custom template
 	if ($shortcode instanceof Holidays)
 		return '/path/to/template.php';
@@ -93,7 +122,8 @@ add_filter('op_shortcode_template', function ($template, $shortcode) {
 ~~~
 
 ## `op_shortcode_markup`
-With the `op_shortcode_template` filter you can filter the final Shortcode output. It will be called right before the Plugin returns the Shortcode markup to WordPress.
+
+With the `op_shortcode_markup` filter you can filter the final Shortcode output. It will be called right before the Plugin returns the Shortcode markup to WordPress.
 
 Parameters passed to the filter callback:
 <table>
@@ -337,6 +367,25 @@ add_filter('op_set_alias_presets', function (array $presets) {
 The below screenshot shows the above example in Chrome:
 
 ![Set Alias presets in Chrome](./screenshots/set-alias-presets.png)
+
+## <a name="op_set_post_type_arguments"></a>`op_set_post_type_arguments`
+
+With the `op_set_alias_presets` filter you can change the arguments passed to [`register_post_type`](https://developer.wordpress.org/reference/functions/register_post_type/) when registering the custom post type for Set. This can be used to e.g., change the capabilities required to being able to edit Sets.
+
+Parameters passed to the callback:
+
+|Name|Type|Description|
+|---|---|---|
+|`$arguments`|`array`|Default arguments passed to `register_post_type`|
+
+### Example: Changing the `capability_type`
+
+~~~php
+add_filter('op_set_post_type_arguments', function (array $arguments) {
+	$arguments['capability_type'] = 'story';
+	return $arguments;
+});
+~~~
 
 ## Need another filter?
 Filters are a great way to give developers more control over the behavior of an external Plugin and are very easy to integrate.  
