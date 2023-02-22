@@ -24,6 +24,8 @@ extract( $this->data['attributes'] );
  * @var         $time_format        string w/ PHP time format
  */
 
+$class_highlighted = esc_js($class_highlighted);
+
 if ( !count( $irregular_openings ) )
 	return;
 
