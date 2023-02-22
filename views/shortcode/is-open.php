@@ -19,6 +19,9 @@ extract( $this->data['attributes'] );
  * @var     $classes            string w/ classes for span
  */
 
+$classes = esc_js($classes);
+$next_period_classes = esc_js($next_period_classes);
+
 echo $before_widget;
 
 if ( ! empty( $title ) ) {

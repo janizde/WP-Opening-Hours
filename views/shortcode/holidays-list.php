@@ -24,6 +24,9 @@ extract( $this->data['attributes'] );
  * @var         $date_format        string w/ PHP date format
  */
 
+$class_holiday = esc_js($class_holiday);
+$class_highlighted = esc_js($class_highlighted);
+
 if ( !count( $holidays ) )
 	return;
 
